@@ -48,13 +48,14 @@
 <div class="textcolumn">
   <h1 style="text-align: center;">Proposition 47</h1>
   <p>You can drag triangles and parallelograms around in this figure to
-    understand Euclid's proof of the Pythagorean theorem, proposition 47 of his
-    <em>Elements</em>.  The triangle ABC is a right triangle.  Euclid continues
-    the triangle altitude from C, dividing the square on the hypotenuse AB into
-    rectangles (colored blue and gold) having areas equal to the squares
-    on the corresponding sides: Thus, the area of the square on the hypotenuse
-    is the sum of the areas of the squares on the two sides at right angles.
-    Until you play with the figure, the equality of the areas is not at all
+    understand Euclid's proof of the Pythagorean theorem, Proposition 47 of
+    Book I of his <em>Elements</em>.  The triangle ABC is a right triangle.
+    Euclid continues the triangle altitude from C, dividing the square on the
+    hypotenuse AB into rectangles (colored blue and gold) having areas equal
+    to the squares on the corresponding sides: Thus, the area of the square on
+    the hypotenuse is the sum of the areas of the squares on the other two
+    sides.  Each individual sliding or turning move you make clearly preserves
+    area, but there are just enough steps that the conclusion is not at all
     obvious.</p>
   <div class="halfwide" style="float: right;">
   <svg id="prop47" xmlns="http://www.w3.org/2000/svg"
@@ -180,6 +181,10 @@
       transform="translate(0.0,0.0)" points="0.1,-0.1, 0.1,-0.7, -0.7,-0.1"/>
     <polygon id="tri3" fill="#ffffff" stroke="#000000"
       points="-0.7,-0.1, 0.1,-0.7, -0.7,-0.7"/>
+    <polygon class="moveable" id="ghost" fill="#ffffff" stroke="#8c7600"
+      display="block" opacity="0.0" fill-rule="nonzero"
+      transform="rotate(0.0,0.4,-0.4)"
+      points="0.1,-0.7, -0.7,-0.1, 0.1,-0.1, 0.1,-0.7, -0.7,-0.7, -0.7,-0.1"/>
     <circle class="moveable" id="circ0"
       display="block" style="fill:transparent; stroke:transparent;"
       cx="0.1" cy="-0.1" r="0.1"/>
@@ -187,8 +192,9 @@
   <ol>
     <li>Again, you may first drag the intersection point where the two blue
       squares touch to select the shape of the four right triangles.</li>
-    <!-- Perhaps would be better to force you to click on a blue square
-      first to put it in shape changing mode?  Could lighten the color. -->
+    <li>In the initial configuration, you may also drag the upper left
+      white rectangle downward to rotate it by ninety degrees, checking that
+      the diagonals of the white rectangles are ninety degrees apart.</li>
     <li>Split the lower right white rectangle, sliding one of its triangles
       left and the other up as far as possible.</li>
     <li>Split the upper left white rectangle by sliding its central triangle
@@ -606,7 +612,7 @@
 }
 function alt47_interactions(evt) {
   var alt47 = evt.target;
-  var ids = ["tri0", "tri1", "tri2", "circ0"];
+  var ids = ["tri0", "tri1", "tri2", "circ0", "ghost"];
   var movers = ids.map(
    function(id) {return document.getElementById(id)});
   var tris = movers.slice(0, 3);
@@ -620,7 +626,14 @@ function alt47_interactions(evt) {
   var cyatt = movers[3].getAttributeNodeNS(null, "cy");
   var circ0_disp = movers[3].getAttributeNodeNS(null, "display");
   var tri3pts = document.getElementById(
-    "tri3").getAttributeNodeNS(null, "points");
+      "tri3").getAttributeNodeNS(null, "points");
+  var ghostpts = movers[4].getAttributeNodeNS(null, "points");
+  var ghostx = movers[4].getAttributeNodeNS(null, "transform");
+  var ghosto = movers[4].getAttributeNodeNS(null, "opacity");
+  var ghostd = movers[4].getAttributeNodeNS(null, "display");
+  var ghostc = 0.4
+  var rad2deg = 180. / Math.PI;
+  var atan2 = Math.atan2;
 
   function svgcoords(e) {  // return svg#prop47 event coordinates
     var CTM = alt47.getScreenCTM();
@@ -669,6 +682,11 @@ function alt47_interactions(evt) {
     }
     selected = index;
     var s = svgcoords(evt);
+    if (selected === 4) {
+      adjust = atan2(-ghostc - s.y, ghostc - s.x);
+      ghosto.value = "0.5";
+      return;
+    }
     s = selected? s.y : s.x;
     if (selected === 3) {
       adjust = -param - s;
@@ -688,6 +706,16 @@ function alt47_interactions(evt) {
       return;
     }
     var s = svgcoords(evt);
+    if (selected === 4) {
+      var dy = -ghostc - s.y;
+      var dx = ghostc - s.x;
+      if ((!dx) && (!dy)) {
+        dx = 1.0;
+      }
+      s = rad2deg * (atan2(dy, dx) - adjust);
+      ghostx.value = "rotate(" + s + "," + ghostc + "," + (-ghostc) + ")";
+      return;
+    }
     s = selected? s.y : s.x;
     if (selected === 3) {
       s += adjust;
@@ -705,6 +733,10 @@ function alt47_interactions(evt) {
       points[1].value = xy + "0.7,0.7, 0.7," + y;
       points[2].value = xy + x + ",-0.7, -0.7," + y;
       tri3pts.value = "-0.7," + y + ", " + x + ",-0.7, -0.7,-0.7";
+      ghostpts.value = (x + ",-0.7, -0.7," + y + ", " + xy + x
+                        + ",-0.7, -0.7,-0.7, -0.7," + y);
+      ghostc = 0.5*(param + 0.7);
+      ghostx.value = "rotate(0.0," + ghostc + "," + (-ghostc) + ")";
       return;
     }
     if (selected === 0) {
@@ -713,7 +745,7 @@ function alt47_interactions(evt) {
       if (s >= 0.0) {
         s = 0.0;
         if (deltas[0] && !deltas[1]) {
-          circ0_disp.value = "block";
+          circ0_disp.value = ghostd.value = "block";
         }
       } else if (s <= -0.7-param) {
         s = -0.7-param;
@@ -723,7 +755,7 @@ function alt47_interactions(evt) {
       } else if (deltas[0] <= -0.7-param && deltas[1] <= param-0.7) {
         classes[2].value = "";
       } else if (!(deltas[0] || deltas[1])) {
-        circ0_disp.value = "none";
+        circ0_disp.value = ghostd.value = "none";
       }
       deltas[0] = s;
       xforms[0].value = "translate(" + (s-0.00001) + ",0.0)"
@@ -733,7 +765,7 @@ function alt47_interactions(evt) {
       if (s >= 0.0) {
         s = 0.0;
         if (deltas[1] && !deltas[0]) {
-          circ0_disp.value = "block";
+          circ0_disp.value = ghostd.value = "block";
         }
       } else if (s <= param-0.7) {
         s = param-0.7;
@@ -743,7 +775,7 @@ function alt47_interactions(evt) {
       } else if (deltas[0] <= -0.7-param && deltas[1] <= param-0.7) {
         classes[2].value = "";
       } else if (!(deltas[0] || deltas[1])) {
-        circ0_disp.value = "none";
+        circ0_disp.value = ghostd.value = "none";
       }
       deltas[1] = s;
       xforms[1].value = "translate(0.0," + (s-0.00001) + ")"
@@ -769,6 +801,10 @@ function alt47_interactions(evt) {
   function endDrag(evt) {
     evt.stopPropagation();
     evt.preventDefault();  // make usable for touch events
+    if (selected === 4) {
+      ghosto.value = "0.0";
+      ghostx.value = "rotate(0.0," + ghostc + "," + (-ghostc) + ")";
+    }
     selected = null;
     adjust = 0.0;
   }
