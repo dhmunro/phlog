@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Rulers and Graph Paper</title>
+  <meta name="description"
+    content="Why are complex numbers interesting.">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script>MathJax = {tex: { inlineMath: [["$", "$"], ["\\(", "\\)"]] }};
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"
+          id="MathJax-script">
+  </script>
+  <style>
+    div {
+      -moz-box-sizing: border-box;
+      box-sizing: border-box;
+    }
+    .textcolumn {
+      padding-left: 1em;
+      padding-right: 1em;
+      min-width: 22em;
+      max-width: 52em;
+      margin: 0 auto;
+    }
+    .halfwide {
+      width: 60%;
+    }
+    .clickable {
+      cursor: pointer;
+    }
+    .moveable {
+      cursor: move;
+    }
+    svg {
+      background-color: #ffffff;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      width: 100%;
+      height: 100%;
+    }
+    .belowsvg {
+      font: italic bold large serif;
+      padding-top: 0px;
+      margin-top: 0px;
+      margin-left: auto;
+      margin-right: auto;
+      text-align: center;
+    }
+    @media only screen and (max-width: 620px) {
+      .halfwide {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="textcolumn">
+  <h1 style="text-align: center;">Rulers and Graph Paper</h1>
+  <h2>Adding and multiplying with rulers</h2>
+  <p>A number line is an idealized infinite ruler, a coordinate system
+    for the points on the line.  The point associated with the number
+    zero is called the origin, and the distance from the origin to the
+    point associated with the number one is the unit of the ruler.
+    Both origin and unit are arbitrary.  To add two numbers we can use
+    two rulers with the same units but different origins: Place the
+    origin of the second ruler at the first number; the sum will be
+    the reading on the first ruler at the point corresponding to the
+    second number on the displaced ruler.</p>
+  <svg id="add1d" xmlns="http://www.w3.org/2000/svg"
+       viewBox="-6 -0.5 12 1.0" onload="add1d_interactions(evt)"
+       stroke-width="0.03">
+    <path fill="none" stroke="#0080ff"
+      d="M -5.8,0 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.2 v .4 m .2,-.4 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.2 v .4 m .2,-.4 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.2 v .4 m .2,-.4 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.2 v .4 m .2,-.4 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.2 v .4 m .2,-.4 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.2 v .4 m .2,-.4 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.2 v .4 m .2,-.4 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.2 v .4 m .2,-.4 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.2 v .4 m .2,-.4 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.2 v .4 m .2,-.4 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.2 v .4 m .2,-.4 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2"/>
+    <path id="add1t" fill="none" stroke="#ff8000" transform="translate(0.00,0)"
+      d="M -12.8,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2"/>
+    <line stroke="black" stroke-width="0.04" x1="-6" y1="0" x2="6" y2="0" />
+    <line stroke="#0080ff" stroke-width="0.08" x1="0" y1="0" x2="1" y2="0" />
+    <circle fill="#0080ff" stroke="#0080ff"
+            cx="0" cy="0" r="0.1" />
+    <rect fill="#0080ff" stroke="#0080ff"
+          x="0.9" y="-0.1" width="0.2" height="0.2" />
+    <g id="add1u" transform="translate(0.00,0)">
+      <line stroke="#ff8000" stroke-width="0.08" x1="0" y1="0" x2="1" y2="0" />
+      <circle fill="#ff8000" stroke="#ff8000"
+              cx="0" cy="0" r="0.1" />
+      <rect fill="#ff8000" stroke="#ff8000"
+            x="0.9" y="-0.1" width="0.2" height="0.2" />
+    </g>
+    <polygon id="add1u" fill="#808080" stroke="#808080"
+             transform="translate(1.8,0)"
+             points="-0.14142,0, 0,-0.14142, 0.14142,0, 0,0.14142"/>
+  </svg>
+  <p class="belowsvg">
+    <span id="add1x" style="color: #0080ff;">0.00</span> +
+    <span id="add1y" style="color: #ff8000;">1.80</span> =
+    <span id="add1z" style="color: #0080ff;">1.80</span></p>
+  <p>Similarly, to multiply two numbers we can use two rulers with the
+    same origins but different units: Stretch the scale of the second
+    ruler until its number one lies at the first number on the first
+    ruler; the product will be the reading on the first ruler at the
+    point corresponding to the second number on the stretched ruler.</p>
+  <svg id="mul1d" xmlns="http://www.w3.org/2000/svg"
+       viewBox="-6 -0.5 12 1.0" onload="add1d_interactions(evt)"
+       stroke-width="0.03">
+    <path fill="none" stroke="#0080ff"
+      d="M -5.8,0 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.2 v .4 m .2,-.4 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.2 v .4 m .2,-.4 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.2 v .4 m .2,-.4 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.2 v .4 m .2,-.4 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.2 v .4 m .2,-.4 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.2 v .4 m .2,-.4 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.2 v .4 m .2,-.4 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.2 v .4 m .2,-.4 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.2 v .4 m .2,-.4 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.2 v .4 m .2,-.4 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.2 v .4 m .2,-.4 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2"/>
+    <path id="mul1t" fill="none" stroke="#ff8000" stroke-width="0.03"
+      transform="scale(1.00,1)"
+      d="M -32.8,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2"/>
+    <line stroke="black" x1="-6" y1="0" x2="6" y2="0" />
+    <line stroke="#0080ff" stroke-width="0.08" x1="0" y1="0" x2="1" y2="0" />
+    <circle fill="#0080ff" stroke="#0080ff"
+            cx="0" cy="0" r="0.1" />
+    <rect fill="#0080ff" stroke="#0080ff"
+          x="0.9" y="-0.1" width="0.2" height="0.2" />
+    <line id="mul1ul" stroke="#ff8000" stroke-width="0.08"
+          x1="0" y1="0" x2="1.00" y2="0" />
+    <circle fill="#ff8000" stroke="#ff8000"
+            cx="0" cy="0" r="0.1" />
+    <rect id="mul1ur" fill="#ff8000" stroke="#ff8000"
+          x="0.90" y="-0.1" width="0.2" height="0.2" />
+    <polygon id="add1u" fill="#808080" stroke="#808080"
+      transform="translate(1.8,0)"
+      points="-0.14142,0, 0,-0.14142, 0.14142,0, 0,0.14142"/>
+  </svg>
+  <p class="belowsvg">
+    <span id="mul1x" style="color: #0080ff;">1.00</span> &times;
+    <span id="mul1y" style="color: #ff8000;">1.80</span> =
+    <span id="mul1z" style="color: #0080ff;">1.80</span></p>
+  <p>Addition of numbers corresponds to displacing the coordinate
+    origin.  Multiplication of numbers corresponds to stretching the
+    coordinate unit.</p>
+  <h2>Adding and multiplying with graph paper</h2>
+  <p>Graph paper provides a coordinate system for the points in a
+    plane.  Our unit on the plane is a square instead of a segment;
+    one corner goes at an arbitrary origin point, then we tile the
+    remainder of the plane into a grid of our unit squares.  Two
+    coordinate numbers are associated with each point of the plane, the
+    row and column numbers of the point in our grid.  We can define
+    "addition" and "multiplication" for pairs of numbers using the
+    same ideas we used for single numbers on the one dimensional
+    number line: Addition will be changing the origin with a fixed
+    unit square, and multiplication will be changing the unit square
+    with a fixed origin.  To play with this idea, we need two
+    overlapping sheets of graph paper which initially overlay each
+    other.</p>
+  <p>To add two coordinate pairs, we drag the origin of the second
+    sheet to the to the point at the first pair; the sum is the
+    coordinate pair on the first sheet corresponding to the second
+    pair on the displaced sheet.  Adding pairs by shifting the
+    coordinate origin therefore amounts to ordinary addition of each
+    component of the two pairs.</p>
+  <p>Multiplication is far more interesting.  We can scale our unit
+    square up and down by fixing its lower left corner (our origin
+    point) and dragging its lower right corner to the right or left
+    along the line where the vertical coordinate is zero.  For the
+    horizontal coordinate, this action exactly reproduces our
+    stretching of the unit segment in one dimension.  In order to keep
+    our plane unit square, we must simultaneously stretch the vertical
+    edge of the square.  Besides just making the squares in our graph
+    paper larger or smaller, we can also rotate the paper.  That is,
+    the orientation of the graph paper can change as well as its
+    scale.  This happens very naturally when we drag the lower right
+    corner to an arbitrary point, instead of restricting ourselves to
+    dragging it horizontally.  Thus, to multiply two coordinate pairs,
+    we fix the origins of the two sheets and drag the lower right
+    corner of the unit square to the point of the first pair.  The
+    product is the coordinate pair on the first sheet corresponding to
+    the second pair on the stretched and rotated second sheet.</p>
+  <p>Here is a revolutionary way to think about this two dimensional
+    multiplication: Multiplying anything by $(0, 1)$ rotates the point
+    about the origin by ninety degrees, so $(0, 1)$ times itself is
+    $(-1, 0)$.  Since the line where the second coordinate is zero has
+    the same addition and multiplication operations as the ordinary
+    one dimensional number line, the square of $(0, 1)$ is $-1$.  The
+    standard symbol for the square root of negative one is $i$, so $i$
+    has coordinates $(0, 1)$.  Instead of a coordinate pair $(x, y)$
+    we write a "complex number" $x + iy$, where $x$ and $y$ are
+    ordinary numbers on a number line.  This notation provides a
+    simple mnemonic for remembering how to compute a complex (two
+    dimensional) product using the ordinary rules of algebra:
+    $$(a+ib)(x+iy) = ax + iay + ibx + i^2by = (ax-by) + i(ay+bx)$$
+    Notice that the addition and multiplication operations inside the
+    parentheses on the rightmost side of this equation are the usual
+    operations on ordinary numbers, while the rest are our two
+    dimensional operations.</p>
+  <p>These algebraic formulas are critical for actually computing
+    anything using complex numbers, but the geometrical picture of
+    dragging the origin for addition and dragging the point $(1, 0)$,
+    which we simply call the complex number $1$, for multiplication
+    are what gives meaning to those formulas.  Rotating, scaling, and
+    translating things are indispensible for mechanics, and when you do
+    them (in two dimensions) you are multiplying or adding complex
+    numbers.</p>
+</div>
+<!--
+colors: orangered #ff4500   gold #ffd700
+        dodgerblue #1e90ff
+        blue: #0080ff  orange: #ff8000
+  -->
+<script>
+function add1d_interactions(evt) {
+}
+</script>
+</body>
+</html>
