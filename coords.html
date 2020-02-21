@@ -29,8 +29,8 @@
     .clickable {
       cursor: pointer;
     }
-    .moveable {
-      cursor: move;
+    .backlit {
+      background-color: #d8d8d8;
     }
     svg {
       background-color: #ffffff;
@@ -62,12 +62,15 @@
     for the points on the line.  The point associated with the number
     zero is called the origin, and the distance from the origin to the
     point associated with the number one is the unit of the ruler.
-    Both origin and unit are arbitrary.  To add two numbers we can use
-    two rulers with the same units but different origins: Place the
-    origin of the second ruler at the first number; the sum will be
-    the reading on the first ruler at the point corresponding to the
-    second number on the displaced ruler.</p>
-  <svg id="add1d" xmlns="http://www.w3.org/2000/svg"
+    Both origin and unit are arbitrary.  We draw a circle at the
+    origin and draw a square at the point corresponding to the number
+    one; the thick segment connecting them is one unit long.</p>
+  <p>To add two numbers we use two rulers, here blue and orange, with the
+    same units but different origins: Drag the origin of the orange
+    ruler to the first addend on the blue scale, then drag the gray slider
+    to the second addend on the orange scale.  Read the sum as the position
+    of the slider on the blue scale.</p>
+  <svg xmlns="http://www.w3.org/2000/svg"
        viewBox="-6 -0.5 12 1.0" onload="add1d_interactions(evt)"
        stroke-width="0.03">
     <path fill="none" stroke="#0080ff"
@@ -116,28 +119,29 @@
             cx="0" cy="0" r="0.1" />
     <rect fill="#0080ff" stroke="#0080ff"
           x="0.9" y="-0.1" width="0.2" height="0.2" />
-    <g id="add1u" transform="translate(0.00,0)">
+    <g id="add1ug" transform="translate(0.00,0)">
       <line stroke="#ff8000" stroke-width="0.08" x1="0" y1="0" x2="1" y2="0" />
-      <circle fill="#ff8000" stroke="#ff8000"
+      <circle id="add1uc" fill="#ff8000" stroke="#ff8000"
               cx="0" cy="0" r="0.1" />
       <rect fill="#ff8000" stroke="#ff8000"
             x="0.9" y="-0.1" width="0.2" height="0.2" />
     </g>
-    <polygon id="add1u" fill="#808080" stroke="#808080"
+    <polygon id="add1s" fill="black" stroke="black" opacity="0.5"
              transform="translate(1.8,0)"
              points="-0.14142,0, 0,-0.14142, 0.14142,0, 0,0.14142"/>
   </svg>
   <p class="belowsvg">
-    <span id="add1x" style="color: #0080ff;">0.00</span> +
-    <span id="add1y" style="color: #ff8000;">1.80</span> =
-    <span id="add1z" style="color: #0080ff;">1.80</span></p>
+    <span id="add1x" class="" style="color: #0080ff;">0.00</span> +
+    <span id="add1y" class="" style="color: #ff8000;">1.80</span> =
+    <span id="add1z" class="" style="color: #0080ff;">1.80</span></p>
   <p>Similarly, to multiply two numbers we can use two rulers with the
-    same origins but different units: Stretch the scale of the second
-    ruler until its number one lies at the first number on the first
-    ruler; the product will be the reading on the first ruler at the
-    point corresponding to the second number on the stretched ruler.</p>
-  <svg id="mul1d" xmlns="http://www.w3.org/2000/svg"
-       viewBox="-6 -0.5 12 1.0" onload="add1d_interactions(evt)"
+    same origins but different units: Drag the square marker of the
+    orange ruler to the first mulitplicand on the blue scale (which is
+    the new unit of the stretched orange ruler), then drag the gray
+    slider to the second multiplicand on the orange scale.  Read the
+    product as the position of the slider on the blue scale.</p>
+  <svg xmlns="http://www.w3.org/2000/svg"
+       viewBox="-6 -0.5 12 1.0" onload="mul1d_interactions(evt)"
        stroke-width="0.03">
     <path fill="none" stroke="#0080ff"
       d="M -5.8,0 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
@@ -232,16 +236,16 @@
             cx="0" cy="0" r="0.1" />
     <rect id="mul1ur" fill="#ff8000" stroke="#ff8000"
           x="0.90" y="-0.1" width="0.2" height="0.2" />
-    <polygon id="add1u" fill="#808080" stroke="#808080"
+    <polygon id="mul1s" fill="black" stroke="black" opacity="0.5"
       transform="translate(1.8,0)"
       points="-0.14142,0, 0,-0.14142, 0.14142,0, 0,0.14142"/>
   </svg>
   <p class="belowsvg">
-    <span id="mul1x" style="color: #0080ff;">1.00</span> &times;
-    <span id="mul1y" style="color: #ff8000;">1.80</span> =
-    <span id="mul1z" style="color: #0080ff;">1.80</span></p>
+    <span id="mul1x" class="" style="color: #0080ff;">1.00</span> &times;
+    <span id="mul1y" class="" style="color: #ff8000;">1.80</span> =
+    <span id="mul1z" class="" style="color: #0080ff;">1.80</span></p>
   <p>Addition of numbers corresponds to displacing the coordinate
-    origin.  Multiplication of numbers corresponds to stretching the
+    origin.  Multiplication of numbers corresponds to changing the
     coordinate unit.</p>
   <h2>Adding and multiplying with graph paper</h2>
   <p>Graph paper provides a coordinate system for the points in a
@@ -312,8 +316,195 @@ colors: orangered #ff4500   gold #ffd700
         blue: #0080ff  orange: #ff8000
   -->
 <script>
-function add1d_interactions(evt) {
-}
+  var tracking = null;
+
+  function add_trackers(svg, targets, start, track, stop) {
+    // svg = svg element
+    // targets = array of elements in svg to listen for mouse down events
+    // start(index, coords) --> tracking (or null to abort)
+    //   index = index into targets
+    //   coords = event coordinates in svg coordinate system
+    // track(tracking, coords) --> tracking (or null to abort)
+    //   tracking = returned by start
+    //   coords = event coordinates in svg coordinate system
+    // stop(tracking)
+    //   tracking = returned by start
+
+    function svgcoords(evt) {  // return event coordinates
+      var CTM = svg.getScreenCTM();
+      if (evt.touches) {
+        evt = evt.touches[0];
+      }
+      return {
+        x: (evt.clientX - CTM.e) / CTM.a,
+        y: (evt.clientY - CTM.f) / CTM.d
+      };
+    }
+
+    function wrapstart(evt) {
+      if (tracking !== null) {
+        wrapstop(evt);
+      }
+      var t = evt.target;
+      var index = targets.indexOf(t);
+      if (index < 0) {
+        return;
+      }
+      evt.stopPropagation();
+      evt.preventDefault();  // make usable for touch events
+      tracking = start(index, svgcoords(evt));
+    }
+
+    function wraptrack(evt) {
+      if (tracking === null) {
+        return;
+      }
+      evt.stopPropagation();
+      evt.preventDefault();  // make usable for touch events
+      tracking = track(tracking, svgcoords(evt));
+    }
+
+    function wrapstop(evt) {
+      if (tracking === null) {
+        return;
+      }
+      evt.stopPropagation();
+      evt.preventDefault();  // make usable for touch events
+      stop(tracking);
+      tracking = null;
+    }
+
+    svg.addEventListener("mousedown", wrapstart);
+    svg.addEventListener("mousemove", wraptrack);
+    svg.addEventListener("mouseup", wrapstop);
+    svg.addEventListener("mouseleave", wrapstop);
+    svg.addEventListener("touchstart", wrapstart);
+    svg.addEventListener("touchmove", wraptrack);
+    svg.addEventListener("touchend", wrapstop);
+    svg.addEventListener("touchcancel", wrapstop);
+  }
+
+  function get_element(id) {
+    return document.getElementById(id);
+  }
+
+  var round = Math.round;
+  var abs = Math.abs;
+
+  function add1d_interactions(evt) {
+    var add1d = evt.target;
+    var a1handle = ["add1uc", "add1s"].map(get_element);
+    var xyz = ["add1x", "add1y", "add1z"].map(get_element);
+    var cl_xyz = xyz.map(function(e)
+                         {return e.getAttributeNodeNS(null, "class");});
+    // xyz[0].textContent = value; (old way xyz[0].innerHTML = value;)
+    // textContent not supported by IE8 and lower, but neither is SVG
+    var xnow = 0.0;
+    var ynow = 1.8;
+    var xf_tick = get_element("add1t").getAttributeNodeNS(null, "transform");
+    var xf_unit = get_element("add1ug").getAttributeNodeNS(null, "transform");
+    var xf_slid = get_element("add1s").getAttributeNodeNS(null, "transform");
+
+    function start(index, coords) {
+      cl_xyz[index].value = "backlit";
+      return [index, coords.x - (index? ynow : xnow)];
+    }
+
+    function track(tracking, coords) {
+      var index = tracking[0];
+      var x = round(20.*(coords.x - tracking[1])) * 0.05;
+      if (x > 5.9 || x < -5.9) {
+        x = index? 1.8 : 0.0;
+        cl_xyz[index].value = "";
+        tracking = null;
+      }
+      var xform = "translate(" + x + ",0.0)";
+      if (index === 0) {
+        xf_tick.value = xform;
+        xf_unit.value = xform;
+        xnow = x;
+        xyz[0].textContent = xnow.toFixed(2);
+        xyz[1].textContent = (ynow - xnow).toFixed(2);
+      } else {
+        xf_slid.value = xform;
+        ynow = x;
+        xyz[1].textContent = (ynow - xnow).toFixed(2);
+      }
+      xyz[2].textContent = ynow.toFixed(2);
+      return tracking;
+    }
+
+    function stop(tracking) {
+      if (tracking !== null) {
+        cl_xyz[tracking[0]].value = "";
+      }
+      return;
+    }
+
+    add_trackers(add1d, a1handle, start, track, stop);
+  }
+
+  function mul1d_interactions(evt) {
+    var mul1d = evt.target;
+    var m1handle = ["mul1ur", "mul1s"].map(get_element);
+    var xyz = ["mul1x", "mul1y", "mul1z"].map(get_element);
+    var cl_xyz = xyz.map(function(e)
+                         {return e.getAttributeNodeNS(null, "class");});
+    var xf_tick = get_element("mul1t").getAttributeNodeNS(null, "transform");
+    var xf_slid = get_element("mul1s").getAttributeNodeNS(null, "transform");
+    var xnow = 1.0;
+    var ynow = 1.8;
+    var xul = get_element("mul1ul").getAttributeNodeNS(null, "x2");
+    var xur = get_element("mul1ur").getAttributeNodeNS(null, "x");
+    var twidth = get_element("mul1t").getAttributeNodeNS(null, "stroke-width");
+
+    function start(index, coords) {
+      cl_xyz[index].value = "backlit";
+      var z = xnow * ynow;
+      return [index, coords.x - (index? z : xnow), z];
+    }
+
+    function track(tracking, coords) {
+      var index = tracking[0];
+      var x = coords.x - tracking[1];
+      var z = tracking[2];
+      if (x > 5.9 || x < -5.9) {
+        x = index? 1.8 : 1.0;
+        cl_xyz[index].value = "";
+        tracking = null;
+      } else if (index == 0 && x < 0.05 && x > -0.05) {
+        x = 0.05;
+      }
+      if (index === 0) {
+        x = round(20.*x) * 0.05;
+        xf_tick.value = "scale(" + x + ",1.0)";
+        twidth.value = "" + (0.03 / abs(x));
+        ynow = round(20.*(z / x)) * 0.05;  // in orange coordinates
+        xnow = x;
+        xf_slid.value = "translate(" + (xnow * ynow) + ",0.0)";
+        xul.value = "" + xnow;
+        xur.value = "" + (xnow - 0.1);
+        xyz[0].textContent = xnow.toFixed(2);
+        xyz[1].textContent = ynow.toFixed(2);
+      } else {
+        ynow = round(20.*(x / xnow)) * 0.05;  // in orange coordinates
+        x = xnow * ynow;  // in blue coordinates
+        xf_slid.value = "translate(" + x + ",0.0)";
+        xyz[1].textContent = ynow.toFixed(2);
+      }
+      xyz[2].textContent = (xnow * ynow).toFixed(4);
+      return tracking;
+    }
+
+    function stop(tracking) {
+      if (tracking !== null) {
+        cl_xyz[tracking[0]].value = "";
+      }
+      return;
+    }
+
+    add_trackers(mul1d, m1handle, start, track, stop);
+  }
 </script>
 </body>
 </html>
