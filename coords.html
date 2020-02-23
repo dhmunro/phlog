@@ -25,6 +25,7 @@
     }
     .halfwide {
       width: 60%;
+      float: right;
     }
     .clickable {
       cursor: pointer;
@@ -139,7 +140,9 @@
     orange ruler to the first mulitplicand on the blue scale (which is
     the new unit of the stretched orange ruler), then drag the gray
     slider to the second multiplicand on the orange scale.  Read the
-    product as the position of the slider on the blue scale.</p>
+    product as the position of the slider on the blue scale.  Be sure
+    to notice what happens when you drag the orange square to the left
+    of the common origin.</p>
   <svg xmlns="http://www.w3.org/2000/svg"
        viewBox="-6 -0.5 12 1.0" onload="mul1d_interactions(evt)"
        stroke-width="0.03">
@@ -243,11 +246,63 @@
   <p class="belowsvg">
     <span id="mul1x" class="" style="color: #0080ff;">1.00</span> &times;
     <span id="mul1y" class="" style="color: #ff8000;">1.80</span> =
-    <span id="mul1z" class="" style="color: #0080ff;">1.80</span></p>
+    <span id="mul1z" class="" style="color: #0080ff;">1.8000</span></p>
   <p>Addition of numbers corresponds to displacing the coordinate
     origin.  Multiplication of numbers corresponds to changing the
     coordinate unit.</p>
   <h2>Adding and multiplying with graph paper</h2>
+  <div class="halfwide">
+  <svg xmlns="http://www.w3.org/2000/svg" style="padding-left: 0.5em"
+       viewBox="-4.1 -4.1 8.2 8.2" onload="add2d_interactions(evt)"
+       stroke-width="0.03">
+    <path fill="none" stroke="#0080ff" opacity="0.33"
+      d="M -5,-6 v 12
+      m 1,-12 v 12 m 1,-12 v 12 m 1,-12 v 12 m 1,-12 v 12 m 1,-12 v 12
+      m 1,-12 v 12 m 1,-12 v 12 m 1,-12 v 12 m 1,-12 v 12 m 1,-12 v 12
+      M -6,-5 h 12
+      m -12,1 h 12 m -12,1 h 12 m -12,1 h 12 m -12,1 h 12 m -12,1 h 12
+      m -12,1 h 12 m -12,1 h 12 m -12,1 h 12 m -12,1 h 12 m -12,1 h 12"/>
+    <path id="add2t" fill="none" stroke="#ff8000" opacity="0.33"
+      stroke-width="0.03" transform="translate(0.00,0.00)"
+      d="M -12,-13 v 26
+         m 1,-26 v 26 m 1,-26 v 26 m 1,-26 v 26 m 1,-26 v 26 m 1,-26 v 26
+         m 1,-26 v 26 m 1,-26 v 26 m 1,-26 v 26 m 1,-26 v 26 m 1,-26 v 26
+         m 1,-26 v 26 m 1,-26 v 26 m 1,-26 v 26 m 1,-26 v 26 m 1,-26 v 26
+         m 1,-26 v 26 m 1,-26 v 26 m 1,-26 v 26 m 1,-26 v 26 m 1,-26 v 26
+         m 1,-26 v 26 m 1,-26 v 26 m 1,-26 v 26 m 1,-26 v 26
+         M -13,-12 h 26
+         m -26,1 h 26 m -26,1 h 26 m -26,1 h 26 m -26,1 h 26 m -26,1 h 26
+         m -26,1 h 26 m -26,1 h 26 m -26,1 h 26 m -26,1 h 26 m -26,1 h 26
+         m -26,1 h 26 m -26,1 h 26 m -26,1 h 26 m -26,1 h 26 m -26,1 h 26
+         m -26,1 h 26 m -26,1 h 26 m -26,1 h 26 m -26,1 h 26 m -26,1 h 26
+         m -26,1 h 26 m -26,1 h 26 m -26,1 h 26 m -26,1 h 26"/>
+    <polygon stroke="#0080ff" fill="none" stroke-width="0.1"
+             points="0,0, 1,0, 1,-1, 0,-1" />
+    <circle fill="#0080ff" stroke="#0080ff"
+            cx="0" cy="0" r="0.125" />
+    <rect fill="#0080ff" stroke="#0080ff"
+          x="0.9" y="-0.1" width="0.25" height="0.25" />
+    <polygon id="add2gb" fill="none" stroke="#0080ff"
+              points="0.0,0.0, 1.8,0.0, 1.8,-0.8, 0.0,-0.8" />
+    <polygon id="add2go" fill="none" stroke="#ff8000"
+              points="0.0,0.0, 1.8,0.0, 1.8,-0.8, 0.0,-0.8" />
+    <g id="add2ug" transform="translate(0.00,0)">
+      <polygon stroke="#ff8000" fill="none" stroke-width="0.1"
+               points="0,0, 1,0, 1,-1, 0,-1"/>
+      <circle id="add2uc" fill="#ff8000" stroke="#ff8000"
+              cx="0" cy="0" r="0.125" />
+      <rect fill="#ff8000" stroke="#ff8000"
+            x="0.90" y="-0.1" width="0.25" height="0.25" />
+    </g>
+    <polygon id="add2s" fill="black" stroke="black" opacity="0.5"
+      transform="translate(1.8,-0.8)"
+      points="-0.1768,0, 0,-0.1768, 0.1768,0, 0,0.1768"/>
+  </svg>
+  <p class="belowsvg">
+    (<span id="add2x" class="" style="color: #0080ff;">1.00 + i0.00</span>) +
+    (<span id="add2y" class="" style="color: #ff8000;">1.80 + i0.80</span>) =
+    <span id="add2z" class="" style="color: #0080ff;">1.80 + i0.80</span></p>
+  </div>
   <p>Graph paper provides a coordinate system for the points in a
     plane.  Our unit on the plane is a square instead of a segment;
     one corner goes at an arbitrary origin point, then we tile the
@@ -267,6 +322,75 @@
     pair on the displaced sheet.  Adding pairs by shifting the
     coordinate origin therefore amounts to ordinary addition of each
     component of the two pairs.</p>
+</div><div class="textcolumn" style="clear: right; margin-top: 0.3em;">
+  <div class="halfwide">
+  <svg xmlns="http://www.w3.org/2000/svg" style="padding-left: 0.5em"
+       viewBox="-4.1 -4.1 8.2 8.2" onload="mul2d_interactions(evt)"
+       stroke-width="0.03">
+    <path fill="none" stroke="#0080ff" opacity="0.33"
+      d="M -5,-6 v 12
+      m 1,-12 v 12 m 1,-12 v 12 m 1,-12 v 12 m 1,-12 v 12 m 1,-12 v 12
+      m 1,-12 v 12 m 1,-12 v 12 m 1,-12 v 12 m 1,-12 v 12 m 1,-12 v 12
+      M -6,-5 h 12
+      m -12,1 h 12 m -12,1 h 12 m -12,1 h 12 m -12,1 h 12 m -12,1 h 12
+      m -12,1 h 12 m -12,1 h 12 m -12,1 h 12 m -12,1 h 12 m -12,1 h 12"/>
+    <path id="mul2t" fill="none" stroke="#ff8000" opacity="0.33"
+      stroke-width="0.03" transform="scale(1.00,1.00)"
+      d="M -32,-33 v 66
+         m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66
+         m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66
+         m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66
+         m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66
+         m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66
+         m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66
+         m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66
+         m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66
+         m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66
+         m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66
+         m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66
+         m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66
+         m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66
+         M -33,-32 h 66
+         m -66,1 h 66 m -66,1 h 66 m -66,1 h 66 m -66,1 h 66 m -66,1 h 66
+         m -66,1 h 66 m -66,1 h 66 m -66,1 h 66 m -66,1 h 66 m -66,1 h 66
+         m -66,1 h 66 m -66,1 h 66 m -66,1 h 66 m -66,1 h 66 m -66,1 h 66
+         m -66,1 h 66 m -66,1 h 66 m -66,1 h 66 m -66,1 h 66 m -66,1 h 66
+         m -66,1 h 66 m -66,1 h 66 m -66,1 h 66 m -66,1 h 66 m -66,1 h 66
+         m -66,1 h 66 m -66,1 h 66 m -66,1 h 66 m -66,1 h 66 m -66,1 h 66
+         m -66,1 h 66 m -66,1 h 66 m -66,1 h 66 m -66,1 h 66 m -66,1 h 66
+         m -66,1 h 66 m -66,1 h 66 m -66,1 h 66 m -66,1 h 66 m -66,1 h 66
+         m -66,1 h 66 m -66,1 h 66 m -66,1 h 66 m -66,1 h 66 m -66,1 h 66
+         m -66,1 h 66 m -66,1 h 66 m -66,1 h 66 m -66,1 h 66 m -66,1 h 66
+         m -66,1 h 66 m -66,1 h 66 m -66,1 h 66 m -66,1 h 66 m -66,1 h 66
+         m -66,1 h 66 m -66,1 h 66 m -66,1 h 66 m -66,1 h 66 m -66,1 h 66
+         m -66,1 h 66 m -66,1 h 66 m -66,1 h 66 m -66,1 h 66"/>
+    <polygon stroke="#0080ff" fill="none" stroke-width="0.1"
+             points="0,0, 1,0, 1,-1, 0,-1" />
+    <circle fill="#0080ff" stroke="#0080ff"
+            cx="0" cy="0" r="0.125" />
+    <rect fill="#0080ff" stroke="#0080ff"
+          x="0.9" y="-0.1" width="0.25" height="0.25" />
+    <polygon id="mul2gb" fill="none" stroke="#0080ff"
+              points="0.0,0.0, 1.8,0.0, 1.8,-0.8, 0.0,-0.8" />
+    <polygon id="mul2go" fill="none" stroke="#ff8000"
+              points="0.0,0.0, 1.8,0.0, 1.8,-0.8, 0.0,-0.8" />
+    <polygon id="mul2ul" stroke="#ff8000" fill="none" stroke-width="0.1"
+             points="0,0, 1,0, 1,-1, 0,-1"/>
+    <circle fill="#ff8000" stroke="#ff8000" cx="0" cy="0" r="0.125" />
+    <polygon id="mul2ur" fill="#ff8000" stroke="#ff8000"
+             transform="matrix(1.0, 0.0, 0.0, 1.0, 1.0, 0.0)"
+             points="-0.125,-0.125, 0.125,-0.125, 0.125,0.125, -0.125,0.125" />
+    <polygon id="mul2s" fill="black" stroke="black" opacity="0.5"
+      transform="translate(1.8,-0.8)"
+      points="-0.1768,0, 0,-0.1768, 0.1768,0, 0,0.1768" />
+  </svg>
+  <p class="belowsvg">
+    (<span id="mul2x" class="" style="color: #0080ff;">1.00 + i0.00</span>)
+    &times;
+    (<span id="mul2y" class="" style="color: #ff8000;">1.80 + i0.80</span>) =
+    <span id="mul2z" class="" style="color: #0080ff;">1.8000 + i0.8000</span>
+  </p>
+  </div>
   <p>Multiplication is far more interesting.  We can scale our unit
     square up and down by fixing its lower left corner (our origin
     point) and dragging its lower right corner to the right or left
@@ -390,6 +514,7 @@ colors: orangered #ff4500   gold #ffd700
 
   var round = Math.round;
   var abs = Math.abs;
+  var sqrt = Math.sqrt;
 
   function add1d_interactions(evt) {
     var add1d = evt.target;
@@ -413,7 +538,7 @@ colors: orangered #ff4500   gold #ffd700
     function track(tracking, coords) {
       var index = tracking[0];
       var x = round(20.*(coords.x - tracking[1])) * 0.05;
-      if (x > 5.9 || x < -5.9) {
+      if (x > 5.8 || x < -5.8) {
         x = index? 1.8 : 0.0;
         cl_xyz[index].value = "";
         tracking = null;
@@ -468,30 +593,29 @@ colors: orangered #ff4500   gold #ffd700
       var index = tracking[0];
       var x = coords.x - tracking[1];
       var z = tracking[2];
-      if (x > 5.9 || x < -5.9) {
+      if (x > 5.8 || x < -5.8) {
         x = index? 1.8 : 1.0;
         cl_xyz[index].value = "";
         tracking = null;
-      } else if (index == 0 && x < 0.05 && x > -0.05) {
-        x = 0.05;
       }
       if (index === 0) {
-        x = round(20.*x) * 0.05;
+        if (abs(x) > 0.05) {
+          x = round(20.*x) * 0.05;
+        } else {
+          x = 0.05;
+        }
         xf_tick.value = "scale(" + x + ",1.0)";
         twidth.value = "" + (0.03 / abs(x));
         ynow = round(20.*(z / x)) * 0.05;  // in orange coordinates
         xnow = x;
-        xf_slid.value = "translate(" + (xnow * ynow) + ",0.0)";
         xul.value = "" + xnow;
         xur.value = "" + (xnow - 0.1);
         xyz[0].textContent = xnow.toFixed(2);
-        xyz[1].textContent = ynow.toFixed(2);
       } else {
         ynow = round(20.*(x / xnow)) * 0.05;  // in orange coordinates
-        x = xnow * ynow;  // in blue coordinates
-        xf_slid.value = "translate(" + x + ",0.0)";
-        xyz[1].textContent = ynow.toFixed(2);
       }
+      xf_slid.value = "translate(" + (xnow * ynow) + ",0.0)";
+      xyz[1].textContent = ynow.toFixed(2);
       xyz[2].textContent = (xnow * ynow).toFixed(4);
       return tracking;
     }
@@ -504,6 +628,204 @@ colors: orangered #ff4500   gold #ffd700
     }
 
     add_trackers(mul1d, m1handle, start, track, stop);
+  }
+
+  function str_complex(spanel, ndig, xy, xy0) {
+    var x = xy[0];
+    var y = xy[1];
+    if (xy0 !== null) {
+      x -= xy0[0];
+      y -= xy0[1];
+    }
+    y = -y;
+    var sgn = " + i";
+    if (y < 0) {
+      y = -y;
+      sgn = " &minus; i";
+    }
+    spanel.innerHTML = x.toFixed(ndig) + sgn + y.toFixed(ndig);
+  }
+
+  function add2d_interactions(evt) {
+    var add2d = evt.target;
+    var a2handle = ["add2uc", "add2s"].map(get_element);
+    var xyz = ["add2x", "add2y", "add2z"].map(get_element);
+    var cl_xyz = xyz.map(function(e)
+                         {return e.getAttributeNodeNS(null, "class");});
+    // xyz[0].textContent = value; (old way xyz[0].innerHTML = value;)
+    // textContent not supported by IE8 and lower, but neither is SVG
+    var xnow = [0.0, 0.0];
+    var ynow = [1.8, -0.8];
+    var xf_tick = get_element("add2t").getAttributeNodeNS(null, "transform");
+    var xf_unit = get_element("add2ug").getAttributeNodeNS(null, "transform");
+    var xf_slid = get_element("add2s").getAttributeNodeNS(null, "transform");
+    var add2gb = get_element("add2gb").getAttributeNodeNS(null, "points");
+    var add2go = get_element("add2go").getAttributeNodeNS(null, "points");
+
+    function start(index, coords) {
+      cl_xyz[index].value = "backlit";
+      var dx = coords.x - (index? ynow[0] : xnow[0]);
+      var dy = coords.y - (index? ynow[1] : xnow[1]);
+      return [index, [dx, dy]];
+    }
+
+    function track(tracking, coords) {
+      var index = tracking[0];
+      var dxy = tracking[1];
+      var x = round(20.*(coords.x - dxy[0])) * 0.05;
+      var y = round(20.*(coords.y - dxy[1])) * 0.05;
+      if (x > 3.8 || x < -3.8) {
+        x = index? 1.8 : 0.0;
+        y = index? -0.8 : 0.0;
+        cl_xyz[index].value = "";
+        tracking = null;
+      }
+      if (y > 3.8 || y < -3.8) {
+        x = index? 1.8 : 0.0;
+        y = index? -0.8 : 0.0;
+        cl_xyz[index].value = "";
+        tracking = null;
+      }
+      var xform = "translate(" + x + "," + y + ")";
+      if (index === 0) {
+        xf_tick.value = xform;
+        xf_unit.value = xform;
+        var p = ynow[0];
+        var q = ynow[1];
+        add2go.value = x+","+y+", "+p+","+y+", "+p+","+q+", "+x+","+q;
+        xnow = [x, y];
+        str_complex(xyz[0], 2, xnow, null);
+        str_complex(xyz[1], 2, ynow, xnow);
+      } else {
+        xf_slid.value = xform;
+        var p = xnow[0];
+        var q = xnow[1];
+        add2gb.value = "0,0, " + x + ",0, " + x + "," + y + ", 0," + y;
+        add2go.value = p+","+q+", "+x+","+q+", "+x+","+y+", "+p+","+y;
+        ynow = [x, y];
+        str_complex(xyz[1], 2, ynow, xnow);
+      }
+      str_complex(xyz[2], 2, ynow, null);
+      return tracking;
+    }
+
+    function stop(tracking) {
+      if (tracking !== null) {
+        cl_xyz[tracking[0]].value = "";
+      }
+      return;
+    }
+
+    add_trackers(add2d, a2handle, start, track, stop);
+  }
+
+  function mul2d_interactions(evt) {
+    var mul2d = evt.target;
+    var m2handle = ["mul2ur", "mul2s"].map(get_element);
+    var xyz = ["mul2x", "mul2y", "mul2z"].map(get_element);
+    var cl_xyz = xyz.map(function(e)
+                         {return e.getAttributeNodeNS(null, "class");});
+    var xf_tick = get_element("mul2t").getAttributeNodeNS(null, "transform");
+    var xf_slid = get_element("mul2s").getAttributeNodeNS(null, "transform");
+    var xnow = [1.0, 0.0];
+    var ynow = [1.8, -0.8];
+    var xyul = get_element("mul2ul").getAttributeNodeNS(null, "points");
+    var xfur = get_element("mul2ur").getAttributeNodeNS(null, "transform");
+    var twidth = get_element("mul2t").getAttributeNodeNS(null, "stroke-width");
+    var mul2gb = get_element("mul2gb").getAttributeNodeNS(null, "points");
+    var mul2go = get_element("mul2go").getAttributeNodeNS(null, "points");
+
+    function start(index, coords) {
+      cl_xyz[index].value = "backlit";
+      var znow = [xnow[0]*ynow[0] - xnow[1]*ynow[1],
+                  xnow[0]*ynow[1] + xnow[1]*ynow[0]];
+      var dx = coords.x - (index? znow[0] : xnow[0]);
+      var dy = coords.y - (index? znow[1] : xnow[1]);
+      return [index, [dx, dy], znow];
+    }
+
+    function track(tracking, coords) {
+      var index = tracking[0];
+      var xy = tracking[1];
+      var x = coords.x - xy[0];
+      var y = coords.y - xy[1];
+      var z = tracking[2];
+      if (x > 3.8 || x < -3.8) {
+        cl_xyz[index].value = "";
+        index = 0;
+        xnow = [1.0, 0.0];
+        ynow = [1.8, -0.8];
+        z = ynow;
+        x = 1.0;
+        y = 0.0;
+        tracking = null;
+      }
+      if (y > 3.8 || y < -3.8) {
+        cl_xyz[index].value = "";
+        index = 0;
+        xnow = [1.0, 0.0];
+        ynow = [1.8, -0.8];
+        z = ynow;
+        x = 1.0;
+        y = 0.0;
+        tracking = null;
+      }
+      if (index === 0) {
+        if (x*x + y*y < 0.05) {
+          x = 0.05;
+          y = 0.0;
+        } else {
+          x = round(20.*x) * 0.05;
+          y = round(20.*y) * 0.05;
+        }
+        var r = x*x + y*y;
+        var rx = x / r;
+        var ry = -y / r;  // rx + i*ry = 1 / (x + i*y)
+        r = sqrt(r);
+        xf_tick.value = "matrix("+x+","+y+","+(-y)+","+x+",0.0,0.0)";
+        twidth.value = "" + (0.03 / r);
+        var zox = [rx*z[0] - ry*z[1], rx*z[1] + ry*z[0]];
+        ynow = [round(20.*zox[0]) * 0.05, round(20.*zox[1]) * 0.05];
+        xnow = [x, y];
+        // orange unit square is (0,0), xnow, xnow+perp, perp
+        var perp = [xnow[1], -xnow[0]];  // remember +y is downward
+        xyul.value = ("0.0,0.0, " + xnow[0] + "," + xnow[1] + ", " +
+                      (xnow[0]+perp[0]) + "," + (xnow[1]+perp[1]) + ", " +
+                      perp[0] + "," + perp[1]);
+        x /= r;
+        y /= r;
+        xfur.value = ("matrix(" + x + "," + y + "," + (-y) + "," + x + "," +
+                      xnow[0] + "," + xnow[1] + ")");
+        // xul.value = "" + xnow;
+        // xur.value = "" + (xnow - 0.1);
+        str_complex(xyz[0], 2, xnow, null);
+      } else {
+        // in mul1d:   ynow = round(20.*(x / xnow)) * 0.05;
+        var rr2 = 20. / (xnow[0]*xnow[0] + xnow[1]*xnow[1]);
+        ynow = [round(rr2*(x*xnow[0]+y*xnow[1])) * 0.05,
+                round(rr2*(y*xnow[0]-x*xnow[1])) * 0.05];
+      }
+      var znow = [xnow[0]*ynow[0] - xnow[1]*ynow[1],
+                  xnow[0]*ynow[1] + xnow[1]*ynow[0]];
+      xf_slid.value = "translate(" + znow[0] + "," + znow[1] + ")";
+      mul2gb.value = ("0,0, " + znow[0]+",0, " + znow[0]+","+znow[1] +
+                      ", 0,"+znow[1]);
+      mul2go.value = ("0,0, " + (xnow[0]*ynow[0])+","+(xnow[1]*ynow[0]) +
+                      ", " + znow[0]+","+znow[1]+", " +
+                      (-xnow[1]*ynow[1])+","+(xnow[0]*ynow[1]));
+      str_complex(xyz[1], 2, ynow, null);
+      str_complex(xyz[2], 4, znow, null);
+      return tracking;
+    }
+
+    function stop(tracking) {
+      if (tracking !== null) {
+        cl_xyz[tracking[0]].value = "";
+      }
+      return;
+    }
+
+    add_trackers(mul2d, m2handle, start, track, stop);
   }
 </script>
 </body>
