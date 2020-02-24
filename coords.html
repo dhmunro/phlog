@@ -402,6 +402,8 @@
     <polygon id="mul2ur" fill="#ff8000" stroke="#ff8000"
              transform="matrix(1.0, 0.0, 0.0, 1.0, 1.0, 0.0)"
              points="-0.125,-0.125, 0.125,-0.125, 0.125,0.125, -0.125,0.125" />
+    <line id="mul2vb" fill="#0080ff" stroke="#0080ff" stroke-width="0.05"
+          marker-end="url(#arrow-blue)" x1="0" y1="0" x2="1.0" y2="0.0"/>
     <line id="mul2vec" fill="#808080" stroke="#808080" stroke-width="0.05"
           marker-end="url(#arrow-gray)" x1="0" y1="0" x2="1.8" y2="-0.8"/>
     <polygon id="mul2urx" fill="#ff8000" stroke="#ff8000" opacity="0.0"
@@ -809,6 +811,9 @@ colors: orangered #ff4500   gold #ffd700
     vec = [[vec.getAttributeNodeNS(null, "x2")],
            [vec.getAttributeNodeNS(null, "y2")],
            [vec.getAttributeNodeNS(null, "marker-end")]];
+    var vbx2 = get_element("mul2vb");
+    var vby2 = vbx2.getAttributeNodeNS(null, "y2");
+    vbx2 = vbx2.getAttributeNodeNS(null, "x2");
 
     function start(index, coords) {
       cl_xyz[index].value = "backlit";
@@ -872,8 +877,8 @@ colors: orangered #ff4500   gold #ffd700
         xfur.value = xfurx.value = (
           "matrix(" + x + "," + y + "," + (-y) + "," + x + "," +
             xnow[0] + "," + xnow[1] + ")");
-        // xul.value = "" + xnow;
-        // xur.value = "" + (xnow - 0.1);
+        vbx2.value = xnow[0];
+        vby2.value = xnow[1];
         str_complex(xyz[0], 2, xnow, null);
       } else {
         // in mul1d:   ynow = round(20.*(x / xnow)) * 0.05;
