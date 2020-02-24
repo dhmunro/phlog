@@ -251,6 +251,19 @@
     origin.  Multiplication of numbers corresponds to changing the
     coordinate unit.</p>
   <h2>Adding and multiplying with graph paper</h2>
+  <p>Graph paper provides a coordinate system for the points in a
+    plane.  Our unit on the plane is a square instead of a segment;
+    one corner goes at an arbitrary origin point, then we tile the
+    remainder of the plane into a grid of our unit squares.  Two
+    coordinate numbers are associated with each point of the plane, the
+    row and column numbers of the point in our grid.  We can define
+    "addition" and "multiplication" for pairs of numbers using the
+    same ideas we used for single numbers on the one dimensional
+    number line: Addition will be changing the origin with a fixed
+    unit square, and multiplication will be changing the unit square
+    with a fixed origin.  To play with this idea, we need two
+    overlapping sheets of graph paper which initially overlay each
+    other.</p>
   <div class="halfwide">
   <svg xmlns="http://www.w3.org/2000/svg" style="padding-left: 0.5em"
        viewBox="-4.1 -4.1 8.2 8.2" onload="add2d_interactions(evt)"
@@ -296,8 +309,10 @@
             cx="0" cy="0" r="0.125" />
     <rect fill="#0080ff" stroke="#0080ff"
           x="0.9" y="-0.1" width="0.25" height="0.25" />
-    <polygon id="add2gb" fill="none" stroke="#0080ff"
+    <polygon id="add2gg" fill="none" stroke="#808080"
               points="0.0,0.0, 1.8,0.0, 1.8,-0.8, 0.0,-0.8" />
+    <polygon id="add2gb" fill="none" stroke="#0080ff"
+              points="0.0,0.0, 0.0,0.0, 0.0,0.0, 0.0,0.0" />
     <polygon id="add2go" fill="none" stroke="#ff8000"
               points="0.0,0.0, 1.8,0.0, 1.8,-0.8, 0.0,-0.8" />
     <g id="add2ug" transform="translate(0.00,0)">
@@ -325,19 +340,6 @@
     (<span id="add2y" class="" style="color: #ff8000;">1.80 + i0.80</span>) =
     <span id="add2z" class="" style="color: #0080ff;">1.80 + i0.80</span></p>
   </div>
-  <p>Graph paper provides a coordinate system for the points in a
-    plane.  Our unit on the plane is a square instead of a segment;
-    one corner goes at an arbitrary origin point, then we tile the
-    remainder of the plane into a grid of our unit squares.  Two
-    coordinate numbers are associated with each point of the plane, the
-    row and column numbers of the point in our grid.  We can define
-    "addition" and "multiplication" for pairs of numbers using the
-    same ideas we used for single numbers on the one dimensional
-    number line: Addition will be changing the origin with a fixed
-    unit square, and multiplication will be changing the unit square
-    with a fixed origin.  To play with this idea, we need two
-    overlapping sheets of graph paper which initially overlay each
-    other.</p>
   <p>To add two coordinate pairs, we drag the origin of the second
     sheet to the to the point at the first pair; the sum is the
     coordinate pair on the first sheet corresponding to the second
@@ -392,8 +394,10 @@
             cx="0" cy="0" r="0.125" />
     <rect fill="#0080ff" stroke="#0080ff"
           x="0.9" y="-0.1" width="0.25" height="0.25" />
-    <polygon id="mul2gb" fill="none" stroke="#0080ff"
+    <polygon id="mul2gg" fill="none" stroke="#808080"
               points="0.0,0.0, 1.8,0.0, 1.8,-0.8, 0.0,-0.8" />
+    <polygon id="mul2gb" fill="none" stroke="#0080ff"
+              points="0.0,0.0, 0.0,0.0, 0.0,0.0, 0.0,0.0" />
     <polygon id="mul2go" fill="none" stroke="#ff8000"
               points="0.0,0.0, 1.8,0.0, 1.8,-0.8, 0.0,-0.8" />
     <polygon id="mul2ul" stroke="#ff8000" fill="none" stroke-width="0.1"
@@ -705,6 +709,7 @@ colors: orangered #ff4500   gold #ffd700
     var xf_unit = get_element("add2ug").getAttributeNodeNS(null, "transform");
     var xfux = a2handle[0].getAttributeNodeNS(null, "transform");
     var xf_slid = get_element("add2s").getAttributeNodeNS(null, "transform");
+    var add2gg = get_element("add2gg").getAttributeNodeNS(null, "points");
     var add2gb = get_element("add2gb").getAttributeNodeNS(null, "points");
     var add2go = get_element("add2go").getAttributeNodeNS(null, "points");
     var v = ["add2vb", "add2vo", "add2vg"].map(get_element);
@@ -749,6 +754,7 @@ colors: orangered #ff4500   gold #ffd700
         xf_unit.value = xfux.value = xform;
         var p = ynow[0];
         var q = ynow[1];
+        add2gb.value = "0,0, " + x + ",0, " + x + "," + y + ", 0," + y;
         add2go.value = x+","+y+", "+p+","+y+", "+p+","+q+", "+x+","+q;
         xnow = [x, y];
         str_complex(xyz[0], 2, xnow, null);
@@ -768,8 +774,11 @@ colors: orangered #ff4500   gold #ffd700
         xf_slid.value = xform;
         var p = xnow[0];
         var q = xnow[1];
-        add2gb.value = "0,0, " + x + ",0, " + x + "," + y + ", 0," + y;
-        add2go.value = p+","+q+", "+x+","+q+", "+x+","+y+", "+p+","+y;
+        add2gg.value = "0,0, " + x + ",0, " + x + "," + y + ", 0," + y;
+        if (tracking === null) {
+          add2gb.value = "0,0, " + p + ",0, " + p + "," + q + ", 0," + q;
+          add2go.value = p+","+q+", "+x+","+q+", "+x+","+y+", "+p+","+y;
+        }
         ynow = [x, y];
         str_complex(xyz[1], 2, ynow, xnow);
         setvector(vecs, 1, ynow, "orange", xnow);
@@ -805,6 +814,7 @@ colors: orangered #ff4500   gold #ffd700
     var xfur = get_element("mul2ur").getAttributeNodeNS(null, "transform");
     var xfurx = m2handle[0].getAttributeNodeNS(null, "transform");
     var twidth = get_element("mul2t").getAttributeNodeNS(null, "stroke-width");
+    var mul2gg = get_element("mul2gg").getAttributeNodeNS(null, "points");
     var mul2gb = get_element("mul2gb").getAttributeNodeNS(null, "points");
     var mul2go = get_element("mul2go").getAttributeNodeNS(null, "points");
     var vec = get_element("mul2vec");
@@ -872,6 +882,7 @@ colors: orangered #ff4500   gold #ffd700
         xyul.value = ("0.0,0.0, " + xnow[0] + "," + xnow[1] + ", " +
                       (xnow[0]+perp[0]) + "," + (xnow[1]+perp[1]) + ", " +
                       perp[0] + "," + perp[1]);
+        mul2gb.value = "0,0, " + x+",0, " + x+","+y + ", 0,"+y;
         x /= r;
         y /= r;
         xfur.value = xfurx.value = (
@@ -889,7 +900,7 @@ colors: orangered #ff4500   gold #ffd700
       var znow = [xnow[0]*ynow[0] - xnow[1]*ynow[1],
                   xnow[0]*ynow[1] + xnow[1]*ynow[0]];
       xf_slid.value = "translate(" + znow[0] + "," + znow[1] + ")";
-      mul2gb.value = ("0,0, " + znow[0]+",0, " + znow[0]+","+znow[1] +
+      mul2gg.value = ("0,0, " + znow[0]+",0, " + znow[0]+","+znow[1] +
                       ", 0,"+znow[1]);
       mul2go.value = ("0,0, " + (xnow[0]*ynow[0])+","+(xnow[1]*ynow[0]) +
                       ", " + znow[0]+","+znow[1]+", " +
