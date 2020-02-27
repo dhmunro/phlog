@@ -48,6 +48,9 @@
       margin-right: auto;
       text-align: center;
     }
+    .svgtxt {
+      font: bold 0.45px sans-serif;
+    }
     @media only screen and (max-width: 620px) {
       .halfwide {
         width: 100%;
@@ -58,6 +61,7 @@
 <body>
 <div class="textcolumn">
   <h1 style="text-align: center;">Rulers and Graph Paper</h1>
+
   <h2>Adding and multiplying with rulers</h2>
   <p>A number line is an idealized infinite ruler, a coordinate system
     for the points on the line.  The point associated with the number
@@ -137,7 +141,7 @@
     <span id="add1z" class="" style="color: #0080ff;">1.80</span></p>
   <p>Similarly, to multiply two numbers we can use two rulers with the
     same origins but different units: Drag the square marker of the
-    orange ruler to the first mulitplicand on the blue scale (which is
+    orange ruler to the first multiplicand on the blue scale (which is
     the new unit of the stretched orange ruler), then drag the gray
     slider to the second multiplicand on the orange scale.  Read the
     product as the position of the slider on the blue scale.  Be sure
@@ -250,6 +254,7 @@
   <p>Addition of numbers corresponds to displacing the coordinate
     origin.  Multiplication of numbers corresponds to changing the
     coordinate unit.</p>
+
   <h2>Adding and multiplying with graph paper</h2>
   <p>Graph paper provides a coordinate system for the points in a
     plane.  Our unit on the plane is a square instead of a segment;
@@ -411,11 +416,11 @@
     <rect fill="#0080ff" stroke="#0080ff"
           x="0.9" y="-0.1" width="0.25" height="0.25" />
     <polygon id="mul2gg" fill="none" stroke="#808080"
-              points="0.0,0.0, 1.8,0.0, 1.8,-0.8, 0.0,-0.8" />
+             points="0.0,0.0, 1.8,0.0, 1.8,-0.8, 0.0,-0.8" />
     <polygon id="mul2gb" fill="none" stroke="#0080ff"
-              points="0.0,0.0, 0.0,0.0, 0.0,0.0, 0.0,0.0" />
+             points="0.0,0.0, 0.0,0.0, 0.0,0.0, 0.0,0.0" />
     <polygon id="mul2go" fill="none" stroke="#ff8000"
-              points="0.0,0.0, 1.8,0.0, 1.8,-0.8, 0.0,-0.8" />
+             points="0.0,0.0, 1.8,0.0, 1.8,-0.8, 0.0,-0.8" />
     <polygon id="mul2ul" stroke="#ff8000" fill="none" stroke-width="0.1"
              points="0,0, 1,0, 1,-1, 0,-1"/>
     <circle fill="#ff8000" stroke="#ff8000" cx="0" cy="0" r="0.125" />
@@ -462,53 +467,183 @@
     dimensional multiplication in this case is as simple as the
     addition formula:
     $$(a + i0)(x + iy) = ax + iay.$$
-    However, our orange unit square can be tilted as well as simply a
-    different size, and dragging the orange square marker off the
-    $x$-axis does exactly that.  In other words, changing unit squares
-    in two dimensions may rotate our coordinate system in addition to
-    merely rescaling it -- we can orient our graph paper however we
-    like.</p>
-  <p>The general formula to compute the product is more complicated.
-    However, our definitions for addition and multiplication retain
-    all the properties of addition and multiplication of ordinary
-    numbers.  If we take our eccentric notation for $(x, y)$ coordinates
-    seriously, we can expand the product using the distributive law:
-    $$(a + ib)(x + iy) = ax + iay + ibx + i^2by.$$
-    We can use our definition of multiplication to find that
-    $i^2 = (0 + i1)^2 = -1 + i0$ (to which the simple scaling formula
-    applies), giving the general result:
-    $$(a + ib)(x + iy) = (ax - by) + i(ay + bx).$$
-    So it takes four ordinary multiplies and two ordinary adds to perform
-    a single two dimensional multiply operation.  Recall that a two
-    dimensional add operation only required two ordinary adds, one for
-    each coordinate.  Changing units gets complicated a lot faster than
-    changing origins.</p>
-  <p>Wait!  Under our definition of multiplication in the plane, we
-    see that the square of a two-dimensional "number" can be a
-    negative ordinary number.  In particular, $i^2 = -1$.  Negative
-    numbers have square roots in this two dimensional system, and we
-    have attached a meaning to what began as an eccentric notation $x
-    + iy$.  Since $i$, the square root of $-1$, is no ordinary number,
-    there is no way to convert the product $iy$ to any ordinary
-    number.  These two dimensional numbers, called complex numbers,
-    turn out to be one of the most productive concepts in all of
-    mathematics.</p>
-  <p>The truly important feature of complex numbers is our definitions
-    of addition and multiplication, which perfectly capture the
-    operations of translation, scaling, and rotation in two
-    dimensions.  That these definitions allow square roots of negative
-    numbers is a mere curiosity, or the tip of a very large
-    iceberg.</p>
-  <p>Multiplying by $-1$ produces a hundred eighty degree rotation of
-    the unit square.  Multiplying by the ninety degree rotation of the
-    unit square twice produces the same effect; that ninety degree
-    rotation is $i$.  In one dimension, there is no smooth way to go
-    from a positive to a negative multiplier -- multiplication by zero
-    is singular because the unit segment (or unit square) must have
-    some finite size to be a useful measuring tool.  But in two
-    dimensions, the orientation of the unit square can change smoothly
-    from plus to minus by rotating without needing to become
-    infinitely small.</p>
+    But our orange unit square can be tilted as well as rescaled,
+    and dragging the orange square marker off the $x$-axis does exactly
+    that.  In other words, changing unit squares in two dimensions may
+    rotate our coordinate system in addition to merely rescaling it
+    -- we can orient our graph paper however we like.</p>
+  <div style="width: 175px; float: left;">
+  <svg xmlns="http://www.w3.org/2000/svg"
+       viewBox="-1.0 -3.4 3.5 4.0" stroke-width="0.03">
+    <polygon stroke="#0080ff" fill="none" stroke-width="0.1"
+             points="0,0, 1,0, 1,-1, 0,-1" />
+    <circle fill="#0080ff" stroke="#0080ff"
+            cx="0" cy="0" r="0.125" />
+    <rect fill="#0080ff" stroke="#0080ff"
+          x="0.9" y="-0.1" width="0.25" height="0.25" />
+    <polygon fill="none" stroke="#808080"
+             points="0.0,0.0, 0.61,0.0, 0.61,-2.75, 0.0,-2.75" />
+    <polygon fill="none" stroke="#0080ff"
+             points="0.0,0.0, 0.0,0.0, 0.0,0.0, 0.0,0.0" />
+    <polygon fill="none" stroke="#ff8000"
+             points="0.0,0.0, 1.53,-0.68, 0.61,-2.75, -0.92,-2.07" />
+    <polygon stroke="#ff8000" fill="none" stroke-width="0.1"
+             points="0,0, 1.8,-0.8, 1,-2.6, -0.8,-1.8"/>
+    <circle fill="#ff8000" stroke="#ff8000" cx="0" cy="0" r="0.125" />
+    <polygon fill="#ff8000" stroke="#ff8000"
+             transform="matrix(0.91381, -0.40614, 0.40614, 0.91381, 1.8, -0.8)"
+             points="-0.125,-0.125, 0.125,-0.125, 0.125,0.125, -0.125,0.125" />
+    <line fill="#0080ff" stroke="#0080ff" stroke-width="0.05"
+          marker-end="url(#arrow-blue)" x1="0" y1="0" x2="1.8" y2="-0.8"/>
+    <line fill="#808080" stroke="#808080" stroke-width="0.05"
+          marker-end="url(#arrow-gray)" x1="0" y1="0" x2="0.61" y2="-2.75"/>
+    <text class="svgtxt" x="0.0" y="0.5" style="text-anchor: end;">O</text>
+    <text class="svgtxt" x="1.0" y="0.5">U</text>
+    <text class="svgtxt" fill="#0080ff" x="1.8" y="-0.3">V</text>
+    <text class="svgtxt" fill="#808080" x="0.61" y="-2.75">W</text>
+  </svg></div>
+  <p>Consider this labeled snapshot of the interactive picture: The
+    the distance of point V from the origin O measured in blue units
+    represents the ratio of the distance between any two points in
+    blue units to the distance between the same two points in orange
+    units, because OV has length one in orange units.  Hence, OW in
+    blue units is OW in orange units times OV in blue units: The
+    distance of the two dimensional product from O is the ordinary
+    product of the distances of the multiplicands from O.
+    Furthermore, the first multiplicand, OV, is at an angle UOV up
+    from the blue $x$-axis (OU), while the second multiplicand, OW
+    represented by orange coordinates, is at an angle VOW up from the
+    orange $x$-axis (OV).  The product OW represented by blue
+    coordinates is at an angle UOW up from the blue $x$-axis.  Since
+    the sum of angles OUV and VOW equals angle UOW, the angle of a two
+    dimensional product from the $x$-axis is the sum of the angles of
+    the multiplicands.  To summarize, the two dimensional
+    multiplication rule is that angles from the $x$-axis add and the
+    distances from the origin multiply.</p>
+  <p>Finally, we can justify our eccentric coordinate notation $x + iy$,
+    by interpreting all the symbols as points and operations using our
+    two dimensional definitions of addition and multiplication: First,
+    interpreting $i$ as $0 + i1$ and $y$ as $y + i0$, we see that the
+    orange unit square is just rotated ninety degrees, so the two
+    dimensional product $iy = 0 + iy$.  And under two dimensional
+    addition, interpreting $x$ as $x + i0$ means that the sum produces
+    exactly $x + iy$.  The eccentric notation turns out to exactly
+    match the behavior of our two dimensional arithmetic operations.</p>
+
+  <h2>Complex numbers</h2>
+  <p>Our two dimensional numbers $x + iy$, the coordinates of points
+    in a plane in a slightly eccentric notation, are called complex
+    numbers.  Addition corresponds to changing the coordinate origin
+    with a fixed unit square, while multiplication corresponds to
+    changing the unit square with a fixed origin.  This is a direct
+    generalization of ordinary arithmetic, simply replacing the unit
+    segment of a ruler with the unit square of a sheet of graph paper.
+    You can verify these definitions of addition and multiplication
+    satisfy the same three properties as ordinary arithmetic, namely
+    both operations are commutative and associative, and the
+    distributive law of multiplication over addition applies.  The
+    ordinary numbers are embedded within the complex numbers as the
+    line where $y = 0$, the $x$-axis.</p>
+  <p>The complex number $i = 0 + i1$ is called the imaginary unit, a
+    terrible name which came about because complex numbers were
+    introduced into algebra before Descartes unified algebra
+    and geometry.  The imaginary unit has the curious property that
+    $i^2 = -1$, which is famously impossible for any ordinary number
+    -- hence imaginary.  For us, $i$ is just the corner of the unit
+    square diagonally opposite the corner we labeled $1$.</p>
+  <div style="width: 160px; float: right;">
+  <svg xmlns="http://www.w3.org/2000/svg"
+       viewBox="-1.5 -2.8 3.0 3.9" stroke-width="0.03">
+    <g transform="translate(0,-1.5)">
+    <polygon stroke="#0080ff" fill="none" stroke-width="0.1"
+             points="0,0, 1,0, 1,-1, 0,-1" />
+    <circle fill="#0080ff" stroke="#0080ff"
+            cx="0" cy="0" r="0.125" />
+    <rect fill="#0080ff" stroke="#0080ff"
+          x="0.9" y="-0.1" width="0.25" height="0.25" />
+    <polygon stroke="#ff8000" fill="none" stroke-width="0.1"
+             points="0,0, 0,-1, -1,-1, -1,0"/>
+    <circle fill="#ff8000" stroke="#ff8000" cx="0" cy="0" r="0.125" />
+    <rect fill="#ff8000" stroke="#ff8000"
+          x="-0.1" y="-1.1" width="0.25" height="0.25" />
+    <line fill="#0080ff" stroke="#0080ff" stroke-width="0.05"
+          marker-end="url(#arrow-blue)" x1="0" y1="0" x2="0" y2="-1"/>
+    </g>
+    <polygon stroke="#0080ff" fill="none" stroke-width="0.1"
+             points="0,0, 1,0, 1,-1, 0,-1" />
+    <circle fill="#0080ff" stroke="#0080ff"
+            cx="0" cy="0" r="0.125" />
+    <rect fill="#0080ff" stroke="#0080ff"
+          x="0.9" y="-0.1" width="0.25" height="0.25" />
+    <polygon stroke="#ff8000" fill="none" stroke-width="0.1"
+             points="0,0, -1,0, -1,1, 0,1"/>
+    <circle fill="#ff8000" stroke="#ff8000" cx="0" cy="0" r="0.125" />
+    <rect fill="#ff8000" stroke="#ff8000"
+          x="-1.1" y="-0.1" width="0.25" height="0.25" />
+    <line fill="#0080ff" stroke="#0080ff" stroke-width="0.05"
+          marker-end="url(#arrow-blue)" x1="0" y1="0" x2="-1" y2="0"/>
+  </svg></div>
+  <p>Two dimensional multiplication by $i$ represents a ninety degree
+    rotation of the unit square (upper sketch), while multiplication
+    by $-1$ represents a hundred eighty degree rotation of the unit
+    square (lower sketch).  Since two ninety degree rotations produce
+    a hundred eighty degree rotation, $i^2 = -1$ is perfectly natural
+    in two dimensions, not imaginary at all.</p>
+  <p>In one dimension, there isn't any way to smoothly change from
+    multiplying by a positive number to multiplying by a negative
+    number without going through multiplication by zero.  And a zero
+    length unit, in either one or two dimensions, is worthless as a
+    basis for a coordinate system.  But with a two dimensional unit
+    square, we can smoothly change from multiplying by a positive
+    number (with $y=0$) to multiplying by a negative number (with
+    $y=0$), by rotating the unit square instead of rescaling it.  In
+    exchange for this multiplicative smoothness, we are giving up an
+    extremely important property of ordinary numbers: Complex numbers
+    have no order.  Greater than and less than do not apply to
+    complex numbers.</p>
+  <div style="width: 96px; float: left;">
+  <svg xmlns="http://www.w3.org/2000/svg"
+       viewBox="-0.4 -1.3 1.8 2.6" stroke-width="0.03">
+    <polygon stroke="#0080ff" fill="none" stroke-width="0.1"
+             points="0,0, 1,0, 1,-1, 0,-1" />
+    <circle fill="#0080ff" stroke="#0080ff"
+            cx="0" cy="0" r="0.125" />
+    <rect fill="#0080ff" stroke="#0080ff"
+          x="0.9" y="-0.1" width="0.25" height="0.25" />
+    <polygon stroke="#ff8000" fill="none" stroke-width="0.1"
+             points="0,0, 0,1, 1,1, 1,0"/>
+    <circle fill="#ff8000" stroke="#ff8000" cx="0" cy="0" r="0.125" />
+    <rect fill="#ff8000" stroke="#ff8000"
+          x="0.9" y="-0.1" width="0.25" height="0.25" />
+  </svg></div>
+  <p>We have defined complex addition and multiplication to correspond
+    to physical operations of translation, rotation, and scaling.  But
+    that leaves out one important physical operation: reflection.
+    Reflection does not correspond to any number of add or multiply
+    operations in two dimensions.  (In one dimension, multiplying by
+    -1 does correspond to reflection, but in two dimensions,
+    multiplying by -1 is a hundred eighty degree rotation.)  Addition
+    and multiplication can only produce the effects of sliding the
+    graph paper around on the plane or of scaling its unit to a
+    different size.  Reflection corresponds to flipping the graph
+    paper over, for example by switching the order of the $x$ and $y$
+    coordinates, or by multiplying just one of the coordinates by -1.
+    In complex arithmetic, the operation of reflection through the
+    $x$-axis, that is, of changing the sign of the $y$ coordinate, is
+    called taking the complex conjugate.  In terms of our unit
+    squares, complex conjugation flips the unit square vertically, as
+    shown in the sketch to the left.</p>
+  <p>Complex arithmetic, with its two dimensional add and multiply
+    operations corresponding to translation, rotation, and scaling
+    (with conjugation for reflection), turns out to be indispensible
+    in both algebra and physics.  The behavior of functions of a
+    complex variable remains a driving force in modern mathematics.
+    The Riemann hypothesis, for example, is a problem in complex
+    analysis that has remained at the forefront of mathematical
+    research for a hundred and sixty years (so far).  In physics,
+    complex arithmetic is central to quantum theory.</p>
+
+  <h2>What happens in three dimensions?</h2>
 </div>
 <!--
 colors: orangered #ff4500   gold #ffd700
