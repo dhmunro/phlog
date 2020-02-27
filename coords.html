@@ -590,18 +590,12 @@
     square (lower sketch).  Since two ninety degree rotations produce
     a hundred eighty degree rotation, $i^2 = -1$ is perfectly natural
     in two dimensions, not imaginary at all.</p>
-  <p>In one dimension, there isn't any way to smoothly change from
-    multiplying by a positive number to multiplying by a negative
-    number without going through multiplication by zero.  And a zero
-    length unit, in either one or two dimensions, is worthless as a
-    basis for a coordinate system.  But with a two dimensional unit
-    square, we can smoothly change from multiplying by a positive
-    number (with $y=0$) to multiplying by a negative number (with
-    $y=0$), by rotating the unit square instead of rescaling it.  In
-    exchange for this multiplicative smoothness, we are giving up an
-    extremely important property of ordinary numbers: Complex numbers
-    have no order.  Greater than and less than do not apply to
-    complex numbers.</p>
+  <p>With this property of $i$, we can use the distributive law to
+    find the general formula for complex multiplication:
+    $$(a + ib)(x + iy) = ax + iay + ibx + i^2by = (ax-by) + i(ay+bx)$$
+    Note that we need four ordinary multiplies and two ordinary adds
+    to carry out one complex multiply; multiplication is more complicated
+    than addition, because rotation mixes the $x$ and $y$ coordinates.</p>
   <div style="width: 96px; float: left;">
   <svg xmlns="http://www.w3.org/2000/svg"
        viewBox="-0.4 -1.3 1.8 2.6" stroke-width="0.03">
@@ -618,8 +612,8 @@
           x="0.9" y="-0.1" width="0.25" height="0.25" />
   </svg></div>
   <p>We have defined complex addition and multiplication to correspond
-    to physical operations of translation, rotation, and scaling.  But
-    that leaves out one important physical operation: reflection.
+    to physical operations of translation, rotation, and scaling.
+    That omits one important physical operation: reflection.
     Reflection does not correspond to any number of add or multiply
     operations in two dimensions.  (In one dimension, multiplying by
     -1 does correspond to reflection, but in two dimensions,
@@ -634,6 +628,10 @@
     called taking the complex conjugate.  In terms of our unit
     squares, complex conjugation flips the unit square vertically, as
     shown in the sketch to the left.</p>
+  <p>The product of any complex number with its conjugate gives the
+    square of its distance to the origin: $(a+ib)(a-ib) = a^2+b^2$.
+    Note that this relation also provides the formula for the
+    reciprocal of a complex number, $1/(a+ib) = (a-ib)/(a^2+b^2)$.</p>
   <p>Complex arithmetic, with its two dimensional add and multiply
     operations corresponding to translation, rotation, and scaling
     (with conjugation for reflection), turns out to be indispensible
@@ -643,49 +641,6 @@
     analysis that has remained at the forefront of mathematical
     research for a hundred and sixty years (so far).  In physics,
     complex arithmetic is central to quantum theory.</p>
-
-  <h2>What happens in three dimensions?</h2>
-  <p>We can tile space with unit cubes to make a three dimensional
-    coordinate system.  Once again, we can define addition to
-    correspond to translating the coordinate origin with a fixed unit
-    cube.  Now multiplication should correspond to scaling and
-    rotating the unit cube with the origin fixed.  But in three
-    dimensions, rotation alone has three degrees of freedom (the
-    rotation axis can be any point on a two dimensional spherical
-    surface around the origin, and the angle of rotation is a third
-    parameter), so it takes four numbers to describe rotation plus
-    scaling.  There can be no correspondance between the three
-    coordinates of a point in three dimensions and the natural scaling
-    and rotating operations on the unit cube, which require four
-    numbers to specify.  This problem becomes even more acute in four
-    or more dimensions -- there are too many ways to rotate a cube or
-    hypercube.</p>
-  <p>Quarternions are an example of the problem, not a solution:
-    Although they are designed to multiply like three dimensional
-    rotation and scaling operations (and reflection), they have four
-    coordinates, hence do not also serve as coordinates nor capture
-    three dimensional translation operations.  For practical purposes,
-    you probably will want to use the more general formalism of
-    matrices and linear algebra instead of quarternions.</p>
-  <p>These problems illustrate a subtle but crucial feature of complex
-    numbers: A complex number can have many possible meanings: it at
-    once represents the position of a point in a plane, a translation
-    operation when used as an addend, and a rotation and scaling
-    operation when used as a multiplicand.  This interchangability means
-    we can chain together these physical operations in two dimensions
-    in a way that is not possible in higher dimensions.  That feature
-    keeps things from becoming incomprehensibly complicated for much
-    longer in two dimensions than in three or more.</p>
-  <p>Complex numbers and their arithmetic occupy a sweet spot in
-    mathematics.  Plane geometry is the basis for the visual arts;
-    what we see is a two dimensional projection of the world.
-    Furthermore, even what we call "three dimensional" really consists
-    of two dimensional surfaces - we can't really make sense out of
-    truly three dimensional things like fog, and cutting into a solid
-    object to discover its interior consists precisely of cleaving it
-    to expose two dimensional sections.  We may live in a three
-    dimensional world, but we really only experience two dimensional
-    patterns.</p>
 </div>
 <!--
 colors: orangered #ff4500   gold #ffd700
