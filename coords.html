@@ -254,7 +254,10 @@
     <span id="mul1z" class="" style="color: #0080ff;">1.8000</span></p>
   <p>Addition of numbers corresponds to displacing the coordinate
     origin.  Multiplication of numbers corresponds to changing the
-    coordinate unit.</p>
+    coordinate unit.  Thus, a number may play several different roles:
+    As a coordinate, a number represents a position.  As an addend, a
+    number represents a displacement.  And as a multiplier, a number
+    represents a change of scale.</p>
 
   <h2>Adding and multiplying with graph paper</h2>
   <p>Graph paper provides a coordinate system for the points in a
@@ -281,15 +284,18 @@
     <defs>
       <marker id="arrow-gray" orient="auto" viewBox="0 -3 6 6"
               refX="6" markerWidth="6" markerHeight="6">
-        <polygon fill="#808080" stroke="none" points="0,-3, 6,0, 0,3"/>
+        <polygon fill="#808080" stroke="#808080" stroke-width="1"
+                 points="0,-3, 6,0, 0,3"/>
       </marker>
       <marker id="arrow-blue" orient="auto" viewBox="0 -3 6 6"
               refX="6" markerWidth="6" markerHeight="6">
-        <polygon fill="#0080ff" stroke="none" points="0,-3, 6,0, 0,3"/>
+        <polygon fill="#0080ff" stroke="#0080ff" stroke-width="1"
+                 points="0,-3, 6,0, 0,3"/>
       </marker>
       <marker id="arrow-orange" orient="auto" viewBox="0 -3 6 6"
               refX="6" markerWidth="6" markerHeight="6">
-        <polygon fill="#ff8000" stroke="none" points="0,-3, 6,0, 0,3"/>
+        <polygon fill="#ff8000" stroke="#ff8000" stroke-width="1"
+                 points="0,-3, 6,0, 0,3"/>
       </marker>
     </defs>
     <path fill="none" stroke="#0080ff" opacity="0.33"
@@ -333,9 +339,9 @@
       <rect fill="#ff8000" stroke="#ff8000"
             x="0.90" y="-0.1" width="0.25" height="0.25" />
     </g>
-    <line id="add2vb" fill="#0080ff" stroke="#0080ff" stroke-width="0.05"
-          marker-end="none" x1="0" y1="0" x2="0" y2="0"/>
     <line id="add2vo" fill="#ff8000" stroke="#ff8000" stroke-width="0.05"
+          marker-end="none" x1="0" y1="0" x2="0" y2="0"/>
+    <line id="add2vb" fill="#0080ff" stroke="#0080ff" stroke-width="0.05"
           marker-end="none" x1="0" y1="0" x2="0" y2="0"/>
     <line id="add2vg" fill="#808080" stroke="#808080" stroke-width="0.05"
           marker-end="url(#arrow-gray)" x1="0" y1="0" x2="1.8" y2="-0.8"/>
@@ -453,29 +459,29 @@
     marker to the second multiplicand on the orange sheet.  Read the
     product as the position of the gray diamond on the blue sheet.
     We've drawn arrows as for addition, but this time the orange arrow
-    always coincides with the gray arrow.  But the orange arrow
-    (hidden by the gray) has coordinates relative to the orange unit,
-    indicated by the orange guideline rectangle, while the gray arrow
-    has coordinates relative to the blue unit, indicated by the gray
-    guideline rectangle.  (Again you are to read the gray coordinates
-    on the blue plane, not on the orange plane.)</p>
+    always coincides with the gray arrow, so you only see the gray
+    arrow.  You need to read the coordinates of that gray arrow in two
+    different ways now: relative to the orange unit (orange
+    guidelines) as the second mulitplier, or relative to the blue unit
+    (gray guidelines) as the product.</p>
   <p>As long as we drag the orange square marker directly to the left
-    or right along the $x$-axis (the points $x+i0$ where $y=0$), this
-    definition of multiplication exactly matches our one dimensional
-    interpretation of multiplication with rulers.  However, we must
-    now change the length of the vertical edge of our unit to keep it
-    square.  Therefore the formula corresponding to our new two
-    dimensional multiplication in this case is as simple as the
-    addition formula:
+    or right along the $x$-axis (to points $x+i0$ where $y=0$), we
+    only change the scale of the unit square, and this definition of
+    multiplication exactly matches our one dimensional interpretation
+    of multiplication with rulers.  Since the vertical dimension
+    changes by the same amount as the horizontal, the formula
+    corresponding to our new two dimensional multiplication for this
+    special case is:
     $$(a + i0)(x + iy) = ax + iay.$$
-    But our orange unit square can be tilted as well as rescaled,
-    and dragging the orange square marker off the $x$-axis does exactly
+    But our orange unit square can be tilted as well as rescaled, and
+    dragging the orange square marker off the $x$-axis does exactly
     that.  In other words, changing unit squares in two dimensions may
-    rotate our coordinate system in addition to merely rescaling it
-    -- we can orient our graph paper however we like.</p>
+    rotate our coordinate system in addition to merely rescaling it --
+    we can orient our graph paper however we like as well as making
+    the unit square any size we like.</p>
   <div style="width: 175px; float: left;">
   <svg xmlns="http://www.w3.org/2000/svg"
-       viewBox="-1.0 -3.4 3.5 4.0" stroke-width="0.03">
+       viewBox="-1.0 -3.2 3.5 3.8" stroke-width="0.03">
     <polygon stroke="#0080ff" fill="none" stroke-width="0.1"
              points="0,0, 1,0, 1,-1, 0,-1" />
     <circle fill="#0080ff" stroke="#0080ff"
@@ -518,9 +524,10 @@
     coordinates is at an angle UOW up from the blue $x$-axis.  Since
     the sum of angles OUV and VOW equals angle UOW, the angle of a two
     dimensional product from the $x$-axis is the sum of the angles of
-    the multiplicands.  To summarize, the two dimensional
-    multiplication rule is that angles from the $x$-axis add and the
-    distances from the origin multiply.</p>
+    the multiplicands.</p>
+  <p>To summarize, our two dimensional multiplication rule is that
+    angles from the $x$-axis add and the distances from the origin
+    multiply.</p>
   <p>Finally, we can justify our eccentric coordinate notation $x + iy$,
     by interpreting all the symbols as points and operations using our
     two dimensional definitions of addition and multiplication: First,
@@ -546,12 +553,18 @@
     ordinary numbers are embedded within the complex numbers as the
     line where $y = 0$, the $x$-axis.</p>
   <p>The complex number $i = 0 + i1$ is called the imaginary unit, a
-    terrible name which came about because complex numbers were
-    introduced into algebra before Descartes unified algebra
-    and geometry.  The imaginary unit has the curious property that
-    $i^2 = -1$, which is famously impossible for any ordinary number
-    -- hence imaginary.  For us, $i$ is just the corner of the unit
-    square diagonally opposite the corner we labeled $1$.</p>
+    terrible name which came about because it has the curious property
+    that $i^2 = -1$, which is famously impossible for any ordinary
+    number -- hence imaginary.  For us, $i$ is just the corner of the
+    unit square diagonally opposite the corner we labeled $1$.  The
+    $x$ coordinate is called the real part of a complex number, while
+    the $y$ coordinate is called its imaginary part; the $x$ and $y$
+    axes are called the real and imaginary axes.  The angle from the
+    real axis is called the argument of a complex number, while the
+    distance from the origin is called its modulus.  Hence, to add
+    complex numbers, we separately add their real and imaginary parts,
+    and to multiply complex numbers, we add their arguments and
+    multiply their moduli.</p>
   <div style="width: 160px; float: right;">
   <svg xmlns="http://www.w3.org/2000/svg"
        viewBox="-1.5 -2.8 3.0 3.9" stroke-width="0.03">
@@ -584,18 +597,20 @@
     <line fill="#0080ff" stroke="#0080ff" stroke-width="0.05"
           marker-end="url(#arrow-blue)" x1="0" y1="0" x2="-1" y2="0"/>
   </svg></div>
-  <p>Two dimensional multiplication by $i$ represents a ninety degree
-    rotation of the unit square (upper sketch), while multiplication
-    by $-1$ represents a hundred eighty degree rotation of the unit
-    square (lower sketch).  Since two ninety degree rotations produce
-    a hundred eighty degree rotation, $i^2 = -1$ is perfectly natural
-    in two dimensions, not imaginary at all.</p>
+  <p>Complex multiplication by $i$ represents a ninety degree rotation
+    of the unit square (upper sketch), while multiplication by $-1$
+    represents a hundred eighty degree rotation of the unit square
+    (lower sketch).  Since two ninety degree rotations produce a
+    hundred eighty degree rotation, $i^2 = -1$ is perfectly natural in
+    two dimensions, not imaginary at all.</p>
   <p>With this property of $i$, we can use the distributive law to
     find the general formula for complex multiplication:
     $$(a + ib)(x + iy) = ax + iay + ibx + i^2by = (ax-by) + i(ay+bx)$$
+    
     Note that we need four ordinary multiplies and two ordinary adds
-    to carry out one complex multiply; multiplication is more complicated
-    than addition, because rotation mixes the $x$ and $y$ coordinates.</p>
+    to carry out one complex multiply; multiplication is more
+    complicated than addition, because rotation mixes the $x$ and $y$
+    coordinates.</p>
   <div style="width: 96px; float: left;">
   <svg xmlns="http://www.w3.org/2000/svg"
        viewBox="-0.4 -1.3 1.8 2.6" stroke-width="0.03">
@@ -629,18 +644,19 @@
     squares, complex conjugation flips the unit square vertically, as
     shown in the sketch to the left.</p>
   <p>The product of any complex number with its conjugate gives the
-    square of its distance to the origin: $(a+ib)(a-ib) = a^2+b^2$.
-    Note that this relation also provides the formula for the
-    reciprocal of a complex number, $1/(a+ib) = (a-ib)/(a^2+b^2)$.</p>
+    square of its modulus (according to the Pythagorean theorem):
+    $(a+ib)(a-ib) = a^2+b^2$.  Note that this relation also provides
+    the formula for the reciprocal of a complex number, $1/(a+ib) =
+    (a-ib)/(a^2+b^2)$.</p>
   <p>Complex arithmetic, with its two dimensional add and multiply
     operations corresponding to translation, rotation, and scaling
     (with conjugation for reflection), turns out to be indispensible
     in both algebra and physics.  The behavior of functions of a
     complex variable remains a driving force in modern mathematics.
-    The Riemann hypothesis, for example, is a problem in complex
-    analysis that has remained at the forefront of mathematical
-    research for a hundred and sixty years (so far).  In physics,
-    complex arithmetic is central to quantum theory.</p>
+    In physics, complex arithmetic is central to quantum theory.  The
+    key feature, as in real arithmetic, is that a complex number may
+    represent a position (coordinates in a plane), a displacement
+    (addend), or a change of unit (multiplicand).</p>
 </div>
 <!--
 colors: orangered #ff4500   gold #ffd700
