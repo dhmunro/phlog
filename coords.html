@@ -648,15 +648,64 @@
     $(a+ib)(a-ib) = a^2+b^2$.  Note that this relation also provides
     the formula for the reciprocal of a complex number, $1/(a+ib) =
     (a-ib)/(a^2+b^2)$.</p>
-  <p>Complex arithmetic, with its two dimensional add and multiply
-    operations corresponding to translation, rotation, and scaling
-    (with conjugation for reflection), turns out to be indispensible
-    in both algebra and physics.  The behavior of functions of a
-    complex variable remains a driving force in modern mathematics.
-    In physics, complex arithmetic is central to quantum theory.  The
-    key feature, as in real arithmetic, is that a complex number may
-    represent a position (coordinates in a plane), a displacement
-    (addend), or a change of unit (multiplicand).</p>
+  <div class="halfwide">
+  <svg xmlns="http://www.w3.org/2000/svg" style="padding-left: 0.5em"
+       viewBox="-2 -5 6.1 6.1" onload="orion_interactions(evt)"
+       stroke-width="0.04">
+    <defs>
+      <circle id="graycirc"
+              fill="#d0e0ff" stroke="none" cx="0" cy="0" r="0.05" />
+      <circle id="orangecirc"
+              fill="#ff8000" stroke="none" cx="0" cy="0" r="0.05" />
+    </defs>
+    <use href="#graycirc" x="0.0532" y="-3.3702"/>
+    <use href="#graycirc" x="1.3419" y="-2.8980"/>
+    <use href="#graycirc" x="1.2648" y="-0.2000"/>
+    <use href="#graycirc" x="-0.2648" y="-0.2489"/>
+    <use href="#graycirc" x="0.3354" y="-1.5678"/>
+    <use href="#graycirc" x="0.5668" y="-1.6581"/>
+    <use href="#graycirc" x="0.7888" y="-1.7785"/>
+    <use href="#graycirc" x="0.4238" y="-0.8096"/>
+    <use href="#graycirc" x="0.4520" y="-0.9018"/>
+    <use href="#graycirc" x="0.4633" y="-1.0053"/>
+    <line fill="none" stroke="#d0e0ff" x1="0" y1="0" x2="1" y2="0"/>
+    <circle fill="#d0e0ff" stroke="none" cx="0" cy="0" r="0.1"/>
+    <rect fill="#d0e0ff" stroke="none"
+          x="0.9" y="-0.1" width="0.2" height="0.2"/>
+    <g id="oriong" transform="matrix(1,0,0,1,0,0)">  <!-- orion -->
+      <use href="#orangecirc" x="0.0532" y="-3.3702"/>
+      <use href="#orangecirc" x="1.3419" y="-2.8980"/>
+      <use href="#orangecirc" x="1.2648" y="-0.2000"/>
+      <use href="#orangecirc" x="-0.2648" y="-0.2489"/>
+      <use href="#orangecirc" x="0.3354" y="-1.5678"/>
+      <use href="#orangecirc" x="0.5668" y="-1.6581"/>
+      <use href="#orangecirc" x="0.7888" y="-1.7785"/>
+      <use href="#orangecirc" x="0.4238" y="-0.8096"/>
+      <use href="#orangecirc" x="0.4520" y="-0.9018"/>
+      <use href="#orangecirc" x="0.4633" y="-1.0053"/>
+      <line id="oline" fill="none" stroke="#ff8000" stroke-width="0.04"
+            x1="0" y1="0" x2="1" y2="0"/>
+    </g>
+    <circle id="orion0" fill="#ff8000" stroke="none" cx="0" cy="0" r="0.1"
+            transform="translate(0,0)"/>
+    <rect id="orion1" fill="#ff8000" stroke="none"
+          x="-0.1" y="-0.1" width="0.2" height="0.2"
+          transform="matrix(1,0,0,1,1,0)"/>
+  </svg></div>
+  <p>The key feature of complex numbers and their arithmetic, as for
+    real numbers, is that a complex number may represent a position
+    (coordinates in a plane), a displacement (addend), or a change of
+    unit (multiplicand).  In the example here, we plot ten complex
+    numbers whose coordinates match the pattern of the constellation
+    Orion in the sky.  The orange unit segment, one edge of the unit
+    square we have chosen, is drawn below.  You can drag either the
+    unit square marker or the origin circle marker to select a complex
+    number to multiply Orion then to add to Orion.  Of course, complex
+    addition and multiplication work like this for any pattern of
+    points, which is to say, for anything you can draw.  A complex
+    number may be the coordinates of a point in the plane; addition
+    and mulitplication represent the physical operations of
+    translation, rotation, and scaling.</p>
 </div>
 <!--
 colors: orangered #ff4500   gold #ffd700
@@ -1110,6 +1159,75 @@ colors: orangered #ff4500   gold #ffd700
     }
 
     add_trackers(mul2d, m2handle, start, track, stop);
+  }
+
+  function orion_interactions(evt) {
+    var orion = evt.target;
+    var o2handle = ["orion0", "orion1"].map(get_element);
+    var xfcirc = get_element("orion0").getAttributeNodeNS(null, "transform");
+    var xfrect = get_element("orion1").getAttributeNodeNS(null, "transform");
+    var xfg = get_element("oriong").getAttributeNodeNS(null, "transform");
+    var wline = get_element("oline").getAttributeNodeNS(null, "stroke-width");
+    var roc = get_element("orangecirc").getAttributeNodeNS(null, "r");
+
+    var now0 = [0.0, 0.0];  // current coords of orion0
+    var now1 = [1.0, 0.0];  // current coords of orion1
+
+    function start(index, coords) {
+      var dx = coords.x - (index? now1[0] : now0[0]);
+      var dy = coords.y - (index? now1[1] : now0[1]);
+      return [index, [dx, dy]];
+    }
+
+    function track(tracking, coords) {
+      var index = tracking[0];
+      var dxy = tracking[1];
+      var x = coords.x - dxy[0];
+      var y = coords.y - dxy[1];
+      var r;
+      if (x > 3.9 || x < -1.8 || y > 0.9 || y < -4.8) {
+        now0 = [0.0, 0.0];
+        now1 = [1.0, 0.0];
+        index = 0;
+        x = y = 0.0;
+        tracking = null;
+      }
+      if (index === 0) {
+        now1 = [now1[0] - now0[0] + x, now1[1] - now0[1] + y];
+        now0 = [x, y];
+      } else {
+        dxy = [x - now0[0], y - now0[1]];
+        if (abs(dxy[0]) < 0.1 && abs(dxy[1]) < 0.1) {
+          r = sqrt(dxy[0]*dxy[0] + dxy[1]*dxy[1]);
+          if (r == 0.0) {
+            dxy = [0.1, 0.0];
+          } else {
+            dxy = [0.1 * dxy[0]/r, 0.1 * dxy[1]/r];
+          }
+          now1 = [now0[0] + dxy[0], now0[1] + dxy[1]];
+        } else {
+          now1 = [x, y];
+        }
+      }
+      dxy = [now1[0] - now0[0], now1[1] - now0[1]];
+      r = sqrt(dxy[0]*dxy[0] + dxy[1]*dxy[1]);  // scaling factor
+      var xy0 = now0[0] + "," + now0[1]
+      xfcirc.value = "translate(" + xy0 + ")";
+      xfg.value = ("matrix("+dxy[0]+","+dxy[1]+","+(-dxy[1])+","+dxy[0]+","+
+                   xy0 + ")");
+      dxy = [dxy[0]/r, dxy[1]/r];
+      xfrect.value = ("matrix("+dxy[0]+","+dxy[1]+","+(-dxy[1])+","+dxy[0]+","+
+                      now1[0] + "," + now1[1] + ")");
+      roc.value = "" + (0.05 / r);
+      wline.value = "" + (0.04 / r);
+      return tracking;
+    }
+
+    function stop(tracking) {
+      return;
+    }
+
+    add_trackers(orion, o2handle, start, track, stop);
   }
 </script>
 </body>
