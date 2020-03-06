@@ -265,18 +265,18 @@
     one corner goes at an arbitrary origin point, then we tile the
     remainder of the plane into a grid of our unit squares.  Two
     coordinate numbers are associated with each point of the plane,
-    the row and column numbers of the point in our grid.  By analogy
-    with our definitions in one dimension, we will define two
-    dimensional "addition" as changing the origin with a fixed unit
-    square, and "multiplication" as changing the unit square with a
-    fixed origin.</p>
-  <p>Generally we write the coordinates as the pair $(x, y)$, the
-    horizontal number followed by the vertical number.  However, here
-    we write $x + iy$, although we have not yet defined either the $+$
-    sign or the symbol $i$ that multiplies $y$.  This notation will
-    turn out to be consistent with our upcoming definitions of
-    "addition" and "multiplication"; until then you may regard $x +
-    iy$ as simply an eccentric way to write $(x, y)$.</p>
+    the row and column numbers of the point in our grid.  Generally we
+    write the coordinates as the pair $(x, y)$, the horizontal number
+    followed by the vertical number.  However, here we write $x + iy$,
+    although we have not yet defined either the $+$ sign or the symbol
+    $i$ that multiplies $y$.  This notation will turn out to be
+    consistent with our upcoming definitions of "addition" and
+    "multiplication"; until then you may regard $x + iy$ as simply an
+    eccentric way to write $(x, y)$.</p>
+  <p>By analogy with our definitions in one dimension, we will define
+    two dimensional "addition" as changing the origin with a fixed
+    unit square, and "multiplication" as changing the unit square with
+    a fixed origin.</p>
   <div class="halfwide">
   <svg xmlns="http://www.w3.org/2000/svg" style="padding-left: 0.5em"
        viewBox="-4.1 -4.1 8.2 8.2" onload="add2d_interactions(evt)"
@@ -323,13 +323,13 @@
              points="0,0, 1,0, 1,-1, 0,-1" />
     <circle fill="#0080ff" stroke="#0080ff"
             cx="0" cy="0" r="0.125" />
-    <rect fill="#0080ff" stroke="#0080ff"
+    <rect fill="#0080ff" stroke="#0080ff" stroke-width="0.05"
           x="0.9" y="-0.1" width="0.25" height="0.25" />
-    <polygon id="add2gg" fill="none" stroke="#808080"
+    <polygon id="add2gg" fill="none" stroke="#808080" stroke-width="0.05"
               points="0.0,0.0, 1.8,0.0, 1.8,-0.8, 0.0,-0.8" />
-    <polygon id="add2gb" fill="none" stroke="#0080ff"
+    <polygon id="add2gb" fill="none" stroke="#0080ff" stroke-width="0.05"
               points="0.0,0.0, 0.0,0.0, 0.0,0.0, 0.0,0.0" />
-    <polygon id="add2go" fill="none" stroke="#ff8000"
+    <polygon id="add2go" fill="none" stroke="#ff8000" stroke-width="0.05"
               points="0.0,0.0, 1.8,0.0, 1.8,-0.8, 0.0,-0.8" />
     <g id="add2ug" transform="translate(0.00,0)">
       <polygon stroke="#ff8000" fill="none" stroke-width="0.1"
@@ -363,7 +363,7 @@
     corresponds to the $x$ axis (our first coordinate); here drawn with
     a square marker.</p>
   <p>To add two points in the plane, we drag the origin of the orange
-    sheet to first addend on the blue plane, then drag the gray diamond
+    sheet to first addend on the blue sheet, then drag the gray diamond
     marker to the second addend on the orange sheet.  Read the sum as the
     position of the gray diamond on the blue sheet.  We've drawn arrows
     corresponding to the first and second addends (blue and orange) and
@@ -420,13 +420,13 @@
              points="0,0, 1,0, 1,-1, 0,-1" />
     <circle fill="#0080ff" stroke="#0080ff"
             cx="0" cy="0" r="0.125" />
-    <rect fill="#0080ff" stroke="#0080ff"
+    <rect fill="#0080ff" stroke="#0080ff" stroke-width="0.05"
           x="0.9" y="-0.1" width="0.25" height="0.25" />
-    <polygon id="mul2gg" fill="none" stroke="#808080"
+    <polygon id="mul2gg" fill="none" stroke="#808080" stroke-width="0.05"
              points="0.0,0.0, 1.8,0.0, 1.8,-0.8, 0.0,-0.8" />
-    <polygon id="mul2gb" fill="none" stroke="#0080ff"
+    <polygon id="mul2gb" fill="none" stroke="#0080ff" stroke-width="0.05"
              points="0.0,0.0, 0.0,0.0, 0.0,0.0, 0.0,0.0" />
-    <polygon id="mul2go" fill="none" stroke="#ff8000"
+    <polygon id="mul2go" fill="none" stroke="#ff8000" stroke-width="0.05"
              points="0.0,0.0, 1.8,0.0, 1.8,-0.8, 0.0,-0.8" />
     <polygon id="mul2ul" stroke="#ff8000" fill="none" stroke-width="0.1"
              points="0,0, 1,0, 1,-1, 0,-1"/>
@@ -454,25 +454,20 @@
   </div>
   <p>Multiplication is far more interesting.  We can scale our unit
     square by dragging its lower right corner, the one we marked with
-    a square at the point $1+i0$.  Drag that orange square marker to
-    first multiplicand on the blue plane, then drag the gray diamond
-    marker to the second multiplicand on the orange sheet.  Read the
-    product as the position of the gray diamond on the blue sheet.
-    We've drawn arrows as for addition, but this time the orange arrow
-    always coincides with the gray arrow, so you only see the gray
-    arrow.  You need to read the coordinates of that gray arrow in two
-    different ways now: relative to the orange unit (orange
-    guidelines) as the second mulitplier, or relative to the blue unit
-    (gray guidelines) as the product.</p>
-  <p>As long as we drag the orange square marker directly to the left
-    or right along the $x$-axis (to points $x+i0$ where $y=0$), we
-    only change the scale of the unit square, and this definition of
+    a square at the point $1+i0$, to the first multiplicand on the
+    blue sheet.  Then drag the gray diamond marker to the second
+    multiplicand on the orange sheet.  Read the product as the
+    position of the gray diamond on the blue sheet.  We've drawn
+    arrows as for addition, but this time the orange arrow always
+    coincides with the gray arrow, so you only see the gray arrow.
+    The orange and gray guideline rectangles from the arrow tip back
+    to their respective coordinate axes are more useful for reading
+    the orange and blue coordinates, respectively.</p>
+  <p>If we drag the orange square marker directly to the left or right
+    along the $x$-axis (to points $x+i0$ where $y=0$), we change only
+    the scale of the unit square, and this definition of
     multiplication exactly matches our one dimensional interpretation
-    of multiplication with rulers.  Since the vertical dimension
-    changes by the same amount as the horizontal, the formula
-    corresponding to our new two dimensional multiplication for this
-    special case is:
-    $$(a + i0)(x + iy) = ax + iay.$$
+    of multiplication with rulers when both multiplicands have $y=0$.
     But our orange unit square can be tilted as well as rescaled, and
     dragging the orange square marker off the $x$-axis does exactly
     that.  In other words, changing unit squares in two dimensions may
@@ -528,15 +523,16 @@
   <p>To summarize, our two dimensional multiplication rule is that
     angles from the $x$-axis add and the distances from the origin
     multiply.</p>
-  <p>Finally, we can justify our eccentric coordinate notation $x + iy$,
-    by interpreting all the symbols as points and operations using our
-    two dimensional definitions of addition and multiplication: First,
-    interpreting $i$ as $0 + i1$ and $y$ as $y + i0$, we see that the
-    orange unit square is just rotated ninety degrees, so the two
-    dimensional product $iy = 0 + iy$.  And under two dimensional
-    addition, interpreting $x$ as $x + i0$ means that the sum produces
-    exactly $x + iy$.  The eccentric notation turns out to exactly
-    match the behavior of our two dimensional arithmetic operations.</p>
+  <p>Finally, we can justify our eccentric coordinate notation $x +
+    iy$, by interpreting all the symbols as points and operations
+    using our two dimensional definitions of addition and
+    multiplication: First, interpreting the two dimensional product
+    $iy$ as $(0 + i1)(y + i0)$, the first multiplicand $i$ rotates the
+    point at $y$ on the $x$-axis ninety degrees, so that $iy = 0 +
+    iy$.  And under two dimensional addition, interpreting $x$ as $x +
+    i0$ means that the sum produces exactly $x + iy$.  Hence, the
+    eccentric notation turns out to exactly match the behavior of our
+    two dimensional arithmetic operations.</p>
 
   <h2>Complex numbers</h2>
   <p>Our two dimensional numbers $x + iy$, the coordinates of points
@@ -558,13 +554,13 @@
     number -- hence imaginary.  For us, $i$ is just the corner of the
     unit square diagonally opposite the corner we labeled $1$.  The
     $x$ coordinate is called the real part of a complex number, while
-    the $y$ coordinate is called its imaginary part; the $x$ and $y$
-    axes are called the real and imaginary axes.  The angle from the
-    real axis is called the argument of a complex number, while the
-    distance from the origin is called its modulus.  Hence, to add
-    complex numbers, we separately add their real and imaginary parts,
-    and to multiply complex numbers, we add their arguments and
-    multiply their moduli.</p>
+    the $y$ coordinate is called its imaginary part.  The $x$ and $y$
+    axes are called the real and imaginary axes, respectively.  The
+    angle from the real axis is called the argument of a complex
+    number, while the distance from the origin is called its modulus.
+    Hence, to add complex numbers, we separately add their real and
+    imaginary parts, and to multiply complex numbers, we add their
+    arguments and multiply their moduli.</p>
   <div style="width: 160px; float: right;">
   <svg xmlns="http://www.w3.org/2000/svg"
        viewBox="-1.5 -2.8 3.0 3.9" stroke-width="0.03">
@@ -645,9 +641,13 @@
     shown in the sketch to the left.</p>
   <p>The product of any complex number with its conjugate gives the
     square of its modulus (according to the Pythagorean theorem):
-    $(a+ib)(a-ib) = a^2+b^2$.  Note that this relation also provides
-    the formula for the reciprocal of a complex number, $1/(a+ib) =
-    (a-ib)/(a^2+b^2)$.</p>
+    $(a+ib)(a-ib) = a^2 - (ib)^2 = a^2+b^2$.  Note that this relation
+    also provides the formula for the reciprocal of a complex number,
+    $1/(a+ib) = (a-ib)/(a^2+b^2)$.  In general, the quotient of two
+    complex numbers has the quotient of their moduli and the
+    difference of their arguments, so this reciprocal formula produces
+    very interesting algorithms for computing differences in
+    angle.</p>
   <div class="halfwide">
   <svg xmlns="http://www.w3.org/2000/svg" style="padding-left: 0.5em"
        viewBox="-2 -5 6.1 6.1" onload="orion_interactions(evt)"
@@ -698,14 +698,14 @@
     unit (multiplicand).  In the example here, we plot ten complex
     numbers whose coordinates match the pattern of the constellation
     Orion in the sky.  The orange unit segment, one edge of the unit
-    square we have chosen, is drawn below.  You can drag either the
-    unit square marker or the origin circle marker to select a complex
-    number to multiply Orion then to add to Orion.  Of course, complex
-    addition and multiplication work like this for any pattern of
-    points, which is to say, for anything you can draw.  A complex
-    number may be the coordinates of a point in the plane; addition
-    and mulitplication represent the physical operations of
-    translation, rotation, and scaling.</p>
+    square we have chosen, is drawn below them.  You can drag either
+    the unit square marker or the origin circle marker to select one
+    complex number to multiply Orion and another to add to Orion.  Of
+    course, complex addition and multiplication work like this for any
+    pattern of points, which is to say, for anything you can draw.
+    Complex addition and multiplication are interesting because they
+    model the physical operations of translation, rotation, and
+    scaling.</p>
 </div>
 <!--
 colors: orangered #ff4500   gold #ffd700
@@ -1015,10 +1015,7 @@ colors: orangered #ff4500   gold #ffd700
         var p = xnow[0];
         var q = xnow[1];
         add2gg.value = "0,0, " + x + ",0, " + x + "," + y + ", 0," + y;
-        if (tracking === null) {
-          add2gb.value = "0,0, " + p + ",0, " + p + "," + q + ", 0," + q;
-          add2go.value = p+","+q+", "+x+","+q+", "+x+","+y+", "+p+","+y;
-        }
+        add2go.value = p+","+q+", "+x+","+q+", "+x+","+y+", "+p+","+y;
         ynow = [x, y];
         str_complex(xyz[1], 2, ynow, xnow);
         setvector(vecs, 1, ynow, "orange", xnow);
