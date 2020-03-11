@@ -51,6 +51,39 @@
     .svgtxt {
       font: bold 0.45px sans-serif;
     }
+    .bselected {
+      background-color: #80c0ff;
+    }
+    .dothot {
+      stroke: none;
+      fill: #0080ff;
+      opacity: 1.0;
+    }
+    .dotnot {
+      stroke: none;
+      fill: black;
+      opacity: 0.1;
+    }
+    .dotoff {
+      display: none;
+    }
+    .linehot {
+      stroke: #0080ff;
+      fill: none;
+      opacity: 0.6;
+    }
+    .linenot {
+      stroke: black;
+      fill: none;
+      opacity: 0.1;
+    }
+    .buttondiv {
+      margin-bot: 0em;
+      margin-left: auto;
+      margin-right: auto;
+      text-align: center;
+      margin-bot: 2em;
+    }
     @media only screen and (max-width: 620px) {
       .halfwide {
         width: 100%;
@@ -62,9 +95,411 @@
 <div class="textcolumn">
   <h1 style="text-align: center;"><a href="index.html">Roots of Unity</a></h1>
 
-  <h2>Fractional powers of complex numbers</h2>
+  <h2>Powers of complex numbers</h2>
+  <p><a href="coords.html">We define</a> complex multiplication to
+    scale and rotate coordinates in a plane.  This definition
+    automatically includes a definition of raising any complex number
+    $z$ to the power $p$ -- multiply $z$ by itself $p$ times.
+    Multiplying two powers evidently adds the powers: $z^p z^q =
+    z^{p+q}$.  We can use this rule to uniquely define the zero power
+    and negative powers, so we know how to raise a number to any
+    integer power: $z^0 = 1$ and $z^{-p} = 1/z^p$.  Lastly, raising a
+    power to a power evidently multiplies the powers: $(z^p)^q =
+    z^{pq}$.  Following the idea we used to define negative integer
+    powers, we naturally want to use this relation to define
+    fractional powers, for example $(z^{1/p})^p = z^1 = z$ defines
+    $z^{1/p}$.  For complex $z$, this procedure hits an extremely
+    interesting and fruitful snag, which we explore here.</p>
+  <div class="halfwide">
+  <svg xmlns="http://www.w3.org/2000/svg"
+       viewBox="-2.1 -2.1 4.2 4.2" onload="pow_interactions(evt)"
+       stroke-width="0.03">
+    <line stroke="#0080ff" opacity="0.3" stroke-width="0.015"
+          x1="-2.1" y1="0" x2="2.1" y2="0"/>
+    <line stroke="#0080ff" opacity="0.3" stroke-width="0.015"
+          x1="0" y1="-2.1" x2="0" y2="2.1"/>
+    <circle fill="none" stroke="#0080ff" opacity="0.3" stroke-width="0.015"
+            cx="0" cy="0" r="1"/>
+    <polyline fill="none" stroke="#0080ff" points="0,0, 1,0"/>
+    <polyline id="parc" fill="none" stroke="black" opacity="0.3"
+              points="1,0, 1.1,-0.2, 1.17,-0.44, 1.199,-0.718, 1.1753,-1.0296,
+                      1.08691,-1.36762, 0.922077,-1.721764"/>
+    <polyline id="pow6" fill="none" stroke="black" opacity="0.3"
+              points="0,0, 0.922077,-1.721764"/>
+    <polyline id="pow5" fill="none" stroke="black" opacity="0.3"
+              points="0,0, 1.08691,-1.36762"/>
+    <polyline id="pow4" fill="none" stroke="black" opacity="0.3"
+              points="0,0, 1.1753,-1.0296"/>
+    <polyline id="pow3" fill="none" stroke="black" opacity="0.3"
+              points="0,0, 1.199,-0.718"/>
+    <polyline id="pow2" fill="none" stroke="black" opacity="0.3"
+              points="0,0, 1.17,-0.44"/>
+    <polyline id="pow1" fill="none" stroke="black" opacity="0.3"
+              points="0,0, 1.1,-0.2"/>
+    <circle id="ppt6" fill="black" stroke="none" opacity="0.6"
+            cx="0.922077" cy="-1.721764" r="0.06"/>
+    <circle id="ppt5" fill="black" stroke="none" opacity="0.6"
+            cx="1.08691" cy="-1.36762" r="0.06"/>
+    <circle id="ppt4" fill="black" stroke="none" opacity="0.6"
+            cx="1.1753" cy="-1.0296" r="0.06"/>
+    <circle id="ppt3" fill="black" stroke="none" opacity="0.6"
+            cx="1.199" cy="-0.718" r="0.06"/>
+    <circle id="ppt2" fill="black" stroke="none" opacity="0.6"
+            cx="1.17" cy="-0.44" r="0.06"/>
+    <circle id="ppt1" fill="#ff8000" stroke="transparent" stroke-width="0.05"
+            cx="1.1" cy="-0.2" r="0.06"/>  <!-- fat stroke easier to grab -->
+  </svg></div>
+  <p>The modulus of the product of any two complex numbers is the
+    product of their moduli, and the argument of their product is the
+    sum of their arguments.  Geometrically, this means that when you
+    raise a complex number $z$ to successive powers by squaring it,
+    cubing it, raising it to the fourth power, and so on, what you are
+    doing is constructing a series of triangles the same shape as the
+    one formed by the points $0$, $1$, and $z$, stacked onto each
+    other as shown in the figure.  The orange dot is $z$, and the blue
+    segment goes from $0$ to $1$.  The arc of gray points are $z^2$,
+    $z^3$, $z^4$, $z^5$, and $z^6$.  You can drag the orange point $z$
+    around to observe the pattern its powers make on the plane: An arc
+    that spirals outward or inward according to whether $z$ is outside
+    or inside the unit circle (of radius one centered at the origin).
+    Examine what happens when $z$ lies on the unit circle or on the
+    real (horizontal) or imaginary (vertical) axis.</p>
+  <p>If the lovely arc of the powers of $z$ strikes your fancy, look
+    up "logarithmic spiral" and you will find many people agree.</p>
+</div>
+<div class="textcolumn" style="clear: right;">
+  <p>The case when $z$ lies on the unit circle richly rewards closer
+    scrutiny.  All powers of any such $z$ also lie on the unit circle.
+    In the figure below, you may select a power $p$ from two to six
+    and explore how $z^p$ changes as you move $z$ around the unit
+    circle.</p>
+  <div class="halfwide">
+  <svg xmlns="http://www.w3.org/2000/svg"
+       viewBox="-1.1 -1.1 2.2 2.2" onload="unit_interactions(evt)"
+       stroke-width="0.015">
+    <line stroke="#0080ff" opacity="0.3" stroke-width="0.0075"
+          x1="-2.1" y1="0" x2="2.1" y2="0"/>
+    <line stroke="#0080ff" opacity="0.3" stroke-width="0.0075"
+          x1="0" y1="-2.1" x2="0" y2="2.1"/>
+    <circle fill="none" stroke="#0080ff" opacity="0.3" stroke-width="0.0075"
+            cx="0" cy="0" r="1"/>
+    <polyline fill="none" stroke="#0080ff" points="0,0, 1,0"/>
+    <polyline id="uarc" fill="none" stroke="black" opacity="0.0"
+              points="1,0, 0.983870,-0.178885, 0.936000,-0.352000,
+                      0.857935,-0.513759, 0.752192,-0.658944,
+                      0.622184,-0.782871, 0.472103,-0.881543"/>
+    <polyline fill="none" stroke="#ff8000" points="1,0, 1.1,0"/>
+    <polyline id="utk1" fill="none" stroke="#ff8000" display="block"
+              points="0.5,0.866025, 0.55,0.952628"/>
+    <polyline id="utk2" fill="none" stroke="#ff8000" display="block"
+              points="-0.5,0.866025, -0.55,0.952628"/>
+    <polyline id="utk3" fill="none" stroke="#ff8000" display="block"
+              points="-1,0, -1.1,0"/>
+    <polyline id="utk4" fill="none" stroke="#ff8000" display="block"
+              points="-0.5,-0.866025, -0.55,-0.952628"/>
+    <polyline id="utk5" fill="none" stroke="#ff8000" display="block"
+              points="0.5,-0.866025, 0.55,-0.952628"/>
+    <polyline id="uow6" class="linehot"
+              points="0,0, 0.472103,-0.881543"/>
+    <polyline id="uow5" class="linenot"
+              points="0,0, 0.622184,-0.782871"/>
+    <polyline id="uow4" class="linenot"
+              points="0,0, 0.752192,-0.658944"/>
+    <polyline id="uow3" class="linenot"
+              points="0,0, 0.857935,-0.513759"/>
+    <polyline id="uow2" class="linenot"
+              points="0,0, 0.936000,-0.352000"/>
+    <polyline id="uow1" fill="none" stroke="#ff8000" opacity="0.6"
+              points="0,0, 0.983870,-0.178885"/>
+    <circle id="upt6" class="dothot"
+            cx="0.472103" cy="-0.881543" r="0.034"/>
+    <circle id="upt5" class="dotnot"
+            cx="0.622184" cy="-0.782871" r="0.034"/>
+    <circle id="upt4" class="dotnot"
+            cx="0.752192" cy="-0.658944" r="0.034"/>
+    <circle id="upt3" class="dotnot"
+            cx="0.857935" cy="-0.513759" r="0.034"/>
+    <circle id="upt2" class="dotnot"
+            cx="0.936000" cy="-0.352000" r="0.034"/>
+    <circle id="upt1" fill="#ff8000" stroke="transparent" stroke-width="0.025"
+            cx="0.983870" cy="-0.178885" r="0.034"/>
+  </svg>
+    <div class="buttondiv">
+    <br/>Choose power: 
+    <button id="ubut2" type="button" class=""><b>2</b></button>
+    <button id="ubut3" type="button" class=""><b>3</b></button>
+    <button id="ubut4" type="button" class=""><b>4</b></button>
+    <button id="ubut5" type="button" class=""><b>5</b></button>
+    <button id="ubut6" type="button" class="bselected"><b>6</b></button>
+    </div>
+  </div>
+  <p>When you drag the orange point $z$ once around the circle, the
+    blue point $z^p$ to orbits $p$ times.  Thus there are $p$ values
+    of $z$ for which $z^p = 1$, marked by the orange ticks around the
+    perimeter of the unit circle.  Since the angles between successive
+    powers are equal, these $p$ points are equally spaced around the
+    unit circle, forming a regular $p$-gon.  Each of these $p$ points
+    is a $p$-th root of $1$.  We see that the fact that two real
+    numbers ($+1$ and $-1$) which square to give one is a special case
+    of the general rule that there are $p$ complex numbers with a
+    $p$-th power of one.  These "$p$-th roots of unity" are equally
+    spaced around the unit circle.</p>
+  <p>In standard mathematical notation, $1^{1/p} = 1$ for all $p$ --
+    the most boring choice is the most convenient and consistent for
+    many purposes.  But fractional powers are ambiguous, and in the
+    case of roots of one, we can make a far more useful choice: On
+    this page, let's write $1^{1/p}$ for the first
+    <em>interesting</em> $p$-th root of unity.  The other $p$-th roots
+    are then $1^{2/p}$, $1^{3/p}$, $1^{4/p}$, and so on up to $1^{p/p}
+    = 1$.  Still higher powers hop counterclockwise around the circle
+    again, looping back to $1$ at every multiple of $p$; negative
+    powers loop clockwise.  By our definition, powers of $1^{1/p}$ are
+    clock arithmetic.</p>
+  <p>By defining $1^{1/p}$, we have in fact defined $1^\alpha$ for all
+    rational numbers $\alpha$, and by continuity for all real numbers
+    $\alpha$: $1^\alpha$ is the complex number which lies $\alpha$
+    clockwise revolutions around the unit circle starting from the
+    point $1$, including fractions of a revolution.  That is, an angle
+    in units of revolutions (often called cycles) is a power of $1$.</p>
+</div>
+<div class="textcolumn" style="clear: right; margin-top: 2em;">
 </div>
 <script>
+  var tracking = null;
+
+  function add_trackers(svg, targets, start, track, stop) {
+    // svg = svg element
+    // targets = array of elements in svg to listen for mouse down events
+    // start(index, coords) --> tracking (or null to abort)
+    //   index = index into targets
+    //   coords = event coordinates in svg coordinate system
+    // track(tracking, coords) --> tracking (or null to abort)
+    //   tracking = returned by start
+    //   coords = event coordinates in svg coordinate system
+    // stop(tracking)
+    //   tracking = returned by start
+
+    function svgcoords(evt) {  // return event coordinates
+      var CTM = svg.getScreenCTM();
+      if (evt.touches) {
+        evt = evt.touches[0];
+      }
+      return {
+        x: (evt.clientX - CTM.e) / CTM.a,
+        y: (evt.clientY - CTM.f) / CTM.d
+      };
+    }
+
+    function wrapstart(evt) {
+      if (tracking !== null) {
+        wrapstop(evt);
+      }
+      var t = evt.target;
+      var index = targets.indexOf(t);
+      if (index < 0) {
+        return;
+      }
+      evt.stopPropagation();
+      evt.preventDefault();  // make usable for touch events
+      tracking = start(index, svgcoords(evt));
+    }
+
+    function wraptrack(evt) {
+      if (tracking === null) {
+        return;
+      }
+      evt.stopPropagation();
+      evt.preventDefault();  // make usable for touch events
+      tracking = track(tracking, svgcoords(evt));
+    }
+
+    function wrapstop(evt) {
+      if (tracking === null) {
+        return;
+      }
+      evt.stopPropagation();
+      evt.preventDefault();  // make usable for touch events
+      stop(tracking);
+      tracking = null;
+    }
+
+    svg.addEventListener("mousedown", wrapstart);
+    svg.addEventListener("mousemove", wraptrack);
+    svg.addEventListener("mouseup", wrapstop);
+    svg.addEventListener("mouseleave", wrapstop);
+    svg.addEventListener("touchstart", wrapstart);
+    svg.addEventListener("touchmove", wraptrack);
+    svg.addEventListener("touchend", wrapstop);
+    svg.addEventListener("touchcancel", wrapstop);
+  }
+
+  function get_element(id) {
+    return document.getElementById(id);
+  }
+
+  var round = Math.round;
+  var abs = Math.abs;
+  var sqrt = Math.sqrt;
+
+  function pow_interactions(evt) {
+    var power = evt.target;
+    var handle = ["ppt1"].map(get_element);
+    var apts = get_element("parc").getAttributeNodeNS(null, "points");
+    var pws = ["pow1","pow2","pow3","pow4","pow5","pow6"].map(get_element);
+    var pts = ["ppt1","ppt2","ppt3","ppt4","ppt5","ppt6"].map(get_element);
+    var pxy = pws.map(function(e)
+                      {return e.getAttributeNodeNS(null, "points");});
+    var cxy = pts.map(function(e) { return [
+      e.getAttributeNodeNS(null, "cx"), e.getAttributeNodeNS(null, "cy")];});
+    var xnow = 1.1;
+    var ynow = -0.2;  // that is, 1.1+i0.2 since svg plots y downward
+
+    function start(index, coords) {
+      return [coords.x - xnow, coords.y - ynow];
+    }
+
+    function track(tracking, coords) {
+      xnow = coords.x - tracking[0];
+      ynow = coords.y - tracking[1];
+      if (xnow*xnow + ynow*ynow > 4.0) {
+        xnow = 1.1;
+        ynow = -0.2;
+      }
+      var x = xnow;
+      var y = ynow;
+      var points = "1,0";
+      var i, xq, yq, xyq, xx;
+      for (i=0 ; i<6 ; i+=1) {
+        xq = "" + x;  yq = "" + y;
+        xyq = ", " + xq + "," + yq;
+        points += xyq;
+        pxy[i].value = "0,0" + xyq;
+        cxy[i][0].value = xq;  cxy[i][1].value = yq;
+        xx = x;
+        x = x*xnow - y*ynow;  y = xx*ynow + y*xnow;  // (x, y) *= (xnow, ynow)
+      }
+      apts.value = points;
+      return tracking;
+    }
+    
+    function stop(tracking) {
+      return;
+    }
+
+    add_trackers(power, handle, start, track, stop);
+  }
+
+  function classof(elem) {
+    return elem.getAttributeNodeNS(null, "class");
+  }
+
+  function unit_interactions(evt) {
+    var unit = evt.target;
+    var handle = ["upt1"].map(get_element);
+    var apts = get_element("uarc").getAttributeNodeNS(null, "points");
+    var tks = ["utk1","utk2","utk3","utk4","utk5"].map(get_element);
+    var pws = ["uow1","uow2","uow3","uow4","uow5","uow6"].map(get_element);
+    var pts = ["upt1","upt2","upt3","upt4","upt5","upt6"].map(get_element);
+    var pxy = pws.map(function(e){return e.getAttributeNodeNS(null,"points")});
+    var cxy = pts.map(function(e) { return [
+      e.getAttributeNodeNS(null, "cx"), e.getAttributeNodeNS(null, "cy")];});
+    var xnow = 1.1;
+    var ynow = -0.2;  // that is, 1.1+i0.2 since svg plots y downward
+
+    var power = 6;
+    var buts = ["ubut2", "ubut3", "ubut4", "ubut5", "ubut6"].map(get_element);
+    var butcl = buts.map(classof);
+    var pwcl = pws.map(classof);
+    var ptcl = pts.map(classof);
+    var tkd = tks.map(function(e){return e.getAttributeNodeNS(null,"display")});
+    var tkp = tks.map(function(e){return e.getAttributeNodeNS(null,"points")});
+    // table of cosines and sines of 2pi/p for p=2, 3, 4, 5, 6
+    var ctk = [-1.0, -0.5, 0.0, 0.309017, 0.5];
+    var stk = [0.0, 0.866025, 1.0, 0.951057, 0.866025];
+
+    function power_select(evt) {
+      var but = evt.currentTarget;
+      var old_power = power;
+      var n = buts.indexOf(but)
+      var i;
+      power = n + 2;
+      if (power < 2 || power > 7) {
+        power = 6;
+        but = buts[4];
+      }
+      if (power != old_power) {
+        butcl[old_power-2].value = "";
+        n = power - 1;
+        butcl[power-2].value = "bselected";
+        for (i=1 ; i<n ; i+=1) {
+          pwcl[i].value = "linenot";
+          ptcl[i].value = "dotnot";
+        }
+        if (n) {
+          pwcl[n].value = "linehot";
+          ptcl[n].value = "dothot";
+        }
+        for (i=n+1 ; i<6 ; i+=1) {
+          pwcl[i].value = ptcl[i].value = "dotoff";
+        }
+        var c = ctk[power-2];
+        var s = stk[power-2];
+        var x = 1.0;
+        var y = 0.0;
+        var xx;
+        for (i=0 ; i<5 ; i+=1) {
+          tkd[i].value = (i <= n)? "block" : "none";
+          if (i > n) {
+            continue;
+          }
+          xx = x;
+          x = x*c - y*s;
+          y = xx*s + y*c;
+          tkp[i].value = x + "," + y + ", " + (1.1*x) + "," + (1.1*y);
+        }
+      }
+    }
+    buts.map(function(e) {e.addEventListener("click", power_select);});
+
+    function start(index, coords) {
+      return [coords.x - xnow, coords.y - ynow];
+    }
+
+    function track(tracking, coords) {
+      xnow = coords.x - tracking[0];
+      ynow = coords.y - tracking[1];
+      var r = sqrt(xnow*xnow + ynow*ynow);
+      if (r > 1.2 || r < 0.1) {
+        xnow = 0.983870;
+        ynow = -0.178885;
+        r = 1.0;
+      } else {
+        xnow /= r;
+        ynow /= r;
+      }
+      var x = xnow;
+      var y = ynow;
+      var points = "1,0";
+      var i, xq, yq, xyq, xx;
+      for (i=0 ; i<6 ; i+=1) {
+        xq = "" + x;  yq = "" + y;
+        xyq = ", " + xq + "," + yq;
+        points += xyq;
+        pxy[i].value = "0,0" + xyq;
+        cxy[i][0].value = xq;  cxy[i][1].value = yq;
+        xx = x;
+        x = x*xnow - y*ynow;  y = xx*ynow + y*xnow;  // (x, y) *= (xnow, ynow)
+      }
+      apts.value = points;
+      return tracking;
+    }
+    
+    function stop(tracking) {
+      return;
+    }
+
+    add_trackers(unit, handle, start, track, stop);
+  }
 </script>
 </body>
 </html>
