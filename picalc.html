@@ -3,7 +3,7 @@
 <head>
   <title>Computing Pi by Hand</title>
   <meta name="description"
-    content="How Euler computed Pi to twenty digits in an hour.">
+    content="Euler computed Pi to twenty digits in an hour.  Can you?">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script>MathJax = {tex: { inlineMath: [["$", "$"], ["\\(", "\\)"]] }};
@@ -34,15 +34,15 @@
   <p>In the mid-seventeen hundreds, Euler produced a series which sums
     to $\pi$ and used it to compute the first twenty digits.  I
     decided to try the same thing, and managed the feat in about a day
-    (spread over parts of three days), including a couple of hours to
-    re-derive his formula.  I made a half dozen arithmetic errors
-    which I could catch and fix because I memorized thirty five digits
-    of $\pi$ years ago.  Euler certainly knew more than twenty digits
-    of $\pi$ in advance as well, since Machin had computed $\pi$ in a
-    similar way to a hundred digits decades earlier.  On the other
-    hand, Euler (or Machin for that matter) was hugely more adept at
-    arithmetic than I am, and may well have gotten it right the first
-    time.</p>
+    (spread over parts of three days), including several hours to
+    re-derive his formulas and do some reading.  I made a half dozen
+    arithmetic errors which I could catch and fix because I memorized
+    thirty five digits of $\pi$ years ago.  Euler certainly knew more
+    than twenty digits of $\pi$ in advance as well, since Machin had
+    computed $\pi$ in a similar way to a hundred digits decades
+    earlier.  On the other hand, Euler (or Machin for that matter) was
+    hugely more adept at arithmetic than I am, and may well have
+    gotten it right the first time.</p>
   <p>The basic idea is to use an infinite series for the arctangent
     function $\tan^{-1}$.  Machin used the Taylor series for arctangent,
     which has derivative
@@ -77,13 +77,16 @@
     Now the unit of measure for the angle $\theta$ here is radians, so
     that $\tan^{-1}1 = \pi/4$ is the value for $45^\circ$.  Both the
     Machin and Euler techniques use this fact.  However, the direct
-    series you get by plugging $t=1$ into the formula, $$\pi/4 =
-    1-1/3+1/5-1/7+...$$ converges so slowly that it is computationally
-    worthless (it takes fifty terms to get the first two digits, which
-    were known to the ancients).  However, notice that if $t$ were
+    series you get by plugging $t=1$ into the formula, the famous
+
+    $$\pi/4 = 1-1/3+1/5-1/7+...,$$
+
+    converges so slowly that it is computationally worthless.  (It
+    takes fifty terms to get the first two digits, which were known to
+    the ancients by other means.)  However, notice that if $t$ were
     much smaller than $1$, the series would converge far more rapidly.
     The smaller $t$, the fewer terms of the series you must sum to get
-    its arctangent to any des</p>
+    its arctangent to any desired accuracy.</p>
   <p>Machin had a very clever idea, which is to use the formula for
     the tangent of the sum of two angles to find a set of smaller
     angles which add up to $45^\circ$.  You can organize this kind of
@@ -126,13 +129,22 @@
   <p>Euler improved on Machin's method by finding a decomposition of
     $\tan^{-1}1$ into two parts for which <em>both</em> values of $t$
     are easy to multiply in base ten.  But first, Euler develops a
-    different power series for arctangent, based on the fact that
+    different power series for arctangent.  He was a pioneer of
+    finding ways to accelerate the convergence of series, and he
+    discovered a general procedure, now called the Euler transform,
+    that can be applied to more quickly sum any series whose terms
+    alternate in sign like the arctangent series.  Naturally Euler
+    applied his transform to that series, producing a new series which
+    converges considerably faster.  But the Euler transform is rather
+    complicated, and for the particular case of the arctangent series
+    the result can be derived (or verified if you prefer) much more
+    easily, beginning with the trigonometric identity
 
     $$\sin^2\theta = \tan^2\theta/(1 + \tan^2\theta).$$
 
-    Therefore if we define $x=t^2/(1+t^2)$, we have
+    Therefore if we define $x=t^2/(1+t^2)=\sin^2\theta$, we have
 
-    $$\tan^{-1}t = \sin^{-1}x^{1/2}.$$
+    $$\theta = \tan^{-1}t = \sin^{-1}x^{1/2}.$$
 
     The idea is to develop a power series in $x$ instead of in $t$,
     but you can't do that directly because of the singularity of
@@ -164,7 +176,7 @@
     \end{align*}$$
 
     Together with the fact that $(x(1-x))^{1/2} = x/t,$ this
-    recurrence produces Euler's series for arctangent:
+    recurrence produces Euler's transformed series for arctangent:
 
     $$\tan^{-1}t = \frac{x}{t}\left(1+\frac{2}{3}x+\frac{2\cdot 4}{3\cdot 5}x^2
       + \frac{2\cdot 4\cdot 6}{3\cdot 5\cdot 7}x^3
@@ -178,18 +190,18 @@
       \frac{1\cdot 2\cdot 3}{3\cdot 5\cdot 7} +
       \frac{1\cdot 2\cdot 3\cdot 4}{3\cdot 5\cdot 7\cdot 9} + ...$$
 
-    Unlike the Taylor series, this series converges reasonably
-    quickly, though not nearly as fast as either of the Machin series.
-    But using Machin's decomposition trick, we can do much better.
+    As promised, this series converges reasonably quickly -- far more
+    quickly than the $t=1$ arctangent series.  However, it still
+    doesn't converge nearly as fast as either of the Machin series.
+    But we haven't yet applied Machin's decomposition trick, so we can
+    do much better.
   </p>
-  <p>For small $t$, however, Euler's series in powers of $x$ does not
-    converge a lot quicker than the Taylor series in $t$: Although $x
-    \sim t^2$ for small $t$, all the powers of $x$ appear in the Euler
-    series, whereas the series in $t$ contained only odd powers.
-    Instead, the advantage is that Euler was able to find a
-    decomposition of $\tan^{-1}1$ into a pair of angles for which $x$,
-    rather than $t$, makes <em>both</em> angles easy to work with in
-    base ten:
+  <p>For small $t$, the acceleration afforded by the Euler transform
+    is modest, so whether it can be used to beat the Machin method
+    depends on whether there exists a comparable decompostion of
+    $\tan^{-1}1$.  Euler discovered that there is a two angle
+    decomposition for which <em>both</em> angles are easy to work with
+    in base ten:
 
     $$\frac{\pi}{4} =
       \tan^{-1}1 = 5\tan^{-1}\frac{1}{7} + 2\tan^{-1}\frac{3}{79}$$
@@ -201,34 +213,31 @@
     terminating decimal fractions.  This dramatically simplifies the
     base ten arithmetic if you are doing the calculation by hand.  The
     $1/7$ series drops an extra factor of two per term compared to the
-    Machin series, which means you need about 30% fewer terms for the
-    same final accuracy.  The $3/79$ term, on the other hand,
-    converges far more slowly than Machin's $1/239$, requiring about
-    70% more terms for the same accuracy.  But the simplicity of
-    computing those terms by hand in base ten more than
-    compensates, making Euler's method a less daunting choice for
-    computing $\pi$ using pencil and paper.  It is perhaps the easiest
-    method for computing $\pi$ by hand ever discovered.</p>
+    Machin series (from $1/5^2$ to $1/50$), which means you need about
+    30% fewer terms for the same final accuracy.  The $3/79$ term, on
+    the other hand, converges far more slowly than Machin's $1/239$,
+    requiring about 70% <em>more</em> terms for the same accuracy.
+    But the simplicity of computing those terms by hand in base ten
+    more than compensates, making Euler's method a less daunting
+    choice for computing $\pi$ using pencil and paper.  It is perhaps
+    the easiest method for computing $\pi$ by hand ever
+    discovered.</p>
   <p>Notice that each term of the series (either for Euler or Machin)
     is a rational number.  Thus, no matter where you terminate the series,
     your approximate value for $\pi$ is technically a rational number.
     You don't need to extract any square roots.  In fact, you only need
     to divide by small integers, which, by hand at least, is much easier
     than dividing by large integers.</p>
-  <p>The Euler series in $x$ can be obtained from the Taylor series in
-    an arduous manner by applying a general technique for accelerating
-    convergence of alternating series called the Euler transform.  I
-    assume Euler himself was studying the Taylor series for arctangent
-    when he found the series in $x$, rather than by the much simpler
-    derivation I sketched above.  The more interesting question is how
-    Euler managed to discover his decompositon formula.</p>
   <p>I can imagine how Machin discovered his $1/5$ plus $1/239$
-    formula; he would naturally have looked at fractions with
+    formula: He would naturally have looked at fractions with
     simple terminating decimals $1/4$, $1/5$, $1/8$, $1/10$.  He then
     builds multiples using the tangent sum formula, and rather quickly
     notices that four times the angle whose tangent is $1/5$ happens
     to be extraordinarily close to $45^\circ$; the $1/239$ remainder
-    then drops out quickly as in the derivation given above.</p>
+    then drops out quickly as in the derivation given above.  If you
+    were searching for a way to compute $\pi$, you would plausibly
+    discover this decomposition.
+  </p>
   <p>Euler's $1/7$ plus $3/79$ formula, on the other hand, is beyond
     measure more difficult to discover.  Five times the $1/7$ angle
     isn't notably close to $45^\circ$, and wouldn't really stand out.
@@ -237,12 +246,15 @@
     experimented with all the multiples of small integer ratios, but
     that seems a collosal undertaking.  Furthermore, it's extremely
     difficult to recognize values of $t$ for which $x$ (not $t$) is a
-    nice base ten decimal.  The fact that $1/7$ has the nice $x=1/50$ is
-    not too hard to notice; after all, $7^2+1=50$ is responsible for
-    the fact that $\sqrt{0.5} \sim 0.7$ which is very close to the
+    nice base ten decimal.  The fact that $1/7$ has the nice $x=1/50$
+    is not too hard to notice; after all, $7^2+1=50$ is responsible
+    for the fact that $\sqrt{0.5} \sim 0.7$ which is very close to the
     heart of any arithmetician.  But noticing that $79^2+3^2=6250$ is
     a thousand times $5/8$?  That seems a Ramanujanian feat, and is
-    the true genius of the whole work.</p>
+    the true genius of the whole work.  Whether Euler was actively
+    searching for a way to compute $\pi$, or whether he merely noticed
+    this decomposition and understood it could be used for this
+    purpose, his discovery is remarkable.</p>
   <p>To show how much harder Euler's decomposition is than Machin's,
     here's my work checking that it's true:
 
@@ -352,8 +364,8 @@
   <p>So here are the results I got by hand (on the second attempt in a
     few cases) for the two series.  I show only the results; the
     actual calculations filled about seven sheets of binder paper.
-    For comparison, the algebra to derive all the formulas and error
-    estimates filled five sheets.  If you give it a try, you can check
+    (For comparison, the algebra to derive all the formulas and error
+    estimates filled five sheets.)  If you give it a try, you can check
     your results against these to spot and correct your errors.  We
     begin with the $t=3/79$ series:
 
@@ -365,10 +377,15 @@
     b_5 x^5 = 10/11 x b_4 x^4 &= 0.0000000000000022872792\ 56 \\
     b_6 x^6 = 12/13 x b_5 x^5 &= 0.0000000000000000030403\ 22 \\
     \sum b_n x^n              &= 1.0009611072867707746717 \\
-    b_6 x^6 x/(1-x)           &= 0.0000000000000000000044\ \text{upper}
+    b_6 x^6 x/(1-x)           &= 0.0000000000000000000044\ \text{error}
     \end{align*}$$
 
-    And here is the $t=1/7$ series:
+    Note that some of the $2nx/(2n+1)$ factors have cancellations
+    which simplify the calculation, because
+    $x=0.00144=16\cdot9\cdot10^{-5}$.  For example, $8x/9=128\cdot
+    10^{-5}$.</p>
+
+  <p>And here is the $t=1/7$ series:
     $$\begin{align*}
     b_1 x =    2/3  x                  &= 0.0133333333333333333333\ 33 \\
     b_2 x^2 =  4/5  x b_1 x            &= 0.0002133333333333333333\ 33 \\
@@ -382,17 +399,19 @@
     b_{10}x^{10}= 20/21 x b_9 x^9      &= 0.0000000000000000027674\ 64 \\
     b_{11}x^{11}= 22/23 x b_{10}x^{10} &= 0.0000000000000000000529\ 42 \\
     \sum b_n x^n                       &= 1.0135503900297423058050 \\
-    b_{11} x^{11} x/(1-x)              &= 0.0000000000000000000011\ \text{upper}
+    b_{11} x^{11} x/(1-x)              &= 0.0000000000000000000011\ \text{error}
     \end{align*}$$
+
+    The only cancellation here is in the $14/15$ term.
   </p>
   <p>All that remains is to multiply the $t=3/79$ series by $0.07584$ and
     the $t=1/7$ series by $0.7$ and add them, showing 22 decimal places:
 
     $$\begin{array}{rl}
-    &        0.0759128903766286955511 \\
-    &        0.7094852730208196140635 \\
-    \pi/4= & 0.7853981633974483096146 \\
-    \pi =  & 3.1415926535897932384584
+    3/79\ \text{part}& 0.0759128903766286955511 \\
+    1/7\ \text{part}&  0.7094852730208196140635 \\
+    \pi/4= &          0.7853981633974483096146 \\
+    \pi =  &          3.1415926535897932384584
     \end{array}$$
 
     The upper bounds on the contributions of the remaining terms are
@@ -407,10 +426,9 @@
   <p>The diameter of the solar system is about $1.5\times
     10^{10}$&nbsp;km, so our error of $10^{-21}/3$ would produce an
     error in its perimeter of $0.5\times 10^{-11}$&nbsp;km, or
-    $5$&nbsp;nm, which is about 50 atoms.  I'm very happy to have
-    personally verified the value of $\pi$ to an accuracy far greater
-    than any practical need, courtesy of the genius of Euler and the
-    inspiration of Machin before him.
+    $5$&nbsp;nm, which is about 50 atoms.  So I've finally verified
+    the value of $\pi$ to an accuracy far greater than any practical
+    need, courtesy of the genius of Euler as inspired by Machin.
   </p>
 </div>
 </body>
