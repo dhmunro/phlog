@@ -157,11 +157,11 @@
     doing is constructing a series of triangles the same shape as the
     one formed by the points $0$, $1$, and $z$, stacked onto each
     other as shown in the figure.  The orange dot is $z$, and the blue
-    segment goes from $0$ to $1$.  The arc of gray points are $z^2$,
-    $z^3$, $z^4$, $z^5$, and $z^6$.  You can drag the orange point $z$
-    around to observe the pattern its powers make on the plane: An arc
-    that spirals outward or inward according to whether $z$ is outside
-    or inside the unit circle (of radius one centered at the origin).
+    segment goes from $0$ to $1$.  The gray dots are $z^2$, $z^3$,
+    $z^4$, $z^5$, and $z^6$.  You can drag the orange point $z$ around
+    to observe the pattern its powers make on the plane: An arc that
+    spirals outward or inward according to whether $z$ is outside or
+    inside the unit circle (of radius one centered at the origin).
     Examine what happens when $z$ lies on the unit circle or on the
     real (horizontal) or imaginary (vertical) axis.</p>
   <p>If the lovely arc of the powers of $z$ strikes your fancy, look
@@ -170,8 +170,8 @@
 <div class="textcolumn" style="clear: right;">
 
   <h2>Fractional powers</h2>
-  <p>The case when $z$ lies on the unit circle richly rewards closer
-    scrutiny.  All powers of any such $z$ also lie on the unit circle.
+  <p>Let's take a closer look at the case when $z$ lies on the unit
+    circle.  All powers of any such $z$ also lie on the unit circle.
     In the figure below, you may select a power $p$ from two to six
     and explore how $z^p$ changes as you move $z$ around the unit
     circle.</p>
@@ -242,30 +242,31 @@
     powers are equal, these $p$ points are equally spaced around the
     unit circle, forming a regular $p$-gon.  Each of these $p$ points
     is a $p$-th root of $1$.  We see that the fact that two real
-    numbers ($+1$ and $-1$) which square to give one is a special case
-    of the general rule that there are $p$ complex numbers with a
-    $p$-th power of one.  These "$p$-th roots of unity" are equally
-    spaced around the unit circle.</p>
+    numbers ($+1$ and $-1$) whose squares are one is a special case of
+    the general rule that there are $p$ complex numbers with a $p$-th
+    power of one.  These "$p$-th roots of unity" are equally spaced
+    around the unit circle.</p>
   <p>In standard mathematical notation, $1^{1/p} = 1$ for all $p$ --
     the most boring choice is the most convenient and consistent for
     many purposes.  But fractional powers are ambiguous, and in the
     case of roots of one, we can make a far more useful choice: On
     this page, let's write $1^{1/p}$ for the first
-    <em>interesting</em> $p$-th root of unity.  The other $p$-th roots
-    are then $1^{2/p}$, $1^{3/p}$, $1^{4/p}$, and so on up to $1^{p/p}
-    = 1$.  Still higher powers hop counterclockwise around the circle
-    again, looping back to $1$ at every multiple of $p$; negative
-    powers loop clockwise.  By our definition, powers of $1^{1/p}$ are
-    clock arithmetic.</p>
+    <em>interesting</em> $p$-th root of unity - the nearest to $1$ as
+    we go counterclockwise around the unit circle.  The other $p$-th
+    roots are then $1^{2/p}$, $1^{3/p}$, $1^{4/p}$, and so on up to
+    $1^{p/p} = 1.$ Powers greater than $p$ hop counterclockwise around
+    the circle again, looping back to $1$ at every multiple of $p$;
+    negative powers loop clockwise.</p>
   <p>Thus by defining $1^{1/p}$, we have in fact defined $1^\alpha$
     for all rational numbers $\alpha=n/p$, and by continuity for all
     real numbers $\alpha$.  Namely, $1^\alpha$ is the complex number
-    which lies $\alpha$ clockwise revolutions around the unit circle
-    starting from the point $1$, including fractions of a revolution.
-    That is, an angle in units of revolutions (often called cycles) is
-    a power of $1$.  In trigonometry, the $x$ and $y$ coordinates of a
-    point on the unit circle as functions of angle from the $x$-axis
-    are called cosine and sine, respectively, so by our definition
+    which lies $\alpha$ counterclockwise revolutions around the unit
+    circle starting from the point $1$, including fractions of a
+    revolution.  That is, an angle in units of revolutions (often
+    called cycles) is a power of $1$.</p>
+  <p>In trigonometry, the $x$ and $y$ coordinates of a point on the
+    unit circle as functions of angle from the $x$-axis are called
+    cosine and sine, respectively, so by our definition
 
     $$1^\alpha = \cos\alpha + i\sin\alpha.$$
 
@@ -321,11 +322,11 @@
     or $3$ degrees.  For example, $1/5-1/6=1/30$ then
     $4/30-1/8=1/120$, or in degrees $72-60=12$ then $4\times 12-45=3$.
   </p>
-  <p>
-    More important are the half-angle formulas, which follow from
-    the fact that the diagonal of the rhombus formed by the points
-    $1^\alpha$, $0$, $1$, and $1+1^\alpha$ bisects angle $\alpha$.
-    Algebraically, $1^\alpha||1+1^\alpha||^2 = (1+1^\alpha)^2$, so
+  <p>To compute smaller angles, we can use the fact that the diagonal
+    of the rhombus formed by the points $1^\alpha$, $0$, $1$, and
+    $1+1^\alpha$ bisects angle $\alpha$.  Algebraically, notice that
+    $1^\alpha||1+1^\alpha||^2 = 1^\alpha(1+1^{-\alpha})(1+1^\alpha) =
+    (1+1^\alpha)^2$, so
 
     $$\begin{eqnarray*}
     1^{\alpha/2} &=& (1+1^\alpha) / ||1 + 1^\alpha|| \\
@@ -334,7 +335,8 @@
     \end{eqnarray*}$$
 
     where $||z||$ means the modulus of $z$, and we have used the fact
-    that $||1^\alpha|| = \cos^2\alpha + \sin^2\alpha = 1$.</p>
+    that $||1^\alpha|| = \cos^2\alpha + \sin^2\alpha = 1$ several
+    times.</p>
   <p>Using the half-angle formula, we can compute the sine and cosine
     of $1/2^n$ revolutions for any $n$, and using the sum formulas we
     can recombine them to find the sine and cosine of any terminating
@@ -343,10 +345,13 @@
     calculations began by bisecting the $30$ degree half angle of an
     equilateral triangle rather than a $90$ degree quarter
     revolution.</p>
-  <p>Note that there are simple formulas for $1^{1/p}$ for $p$ equal
-    to $2$, $3$, $4$, $5$, $6$, and $8$.  The ancient Greeks were
-    inordinately fond of the $p=5$ case, which involves the Golden
-    ratio.</p>
+  <p>Today, we use more efficient techniques for computing sines and
+    cosines, or for the inverse operation of computing the power
+    $\alpha$ when we know the coordinates of the point in the plane.
+    However, if you can multiply and extract square roots, and if you
+    have some patience, you can use the formulas we've derived here
+    from complex mulitplication to make your own tables of sine and
+    cosine for a few dozen angles with four to six digit accuracy.</p>
 
   <h2>Relation to Euler's formula</h2>
   <p>You probably won't see this definition of the complex valued
