@@ -329,8 +329,6 @@
   prop47.addEventListener("touchcancel", endDrag);
 
   function startDrag(evt) {
-    evt.stopPropagation();
-    evt.preventDefault();  // make usable for touch events
     var targ = evt.target;
     var index = polys.indexOf(targ);
     selected = null;
@@ -342,11 +340,14 @@
         offset.x -= +pointc_x.value;
         offset.y -= +pointc_y.value;
       } else {
-        if (index < 2) {
+        if (index < 0) {
+          return;
+        } else if (index < 2) {
           selected = targ;
           drag_ready = pending = false;
           state = index;
           delta = 0.0;
+          console.log(index);
           fills[index].value = "#ffe559";
           fills[1-index].value = "#ffffff";
           if (index === 0) {
@@ -519,6 +520,8 @@
         pending = true;
       }
     }
+    evt.stopPropagation();
+    evt.preventDefault();  // make usable for touch events
   }
 
   /* We work around a strange bug in firefox 72 on Windows 10, in which
@@ -527,9 +530,9 @@
    * machines.  The workaround is to add 0.00001 to delta.
    */
   function doDrag(evt) {
-    evt.stopPropagation();
-    evt.preventDefault();  // make usable for touch events
     if (selected && drag_ready) {
+      evt.stopPropagation();
+      evt.preventDefault();  // make usable for touch events
       var coord = svgcoords(evt);
       if (state === -1) {
         var dx = coord.x - offset.x;
@@ -603,10 +606,12 @@
   }
 
   function endDrag(evt) {
-    evt.stopPropagation();
-    evt.preventDefault();  // make usable for touch events
-    selected = null;
-    drag_ready = true;
+    if (selected !== null) {
+      evt.stopPropagation();
+      evt.preventDefault();  // make usable for touch events
+      selected = null;
+      drag_ready = true;
+    }
   }
 }
 function alt47_interactions(evt) {
@@ -671,14 +676,14 @@ function alt47_interactions(evt) {
   }
 
   function startDrag(evt) {
-    evt.stopPropagation();
-    evt.preventDefault();  // make usable for touch events
     selected = null;
     var targ = evt.target;
     var index = movers.indexOf(targ);
     if (!is_moveable(index)) {
       return;
     }
+    evt.stopPropagation();
+    evt.preventDefault();  // make usable for touch events
     selected = index;
     var s = svgcoords(evt);
     if (selected === 4) {
@@ -699,11 +704,11 @@ function alt47_interactions(evt) {
   }
 
   function doDrag(evt) {
-    evt.stopPropagation();
-    evt.preventDefault();  // make usable for touch events
     if (selected === null) {
       return;
     }
+    evt.stopPropagation();
+    evt.preventDefault();  // make usable for touch events
     var s = svgcoords(evt);
     if (selected === 4) {
       var dy = -ghostc - s.y;
@@ -798,11 +803,12 @@ function alt47_interactions(evt) {
   }
 
   function endDrag(evt) {
-    evt.stopPropagation();
-    evt.preventDefault();  // make usable for touch events
     if (selected === 4) {
       ghosto.value = "0.0";
       ghostx.value = "rotate(0.0," + ghostc + "," + (-ghostc) + ")";
+    } else if (selected !== null) {
+      evt.stopPropagation();
+      evt.preventDefault();  // make usable for touch events
     }
     selected = null;
     adjust = 0.0;

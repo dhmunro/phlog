@@ -648,6 +648,19 @@
     difference of their arguments, so this reciprocal formula produces
     very interesting algorithms for computing differences in
     angle.</p>
+
+  <h2>Complex mappings</h2>
+  <p>The key feature of complex numbers and their arithmetic is that a
+    complex number may represent a position (coordinates in a plane),
+    a displacement (addend), or a change of unit (multiplicand).
+    Complex addition and multiplication are interesting because they
+    model the physical operations of translation, rotation, and
+    scaling in the plane.  The situation is exactly analogous to the
+    case of real numbers, which may be coordinates, displacements, or
+    scalings on a line.  Just as you think of a number line, complex
+    arithmetic lets you think about a number plane.  As the name
+    suggests, it gets more complicated, but you won't get bored with
+    a number plane nearly as quickly as with a number line.</p>
   <div class="halfwide">
   <svg xmlns="http://www.w3.org/2000/svg" style="padding-left: 0.5em"
        viewBox="-2 -5 6.1 6.1" onload="orion_interactions(evt)"
@@ -691,21 +704,44 @@
     <rect id="orion1" fill="#ff8000" stroke="none"
           x="-0.1" y="-0.1" width="0.2" height="0.2"
           transform="matrix(1,0,0,1,1,0)"/>
-  </svg></div>
-  <p>The key feature of complex numbers and their arithmetic, as for
-    real numbers, is that a complex number may represent a position
-    (coordinates in a plane), a displacement (addend), or a change of
-    unit (multiplicand).  In the example here, we plot ten complex
-    numbers whose coordinates match the pattern of the constellation
-    Orion in the sky.  The orange unit segment, one edge of the unit
-    square we have chosen, is drawn below them.  You can drag either
-    the unit square marker or the origin circle marker to select one
-    complex number to multiply Orion and another to add to Orion.  Of
-    course, complex addition and multiplication work like this for any
-    pattern of points, which is to say, for anything you can draw.
-    Complex addition and multiplication are interesting because they
-    model the physical operations of translation, rotation, and
-    scaling.</p>
+  </svg>
+  <p class="belowsvg">
+    w =
+    (<span id="oriona" class="" style="color: black;">1.00 + i0.00</span>)z +
+    (<span id="orionb" class="" style="color: black;">0.00 + i0.00</span>)
+  </p>
+  </div>
+  <p>Here we plot ten complex numbers whose coordinates match the
+    pattern of the constellation Orion.  The unit segment, one edge of
+    the unit square we chose, is drawn below them.  You can drag the
+    circle origin marker to translate Orion, or the square unit marker
+    to scale and rotate him.</p>
+  <p>We can label the original coordinate complex numbers $z_k$ for
+    $k=0$ through $9$.  (Say Rigel, Orion's right foot, is $z_0$, and
+    Betelgeuse, his left shoulder, is $z_1$, and so on in order of
+    decreasing brightness, ending with $z_9$ for one of the nebulae in
+    his sword.)  When we select a unit, we are selecting a complex
+    multiplicand, say $a$, and when we select an origin, we are
+    selecting a complex addend, say $b$.  In the original coordinate
+    system, we write $w_k$ for the coordinates of the translated,
+    scaled, and rotated points of Orion.  For each point, $w_k=az_k +
+    b.$  We could add as many points as we please to the pattern, and
+    accomplish the common translation of all of them with the single
+    rule, $w=az+b.$</p>
+  <p>This complex function $w = f(z) = az + b$ maps any point in the
+    complex $z$ plane to a new point $f(z)$ in the complex $w$ plane.
+    We call it a linear mapping.  The complex constants $a$ and $b$
+    represent the rotation and scaling ($a$) and translation ($b$) of
+    the mapping.  Other smooth complex functions, like $w=z^2$,
+    distort figures in the plane, but only by causing the amount of
+    displacement, rotation, and scaling to vary smoothly from place to
+    place -- in small regions around nearly every point every mapping
+    is linear.  Mappings which leave small shapes unchanged except for
+    rotation and scaling are called conformal, and their study is the
+    theory of analytic functions.  Analytic function theory remains a
+    very active and fruitful branch of mathematics.</p>
+  <p>And all of this boils down to how well we understand graph paper
+    and rulers.</p>
 </div>
 <!--
 colors: orangered #ff4500   gold #ffd700
@@ -1166,6 +1202,9 @@ colors: orangered #ff4500   gold #ffd700
     var xfg = get_element("oriong").getAttributeNodeNS(null, "transform");
     var wline = get_element("oline").getAttributeNodeNS(null, "stroke-width");
     var roc = get_element("orangecirc").getAttributeNodeNS(null, "r");
+    var xyz = ["orionb", "oriona"].map(get_element);
+    var cl_xyz = xyz.map(function(e)
+                         {return e.getAttributeNodeNS(null, "class");});
 
     var now0 = [0.0, 0.0];  // current coords of orion0
     var now1 = [1.0, 0.0];  // current coords of orion1
@@ -1173,6 +1212,7 @@ colors: orangered #ff4500   gold #ffd700
     function start(index, coords) {
       var dx = coords.x - (index? now1[0] : now0[0]);
       var dy = coords.y - (index? now1[1] : now0[1]);
+      cl_xyz[index].value = "backlit";
       return [index, [dx, dy]];
     }
 
@@ -1183,6 +1223,7 @@ colors: orangered #ff4500   gold #ffd700
       var y = coords.y - dxy[1];
       var r;
       if (x > 3.9 || x < -1.8 || y > 0.9 || y < -4.8) {
+        cl_xyz[index].value = "";
         now0 = [0.0, 0.0];
         now1 = [1.0, 0.0];
         index = 0;
@@ -1192,6 +1233,7 @@ colors: orangered #ff4500   gold #ffd700
       if (index === 0) {
         now1 = [now1[0] - now0[0] + x, now1[1] - now0[1] + y];
         now0 = [x, y];
+        str_complex(xyz[0], 2, now0, null);
       } else {
         dxy = [x - now0[0], y - now0[1]];
         if (abs(dxy[0]) < 0.1 && abs(dxy[1]) < 0.1) {
@@ -1212,6 +1254,9 @@ colors: orangered #ff4500   gold #ffd700
       xfcirc.value = "translate(" + xy0 + ")";
       xfg.value = ("matrix("+dxy[0]+","+dxy[1]+","+(-dxy[1])+","+dxy[0]+","+
                    xy0 + ")");
+      if (index === 1 || tracking === null) {
+        str_complex(xyz[1], 2, dxy, null);
+      }
       dxy = [dxy[0]/r, dxy[1]/r];
       xfrect.value = ("matrix("+dxy[0]+","+dxy[1]+","+(-dxy[1])+","+dxy[0]+","+
                       now1[0] + "," + now1[1] + ")");
@@ -1221,6 +1266,9 @@ colors: orangered #ff4500   gold #ffd700
     }
 
     function stop(tracking) {
+      if (tracking !== null) {
+        cl_xyz[tracking[0]].value = "";
+      }
       return;
     }
 
