@@ -288,12 +288,12 @@
     Additionally, the angles associated with regular pentagons,
     hexagons, and octagons are mainstays of elementary geometry:
 
-    $$\begin{eqnarray*}
-    1^{1/5} &=& \left.\left(\sqrt{5}-1 + i\sqrt{10+2\sqrt{5}}\right)
+    $$\begin{align*}
+    1^{1/5} &= \left.\left(\sqrt{5}-1 + i\sqrt{10+2\sqrt{5}}\right)
                 \middle/ 4 \right. \\
-    1^{1/6} &=& (1 + i\sqrt{3}) / 2 \\
-    1^{1/8} &=& (1 + i) / \sqrt{2} \\
-    \end{eqnarray*}$$
+    1^{1/6} &= (1 + i\sqrt{3}) / 2 \\
+    1^{1/8} &= (1 + i) / \sqrt{2} \\
+    \end{align*}$$
 
     (The more complicated pentagon formula doesn't get much love these
     days, but the ancient Greeks were enamored because of its
@@ -304,11 +304,11 @@
     angles.  The formula for adding angles is exactly the same as for
     multiplying two complex numbers:
 
-    $$\begin{eqnarray*}
-    1^{(\alpha+\beta)} &=& 1^\alpha 1^\beta \\
+    $$\begin{align*}
+    1^{(\alpha+\beta)} &= 1^\alpha 1^\beta \\
     \cos(\alpha+\beta) + i\sin(\alpha+\beta)
-    &=& (\cos\alpha + i\sin\alpha)(\cos\beta + i\sin\beta)
-    \end{eqnarray*}$$
+    &= (\cos\alpha + i\sin\alpha)(\cos\beta + i\sin\beta)
+    \end{align*}$$
     $$\quad\quad = (\cos\alpha\cos\beta - \sin\alpha\sin\beta)
     + i(\sin\alpha\cos\beta + \cos\alpha\sin\beta)$$
 
@@ -328,30 +328,112 @@
     $1^\alpha||1+1^\alpha||^2 = 1^\alpha(1+1^{-\alpha})(1+1^\alpha) =
     (1+1^\alpha)^2$, so
 
-    $$\begin{eqnarray*}
-    1^{\alpha/2} &=& (1+1^\alpha) / ||1 + 1^\alpha|| \\
-    &=& (1+\cos\alpha + i\sin\alpha) / \sqrt{2+2\cos\alpha} \\
-    &=& \sqrt{(1+\cos\alpha)/2} + i\sqrt{(1-\cos\alpha)/2},
-    \end{eqnarray*}$$
+    $$\begin{align*}
+    1^{\alpha/2} &= (1+1^\alpha) / ||1 + 1^\alpha|| \\
+    &= (1+\cos\alpha + i\sin\alpha) / \sqrt{2+2\cos\alpha},
+    \end{align*}$$
 
     where $||z||$ means the modulus of $z$, and we have used the fact
     that $||1^\alpha|| = \cos^2\alpha + \sin^2\alpha = 1$ several
     times.</p>
-  <p>Using the half-angle formula, we can compute the sine and cosine
-    of $1/2^n$ revolutions for any $n$, and using the sum formulas we
-    can recombine them to find the sine and cosine of any terminating
-    binary fraction of a revolution.  This is how people computed the
-    earliest tables of sines and cosines, although usually such
-    calculations began by bisecting the $30$ degree half angle of an
-    equilateral triangle rather than a $90$ degree quarter
-    revolution.</p>
-  <p>Today, we use more efficient techniques for computing sines and
-    cosines, or for the inverse operation of computing the power
-    $\alpha$ when we know the coordinates of the point in the plane.
-    However, if you can multiply and extract square roots, and if you
-    have some patience, you can use the formulas we've derived here
-    from complex mulitplication to make your own tables of sine and
-    cosine for a few dozen angles with four to six digit accuracy.</p>
+  <p>Using the half-angle formula, we could compute the sine and
+    cosine of $1/2^n$ revolutions for any $n$, and using the sum
+    formulas we can recombine them to find the sine and cosine of any
+    terminating binary fraction of a revolution.  However, if you are
+    serious about building up a table of sines and cosines by hand (or
+    at least by computing them using only ordinary addition,
+    multiplication, division, and square root extraction), this isn't
+    the best plan.  Instead, you should use the binomial expansion,
+    that is, Pascal's triangle, to create equations for the sine and
+    cosine of other multiples, which you can solve iteratively by
+    Newton's method.</p>
+  <p>We'll leave most of the work to the dedicated reader, but give a
+    you a toolkit you could use to compute the sine and cosine of any
+    number of degrees, or decimal fraction of a degree, or minutes or
+    seconds of arc.  The basic idea is to develop algorithms to
+    compute one third or one fifth of an angle.  To do this, we need
+    to solve cubic and fifth degree polynomials; we'll show the
+    polynomials and the iterative scheme devised by Newton for solving
+    them:
+
+    $$\begin{align*}
+    1^{3\alpha} &= \cos 3\alpha + i\sin 3\alpha \\
+      &= (\cos^3\alpha-3\sin^2\alpha\cos\alpha) +
+      i(3\cos^2\alpha\sin\alpha-\sin^3\alpha)
+    \end{align*}$$
+    leads to the Newton iteration
+    $$\sin\frac{\alpha}{3} = x
+      \leftarrow \frac{\sin\alpha - (2x)^3}{3\left(1 - (2x)^2\right)}$$
+
+    which solves the equation $\sin\alpha = 3(1-x^2)x - x^3$ for $x$.
+    To use it, begin with a guess ($x=0$ works fine here), then plug
+    this $x$ into the right hand side to get a much improved second
+    guess ($x=(\sin\alpha)/3$ here), which you again plug into the right
+    hand side, repeating until the result stops changing to whatever
+    accuracy you want the final result.</p>
+  <p>Newton iterations like this double the number of correct digits
+    with each iteration, so just a few iterations gives a good enough
+    answer for any practical purpose.  Here is the Newton iteration
+    for finding the sine of one fifth of an angle $\alpha$ (again
+    starting with $x=0$):
+
+    $$\sin\frac{\alpha}{5} = x
+    \leftarrow \frac{\sin\alpha - (2x)^3\left(5-2(2x)^2\right)}
+    {5\left(1 - (2x)^2\left(3 - (2x)^2\right)\right)}$$
+  </p>
+  <p>Although we don't need an iterative scheme to compute the sine of
+    $\alpha/2$ given the sine of $\alpha$, we do need to extract a
+    square root.  The Newton iterations for computing the sine of
+    $\alpha/3$ or $\alpha/5$ (or any other odd denominator), although
+    recursive, only require ordinary addition, subtraction,
+    multiplication, and divison.  (Though the most famous square root
+    algorithm is also a Newton iteration.)  However, the
+    textbook formula $\sin(\alpha/2)=\sqrt{(1-\cos\alpha)/2}$ is not
+    very useful for small angles $\alpha$, because the cosine becomes
+    very nearly $1$, which means you need to carry lots of significant
+    figures.  Serious workers use the versine
+    $\text{ver }\alpha=1-\cos\alpha$ (which isn't mentioned in most
+    textbooks) instead of the cosine for calculations like this.  The
+    half-angle formula for the versine is, when carefully written for
+    accurate calculation of small angles:
+    $$\text{ver }\frac{\alpha}{2} = \frac{\text{ver }\alpha}
+    {2 + 2\sqrt{1-\tfrac{1}{2}\text{ver }\alpha}}$$
+    To get back and forth between the sine and versine of an angle
+    requires a square root operation.  Again, written with care:
+    $$\begin{align*}
+    \text{ver }\alpha&=1-\cos\alpha=
+      \frac{\sin^2\alpha}{1+\sqrt{1-\sin^2\alpha}}\\
+    \sin\alpha &= \sqrt{(2-\text{ver }\alpha)\text{ver }\alpha}
+    \end{align*}$$
+  </p>
+  <p>Putting all this together gives us an outline for how we could
+    build an accurate table of sines and cosines, or sines and versines
+    for any angle:
+    <ol>
+      <li>Begin with $30$ degrees, for which $\sin 30^\circ=0.5$
+        and (from the formula) $\text{ver }30^\circ=0.13397460$ to 8 places.
+      </li>
+      <li>Use the $\text{ver }(\alpha/2)$ formula to get $15^\circ$.</li>
+      <li>Use the $\sin(\alpha/5)$ iteration on $30^\circ$; three
+        iterations gets 8 places of $6^\circ$.</li>
+      <li>Use the $\sin(\alpha/3)$ iteration on $6^\circ$ to get $2^\circ$;
+        again three iterations gets 8 places.</li>
+      <li>Use the $\text{ver }(\alpha/2)$ formula to get $1^\circ$.</li>
+      <li>With the sines and cosines (from the versines) of
+        $30^\circ$, $15^\circ$, $6^\circ$, $2^\circ$, and $1^\circ$,
+        use the addition formula to compute all the integer numbers of
+        degrees less than $30$.  Generally, the best strategy is to use
+        the biggest angles first: $24=30-6$, $21=15+6$, $9=15-6$, followed
+        by $28=30-2$, $26=24+2$, $23=21+2$, and so on.</li>
+      <li>Similarly, use the addition formulas to extend your sines and
+        cosines up to $45^\circ$.  You can use the known fact that
+        $\sin 45^\circ=1/\sqrt{2}=0.70710678$ to check the accuracy of
+        your table.</li>
+      <li>Once you have completed all the angles up to $45^\circ$ or $1/8$
+        revolution, you can fill in every other angle using the symmetry
+        of the unit circle.</li>
+    </ol>
+  </p>
 
   <h2>Relation to Euler's formula</h2>
   <p>You probably won't see this definition of the complex valued
