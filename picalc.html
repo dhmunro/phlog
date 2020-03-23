@@ -30,84 +30,117 @@
   <h1 style="text-align: center;"><a href="index.html">
       Computing Pi by Hand</a></h1>
 
-  <h2>Euler's method</h2>
-  <p>In the mid-seventeen hundreds, Euler produced a series which sums
-    to $\pi$ and used it to compute the first twenty digits.  I
-    decided to try the same thing, and managed the feat in about a day
-    (spread over parts of three days), including several hours to
-    re-derive his formulas and do some reading.  I made a half dozen
-    arithmetic errors which I could catch and fix because I memorized
-    thirty five digits of $\pi$ years ago.  Euler certainly knew more
-    than twenty digits of $\pi$ in advance as well, since Machin had
-    computed $\pi$ in a similar way to a hundred digits decades
-    earlier.  On the other hand, Euler (or Machin for that matter) was
-    hugely more adept at arithmetic than I am, and may well have
-    gotten it right the first time.</p>
-  <p>The basic idea is to use an infinite series for the arctangent
-    function $\tan^{-1}$.  Machin used the Taylor series for arctangent,
-    which has derivative
+  <h2>Why Pi?</h2>
+  <p>In modern times, computing trillions of digits $\pi$ has become a
+    rite of passage for the latest parallel computer clusters.  This
+    obviously frivolous feat obscures the difficulty and importance of
+    computing the first few digits of $\pi$, the ratio of the distance
+    around a circle to the distance across it.  Engineers need six or
+    eight digits to make precision machinery work properly, while the
+    standard double precision floating point accuracy of about sixteen
+    digits is adequate for even high precision scientific experiments
+    or interplanetary navigation.  But if you had only a pencil and
+    paper, how could you work out the value to even a few digits?
+    When I read that Leonhard Euler calculated the first twenty digits
+    of $\pi$ in one hour, I decided to see how long it would take me.
+  </p>
 
-    $$\begin{align*}
-    \theta &= \tan^{-1}t \\
-    t &= \tan\theta \\
-    dt &= \sec^2\theta d\theta = (1 + t^2)d\theta \\
-    d\theta/dt &= 1/(1+t^2)
-    \end{align*}$$
+  <h2>Archimedes's method</h2>
+  <p>Twenty two centuries ago, Archimedes proved that $\pi$ is between
+    $3\tfrac{1}{7}$ an $3\tfrac{10}{71}$ by estimating the perimeters
+    of 96-sided polygons circumscribed and inscribed around a circle.
+    Careful measurement produces about this accuracy, but Archimedes's
+    method is purely abstract reasoning, and his accuracy was limited
+    only by his patience in selecting how many sides he was willing to
+    choose for his polygons.  In decimal fractions, Archimedes put
+    $\pi$ between $3.1429$ and $3.1408$, which is accurate to two
+    places for either bound, or three places if you average the two.
+    Archimedes was working under the extreme handicap that the only
+    way he had to write numbers was Roman numerals or the equivalent,
+    so I am completely unable to judge the human effort required for
+    his calculation in his own time.
+  </p>
+  <p>For me or a proficient high school student today, repeating the
+    Archimedes calculation requires about an hour's effort (I did it
+    many years ago) - something like what Euler needed to get twenty
+    places.  But the technique of computing perimeters of polygons has
+    a very deep flaw: You need a fabulous number of sides to get even
+    a few more digits of $\pi$.  That is, the perimeter of a
+    many-sided polygon converges very slowly to the perimeter of a
+    true circle.  All techniques for computing $\pi$ involve infinite
+    series (because $\pi$ is transcendental).  What distinguishes them
+    is how rapidly they converge, that is, how many iterations until
+    further corrections are smaller than the accuracy you want.  This
+    is a tradeoff engineers and scientists, as well as mathematicians,
+    face daily: How much time should I spend improving the technique
+    before I dive in and do the work?  For computing $\pi$ to twenty
+    places, the answer is a lot.  Archimedes's direct method is
+    hopeless.
+  </p>
 
-    Now our goal is to write $\theta$ as a power series in $t$, which we
-    will derive in an unusual way to prepare for Euler's series later:
+  <h2>Machin's method</h2>
+  <p>The advent of calculus in the late 1600s provided a very
+    different way to approach calculating $\pi$.  In simple terms,
+    calculus allows you to begin with an infinite-sided polygon, whose
+    sides exactly match an infinitessimal section of circular arc, and
+    work backwards to a finite angle.  The idea is to develop a power
+    series for a function with values related to $\pi$.  By far the
+    simplest such series is for the inverse tangent function
+    $\tan^{-1}t$, which is the angle measured in radians of a right
+    triangle with ratio of opposite to adjacent sides equal to $t$:
 
-    $$\begin{align*}
-    \theta &= \sum_{n=0}^{\infty} a_n t^n \\
-    d\theta/dt &= \sum n a_n t^{n-1} = 1/(1+t^2) \\
-    \sum n a_n (t^{n-1} + t^{n+1}) &= 1 \\
-    \sum ((n+1)a_{n+1} + (n-1)a_{n-1})t^n &= 1 + \sum_{n\gt0} 0\cdot t^n \\
-    a_0 &= 0 \\
-    a_1 &= 1 \\
-    a_{n+1} &= -(n-1)/(n+1) a_{n-1}
-    \end{align*}$$
+    $$\tan^{-1}t = t - t^3/3 + t^5/5 - t^7/7 + ...$$
 
-    Thus $a_n = 0$ for all even $n$, and $a_{n} = (-1)^n/n$ for all
-    odd $n$ (because the final recursion for $a_{n+1}$ telescopes).  Thus,
-    we arrive at the Taylor series for arctangent:
+    Both sides are obviously $0$ when $t=0$.  Furthermore, $t$ is the
+    length of the side of a polygon circumscribed around the unit
+    circle, so for small $t$, $\tan^{-1}t \approx t$ simply says the
+    angle of an arc of the unit circle in radians is equal to the
+    length of the side of the polygon.  If you know how to take
+    derivatives, you can check the inverse tangent series by
+    differentiating both sides:
 
-    $$\tan^{-1}t = \sum_{n=0}^{\infty} (-1)^n t^{2n+1}/(2n+1)
-                 = t - t^3/3 + t^5/5 - t^7/7 + ...$$
+    $$1/(1+t^2) = 1 - t^2 + t^4 - t^6 + ...$$
 
-    Now the unit of measure for the angle $\theta$ here is radians, so
-    that $\tan^{-1}1 = \pi/4$ is the value for $45^\circ$.  Both the
-    Machin and Euler techniques use this fact.  However, the direct
-    series you get by plugging $t=1$ into the formula, the famous
+    This is perhaps the best known infinite series, which you can
+    easily verify by mulitplying both sides by the denominator on the
+    left side.
+  </p>
+  <p>Plugging $t=1$ into the inverse tangent series produces the
+    celebrated formula
 
-    $$\pi/4 = 1-1/3+1/5-1/7+...,$$
+    $$\pi/4 = 1 - 1/3 + 1/5 - 1/7 + ...$$
 
-    converges so slowly that it is computationally worthless.  (It
-    takes fifty terms to get the first two digits, which were known to
-    the ancients by other means.)  However, notice that if $t$ were
-    much smaller than $1$, the series would converge far more rapidly.
-    The smaller $t$, the fewer terms of the series you must sum to get
-    its arctangent to any desired accuracy.</p>
-  <p>Machin had a very clever idea, which is to use the formula for
-    the tangent of the sum of two angles to find a set of smaller
-    angles which add up to $45^\circ$.  You can organize this kind of
-    calculation most easily using complex arithmetic.  The idea is that
-    the argument of a complex number (its angle from the real axis) is
-    the arctangent of the ratio of its real and imaginary parts, so
-    the argument of $1+it$ is $\tan^{-1}t$.  And multiplying two complex
-    numbers adds their arguments, so that:
+    For actually calculating $\pi$, this is a huge step backwards
+    from Archimedes.  It is hard to find any series which converges
+    more slowly than this one; no one would be foolhardy enough to
+    attempt to use it to compute $\pi$.
+  </p>
+  <p>Nevertheless, the series would converge very quickly and become a
+    useful calculation tool if we could somehow relate $\tan^{-1}t$ to
+    $\tan^{-1}1=\pi/4$ for some $t$ substantially smaller than 1.  John
+    Machin's claim to fame is that he found a way to do that.  His
+    idea is to use the tangent sum formula from trigonometry:
 
-    $$(1+it)(1+iu) = 1-tu + i(t+u)$$
+    $$\tan(\alpha+\beta) = (\tan\alpha+\tan\beta)/(1-\tan\alpha\tan\beta)$$
 
-    implies
+    Recast in terms of inverse tangents, this is
 
-    $$\tan^{-1}t + \tan^{-1}u = \tan^{-1}(t+u)/(1-tu)$$
+    $$\tan^{-1}t + \tan^{-1}u = \tan^{-1}\frac{t + u}{1 - tu}.$$
 
-    A second thing that would make base ten arithmetic easier would be
-    to make $t$ something you can easily raise to powers.  Ideally,
-    you would make $t$ a power of ten.  Unfortunately, multiples of
-    $\tan^{-1}0.1$ do not come very close to $45^\circ$.  However, Machin
-    noticed that four times $\tan^{-1}0.2$, by accident, is exceedingly
-    close to $45^\circ$:
+    Thus, for example, if we can find fractions $t$ and $u$ for which
+    $t+u=1-tu$ (for example $t=1/2$ and $u=1/3$) we can realistically
+    use the inverse tangent series to compute the angles $\tan^{-1}t$
+    and $\tan^{-1}u$ in radians, which we know sum to
+    $\tan^{-1}1=\pi/4.$</p>
+  <p>But Machin realized he could do substantially better, both by
+    finding smaller $t$, and by finding values of $t$ which are easy
+    to multiply by hand in base ten.  Once you see the potential of
+    the tangent sum formula for finding angles whose sum is $\pi/4$,
+    and you realize you can use them to efficiently compute $\pi$, you
+    naturally begin to try some combinations of simple fractions.  You
+    are rewarded quickly when you try multiples of the angle whose
+    tangent is $t=1/5$.  By accident, four times that angle is
+    exceptionally close to $45^\circ$:
 
     $$\begin{align*}
     \tan^{-1}\frac{1}{5}+\tan^{-1}\frac{1}{5} &=
@@ -119,144 +152,149 @@
     \frac{\pi}{4} = \tan^{-1}1 &= 4\tan^{-1}\frac{1}{5}-\tan^{-1}\frac{1}{239}
     \end{align*}$$
 
-    The combination of this formula and the Taylor series for
-    arctangent is what Machin used to compute $\pi$ to a hundred
-    digits.  The slower converging $t=1/5$ series compensates by the
-    fact that multiplying by this $t$ in base ten is particularly
-    easy.  The faster converging $t=1/239$ series, on the other hand,
-    requires a nasty long division by $239^2$ for each term.</p>
+    This is an exceedingly clever formula, and Machin deserves his fame
+    for its discovery.  However, it's in the category of results that I
+    probably could have found myself, given the idea to use the tangent
+    sum formula to look for small $t$ that are easy to multiply by hand
+    and use in the inverse tangent series.</p>
+  <p>Machin did, on the other hand, demonstrate far more resolve than
+    I could possibly have mustered, by deciding to use his inverse
+    tangent decomposition to compute $\pi$ to one hundred digits,
+    which he did in 1706.  I have been unable to find out how long
+    this calculation took him, but anything less than a couple of
+    months (or more than a year) would be surprising.  On the other
+    hand, my guess would be that he would have needed at most a day or
+    two to discover his $1/5$ plus $1/239$ tangent decomposition --
+    the calculation for that specific case is the work of a few
+    minutes as we have seen.  The really interesting question, then,
+    is how long did he spend trying to find an even better
+    decomposition before he decided to bury himself in the hundred
+    digit marathon calculation?</p>
+  <p>It's pretty easy to estimate how much work you'll need to do for
+    each of the two series, and Machin must have worked that out in
+    advance: How else did he choose a hundred digits as a reasonable
+    goal?  For the $1/5$ series, each term is a factor of a bit more
+    than $5^2=25$ less than the previous.  Now $5^{-10}=2^10/10^10$ is
+    just a bit more than $10^{-7}$, which means that each $5$ (that
+    is, $10/2$) terms of the series adds another $7$ digits.  To get a
+    hundred digits, therefore, Machin needs about $75$ ($100/7\times
+    5$) terms of the $1/5$ series (up to about t^{150}).  For the
+    $1/239$ series, $1/239\sim 4/1000$ which means $239^{-5}\sim
+    10^3/10^{15} = 10^{-12}$, so every $5$ terms of that series adds
+    another $12$ digits.  A hundred digits therefore requires about
+    $40$ terms of the $1/239$ series, in addition to about $75$ terms
+    of the $1/5$ series.</p>
+  <p>Each term requires one multiply by $t$ (which is dividing by
+    $239$ for that series), plus one small integer divide (for the
+    coefficient of the inverse tangent series), and one add to
+    accumulate the final result.  All up, we're talking about $115$
+    hundred digit adds, $75$ hundred digit multiplies, and $155$
+    hundred digit divides ($40$ of which are by the daunting $239^2$).
+    I imagine each of those divides might take a couple of hours, so
+    the whole process ought to be possible with several hundred hours
+    work.  That's why I'm guessing it took Machin a few months to
+    perform and check his calculation.  It also seems to me that he
+    would have spent the bulk of his time on the $40$ terms of the
+    $1/239$ series.  Even though it is only half as many terms, the
+    arithmetic work is considerably more than twice as great per
+    term.</p>
+  <p>We can all appreciate the level of effort Machin expended to
+    complete this calculation, although the sustained level of
+    concentration required for the task is something most of us will
+    never experience.</p>
 
-  <p>Euler improved on Machin's method by finding a decomposition of
-    $\tan^{-1}1$ into two parts for which <em>both</em> values of $t$
-    are easy to multiply in base ten.  But first, Euler develops a
-    different power series for arctangent.  He was a pioneer of
-    finding ways to accelerate the convergence of series, and he
-    discovered a general procedure, now called the Euler transform,
-    that can be applied to more quickly sum any series whose terms
-    alternate in sign like the arctangent series.  Naturally Euler
-    applied his transform to that series, producing a new series which
-    converges considerably faster.  But the Euler transform is rather
-    complicated, and for the particular case of the arctangent series
-    the result can be derived (or verified if you prefer) much more
-    easily, beginning with the trigonometric identity
+  <h2>Euler's method</h2>
+  <p>That brings us to Euler, one of the two or three greatest
+    mathematicians of all time.  His one hour calculation of twenty
+    digits of $\pi$ probably took place in or near 1766, sixty
+    years after Machin's hundred digit calculation.  Euler's method is
+    based on what Machin did - he certainly would have known the
+    hundred digit calculation.  His major improvement was to find
+    an inverse tangent decomposition into two parts, like Machin, but
+    for which <em>both</em> series involve small terminating base ten
+    decimals.  That is, Euler eliminates the nasty $1/239$ series that
+    Machin probably spent most of his time on.</p>
+  <p>Unlike Machin, his hour long $\pi$ calculation hardly deserves a
+    footnote in the catalog of Euler's achievements - he spent an hour
+    on it compared to the staggering 92 volumes of his collected
+    works.  Euler didn't set out to compute $\pi$ at all.  Instead, he
+    was working on a general technique for what we now call accelerating
+    the convergence of any alternating series.  His major achievement
+    is now called the Euler transform, which he published in 1766.  It
+    is a way to convert any infinite sum whose terms alternate in sign
+    into a new infinite sum which converges faster than the original.
+    The Euler transform is far too complicated to explain here, but
+    it is a very important result.  (Not just a few digits of $\pi$.)</p>
+  <p>Since the inverse tangent series is one of the most famous
+    alternating infinite sums, Euler certainly would have used it as
+    an example of his general method.  This produces Euler's transformed
+    series for the inverse tangent function:
 
-    $$\sin^2\theta = \tan^2\theta/(1 + \tan^2\theta).$$
+    $$\tan^{-1}t = \frac{x}{t}\left(1 + \frac{2}{3}x +
+    \frac{2\cdot 4}{3\cdot 5}x^2 + \frac{2\cdot 4\cdot 6}{3\cdot 5\cdot 7}x^3
+    + \frac{2\cdot 4\cdot 6\cdot 8}{3\cdot 5\cdot 7\cdot 9}x^3 +...\right),$$
 
-    Therefore if we define $x=t^2/(1+t^2)=\sin^2\theta$, we have
+    where Euler defines
 
-    $$\theta = \tan^{-1}t = \sin^{-1}x^{1/2}.$$
+    $$x = t^2/(1+t^2).$$
 
-    The idea is to develop a power series in $x$ instead of in $t$,
-    but you can't do that directly because of the singularity of
-    $x^{1/2}$ at $x=0$.  However, the derivative
+    Plugging in $t=1$ and $x=1/2$ yields a usable series for computing
+    a few digits of $\pi$ immediately, unlike the original inverse
+    tangent series.  However, Machin's series after his decomposition
+    both converge far more quickly.</p>
+  <p>But Euler also discovered a two term inverse tangent decomposition
+    which is tailor-made for his different inverse tangent series:
 
-    $$d\theta/dx = \tfrac{1}{2}(x(1-x))^{-1/2}$$
+    $$\frac{\pi}{4} = \tan^{-1}1 = 5\tan^{-1}\frac{1}{7}
+    + 2\tan^{-1}\frac{3}{79}$$
 
-    can be used to cancel the square root singularity at $x=0$ to
-    produce a function with a well defined power series:
-
-    $$f(x) = \frac{\sin^{-1}x^{1/2}}{(x(1-x))^{1/2}}
-           = \frac{2\theta}{\sin 2\theta} = \sum_{n=0}^{\infty}b_n x^n$$
-
-    Developing this series by taking successive derivatives of $f$
-    would be very messy, but the unusual technique of developing a
-    recurrence for the $b_n$ directly, which we used to find the $a_n$
-    above, works like a charm:
-
-    $$\begin{align*}
-    (x(1-x))^{1/2} f &= \sin^{-1}x^{1/2} \\
-    (x(1-x))^{1/2} f' + \tfrac{1}{2}(x(1-x))^{-1/2}(1-2x)f &=
-      \tfrac{1}{2}(x(1-x))^{-1/2} \\
-    2x(1-x) f' + (1-2x) f &= 1 \\
-    (2xf' + f) - 2(x^2 f' + x f) &= 1 \\
-    \sum (2n+1)b_n x^n - \sum 2(n+1) b_n x^{n+1} &= 1 \\
-    \sum ((2n+1)b_n - 2n b_{n-1}) x^n &= 1 \\
-    b_0 &= 1 \\
-    b_n &= \frac{2n}{2n+1} b_{n-1}
-    \end{align*}$$
-
-    Together with the fact that $(x(1-x))^{1/2} = x/t,$ this
-    recurrence produces Euler's transformed series for arctangent:
-
-    $$\tan^{-1}t = \frac{x}{t}\left(1+\frac{2}{3}x+\frac{2\cdot 4}{3\cdot 5}x^2
-      + \frac{2\cdot 4\cdot 6}{3\cdot 5\cdot 7}x^3
-      + \frac{2\cdot 4\cdot 6\cdot 8}{3\cdot 5\cdot 7\cdot 9}x^4 + ...
-    \right)$$
-
-    Like the Taylor series, this series gives a direct formula for $\pi$
-    by simply plugging in $t=1$, which is $x=1/2$:
-
-    $$\frac{\pi}{2} = 1 + \frac{1}{3} + \frac{1\cdot 2}{3\cdot 5} +
-      \frac{1\cdot 2\cdot 3}{3\cdot 5\cdot 7} +
-      \frac{1\cdot 2\cdot 3\cdot 4}{3\cdot 5\cdot 7\cdot 9} + ...$$
-
-    As promised, this series converges reasonably quickly -- far more
-    quickly than the $t=1$ arctangent series.  However, it still
-    doesn't converge nearly as fast as either of the Machin series.
-    But we haven't yet applied Machin's decomposition trick, so we can
-    do much better.
-  </p>
-  <p>For small $t$, the acceleration afforded by the Euler transform
-    is modest, so whether it can be used to beat the Machin method
-    depends on whether there exists a comparable decompostion of
-    $\tan^{-1}1$.  Euler discovered that there is a two angle
-    decomposition for which <em>both</em> angles are easy to work with
-    in base ten:
-
-    $$\frac{\pi}{4} =
-      \tan^{-1}1 = 5\tan^{-1}\frac{1}{7} + 2\tan^{-1}\frac{3}{79}$$
-
-    The fractions $t=1/7$ and $t=3/79$ would be much worse for
-    calculating than Machin's $t=1/5$ and $t=1/239$ if we used the
-    series in $t$.  But look at the values of $x$!  They are
-    $x=1/50=0.02$ and $x=9/6250=0.00144$, both of which are small
-    terminating decimal fractions.  This dramatically simplifies the
-    base ten arithmetic if you are doing the calculation by hand.  The
-    $1/7$ series drops an extra factor of two per term compared to the
-    Machin series (from $1/5^2$ to $1/50$), which means you need about
-    30% fewer terms for the same final accuracy.  The $3/79$ term, on
-    the other hand, converges far more slowly than Machin's $1/239$,
-    requiring about 70% <em>more</em> terms for the same accuracy.
-    But the simplicity of computing those terms by hand in base ten
-    more than compensates, making Euler's method a less daunting
-    choice for computing $\pi$ using pencil and paper.  It is perhaps
-    the easiest method for computing $\pi$ by hand ever
-    discovered.</p>
-  <p>Notice that each term of the series (either for Euler or Machin)
-    is a rational number.  Thus, no matter where you terminate the series,
-    your approximate value for $\pi$ is technically a rational number.
-    You don't need to extract any square roots.  In fact, you only need
-    to divide by small integers, which, by hand at least, is much easier
-    than dividing by large integers.</p>
-  <p>I can imagine how Machin discovered his $1/5$ plus $1/239$
-    formula: He would naturally have looked at fractions with
-    simple terminating decimals $1/4$, $1/5$, $1/8$, $1/10$.  He then
-    builds multiples using the tangent sum formula, and rather quickly
-    notices that four times the angle whose tangent is $1/5$ happens
-    to be extraordinarily close to $45^\circ$; the $1/239$ remainder
-    then drops out quickly as in the derivation given above.  If you
-    were searching for a way to compute $\pi$, you would plausibly
-    discover this decomposition.
-  </p>
-  <p>Euler's $1/7$ plus $3/79$ formula, on the other hand, is beyond
-    measure more difficult to discover.  Five times the $1/7$ angle
-    isn't notably close to $45^\circ$, and wouldn't really stand out.
-    But the $3/79$ angle also needs to be doubled, which means there's
-    no easy way to form the remainder.  I can only imagine that Euler
-    experimented with all the multiples of small integer ratios, but
-    that seems a collosal undertaking.  Furthermore, it's extremely
-    difficult to recognize values of $t$ for which $x$ (not $t$) is a
-    nice base ten decimal.  The fact that $1/7$ has the nice $x=1/50$
-    is not too hard to notice; after all, $7^2+1=50$ is responsible
-    for the fact that $\sqrt{0.5} \sim 0.7$ which is very close to the
-    heart of any arithmetician.  But noticing that $79^2+3^2=6250$ is
-    a thousand times $5/8$?  That seems a Ramanujanian feat, and is
-    the true genius of the whole work.  Whether Euler was actively
-    searching for a way to compute $\pi$, or whether he merely noticed
-    this decomposition and understood it could be used for this
-    purpose, his discovery is remarkable.</p>
-  <p>To show how much harder Euler's decomposition is than Machin's,
-    here's my work checking that it's true:
+    Now for base ten calculations using the original inverse tangent
+    series, $1/7$ and $3/79$ would be terribly ugly choices, easily
+    as bad as $1/239$.  But look at their values of $x$!  $t=1/7$
+    becomes $x=1/50=0.02$ and $t=3/79$ becomes $x=9/6250=0.00144$.
+    Not one, but both of the two series involve powers which are
+    very easy to calculate by hand in base ten.</p>
+  <p>As for Machin's decomposition, the existence of any decompostion
+    as nice as Euler's is wildly improbable serendipity.  In the case
+    of Machin's decompostion, even a hack mathematician like me could
+    easily have stumbled across it and recognized its significance.
+    Euler's decompostion, on the other hand, is far beyond anything I
+    can imagine discovering myself.</p>
+  <p>I haven't been able to find any description of how people hunt
+    for such decompostions.  At least several thousand such inverse
+    tangent decompositions are known today (perhaps many more), but
+    they are rare enough that probably only a few had been discovered
+    in Euler's time, and as the greatest mathematician of his age, he
+    probably knew of all of them.  An important historical note I
+    found dates Euler's inverse tangent decomposition to 1755 - about
+    ten years <em>before</em> the work on Euler transforms which led
+    to his inverse tangent series.  My guess, therefore, is that Euler
+    became interested in inverse tangent decompositions, which belong
+    to an intriguing branch of number theory involving complex numbers
+    with integer real and imaginary parts.  While studying them, he
+    added his own $1/7$ plus $3/79$ decomposition (at least) before he
+    ever began to think about accelerating series convergence.</p>
+  <p>If he had the decomposition first, and had studied them enough to
+    know they weren't all that common, then it is easy to understand
+    how he would have simply checked all the known decompositions to
+    see if any happened to have nice values of $x$, like Machin's nice
+    value of $t=1/5$.  If so, he would have been just a shocked as we
+    are to find that both $x$ values were nice numbers.  Even better,
+    it is a decomposition that he himself discovered a decode before.
+    If this is an accurate reconstruction of the history, it really
+    brings home Euler's dominance of eighteenth century mathematics.</p>
+  <p>That still doesn't explain how Euler discovered his
+    decomposition.  Unlike the Machin decompostion, it isn't just a
+    matter of noticing that some multiple of a small fraction is
+    extremely close to $45^\circ$, and subtracting to find the
+    remainder.  The factor of $2$ in front of the $3/79$ term breaks
+    that simple approach.  And unlike four times $1/5$, five times
+    $1/7$ is not unususally close to $45^\circ$.  I wouldn't have
+    found this decomposition in a century.  Euler too must have had
+    some method he discovered to narrow his search, but I've been unable
+    to find out what it was.</p>
+  <p>To give you an idea how much harder Euler's decomposition is than
+    Machin's, here is my work just to prove that it is true:
 
     $$\begin{align*}
     \tan^{-1}\frac{1}{7}+\tan^{-1}\frac{1}{7} &=
@@ -281,16 +319,50 @@
     \end{align*}$$
 
     Since the final equality is indeed true, $\pi/4 = 5\tan^{-1}1/7 +
-    2\tan^{-1}3/79$, as Euler says.  But I haven't a clue to how he
-    discovered this.  However, many
-    <a href="https://en.wikipedia.org/wiki/Machin-like_formula">more
-    such decompositions</a> are known, so it may be that there is some
-    systematic way to discover and catalog them of which I am
-    <a href="https://mathworld.wolfram.com/Machin-LikeFormulas.html">simply
-    ignorant</a>.
-  </p>
+    2\tan^{-1}3/79$, as Euler says.  If you search for "Machin-like
+    formulas" you'll find a lot of research on these decompostions,
+    continuing to the present day.</p>
+  <p>It would be pointless for me to carry out a twenty digit
+    calculation of $\pi$ by hand if I had not also proven for myself
+    that the series I was using does in fact converge to $\pi$.  So
+    here is a specific derivation of Euler's series for inverse
+    tangent based on some ideas I found in my web research.  Remember
+    that Euler would have applied his much more powerful and general
+    Euler transform; like the above proof of his $45^\circ$
+    decomposition, this one is constructed backwards from the series
+    itself.</p>
+  <p>First, note that if $t=\tan\alpha$, then $x=\sin^2\alpha$.
+    Hence, $\alpha=\tan^{-1}t=\sin^{-1}\sqrt{x}$.  Consider the function
 
-  <h2>The calculation itself</h2>
+    $$f(x) = \frac{\sin^{-1}\sqrt{x}}{\sqrt{x(1-x)}}.$$
+
+    Unlike its numerator, $f$ has no $\sqrt{x}$ singularity at $x=0$,
+    so it has a power series expansion
+
+    $$f(x) = \sum_{n=0}^{\infty}b_n x^n$$
+
+    We can find the $b_n$ by the following steps:
+
+    $$\begin{align*}
+    (x(1-x))^{1/2} f &= \sin^{-1}x^{1/2} \\
+    (x(1-x))^{1/2} f' + \tfrac{1}{2}(x(1-x))^{-1/2}(1-2x)f &=
+      \tfrac{1}{2}(x(1-x))^{-1/2} \\
+    2x(1-x) f' + (1-2x) f &= 1 \\
+    (2xf' + f) - 2(x^2 f' + x f) &= 1 \\
+    \sum (2n+1)b_n x^n - \sum 2(n+1) b_n x^{n+1} &= 1 \\
+    \sum ((2n+1)b_n - 2n b_{n-1}) x^n &= 1 \\
+    b_0 &= 1 \\
+    b_n &= \frac{2n}{2n+1} b_{n-1}
+    \end{align*}$$
+
+    This recurrence for $b_n$, together with the fact that
+    $\sqrt{x(1-x)}=x/t$, produces the Euler series for inverse tangent.</p>
+  <p>However much serendipty was involved, Euler's method is arguably the
+    easiest way to compute an accurate value of $\pi$ with pencil and paper
+    which has ever been discovered.  If Euler could get twenty digits in an
+    hour as an afterthought, I decided I would try my hand at it.</p>
+
+  <h2>My method</h2>
   <p>The $t=1/7$ series has $x=0.02$ and we need to multiply it by
     $5x/t=0.7$.  The $t=3/79$ series has $x=0.00144$ and we need to
     multiply it by $2x/t=0.07584$:
@@ -424,11 +496,18 @@
     and 6 $t=3/79$ terms, although we need to round up the final digit.
   </p>
   <p>The diameter of the solar system is about $1.5\times
-    10^{10}$&nbsp;km, so our error of $10^{-21}/3$ would produce an
+    10^{10}$&nbsp;km, so our error of $10^{-21}/\pi$ would produce an
     error in its perimeter of $0.5\times 10^{-11}$&nbsp;km, or
-    $5$&nbsp;nm, which is about 50 atoms.  So I've finally verified
-    the value of $\pi$ to an accuracy far greater than any practical
-    need, courtesy of the genius of Euler as inspired by Machin.
+    $5$&nbsp;nm, which is about 50 atoms.  So I've verified the value
+    of $\pi$ myself, by hand, to an accuracy far greater than any
+    practical need, courtesy of the genius of Euler as inspired by
+    Machin.  I've also established that my arithmetic skills are
+    within two (but not one) orders of magnitude of the great Euler,
+    no doubt closer than my batting average would be to Ted Williams,
+    which is something.  But seriously, a day or two spent this way
+    has taught me things about the history of mathematics and the
+    development of algorithms which would be hard to appreciate
+    otherwise.
   </p>
 </div>
 </body>
