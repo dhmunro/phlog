@@ -96,20 +96,40 @@
   <h1 style="text-align: center;"><a href="index.html">Roots of Unity</a></h1>
 
   <h2>Powers of complex numbers</h2>
-  <p><a href="coords.html">We define</a> complex multiplication to
-    scale and rotate coordinates in a plane.  This definition
-    automatically includes a definition of raising any complex number
-    $z$ to the power $p$ -- multiply $z$ by itself $p$ times.
-    Multiplying two powers evidently adds the powers: $z^p z^q =
-    z^{p+q}$.  We can use this rule to uniquely define the zero power
-    and negative powers, so we know how to raise a number to any
-    integer power: $z^0 = 1$ and $z^{-p} = 1/z^p$.  Lastly, raising a
-    power to a power evidently multiplies the powers: $(z^p)^q =
-    z^{pq}$.  Following the idea we used to define negative integer
-    powers, we naturally want to use this relation to define
-    fractional powers, for example $(z^{1/p})^p = z^1 = z$ defines
-    $z^{1/p}$.  For complex $z$, this procedure hits an extremely
-    interesting and fruitful snag, which we explore here.</p>
+  <p>Raising a number $z$ to the power $p$ means multiplying $z$ by
+    itself $p$ times, so multiplying two powers evidently adds the
+    powers: $z^p z^q = z^{p+q}.$ This relationship uniquely defines
+    the meaning of raising $z$ to the $0$ power or to a negative
+    power: We must have $z^0 = 1$ and $z^{-p} = 1/z^p$ in order to
+    preserve the rule that multiplying powers adds the powers.  Thus
+    we know the meaning of any integer power $p$, positive or
+    negative.</p>
+  <p>Continuing in this way, raising a power to a power evidently
+    multiplies the powers: $(z^p)^q = z^{pq},$ which we naturally hope
+    to use to define any rational power by $(z^{p/q})^q = z^p.$ Unlike
+    non-positive integer powers, however, this attempt hits a snag,
+    which textbooks often gloss over little comment.  When $z$ is a
+    real number (on a number line) the snag is subtle: For even
+    denominators $q$, the sign of $z^{p/q}$ is ambiguous (there is a
+    plus and a minus square root for example), and the definition
+    doesn't work at all when $z\lt 0.$ We can sweep away the whole
+    problem by simply declaring that both $z$ and all its non-integer
+    powers $z^p$ only exist for positive $z$.  This step is imminently
+    practical, but not as tidy as we like math to be.</p>
+  <p>Arguably, complex numbers are interesting precisely because they
+    clean up the meaning of raising a number to a fractional power;
+    when $z$ is complex, the restrictions on the values of $z^p$
+    disappear.  Because <a href="coords.html">complex
+    multiplication</a> rotates coordinates in a plane in addition to
+    simply scaling them up and down (like ordinary multiplication), in
+    the complex plane multiplication by a negative number becomes
+    rotation by $180^\circ$, part of a smooth progression of
+    rotations.  However, in the complex plane, the ambiguity of a
+    fractional power $z^p$ becomes impossible to sweep under the rug,
+    and gives us multiple viable choices for what we mean by $z^p$
+    when $p$ is not an integer.  (When $p$ is an integer all
+    definitions agree on a unique result.)  Here we embrace the
+    ambiguity by showing how a non-standard choice can be useful.</p>
   <div class="halfwide">
   <svg xmlns="http://www.w3.org/2000/svg"
        viewBox="-2.1 -2.1 4.2 4.2" onload="pow_interactions(evt)"
@@ -165,7 +185,9 @@
     Examine what happens when $z$ lies on the unit circle or on the
     real (horizontal) or imaginary (vertical) axis.</p>
   <p>If the lovely arc of the powers of $z$ strikes your fancy, look
-    up "logarithmic spiral" and you will find many people agree.</p>
+    up "logarithmic spiral" and you will find many people agree.
+    We'll learn a lot more about these curves by the end of this page.
+  </p>
 </div>
 <div class="textcolumn" style="clear: right;">
 
@@ -240,12 +262,12 @@
     of $z$ for which $z^p = 1$, marked by the orange ticks around the
     perimeter of the unit circle.  Since the angles between successive
     powers are equal, these $p$ points are equally spaced around the
-    unit circle, forming a regular $p$-gon.  Each of these $p$ points
-    is a $p$-th root of $1$.  We see that the fact that two real
+    unit circle, forming a regular $p$-gon with one corner at the
+    point $1$.  Each of these $p$ points is a $p$-th root of $1$, also
+    called a $p$-th root of unity.  We see that the fact that two real
     numbers ($+1$ and $-1$) whose squares are one is a special case of
     the general rule that there are $p$ complex numbers with a $p$-th
-    power of one.  These "$p$-th roots of unity" are equally spaced
-    around the unit circle.</p>
+    power of one.</p>
   <p>In standard mathematical notation, $1^{1/p} = 1$ for all $p$ --
     the most boring choice is the most convenient and consistent for
     many purposes.  But fractional powers are ambiguous, and in the
@@ -263,7 +285,7 @@
     which lies $\alpha$ counterclockwise revolutions around the unit
     circle starting from the point $1$, including fractions of a
     revolution.  That is, an angle in units of revolutions (often
-    called cycles) is a power of $1$.</p>
+    called cycles) is a power of $1$ in the complex plane.</p>
   <p>In trigonometry, the $x$ and $y$ coordinates of a point on the
     unit circle as functions of angle from the $x$-axis are called
     cosine and sine, respectively, so by our definition
@@ -274,35 +296,16 @@
     library.  However, note that our angle $\alpha$ is in units of
     revolutions, so you will usually need to multiply it by either
     $360$ to convert to degrees or by $2\pi$ to convert to radians
-    before invoking a library function.</p>
+    before invoking a library function.  Before computers, every
+    scientist and engineer owned tables of sines (and several other
+    functions) covering dozens of pages with numbers; they're
+    important but not easy to calculate.  But now we can.</p>
 
-  <h2>Computing the trigonometric functions</h2>
-  <p>This formula maps fractional powers $1^\alpha$ to the points on
-    the unit circle and hence to the sine and cosine functions is
-    lovely, but we still need to figure out how to compute both
-    $\cos\alpha$ and $\sin\alpha$ given $\alpha$, and $\alpha$ given
-    the coordinates of a point on the unit circle.  We do know values
-    for a handful of fractions $\alpha$, and by raising these to
-    powers we can get their multiples.  The half and quarter
-    revolutions $1^{1/2}=-1$ and $1^{1/4}=i$ are obvious.
-    Additionally, the angles associated with regular pentagons,
-    hexagons, and octagons are mainstays of elementary geometry:
-
-    $$\begin{align*}
-    1^{1/5} &= \left.\left(\sqrt{5}-1 + i\sqrt{10+2\sqrt{5}}\right)
-                \middle/ 4 \right. \\
-    1^{1/6} &= (1 + i\sqrt{3}) / 2 \\
-    1^{1/8} &= (1 + i) / \sqrt{2} \\
-    \end{align*}$$
-
-    (The more complicated pentagon formula doesn't get much love these
-    days, but the ancient Greeks were enamored because of its
-    connection to the golden ratio.)
-  </p>
-  <p>Complex multiplication (division) gets us beyond this handful
-    of known values by allowing us to add (subtract) any pair of known
-    angles.  The formula for adding angles is exactly the same as for
-    multiplying two complex numbers:
+  <h2>Trigonometry, briefly</h2>
+  <p>The identity of angles with powers of $1$ makes it easy to derive
+    all of the trigonometric identities from complex multiplication.
+    The most important are the angle addition formulas, which we now
+    recognize as nothing more than complex multiplication:
 
     $$\begin{align*}
     1^{(\alpha+\beta)} &= 1^\alpha 1^\beta \\
@@ -312,157 +315,287 @@
     $$\quad\quad = (\cos\alpha\cos\beta - \sin\alpha\sin\beta)
     + i(\sin\alpha\cos\beta + \cos\alpha\sin\beta)$$
 
-    To subtract angles, just reverse the sign of $\beta$ of the left
-    side and $\sin\beta$ on the right side.  (The reciprocal of a
-    complex number on the unit circle is its complex conjugate.)
-    Unfortunately, these operations can only give us values for
-    rational $\alpha$ which are multiples of the least common
-    denominator of whatever angles we already know.  So if we start
-    with $1/5$, $1/6$, and $1/8$, we can find any multiple of $1/120$
-    or $3$ degrees.  For example, $1/5-1/6=1/30$ then
-    $4/30-1/8=1/120$, or in degrees $72-60=12$ then $4\times 12-45=3$.
+    The real parts are the cosine sum formula; the imaginary parts the
+    sine sum formula.  The formulas for the difference of angles
+    $\alpha-\beta$ are the same but with the signs of $\sin\beta$
+    reversed:
+
+    $$1^{-\beta} = 1/1^\beta = \overline{1^\beta}$$
+
+    where $\overline{z}$ means the complex conjugate of $z,$ that is,
+    the number with equal and opposite imaginary part.  Trigonometry
+    teachers delight in torturing students with endless variants of
+    this single idea, that complex multiplication marches around the
+    unit circle.
   </p>
-  <p>To compute smaller angles, we can use the fact that the diagonal
-    of the rhombus formed by the points $1^\alpha$, $0$, $1$, and
-    $1+1^\alpha$ bisects angle $\alpha$.  Algebraically, notice that
-    $1^\alpha||1+1^\alpha||^2 = 1^\alpha(1+1^{-\alpha})(1+1^\alpha) =
-    (1+1^\alpha)^2$, so
+  <p>Finally, if we want to build tables of values of the sine
+    function, we need to be able to subdivide angles into smaller
+    parts.  To compute smaller angles, we can use the fact that the
+    diagonal of the rhombus formed by the points $1^\alpha,$ $0,$ $1,$
+    and $1+1^\alpha$ bisects angle $\alpha$.  To translate this
+    geometric fact into algebra, first write
+    $||z||=\sqrt{\overline{z}z}$ for the modulus of $z.$ Next, notice
+    that
+
+    $$1^\alpha||1+1^\alpha||^2 = 1^\alpha(1+1^{-\alpha})(1+1^\alpha) =
+    (1+1^\alpha)^2,$$
+
+    which implies
 
     $$\begin{align*}
     1^{\alpha/2} &= (1+1^\alpha) / ||1 + 1^\alpha|| \\
-    &= (1+\cos\alpha + i\sin\alpha) / \sqrt{2+2\cos\alpha},
-    \end{align*}$$
-
-    where $||z||$ means the modulus of $z$, and we have used the fact
-    that $||1^\alpha|| = \cos^2\alpha + \sin^2\alpha = 1$ several
-    times.</p>
-  <p>Using the half-angle formula, we could compute the sine and
-    cosine of $1/2^n$ revolutions for any $n$, and using the sum
-    formulas we can recombine them to find the sine and cosine of any
-    terminating binary fraction of a revolution.  However, if you are
-    serious about building up a table of sines and cosines by hand (or
-    at least by computing them using only ordinary addition,
-    multiplication, division, and square root extraction), this isn't
-    the best plan.  Instead, you should use the binomial expansion,
-    that is, Pascal's triangle, to create equations for the sine and
-    cosine of other multiples, which you can solve iteratively by
-    Newton's method.</p>
-  <p>We'll leave most of the work to the dedicated reader, but give a
-    you a toolkit you could use to compute the sine and cosine of any
-    number of degrees, or decimal fraction of a degree, or minutes or
-    seconds of arc.  The basic idea is to develop algorithms to
-    compute one third or one fifth of an angle.  To do this, we need
-    to solve cubic and fifth degree polynomials; we'll show the
-    polynomials and the iterative scheme devised by Newton for solving
-    them:
-
-    $$\begin{align*}
-    1^{3\alpha} &= \cos 3\alpha + i\sin 3\alpha \\
-      &= (\cos^3\alpha-3\sin^2\alpha\cos\alpha) +
-      i(3\cos^2\alpha\sin\alpha-\sin^3\alpha)
-    \end{align*}$$
-    leads to the Newton iteration
-    $$\sin\frac{\alpha}{3} = x
-      \leftarrow \frac{\sin\alpha - (2x)^3}{3\left(1 - (2x)^2\right)}$$
-
-    which solves the equation $\sin\alpha = 3(1-x^2)x - x^3$ for $x$.
-    To use it, begin with a guess ($x=0$ works fine here), then plug
-    this $x$ into the right hand side to get a much improved second
-    guess ($x=(\sin\alpha)/3$ here), which you again plug into the right
-    hand side, repeating until the result stops changing to whatever
-    accuracy you want the final result.</p>
-  <p>Newton iterations like this double the number of correct digits
-    with each iteration, so just a few iterations gives a good enough
-    answer for any practical purpose.  Here is the Newton iteration
-    for finding the sine of one fifth of an angle $\alpha$ (again
-    starting with $x=0$):
-
-    $$\sin\frac{\alpha}{5} = x
-    \leftarrow \frac{\sin\alpha - (2x)^3\left(5-2(2x)^2\right)}
-    {5\left(1 - (2x)^2\left(3 - (2x)^2\right)\right)}$$
-  </p>
-  <p>Although we don't need an iterative scheme to compute the sine of
-    $\alpha/2$ given the sine of $\alpha$, we do need to extract a
-    square root.  The Newton iterations for computing the sine of
-    $\alpha/3$ or $\alpha/5$ (or any other odd denominator), although
-    recursive, only require ordinary addition, subtraction,
-    multiplication, and divison.  (Though the most famous square root
-    algorithm is also a Newton iteration.)  However, the
-    textbook formula $\sin(\alpha/2)=\sqrt{(1-\cos\alpha)/2}$ is not
-    very useful for small angles $\alpha$, because the cosine becomes
-    very nearly $1$, which means you need to carry lots of significant
-    figures.  Serious workers use the versine
-    $\text{ver }\alpha=1-\cos\alpha$ (which isn't mentioned in most
-    textbooks) instead of the cosine for calculations like this.  The
-    half-angle formula for the versine is, when carefully written for
-    accurate calculation of small angles:
-    $$\text{ver }\frac{\alpha}{2} = \frac{\text{ver }\alpha}
-    {2 + 2\sqrt{1-\tfrac{1}{2}\text{ver }\alpha}}$$
-    To get back and forth between the sine and versine of an angle
-    requires a square root operation.  Again, written with care:
-    $$\begin{align*}
-    \text{ver }\alpha&=1-\cos\alpha=
-      \frac{\sin^2\alpha}{1+\sqrt{1-\sin^2\alpha}}\\
-    \sin\alpha &= \sqrt{(2-\text{ver }\alpha)\text{ver }\alpha}
+    \cos(\alpha/2) + i\sin(\alpha/2)
+      &= (1+\cos\alpha + i\sin\alpha) / \sqrt{2+2\cos\alpha}.
     \end{align*}$$
   </p>
-  <p>Putting all this together gives us an outline for how we could
-    build an accurate table of sines and cosines, or sines and versines
-    for any angle:
-    <ol>
-      <li>Begin with $30$ degrees, for which $\sin 30^\circ=0.5$
-        and (from the formula) $\text{ver }30^\circ=0.13397460$ to 8 places.
-      </li>
-      <li>Use the $\text{ver }(\alpha/2)$ formula to get $15^\circ$.</li>
-      <li>Use the $\sin(\alpha/5)$ iteration on $30^\circ$; three
-        iterations gets 8 places of $6^\circ$.</li>
-      <li>Use the $\sin(\alpha/3)$ iteration on $6^\circ$ to get $2^\circ$;
-        again three iterations gets 8 places.</li>
-      <li>Use the $\text{ver }(\alpha/2)$ formula to get $1^\circ$.</li>
-      <li>With the sines and cosines (from the versines) of
-        $30^\circ$, $15^\circ$, $6^\circ$, $2^\circ$, and $1^\circ$,
-        use the addition formula to compute all the integer numbers of
-        degrees less than $30$.  Generally, the best strategy is to use
-        the biggest angles first: $24=30-6$, $21=15+6$, $9=15-6$, followed
-        by $28=30-2$, $26=24+2$, $23=21+2$, and so on.</li>
-      <li>Similarly, use the addition formulas to extend your sines and
-        cosines up to $45^\circ$.  You can use the known fact that
-        $\sin 45^\circ=1/\sqrt{2}=0.70710678$ to check the accuracy of
-        your table.</li>
-      <li>Once you have completed all the angles up to $45^\circ$ or $1/8$
-        revolution, you can fill in every other angle using the symmetry
-        of the unit circle.</li>
-    </ol>
+  <p>This half angle formula would suffice for building sine tables.
+    However, if you want a challenge and know a little calculus, work
+    out the equations you need to solve in order to subdivide an angle
+    into three or five parts, by writing out the binomial expansion of
+    $1^{3\alpha}$ and $1^{5\alpha}.$ The imaginary parts produce third
+    and fifth degree polynomials, respectively, which you can very
+    efficiently solve by Newton iteration (the guess-divide-average
+    algorithm in the case of square roots) to get $\sin(\alpha/3)$ or
+    $\sin(\alpha/5)$ given only $\sin\alpha$.  Note that if you can
+    divide an angle in half and into fifths, you can divide it into
+    tenths, which is an interesting capability if you want to build a
+    sine table.  Dividing by three comes in handy if you work with
+    angles in degrees, minutes, and seconds.  There are also nice
+    Newton iterations for versine, $\text{ver }\alpha=1-\cos\alpha$
+    for the half-angle or quarter angle, if you want to avoid the
+    square root in the non-iterative half-angle formula.  The real
+    part of $1^{n\alpha}$ gives a nice iteration for
+    $\text{ver}(\alpha/n)$ for even $n$, while the imaginary part
+    produces a nice iteration for $\sin(\alpha/n)$ for odd $n$.</p>
+  <p>It is impossible to overstate the importance of the relationship
+    between the complex powers $1^\alpha$ and the trigonometric
+    functions $\cos\alpha$ and $\sin\alpha$.  Working with a power law
+    is just far simpler than working with raw sines and cosines.
+    Practical fields from signal processing to quantum mechanics rely
+    heavily on the fact that the complex roots of unity and their
+    powers orbit smoothly around the unit circle.  We have approached
+    this relationship from the opposite direction of current
+    textbooks, and invented a notation $1^\alpha$ you won't see
+    anywhere else.  It's time to close the loop by demonstrating how
+    our approach relates to the textbook approach.</p>
+
+  <h2>Analytic continuation</h2>
+  <p>We've worked our way from powers which are counting numbers, to
+    zero or negative integer powers, to rational powers, until finally
+    we have a useful definition for a complex value of $1^x$ for any
+    real number $x$.  So now the burning question becomes, how can we
+    define $1^z$ for any complex number $z$ in a useful and consistent
+    way?  The general method for extending a partially defined
+    function to cover the whole complex plane is called analytic
+    continuation; it is a cornerstone of the theory of analytic
+    functions (smooth functions of a complex number that return a
+    value which is also a complex number).</p>
+  <p>The simplest case is complex multiplication.  Just as raising to
+    a power begins with the idea that a power is repeated
+    multiplication, the basic idea behind multiplication is repeated
+    addition.  For powers of a number $a$, we decided we wanted to
+    preserve the property that $a^xa^y=a^{x+y}.$ For multiplication,
+    the property we want to preserve is the distributive law,
+    $ax+ay=a(x+y)$, and it leads us through the same progression -
+    from counting numbers $x$ being repeated addition of $a$ to
+    itself, to multiplying by zero or negative $x$, and finally to
+    multiplying by any rational fraction $x$, all defined uniquely by
+    the requirement that the distributive law continue to apply.  We
+    know how to take a final step in the case of multiplication, which
+    takes us to values of $x$ in the complex plane.</p>
+  <p>The multiplication rule is to regard the first multiplicand $a$
+    as the unit on a new "real" axis, that is, as one edge of a new
+    unit square, which may be tilted as well as rescaled (depending on
+    the value of $a$).  Having chosen one edge of a new unit square,
+    the perpendicular edge is determined, both in direction and length
+    In fact, it is $ia$, $90^\circ$ counterclockwise from $a$ and of
+    equal length.  Thus, our original idea of multiplication as
+    repeated addition led us to understand $ax$ for real $x$ as a
+    point on the line containing $a$, and inexorably to $a$ times an
+    imaginary number $iy$ as a point on the perpendicular to $a$
+    (through the origin).  The mapping from real $x$ to complex $ax$
+    covers only one line, and is only part of the full complex mapping
+    from $x+iy$ to $a(x+iy)$ that fills the whole plane, defined by
+    tiling the plane with unit squares that have $a$ for one edge.</p>
+  <p>Return now to the function $1^x$, which maps the real axis onto
+    the unit circle periodically, revolving around the circle once
+    every time $x$ increases by $1$.  Instead of mapping to a straight
+    line, the real axis now maps to a curve, the unit circle.
   </p>
-
-  <h2>Relation to Euler's formula</h2>
-  <p>You probably won't see this definition of the complex valued
-    function $1^\alpha$ anywhere else.  The standard way to express
-    the same idea is Euler's formula:
-
-    $$e^{i\theta} = \cos\theta + i\sin\theta.$$
-
-    Here, $\theta$ is in units of radians, and the meaning of both the
-    real number $e$ and the meaning of raising a number to an
-    imaginary power require a long discussion which, though brilliant
-    and important, has nothing to do with the connection between
-    trigonometry and powers of complex numbers.  Since $\theta=2\pi$
-    equals one revolution, Euler writes
-
-    $$e^{i2\pi} = 1,$$
-
-    which shows how to get back and forth between our notation and the
-    standard notation introduced by Euler: Just substitute $e^{i2\pi}$
-    for $1$ as the base for the exponential, and remember to convert
-    angles elsewhere from units of revolutions to units of
-    radians:
-
-    $$1^\alpha = e^{i2\pi\alpha} = \cos\alpha + i\sin\alpha.$$
-
-  </p>
-  <p>Our definition of $1^\alpha$ shows how powers of complex numbers
-    relate to sines and cosines without needing to explain imaginary
-    exponents.</p>
+  <div class="halfwide">
+  <svg xmlns="http://www.w3.org/2000/svg"
+       viewBox="-2.1 -3.5 4.2 5.6" onload="map_interactions(evt)"
+       fill="none" stroke="#808080" stroke-width="0.015">
+    <!-- begin z-plane -->
+    <g transform="translate(-1.8,-2.7)">
+    <line stroke="#ff8000" x1="-0.3" y1="0" x2="3.9" y2="0"/>
+    <line stroke="#ff8000" x1="0" y1="-0.7" x2="0" y2="0.5"/>
+    <!-- coordinates are 3.6*z, so dz=0.06 gives 60 steps from z=0 to 1 -->
+    <path d="M -0.09,-0.42, 3.69,-0.42
+             M -0.09,-0.36, 3.69,-0.36
+             M -0.09,-0.30, 3.69,-0.30
+             M -0.09,-0.24, 3.69,-0.24
+             M -0.09,-0.18, 3.69,-0.18
+             M -0.09,-0.12, 3.69,-0.12
+             M -0.09,-0.06, 3.69,-0.06
+             M -0.09,0.06, 3.69,0.06
+             M -0.09,0.12, 3.69,0.12
+             M -0.09,0.18, 3.69,0.18
+             M -0.09,0.24, 3.69,0.24
+             M -0.09,0.30, 3.69,0.30
+             M -0.09,0.36, 3.69,0.36"/>
+    <path d="M -0.06,-0.45, -0.06,0.39
+             M 0.00,-0.45, 0.00,0.39
+             M 0.06,-0.45, 0.06,0.39
+             M 0.12,-0.45, 0.12,0.39
+             M 0.18,-0.45, 0.18,0.39
+             M 0.24,-0.45, 0.24,0.39
+             M 0.30,-0.45, 0.30,0.39
+             M 0.36,-0.45, 0.36,0.39
+             M 0.42,-0.45, 0.42,0.39
+             M 0.48,-0.45, 0.48,0.39
+             M 0.54,-0.45, 0.54,0.39
+             M 0.60,-0.45, 0.60,0.39
+             M 0.66,-0.45, 0.66,0.39
+             M 0.72,-0.45, 0.72,0.39
+             M 0.78,-0.45, 0.78,0.39
+             M 0.84,-0.45, 0.84,0.39
+             M 0.90,-0.45, 0.90,0.39
+             M 0.96,-0.45, 0.96,0.39
+             M 1.02,-0.45, 1.02,0.39
+             M 1.08,-0.45, 1.08,0.39
+             M 1.14,-0.45, 1.14,0.39
+             M 1.20,-0.45, 1.20,0.39
+             M 1.26,-0.45, 1.26,0.39
+             M 1.32,-0.45, 1.32,0.39
+             M 1.38,-0.45, 1.38,0.39
+             M 1.44,-0.45, 1.44,0.39
+             M 1.50,-0.45, 1.50,0.39
+             M 1.56,-0.45, 1.56,0.39
+             M 1.62,-0.45, 1.62,0.39
+             M 1.68,-0.45, 1.68,0.39
+             M 1.74,-0.45, 1.74,0.39
+             M 1.80,-0.45, 1.80,0.39
+             M 1.86,-0.45, 1.86,0.39
+             M 1.92,-0.45, 1.92,0.39
+             M 1.98,-0.45, 1.98,0.39
+             M 2.04,-0.45, 2.04,0.39
+             M 2.10,-0.45, 2.10,0.39
+             M 2.16,-0.45, 2.16,0.39
+             M 2.22,-0.45, 2.22,0.39
+             M 2.28,-0.45, 2.28,0.39
+             M 2.34,-0.45, 2.34,0.39
+             M 2.40,-0.45, 2.40,0.39
+             M 2.46,-0.45, 2.46,0.39
+             M 2.52,-0.45, 2.52,0.39
+             M 2.58,-0.45, 2.58,0.39
+             M 2.64,-0.45, 2.64,0.39
+             M 2.70,-0.45, 2.70,0.39
+             M 2.76,-0.45, 2.76,0.39
+             M 2.82,-0.45, 2.82,0.39
+             M 2.88,-0.45, 2.88,0.39
+             M 2.94,-0.45, 2.94,0.39
+             M 3.00,-0.45, 3.00,0.39
+             M 3.06,-0.45, 3.06,0.39
+             M 3.12,-0.45, 3.12,0.39
+             M 3.18,-0.45, 3.18,0.39
+             M 3.24,-0.45, 3.24,0.39
+             M 3.30,-0.45, 3.30,0.39
+             M 3.36,-0.45, 3.36,0.39
+             M 3.42,-0.45, 3.42,0.39
+             M 3.48,-0.45, 3.48,0.39
+             M 3.54,-0.45, 3.54,0.39
+             M 3.60,-0.45, 3.60,0.39
+             M 3.66,-0.45, 3.66,0.39"/>
+    <line stroke="#0080ff" stroke-width="0.03"
+          x1="-0.3" y1="0" x2="3.9" y2="0"/>
+    <circle fill="#ff8000" stroke="#ff8000" stroke-width="0.015"
+            cx="3.6" cy="0" r="0.04"/>
+    <circle fill="#ff8000" stroke="#ff8000" stroke-width="0.015"
+            cx="0" cy="0" r="0.04"/>
+    </g>
+    <!-- begin w-plane -->
+    <line stroke="#ff8000" x1="-2.1" y1="0" x2="2.1" y2="0"/>
+    <line stroke="#ff8000" x1="0" y1="-2.1" x2="0" y2="2.1"/>
+    <!-- r = exp(-2*pi*n/60) for n = 7, 6, 5, ..., -4, -5, -6 -->
+    <circle cx="0" cy="0" r="0.48045"/>
+    <circle cx="0" cy="0" r="0.53349"/>
+    <circle cx="0" cy="0" r="0.59238"/>
+    <circle cx="0" cy="0" r="0.65778"/>
+    <circle cx="0" cy="0" r="0.73040"/>
+    <circle cx="0" cy="0" r="0.81104"/>
+    <circle cx="0" cy="0" r="0.90058"/>
+    <circle cx="0" cy="0" r="1" stroke="#0080ff" stroke-width="0.03"/>
+    <circle cx="0" cy="0" r="1.11040"/>
+    <circle cx="0" cy="0" r="1.23299"/>
+    <circle cx="0" cy="0" r="1.36911"/>
+    <circle cx="0" cy="0" r="1.52026"/>
+    <circle cx="0" cy="0" r="1.68809"/>
+    <circle cx="0" cy="0" r="1.87446"/>
+    <!-- theta = 2*pi*n/60 radians for n=0 to 59 -->
+    <path d="M 0.43,0, 1.95,0
+             M 0,0.43, 0,1.95
+             M -0.43,0, -1.95,0
+             M 0,-0.43, 0,-1.95
+             M 0.42764, 0.04495, 1.93932, 0.20383
+             M 0.42764, -0.04495, 1.93932, -0.20383
+             M -0.42764, -0.04495, -1.93932, -0.20383
+             M -0.42764, 0.04495, -1.93932, 0.20383
+             M 0.4206, 0.0894, 1.90739, 0.40543
+             M 0.4206, -0.0894, 1.90739, -0.40543
+             M -0.4206, -0.0894, -1.90739, -0.40543
+             M -0.4206, 0.0894, -1.90739, 0.40543
+             M 0.40895, 0.13288, 1.85456, 0.60258
+             M 0.40895, -0.13288, 1.85456, -0.60258
+             M -0.40895, -0.13288, -1.85456, -0.60258
+             M -0.40895, 0.13288, -1.85456, 0.60258
+             M 0.39282, 0.1749, 1.78141, 0.79314
+             M 0.39282, -0.1749, 1.78141, -0.79314
+             M -0.39282, -0.1749, -1.78141, -0.79314
+             M -0.39282, 0.1749, -1.78141, 0.79314
+             M 0.37239, 0.215, 1.68875, 0.975
+             M 0.37239, -0.215, 1.68875, -0.975
+             M -0.37239, -0.215, -1.68875, -0.975
+             M -0.37239, 0.215, -1.68875, 0.975
+             M 0.34788, 0.25275, 1.57758, 1.14618
+             M 0.34788, -0.25275, 1.57758, -1.14618
+             M -0.34788, -0.25275, -1.57758, -1.14618
+             M -0.34788, 0.25275, -1.57758, 1.14618
+             M 0.31955, 0.28773, 1.44913, 1.3048
+             M 0.31955, -0.28773, 1.44913, -1.3048
+             M -0.31955, -0.28773, -1.44913, -1.3048
+             M -0.31955, 0.28773, -1.44913, 1.3048
+             M 0.28773, 0.31955, 1.3048, 1.44913
+             M 0.28773, -0.31955, 1.3048, -1.44913
+             M -0.28773, -0.31955, -1.3048, -1.44913
+             M -0.28773, 0.31955, -1.3048, 1.44913
+             M 0.25275, 0.34788, 1.14618, 1.57758
+             M 0.25275, -0.34788, 1.14618, -1.57758
+             M -0.25275, -0.34788, -1.14618, -1.57758
+             M -0.25275, 0.34788, -1.14618, 1.57758
+             M 0.215, 0.37239, 0.975, 1.68875
+             M 0.215, -0.37239, 0.975, -1.68875
+             M -0.215, -0.37239, -0.975, -1.68875
+             M -0.215, 0.37239, -0.975, 1.68875
+             M 0.1749, 0.39282, 0.79314, 1.78141
+             M 0.1749, -0.39282, 0.79314, -1.78141
+             M -0.1749, -0.39282, -0.79314, -1.78141
+             M -0.1749, 0.39282, -0.79314, 1.78141
+             M 0.13288, 0.40895, 0.60258, 1.85456
+             M 0.13288, -0.40895, 0.60258, -1.85456
+             M -0.13288, -0.40895, -0.60258, -1.85456
+             M -0.13288, 0.40895, -0.60258, 1.85456
+             M 0.0894, 0.4206, 0.40543, 1.90739
+             M 0.0894, -0.4206, 0.40543, -1.90739
+             M -0.0894, -0.4206, -0.40543, -1.90739
+             M -0.0894, 0.4206, -0.40543, 1.90739
+             M 0.04495, 0.42764, 0.20383, 1.93932
+             M 0.04495, -0.42764, 0.20383, -1.93932
+             M -0.04495, -0.42764, -0.20383, -1.93932
+             M -0.04495, 0.42764, -0.20383, 1.93932"/>
+    <circle fill="#ff8000" stroke="#ff8000" stroke-width="0.015"
+            cx="1" cy="0" r="0.04"/>
+  </svg></div>
 </div>
 <script>
   var tracking = null;
@@ -699,6 +832,9 @@
     }
 
     add_trackers(unit, handle, start, track, stop);
+  }
+
+  function map_interactions(evt) {
   }
 </script>
 </body>
