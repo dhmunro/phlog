@@ -523,12 +523,12 @@
       <tspan fill="#ff8000" dy="1em">0</tspan></text>
     <text class="svgtxt" x="3.65" y="0.0">
       <tspan fill="#ff8000" dy="1em">1</tspan></text>
-    <g id="z-mark" transform="translate(0.36,0.0)">
-      <polygon fill="transparent" stroke="#000000" stroke-width="0.02"
+    <g id="zmkg" transform="translate(0.36,0.0)">
+      <polygon id="zmk1" fill="white" stroke="#000000" stroke-width="0.02"
                points="-0.06,-0.06, -0.06,0.06, 0.06,0.06, 0.06,-0.06"/>
-      <polyline stroke="#c04000" stroke-width="0.03"
+      <polyline id="zmk2" stroke="#c04000" stroke-width="0.03"
                 points="-0.06,0, 0,0, 0,0.06"/>
-      <polyline stroke="#0000ff" stroke-width="0.03"
+      <polyline id="zmk3" stroke="#0000ff" stroke-width="0.03"
                 points="0.06,0, 0,0, 0,-0.06"/>
     </g>
     </g>
@@ -620,7 +620,7 @@
       <tspan fill="#ff8000" dy="0.8em">0</tspan></text>
     <text class="svgtxt" x="1.02" y="0.0">
       <tspan fill="#ff8000" dy="0.8em">1</tspan></text>
-    <polygon id="wmk1" fill="transparent" stroke="#000000" stroke-width="0.02"
+    <polygon id="wmk1" fill="white" stroke="#000000" stroke-width="0.02"
              points="0.77992,-0.45029, 0.96163,-0.55520, 0.89833,-0.65268,
                      0.82519,-0.74300, 0.66925,-0.60260, 0.72858,-0.52935"/>
     <polyline id="wmk2" stroke="#c04000" stroke-width="0.03"
@@ -705,6 +705,13 @@
   var round = Math.round;
   var abs = Math.abs;
   var sqrt = Math.sqrt;
+  var exp = Math.exp;
+  var log = Math.log;
+  var sin = Math.sin;
+  var cos = Math.cos;
+  var atan2 = Math.atan2;
+  var round = Math.round;
+  var pi = Math.PI;
 
   function pow_interactions(evt) {
     var power = evt.target;
@@ -867,6 +874,129 @@
   }
 
   function map_interactions(evt) {
+    var acmap = evt.target;
+    var handle = ["zmk1", "zmk2", "zmk3",
+                  "wmk1", "wmk2", "wmk3"].map(get_element);
+    var wpts = handle.slice(3, 6).map(
+      function(e) {return e.getAttributeNodeNS(null, "points");});
+    var ztrans = get_element("zmkg").getAttributeNodeNS(null, "transform");
+    // (zx, zy) are z-plane coords in the zmkg group
+    // note translate(-1.8,-2.7) on zmkg group
+    // multiply by pi/1.8 to get z in radians, w=exp(z*pi/1.8)
+    // but also note that y coordinates are sign-reversed for both zy and wy
+    var zx = 0.36;
+    var zy = 0.0;
+    var torad = pi / 1.8;
+    var wx = cos(torad*zx);
+    var wy = -sin(torad*zx);
+
+    function start(index, coords) {
+      index = index > 2;
+      if (index) {  // drag w-plane marker
+        return [index, coords.x - wx, coords.y - wy];
+      } else {  // drag z-plane marker
+        return [index, coords.x - (zx - 1.8), coords.y - (zy - 2.7)];
+      }
+    }
+
+    function track(tracking, coords) {
+      var index = tracking[0];
+      var ezx, ezy, ewx, ewy, ewr;
+      if (index) {  // drag w-plane marker
+        ewx = coords.x - tracking[1];
+        ewy = coords.y - tracking[2];
+        ewr = sqrt(ewx**2 + ewy**2);
+        if (ewr < 0.48) {
+          if (ewr != 0.) {
+            ewr = 0.48;
+          } else {
+            ewx = cos(torad*0.36);
+            ewy = -sin(torad*0.36);
+            ewr = 1.0;
+          }
+        } else if (ewr > 1.87) {
+          ewr = 1.87;
+        }
+        // convert (ewx, ewy) to z-plane coordinates (ezx, ezy)
+        ezx = atan2(-ewy, ewx) / torad;
+        if (ezx < 0.) {
+          ezx += 3.6;
+        }
+        ezy = log(ewr) / torad;
+      } else {  // drag z-plane marker
+        ezx = 1.8 + coords.x - tracking[1];
+        ezy = 2.7 + coords.y - tracking[2];
+        if (ezx < 0.) {
+          ezx += 3.6;
+          if (ezx < 0.) {
+            ezx = 3.599;
+          }
+          tracking = null;
+        } else if (ezx >= 3.6) {
+          ezx -= 3.6;
+          if (ezx > 3.6) {
+            ezx = 0.;
+          }
+          tracking = null;
+        }
+        if (ezy < -0.42) {
+          ezy = -0.42;
+          tracking = null;
+        } else if (ezy > 0.36) {
+          ezy = 0.36;
+          tracking = null;
+        }
+        ewr = exp(torad*ezy);
+        ewx = ewr * cos(torad*ezx);
+        ewy = -ewr * sin(torad*ezx);
+      }
+      ezx = 0.06 * round(ezx / 0.06);
+      ezy = 0.06 * round(ezy / 0.06);
+      if (abs(ezx - zx) > 0.03 || abs(ezy - zy) > 0.03) {
+        zx = ezx;
+        zy = ezy;
+        ztrans.value = "translate(" + zx + "," + zy + ")";
+        ewr = [];
+        var x, y;
+        for (y = zy-0.06 ; y < zy+0.09 ; y += 0.06) {
+          ewr.push(exp(torad*y));
+        }
+        ewx = [];
+        for (x = zx-0.06 ; x < zx+0.09 ; x += 0.06) {
+          ewx.push([cos(torad*x), -sin(torad*x)]);
+        }
+        ewy = [];
+        var i, j;
+        for (i=0 ; i<3 ; i+=1) {
+          y = ewr[i];
+          for (j=0 ; j<3 ; j+=1) {
+            x = ewx[j];
+            ewy.push([y * x[0], y * x[1]])
+          }
+        }
+        wx = ewy[4][0];
+        wy = ewy[4][1];
+        wpts[0].value = ("" + ewy[0][0] + "," + ewy[0][1] + ", " +
+                         ewy[6][0] + "," + ewy[6][1] + ", " +
+                         ewy[7][0] + "," + ewy[7][1] + ", " +
+                         ewy[8][0] + "," + ewy[8][1] + ", " +
+                         ewy[2][0] + "," + ewy[2][1] + ", " +
+                         ewy[1][0] + "," + ewy[1][1]);
+        wpts[1].value = ("" + ewy[3][0] + "," + ewy[3][1] + ", " +
+                         ewy[4][0] + "," + ewy[4][1] + ", " +
+                         ewy[7][0] + "," + ewy[7][1]);
+        wpts[2].value = ("" + ewy[5][0] + "," + ewy[5][1] + ", " +
+                         ewy[4][0] + "," + ewy[4][1] + ", " +
+                         ewy[1][0] + "," + ewy[1][1]);
+      }
+      return tracking;
+    }
+
+    function stop(tracking) {
+      return;
+    }
+
+    add_trackers(acmap, handle, start, track, stop);
   }
 </script>
 </body>
