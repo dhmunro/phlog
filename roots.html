@@ -137,7 +137,7 @@
     ambiguity by showing how a non-standard choice can be useful.</p>
   <div class="halfwide">
   <svg xmlns="http://www.w3.org/2000/svg"
-       viewBox="-2.1 -2.1 4.2 4.2" onload="pow_interactions(evt)"
+       viewBox="-2.2 -2.1 4.3 4.2" onload="pow_interactions(evt)"
        stroke-width="0.03">
     <line stroke="#0080ff" opacity="0.3" stroke-width="0.015"
           x1="-2.1" y1="0" x2="2.1" y2="0"/>
@@ -204,12 +204,12 @@
     circle.</p>
   <div class="halfwide">
   <svg xmlns="http://www.w3.org/2000/svg"
-       viewBox="-1.1 -1.1 2.2 2.2" onload="unit_interactions(evt)"
+       viewBox="-1.15 -1.1 2.25 2.2" onload="unit_interactions(evt)"
        stroke-width="0.015">
     <line stroke="#0080ff" opacity="0.3" stroke-width="0.0075"
-          x1="-2.1" y1="0" x2="2.1" y2="0"/>
+          x1="-1.1" y1="0" x2="1.1" y2="0"/>
     <line stroke="#0080ff" opacity="0.3" stroke-width="0.0075"
-          x1="0" y1="-2.1" x2="0" y2="2.1"/>
+          x1="0" y1="-1.1" x2="0" y2="1.1"/>
     <circle fill="none" stroke="#0080ff" opacity="0.3" stroke-width="0.0075"
             cx="0" cy="0" r="1"/>
     <polyline fill="none" stroke="#0080ff" points="0,0, 1,0"/>
@@ -387,49 +387,63 @@
   <h2>Analytic continuation</h2>
   <p>We've worked our way from powers which are counting numbers, to
     zero or negative integer powers, to rational powers, until finally
-    we have a useful definition for a complex value of $1^x$ for any
+    we have a useful definition of a complex value for $1^x$ for any
     real number $x$.  So now the burning question becomes, how can we
     define $1^z$ for any complex number $z$ in a useful and consistent
     way?  The general method for extending a partially defined
     function to cover the whole complex plane is called analytic
-    continuation; it is a cornerstone of the theory of analytic
-    functions (smooth functions of a complex number that return a
-    value which is also a complex number).</p>
-  <p>The simplest case is complex multiplication.  Just as raising to
-    a power begins with the idea that a power is repeated
-    multiplication, the basic idea behind multiplication is repeated
-    addition.  For powers of a number $a$, we decided we wanted to
-    preserve the property that $a^xa^y=a^{x+y}.$ For multiplication,
-    the property we want to preserve is the distributive law,
-    $ax+ay=a(x+y)$, and it leads us through the same progression -
-    from counting numbers $x$ being repeated addition of $a$ to
-    itself, to multiplying by zero or negative $x$, and finally to
-    multiplying by any rational fraction $x$, all defined uniquely by
-    the requirement that the distributive law continue to apply.  We
-    know how to take a final step in the case of multiplication, which
-    takes us to values of $x$ in the complex plane.</p>
-  <p>The multiplication rule is to regard the first multiplicand $a$
-    as the unit on a new "real" axis, that is, as one edge of a new
-    unit square, which may be tilted as well as rescaled (depending on
-    the value of $a$).  Having chosen one edge of a new unit square,
-    the perpendicular edge is determined, both in direction and length
-    In fact, it is $ia$, $90^\circ$ counterclockwise from $a$ and of
-    equal length.  Thus, our original idea of multiplication as
-    repeated addition led us to understand $ax$ for real $x$ as a
-    point on the line containing $a$, and inexorably to $a$ times an
-    imaginary number $iy$ as a point on the perpendicular to $a$
-    (through the origin).  The mapping from real $x$ to complex $ax$
-    covers only one line, and is only part of the full complex mapping
-    from $x+iy$ to $a(x+iy)$ that fills the whole plane, defined by
-    tiling the plane with unit squares that have $a$ for one edge.</p>
-  <p>Return now to the function $1^x$, which maps the real axis onto
+    continuation - a cornerstone of the theory of analytic functions
+    (smooth functions of a complex number that return a value which is
+    also a complex number).</p>
+  <p>The simplest case of analytic continuation is complex
+    multiplication.  Just as raising to a power begins with the idea
+    that a power is repeated multiplication, the basic idea behind
+    multiplication is repeated addition.  For powers of a number $a$,
+    we decided to preserve the property that $a^xa^y=a^{x+y}.$ For
+    multiplication, the property we want to preserve is the
+    distributive law, $ax+ay=a(x+y)$, and it leads us through the same
+    progression - from counting numbers $x$ being repeated addition of
+    $a$ to itself, to multiplying by zero or negative $x$, and finally
+    to multiplying by any rational fraction $x$, all defined uniquely
+    by the requirement that the distributive law continue to apply.</p>
+  <p>This whole chain of reasoning works for any complex value of $a$
+    (once we've defined complex addition), but we still have only
+    defined how to multiply a complex number $a$ by a real number $x$.
+    We now want to broaden this definition to cover the product $az$
+    for any complex $z=x+iy.$ Let's think of this product as a mapping
+    from one complex number $z$ to a second complex number $w$, which
+    is its product with $a$, $w=az.$ Our chain starting from repeated
+    addition tells us how to map the real axis; it maps to the line in
+    $w$ determined by the origin $0$ and the point $a$, corresponding
+    to the $z$ values $0$ and $1$, respectively.  When we move
+    perpendicular to the real axis in $z$, the natural response is to
+    move perpendicular to the line through $0$ and $a$ in $w$, with
+    the same map scale factor as when we move along the real axis
+    (namely the length of $a$).  Geometrically, this means that we map
+    a square grid in the $z$-plane with edges $0$, $1$, and $i$ into a
+    square grid in the $w$-plane with edges $0$, $a$, and $ia$.  The
+    grid squares can be any size, for example, the grid based on
+    $1/100$ and $i/100$ maps to the grid based on $a/100$ and
+    $ia/100$.</p>
+  <p>Return now to our function $1^x$, which maps the real axis onto
     the unit circle periodically, revolving around the circle once
-    every time $x$ increases by $1$.  Instead of mapping to a straight
-    line, the real axis now maps to a curve, the unit circle.
-  </p>
+    every time $x$ increases by $1$.  Let's assume this is a part of a
+    function $w = 1^z$ which produces a complex value $w$ for every
+    complex value $z$, that is, a mapping from a complex plane with
+    coordinates $z$ to a second complex plane with coordinates $w$.
+    We know the values $w = 1^z$ where $z = x + i0$, and we want to
+    extend this definition to all values $z = x + iy.$ If we make a
+    fine enough square grid in the $z$ plane, we can do the same thing
+    for grid squares adjacent to the $y=0$ line as we did for
+    multiplication, namely just rotate the squares in the $z$-grid so
+    they fit adjacent to the unit circle in the $w$-plane.  Because of
+    the curvature, the squares won't quite fit in $w$, overlapping
+    slightly inside the circle and leaving slight gaps outside the
+    circle.  However, the finer we make the $z$-grid, the smaller the
+    overlaps or gaps in the $w$-grid become.</p>
   <div class="halfwide">
   <svg xmlns="http://www.w3.org/2000/svg"
-       viewBox="-2.1 -3.5 4.2 5.6" onload="map_interactions(evt)"
+       viewBox="-2.2 -3.5 4.3 5.6" onload="map_interactions(evt)"
        fill="none" stroke="#808080" stroke-width="0.01">
     <!-- begin z-plane -->
     <g transform="translate(-1.8,-2.7)">
@@ -628,6 +642,167 @@
     <polyline id="wmk3" stroke="#0000ff" stroke-width="0.03"
               points="0.72858,-0.52935, 0.80902,-0.58779, 0.74314,-0.66913"/>
   </svg></div>
+  <p>In this way, we can define $1^{x+iy}$ for very small but non-zero
+    values of $y$.  Evidently, for a fixed value of $y$, $w$ will
+    trace concentric circles, slightly inside the unit circle when
+    $y\gt 0$ and slightly outside the unit circle when $y\lt 0.$ We
+    can repeat this procedure for each new value of $y$ to work our
+    way farther inward or outward.  But as we move inward or outward a
+    curious thing happens: The circumference of the circle at fixed
+    $y$ shrinks or grows, while the number of grid steps in $x$ to go
+    once arond remains fixed.  Therefore, the size of the grid squares
+    in the $w$-plane shrinks or grows in proportion to the radius of
+    the circle corresponding to the value of $y$.  We wind up with a
+    $w$-grid like the one in this figure, consisting of squares (in
+    the limit of a very fine grid) arranged in circles.</p>
+  <p>You can drag the marked set of four adjacent squares around on
+    the $z$-plane or the $w$-plane to get a feeling for how our
+    expanded mapping $w=1^z$ works.  For this grid, you can still see
+    the squares are slightly distorted in the $w$-plane, but you can
+    also see that the distortion would be smaller for an even finer
+    grid.  Notice how moving along the blue line - the real axis in
+    $z$ and the unit circle in $w$ - where we had originally defined
+    $1^x$ defines adjacent concentric circles in $w$.  Orbiting those
+    adjacent circles defines the values on slightly larger circles,
+    eventually mapping the whole $z$-plane to the whole the whole
+    $w$-plane.  In fact, because the mapping is periodic in $z$ ($z+1$
+    always maps to the same $w$ as $z$), our function $1^z$ covers the
+    $w$-plane an infinite number of times.</p>
+  <p>The key principle of analytic continuation is that we expand our
+    mapping in such a way that locally, over any small grid square, it
+    looks like a simple complex multiplication and addition.  Near any
+    point $z_0$, our function $1^z = 1^{z_0} + c(z_0)(z-z_0)$ for some
+    complex number $c$ (which may be different for each $z_0$).  (If
+    you know calculus, you'll recognize that the function $c$ is the
+    derivative of the function $1^z$.)  A function that is locally
+    linear is called analytic.  When you think about it, you realize
+    that this is what makes it possible to compute functions like
+    $1^z$: If we define a function so that we can compute it by
+    addition and multiplication in a small region, and we have an
+    appetite for doing lots of adding and multiplying, we can slowly
+    march as far from our starting point as we please.</p>
+
+  <h2>Euler's formula</h2>
+
+  <p>You will notice that according to our mapping, $1^{iy}$ is a
+    point on the positive $w$-real axis, running from very near the
+    origin $w=0$ for large positive $y$ through $w=1$ at $y=0,$ then
+    out to infinity for large negative $y.$ In other words, $1^i$ is a
+    real number less than $1$, and our mapping is simply
+
+    $$1^z = 1^{x+iy} = 1^x(1^i)^y.$$
+
+    Since $1^i$ is a positive real number, we can raise it to a real
+    power $y$ using the standard definition.  The standard way to
+    define $a^y$ for any positive real $a$ and any real $y$ goes
+    through the same familiar steps we took to define $1^x$, beginning
+    with counting numbers $y$, extending that to any integer $y$, then
+    to any rational $y$ by defining reciprocal powers as roots.</p>
+  <p>So what is the value of $1^i$?  If our grid has $n$ squares
+    running from $z=0$ to $z=1$, then in the $w$-plane, we will go
+    around the unit circle in $n$ steps.  Hence near the unit circle,
+    the side of the grid squares must be $2\pi/n$, since the perimeter
+    of the unit circle is $2\pi.$ The radial edge of each square
+    resting on the unit circle must also be $2\pi/n$, so the next
+    circle inward has radius $1-2\pi/n$.  This represents a step
+    upward in the $z$-plane to the line $z=x+i/n.$ Exactly the same
+    reasoning takes us to $z=x+i2/n,$ except that the perimeter of the
+    circle was as factor of $1-2\pi/n$ smaller, so the corresponding
+    circle radius drops by that factor to $(1-2\pi/n)^2$, after $n$
+    such steps, we will have reached the line $z=x+i$, which maps to
+    the circle of radius $1^i$ in the $w$-plane.  Therefore, $1^i
+    \approx (1 - 2\pi/n)^n.$ Now for any finite $n$, this formula is
+    not quite correct, because the grid in the $w$-plane is slightly
+    distorted squares.  (For example, $n=60$ in the figure.)  So to
+    get the exact answer we have to take the limit of an infinite $n$,
+    an infinitely fine grid, written like this:
+
+    $$1^i = \lim_{n\rightarrow\infty} (1 - 2\pi/n)^n.$$
+
+    Thus, $1^i$ is roughly $1/535,$ although you need to make $n$ very
+    large, above ten thousand, to begin to see convergence.</p>
+  <p>Euler studied the function he defined by
+
+    $$f(x) = \lim_{n\rightarrow\infty} (1 + x/n)^n.$$
+
+    We have just demonstrated that $1^i = f(-2\pi),$ so we'll follow
+    Euler's reasoning about this more general form.  You can replace
+    $n$ on the right hand side by any multiple of $n$ since all grow
+    without limit.  If you replace $n$ by $n|x|$ and work through some
+    technical details, you find that Euler's limit is just a disguised
+    form of an exponential function:
+
+    $$f(x) = f(1)^x = f(-1)^{-x} = e^x.$$
+
+    Here, Euler writes $e$ for the number $f(1)$, which is roughly
+    $2.72$, and his choice has become the mathematical standard.</p>
+  <p>Thus, our notation here is related to standard notation by $1^i =
+    e^{-2\pi},$ where the left side is non-standard and the right side
+    is standard.  Now, Euler had to work out how to analytically
+    continue the function $e^x$ from the real axis into the complex
+    plane.  We've already worked this out in reverse.  Since $1^{iy} =
+    e^{-2\pi y}$ for all real $y$, we know
+
+    $$e^z = 1^{-iz/(2\pi)}$$
+
+    for any complex $z.$ This gives the standard notation in terms of
+    ours, which means that our notation would look like this in
+    textbooks:
+
+    $$1^z = e^{i2\pi z}.$$
+
+    In other words, to get from our notation on this page to textbook
+    notation, just substitute $e^{i2\pi}$ for $1$ wherever $1$ appears
+    as the base of an exponent.  Since in the standard notation, $1$
+    is useless as the base of an exponent, so no one uses it and there
+    is little chance of confusion.</p>
+  <p>The relation to the trigonometric functions that appeared
+    naturally from our discussion of the complex roots of unity,
+
+    $$1^\alpha = \cos\alpha + i\sin\alpha,$$
+
+    looks like this in standard notation
+
+    $$e^{i\theta} = \cos\theta + i\sin\theta.$$
+
+    This is the celebrated Euler formula.  The major difference is
+    that the power of the number $e$ in the Euler formula is the pure
+    imaginary number $i\theta,$ while in our non-standard notation,
+    the exponent of $1$ is the ordinary real number $\alpha$.  The
+    secondary difference is that the units of the angle $\theta$ are
+    implicitly radians, while the units of the angle $\alpha$ are
+    revolutions or cycles.  (So $\theta = 2\pi\alpha.$)</p>
+  <p>To understand the meaning of an imaginary exponent, you need to
+    work through the analytic continuation argument.  In the geometric
+    approach on this page, the key element of that argument was that
+    we want our extended function to look like a linear function, a
+    complex multiplication and a complex add, on small scales, so that
+    a grid of fine squares in $z$ maps to a grid of fine squares in
+    $w$.  In Euler's purely algebraic approach, this analytic
+    continuation step hardly needs to be mentioned.  Since his
+    definition of $e^x$ in terms of $(1+x/n)^n$ begins with just
+    addition and multiplication operations, all he needs to to is plug
+    in complex numbers for $x$ and he automatically has definition of
+    $e^x$ for complex values that will look like complex
+    multiplication on small scales.</p>
+  <p>In our roots of unity approach, angles were the primary players
+    from the beginning; we didn't need to introduce radian angle
+    measure or the constants $e$ or $\pi$ at all to reach the
+    important relations between complex multiplication and the
+    trigonometric functions.  It was only when we analytically
+    continued our function $1^z$ to pure imaginary numbers that we
+    discovered its relation to ordinary real exponential functions.
+    The standard textbook approach, Euler's approach, is to begin with
+    ordinary real exponentials and discover their connection to angles
+    by analytic continuation to pure imaginaries.</p>
+  <p>Our notation $1^\alpha$ simplifies many important mathematical
+    formulas, especially in Fourier analysis.  However, it makes many
+    others more complicated, notably anything involving rates of
+    change of angles.  Similarly, measuring angles in revolutions or
+    cycles is often the best choice in engineering - witness the units
+    Hertz (cycles per second) or RPM (revolutions per minute) - while
+    measuring angles in radians is often simplest in problems
+    involving rates of change.</p>
 </div>
 <script>
   var tracking = null;
