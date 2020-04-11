@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Frequency Space</title>
+  <meta name="description"
+    content="Fourier series and transforms are subtle but not malicious.">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script>MathJax = {tex: { inlineMath: [["$", "$"], ["\\(", "\\)"]] }};
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"
+          id="MathJax-script">
+  </script>
+  <style>
+    div {
+      -moz-box-sizing: border-box;
+      box-sizing: border-box;
+    }
+    .textcolumn {
+      padding-left: 1em;
+      padding-right: 1em;
+      min-width: 22em;
+      max-width: 52em;
+      margin: 0 auto;
+    }
+    .halfwide {
+      width: 60%;
+      float: right;
+    }
+    @media only screen and (max-width: 620px) {
+      .halfwide {
+        width: 100%;
+      }
+    }
+  </style>
+</head><body><div class="textcolumn">
+  <h1 style="text-align: center;"><a href="index.html">Frequency Space</a></h1>
+  <p>Sounds contain a spectrum of different pitches or frequencies
+    which our sense of hearing can sort out to a certain degree.  Your
+    ear responds to variations in air pressure, that is pressure as a
+    function of time.  There is a relatively simple mathematical
+    theory for how to decompose any function of time into components
+    of different frequencies, which corresponds fairly well to the way
+    you perceive different pitches.  Frequency analysis turns out to
+    be one of the most important mathemetical techniques ever
+    developed.  Not only acoustics, but signal processing, image
+    processing, and the fundamental theory of quantum mechanics all
+    rely on the technique pioneered by Fourier in the early 1800s.</p>
+  <p>Unfortunately, Fourier analysis is not introduced until roughly
+    the second year of college calculus.  There are two historical
+    accidents that account for this neglect: First, Fourier lived a
+    hundred and fifty years after Newton; it took a long time for
+    people to recognize the importance of frequency decomposition.
+    Second, the suite of mathematical techniques that bear Fourier's
+    name did not become ubiquitous practical tools for another hundred
+    and fifty years, with the advent of the digital age.  Here we
+    present the essentials of Fourier analysis, the decomposition of
+    signals into their component frequencies, from an elementary point
+    of view.  You will need algebra and complex numbers, but little to
+    no calculus.</p>
+
+  <h2>Discrete Fourier Transform (DFT)</h2>
+  <p>The mathematical breakthrough that makes frequency analysis
+    simple is the invention of complex numbers.  In particular,
+    introducing $i=\sqrt{-1}$ makes the operation of complex
+    multiplication correspond to the physical operations of rotation
+    and scaling in the complex plane.  That is, the product of two
+    complex numbers is the complex number whose argument (angle from
+    the positive real axis) is the sum of the angles of the factors,
+    and whose modulus (distance from the origin, $0$) is the product
+    of their moduli.  In particular, this means that multiplying two
+    complex numbers which lie on the unit circle produces another
+    point on the unit circle at the sum of their angles from the point
+    $1$.</p>
+  <p>The $N^\text{th}$ roots of unity are the complex numbers $z$ for
+    which $z^N=1$.  Now $z=1$ is always one such point, but there are
+    obviously $N-1$ other such points equally spaced around the unit
+    circle forming a regular $N\text{-gon}.$ We will write $1^{1/N}$
+    for the $N^\text{th}$ root of unity nearest to $1$ with
+    non-negative imaginary part.  Then the $N$ $N^\text{th}$ roots of
+    unity are $1^{n/N}$ for powers $n=0,1,2,...,N-1.$ ($1^x$ is
+    non-standard notation written $e^{i2\pi x}$ in standard notation.
+    We adopt $1^x$ here because it makes the equations much easier to
+    remember.)</p>
+  <p>Raising any of these to the $N^\text{th}$ power produces
+    $(1^{n/N})^N=1^n=1.$ That is, multiplying any of them by itself
+    $N$ times returns to the starting vertex of the polygon at $1.$
+    The roots differ, however, in how many times they orbit the circle
+    when you imagine marching up through all of their powers,
+    $1^{mn/N}$ for $m=0,1,2,...,N-1$ and any fixed root $n.$ The root
+    we labeled $n$ orbits the unit circle $n$ times before returning
+    exactly to $1$ on the $N^\text{th}$ step.</p>
+  <p>What do the complex roots of unity have to do with frequencies?
+    If we think of $m$ as time, continuing to count indefinitely, then
+    the point $1^{mn/N}$ will continue to orbit the unit circle,
+    completing $n$ revolutions for every increase of $m$ by $N.$ We
+    describe this motion as repeating with a frequency of $n$ cycles
+    every $N$ steps.  Hence each $n$ represents a different frequency
+    of this orbital motion, while $m$ represents a time.  In any real
+    application, time $t$ will not be an integer, but some number of
+    seconds or other unit.  We therefore introduce the fundamental
+    period $T$ of the motion, which has units of time, and corresponds
+    to $N$ increments of $m,$
+
+    $$t/T = m/N. \tag{1}$$
+
+    Similarly, frequency $\nu$ is measured in Hertz (cycles per
+    second) or some corresponding frequency unit.  Since root $n$
+    completes $n$ cycles in time $T,$
+
+    $$\nu = n/T. \tag{2}$$
+
+    Thus, $1^{mn/N}=1^{\nu t}$; the exponent is an angle measured in
+    units of revolutions or cycles.</p>
+  <p>Our model for time is a succession of powers $m$, and each
+    $N^\text{th}$ root of unity is a base $1^{n/N}$ for those powers
+    corresponding to a succession of frequencies $n$.  In this model,
+    a function of time is just a list of complex numbers $f_m$,
+    representing the evolution of the function over time.  Each of our
+    sequences of powers $1^{mn/N}$ corresponds to the function of time
+    which orbits the unit circle with frequency $n$, so if we can
+    write $f$ in the form
+
+    $$f_m = \sum_{n=0}^{N-1}F_n 1^{mn/N}, \tag{3}$$
+
+    we will have expressed $f$ as a sum of frequency components.  Here
+    the complex number $F_n$ represents the amplitude of frequency $n$
+    in the function $f_m.$ Sometimes "amplitude" refers to just the
+    modulus of the complex $F_n$ in which case the argument of $F_n$
+    is called the "phase" of frequency component $n.$</p>
+  <p>Given $f_m$, how do we find $F_n$?  The brute force approach would
+    be to recognize (3) as an $N\times N$ matrix equation and
+    solve it.  However, in this case we can explicitly write the inverse
+    matrix.  The trick is to notice that
+
+    $$\delta_{n0} = \frac{1}{N} \sum_{m=0}^{N-1}1^{mn/N}, \tag{4}$$
+
+    where $\delta_{jk}$ is the Kronecker delta, defined to be $1$ when
+    $j=k$ and $0$ otherwise.  The $n=0$ case is obvious since every
+    term in the sum is $1$ in that case and there are $N$ terms.
+    Multiplying the sum by $1^{n/N}$ does not change its value, since
+    each term simply becomes its succeeding term and the last term
+    times $1^{n/N}$ is $1$, wrapping back to the first term.  The only
+    number which remains unchanged when you multiply by something
+    other than $1$ (for $n\ne 0$) is $0.$ Formula (4) provides a way
+    to invert the matrix to get
+
+    $$F_n = \frac{1}{N} \sum_{m=0}^{N-1}f_m 1^{-mn/N}. \tag{5}$$
+  </p>
+  <p>The symmetry between (3) and (5) is astonishing.  The only
+    differences are the leading factor of $1/N$ and the sign of the
+    exponent.  Roughly speaking, though, the values of the time
+    sequence are the frequency components of the frequency sequence as
+    well as vice-versa.  Together, these two equations comprise the
+    discrete Fourier transform (DFT) and its inverse.  There are many
+    variants, but all of them come back to these.</p>
+  <p>Notice that (5) demonstrates that no matter what function of time
+    $f_{m}$ we choose, we can always decompose it into frequency
+    coefficients $F_n.$</p>
+
+  <h2>Fast Fourier Transform (FFT)</h2>
+  <p>If we were to use equation (5) directly to compute the Fourier
+    coefficients $F_n$ given the $f_m$, we would need to perform $N^2$
+    multiplies and $N(N-1)$ adds.  There is a far, far more efficient
+    algorithm used by Gauss in 1805, then forgotten until its
+    rediscovery in 1965 by Cooley and Tukey.  This fast Fourier
+    transform (FFT) algorithm is the reason frequency analysis has
+    become ubiquitous in the age of digital computers.</p>
+  <p>The idea is simple, but obviously subtle enough to have been
+    forgotten: Given any two sequences of $N$ complex numbers $f_m$
+    and $g_m$ and their frequency amplitudes $F_n$ and $G_n$ we can
+    immediately write down the frequency amplitudes for the sequence
+    of length $P=2N$ built by interleaving $f$ and $g$, $f_0, g_0, f_1,
+    g_1, ...$ until $f_{N-1}, g_{N-1}$.  Calling the interleaved
+    sequence $h_p$ and its frequency amplitudes $H_q$ where $p$ and
+    $q$ run from $0$ to $2N-1,$ we see that:
+
+    $$\begin{align*}
+    H_q &= \frac{1}{P} \sum_{p=0}^{P-1} h_p 1^{pq/P} \\
+    &= \frac{1}{2N} \left(\sum_{m=0}^{N-1} f_m 1^{2mq/P}
+    + \sum_{m=0}^{N-1} g_m 1^{(2m+1)q/P}\right) \\
+    &= \tfrac{1}{2} (F_q + 1^{q/P}G_q) \tag{7}
+    \end{align*}$$
+
+    Notice that frequency coefficients are always periodic in their
+    index $n$, so that $F_q$ and $G_q$ are the same as $F_{q-N}$ and
+    $G_{q-N},$ so the fact that $q$ runs from $0$ to $P=2N$ is not a
+    problem.  Setting aside the leading factor of $\tfrac{1}{2}$ for a
+    moment (although it does not affect the scaling argument we are
+    about to make), given $F_m$ and $G_m$ of length $N$, we can
+    compute a Fourier series of double the length using only one
+    multiply and one add per value of $q.$</p>
+  <p>The insight is that if we apply this interleaving procedure
+    backwards, recursively, we will use far fewer than the $N^2$
+    operations of the direct application of (5).  Assume that $N$ is a
+    power of $2$.  We first take every other element and compute their
+    coefficients; to compute those coefficents, we take every other
+    element of those sequences (every fourth of the original), and so
+    on until we reach sequences of only a single element, for which
+    $F_0=f_0.$ There are a total of $\log_2 N$ such stages.  The stage
+    with subsequences of length $M$ will have $N/M$ such subseqences,
+    each of which requires $M$ multiplies and adds to construct from
+    the following stage, so that every stage involves a grand total of
+    $N$ multiplies and adds.  Since there are $\log_2 N$ stages, the
+    total operation count for the whole procedure is $N\log_2 N.$ This
+    recursive algorithm for computing $F_n$ given $f_m$ or vice-versa
+    is called FFT.  For values of $N$ which are not powers of two,
+    there are variants of this algorithm that involve extracting every
+    third element, or fifth element, etc.  You can easily write down
+    the equivalent of equation (7) for these cases.</p>
+  <p>The FFT operation count of $N\log_2 N$ is far, far less than the
+    count of $N^2$ corresponding to direct application of (5) or (3).
+    Thus, even though those formulas suggest a technique for computing
+    the DFT, they should never be used for that purpose.  The
+    existence of the FFT algorithm makes it so cheap to compute
+    decompose and recompose frequency coefficients that frequency
+    decomposition has become a ubiquitous computing tool, shifting the
+    Fourier transform from an important theoretical concept to an
+    indispensible practical one.</p>
+
+  <h2>Fourier series and integrals</h2>
+  <p>For practical purposes, we must always sample functions at a
+    finite rate, and collect only a finite number of samples.  Hence
+    the DFT in one form or another is the only practical way to
+    decompose a function into its frequency components.  However, for
+    theoretical purposes, we often think about continuous functions of
+    time and an infinite number of samples.  These are important
+    limits, because we can often choose the number of samples and
+    their spacings, and we need to understand what might happen if we
+    could collect many more samples.  There are two distinct cases:
+    The continuous function $f(t)$ may be precisely periodic with
+    period $T$, but we collect an infinite number of infinitessimally
+    spaced samples.  On the other hand, the function $f(t)$ may not be
+    periodic at all, which we can model by allowing the period $T$ to
+    become infinite.</p>
+  <p>If we let the number of samples become infinite while the period
+    $T$ remains finite, we immediately hit a snag.  As long as $N$ was
+    finite, we let the label $n$ for the frequency run from $0$ to
+    $N-1$.  The beginning and ending point did not matter because the
+    way we labeled the roots of unity $1^{n/N}$ was periodic in $n$.
+    However, if we let $N$ recede to infinity and still label the
+    roots from $n=0$ to $n=N-1,$ then we no longer make it around to
+    the lower half of the unit circle in finitely many steps.  In
+    order to include all the roots of unity for very large $N$, we
+    must instead count from $n=-N/2$ to $n=+N/2-1$ (assuming even $N$)
+    in order for the labels $1^{n/N}$ to cover both the upper and
+    lower halves of the unit circle.  (This is the first hint of a
+    very general problem with Fourier analysis called aliasing.)
+    Thus, in the limit $N\rightarrow\infty$, we must label our
+    frequency components $n$ as $..., -2, -1, 0, 1, 2, ...$ instead of
+    beginning at $n=0.$</p>
+  <p>With that understanding and using equation (1), equations (3) and
+  (5) become, respectively,
+
+    $$\begin{align*}
+    f(t) &= \sum_{n=-\infty}^\infty F_n 1^{nt/T} \tag{8} \\
+    F_n &= \frac{1}{T} \int_0^T dt\, f(t) 1^{-nt/T} \tag{9}
+    \end{align*}$$
+
+    The integral is calculus notation, but in this context, it is
+    merely an alternative way to write the sum over $m$.  The $dt$ is
+    part of this shorthand; it stands for the infinitessimal spacing
+    between the time samples $dt=T/N.$  These equations comprise the
+    Fourier series expansion of the periodic function $f(t).$</p>
+  <p>There is an alternative way that the number of sample points
+    might increase without bound.  In practice, the sample spacing
+    $\tau=T/N$ often remains fixed, so that both $T$ increases
+    proportionally to $N.$  In this case, we replace (1) and (2) by
+
+    $$\begin{align*}
+    t &= m\tau \tag{1a} \\
+    \nu\tau &= n/N \tag{2a} \\
+    \end{align*}$$
+
+    Here $1/\tau$ is the largest possible frequency, corresponding to
+    one cycle per sample spacing.</p>
+  <p>With infinitely many discretely sampled times, we hit a new snag
+    in trying to take the limit of equation (3).  Instead of discrete
+    frequency components $1^{n/N}$, we now have a continuum of
+    frequency components $1^{\nu\tau}.$ Therefore, we must replace the
+    concept of a finite amplitude at a single frequency $F_n$ by an
+    infinitessimal amplitude $F(\nu)d\nu$ proportional to the
+    bandwidth $d\nu=1/T$ around frequency $\nu.$ Thus, equations (3)
+    and (5) become
+
+    $$\begin{align*}
+    f_m &= \int_0^{1/\tau} d\nu\,F(\nu) 1^{m\nu\tau} \tag{8a} \\
+    F(\nu)&=\frac{1}{\tau}\sum_{m=-\infty}^\infty f_m 1^{-m\nu\tau} \tag{9a}
+    \end{align*}$$
+
+    Equations (8a) and (9a) are exactly the same as (9) and (8),
+    respectively, with frequency and time swapped provided we replace
+    $f_m$ by $f_m/\tau.$ Another feature of this alternate form which
+    is at first surprising is that $F(\nu)$ is a periodic function of
+    frequency with period $1/\tau.$ (This is another example of the
+    important phenomenon called aliasing.)</p>
+  <p>Finally, with the continuum interpretation of frequency component
+    amplitude per unit frequency $F(\nu),$ we can take the limit as the
+    sample spacing $\tau\rightarrow 0.$  In this limit, (8a) and (9a)
+    take the appealingly symmetric forms
+
+    $$\begin{align*}
+    f(t) &= \int_{-\infty}^\infty d\nu F(\nu) 1^{\nu t} \tag{10} \\
+    F(\nu) &= \int_{-\infty}^\infty dt\, f(t) 1^{-\nu t} \tag{11}
+    \end{align*}$$
+
+    These equations comprise the Fourier integral transform.  (Once
+    again, we have been forced to symmetrize the limits of the
+    integral in (8a) to start from $-1/(2\tau)$ instead of $0$ to
+    ensure we reach the roots of unity in both halves of the unit
+    circle.)
+  </p>
+  <p>Besides the transform equations, the fundamental relation that
+    allowed us to invert the DFT, equation (4), takes on very
+    interesting forms in the Fourier series and integral limits.  This
+    relation is at the heart of all Fourier analysis.  For the series
+    case of continuous periodic functions of time, we can read off the
+    fixed period $T$ while $N\rightarrow\infty$ limit from equation (4):
+
+    $$\delta_{n0} = \frac{1}{T} \int_0^T dt\ 1^{nt/T}. \tag{12}$$
+  </p>
+  <p>In the fixed sample spacing $\tau$ while $N\rightarrow\infty$
+    limit, on the other hand, equation (4) is harder to interpret.  We
+    can find how to translate (4) to this case by setting
+    $f_m=1^{m\nu_0\tau}$ in equation (9a), where $\nu_0$ is an
+    arbitrary frequency.  From equation (8a), we then have
+
+    $$1^{m\nu_0\tau} = \int_0^{1/\tau} d\nu\,F(\nu) 1^{m\nu\tau}.$$
+
+    But we can make any periodic function of $\nu$ as a sum of
+    coefficients times $1^{m\nu\tau}$, hence this particular function
+    $F(\nu)$ has the surprising property that
+
+    $$g(\nu_0) = \int_0^{1/\tau} d\nu\,F(\nu) g(\nu)$$
+
+    for <em>any</em> function $\nu$ which is periodic with period
+    $1/\tau.$</p>
+
+  <p>The only way this can happen is if $F(\nu)$ is zero for all $t$
+    except $\nu=\nu_0$, where it must be infinite in such a way that
+    its integral is $1.$ This puzzling property defines the Dirac
+    delta function $\delta(\nu-\nu_0),$ so $F(\nu)=\delta(\nu-\nu_0).$
+    This is still not quite correct, because $F(\nu)$ must be periodic
+    with period $1/\tau.$ We can fix this by summing over all periods
+    to construct a periodic function which has one delta function
+    spike in each period.  (Technically we should have done this with
+    the Kronecker delta in (4) as well.)  The final result from (9a)
+    is:
+
+    $$\sum_{n=-\infty}^\infty\delta(\nu-\nu_0+n/\tau) = \frac{1}{\tau}
+    \sum_{m=-\infty}^\infty 1^{-m(\nu-\nu_0)\tau}. \tag{13}$$
+  </p>
+  <p>In the case of the Fourier integral, we can take the limit of
+    equation (13) as $\tau\rightarrow 0.$ In this limits, $n\tau$
+    becomes the continuous variable $t,$ and $1/\tau$ becomes the
+    differential $dt.$ Furthermore, we need only consider the $n=0$
+    term on the left hand side of (13) because there is only a single
+    period:
+
+    $$\delta(\nu-\nu_0) = \int_{-\infty}^\infty
+    dt\,1^{-(\nu-\nu_0)t}. \tag{14}$$
+  </p>
+
+  <h2>Convolution</h2>
+  <p>One of the primary applications of the FFT is to quickly compute
+    convolution products.  Convolution arises in physical processes
+    governed by an impulse response.  An example is the chirp sound
+    you hear when you clap your hands at the entrance to a long hollow
+    pipe like a culvert.  The clap is the impulse and the chirp is the
+    response.  The response is a function of time, which we can denote
+    $g(t)$ or $g_m$ for sampled times.  We can regard an arbitrary
+    noise source as a sequence of claps (with a lot of explanation we
+    omit here); this is source is a second function of time $f(t)$ or
+    $f_m.$ In a linear system (like the pipe echo), the complete
+    output $h(t)$ or $h_m$ is simply the sum of the individual impulse
+    responses each starting at different time.  That is,
+
+    $$h_m = \sum_{k=0}^{N-1} f_k\, g_{m-k}. \tag{15}$$
+
+    This defines the discrete convolution of the source function $f$
+    and the impulse response function $g.$ By substituting $k$ for
+    $m-k$ you can see that the convolution operation is symmetric,
+    that is we would get the same result if we swapped $f$ and $g$,
+    source and impulse response.  By substituting the impulse
+    $\delta_{k0}$ for $f_k,$ you see that the response $h_m$ is the
+    impulse response $g_m$ as expected.</p>
+  <p>The DFTs of these three functions, $H_n$, $F_n$, and $G_n$ are
+    related in an especially simple way.  Plug (15) into equation (5)
+    to find
+
+    $$\begin{align*}
+    H_n &= \frac{1}{N}\sum_{m=0}^{N-1}\sum_{k=0}^{N-1}f_k\,g_{m-k}1^{mn/N} \\
+    &= \frac{1}{N}\sum_{k=0}^{N-1}f_k
+    1^{kn/N}\sum_{m=0}^{N-1}g_{m-k}1^{(m-k)n/N} \\
+    H_n &= N F_n G_n \tag{16}
+    \end{align*}$$
+
+    Now computing equation (15) directly requires $N^2$ operations,
+    while using equation (16) would require three FFTs (to find $F_n,$
+    $G_n,$ and then $h_m$) and $2N$ multiplies, which is
+    $3N\log_2N+2N$ operations, potentially far fewer than the direct
+    calculation.
+  </p>
+  <p>As we take the Fourier series limit of infinite $N$ we need to
+    modify equation (15).  The problem is that when we increase $N$,
+    we are decreasing the duration associated with each sample point
+    $m$, which decreases the effect of the source function $f_m,$
+    which we would expect to decrease the size of the response $g_m.$
+    What we want is to replace the source function $f$ by a source
+    function per unit time $f(t).$ Thus, we replace the source $f_m$
+    by $f(t)dt=f(t)T/N$ so that (15) becomes
+
+    $$h(t) = \int_0^T dt'\,f(t')g(t-t'), \tag{17}$$
+
+    where $t'/T=k/N.$ In this case, substituting $\delta(t')$ for
+    $f(t'),$ we see that $g(t)$ is the response to a delta function
+    impulse.</p>
+  <p>Applying equation (9) to (17), we find the frequency components
+
+    $$H_n = T F_n G_n. \tag{18}$$
+
+    That is, once again the frequency components of the convolution
+    are, apart from a costant factor, the product of the frequency
+    components of the source and impulse response functions.</p>
+  <p>For the Fourier series case, we can also convolve the frequency
+    components.  Although the physical situations in which this occurs
+    are rare, mathematically it does produce an interesting formula.
+    If we define $H_n$ as an infinite sum convolution of $F_n$ and
+    $G_n,$ we can go through the same steps to relate $f(t)$ and $g(t)$
+    to the corresponding $h(t)$.  Namely, using equation (8),
+
+    $$\begin{align*}
+    H_n &= \sum_{p=-\infty}^\infty F_p G_{n-p} \tag{19} \\
+    h(t) &= f(t)g(t) \tag{20}
+    \end{align*}$$
+
+    This formula needs no normalization constant.</p>
+  <p>Finally, the Fourier integral case produces the most symmetric
+    convolution transform formula.  Once again, our impulse function
+    $g(t)$ will be the response to a $\delta$-function source, so that
+    we just extend the integral in equation (17) to infinity in both
+    directions.  Applying equation (11) we find for the Fourier
+    integral case
+
+    $$\begin{align*}
+    h(t) &= \int_{-\infty}^\infty dt'\,f(t')g(t-t') \tag{21} \\
+    H(\nu) &= F(\nu)G(\nu) \tag{22}
+    \end{align*}$$
+  </p>
+
+  <h2>Autocorrelation and the power spectrum</h2>
+  <p>A variant of convolution is autocorrelation.  Autocorrelation is
+    an important tool for analyzing noise signals.  When a signal is
+    periodic, we can decompose it into frequencies using the Fourier
+    series formalism.  However, a noisy signal is by definition
+    aperiodic, although it often persists for an indefinitely long
+    time (compared to the rate it is changing).  Hence we turn to the
+    Fourier integral formulation, equations (10) and (11).</p>
+  <p>We have already remarked that power is the square of amplitude,
+    so consider the square of the modulus of equation (11).  From
+    (22), if we convolve a signal $f(t)$ with the complex conjugate of
+    its time-reversal $g(t)=\overline{f(-t)}$, which has Fourier
+    transform $G(\nu)= \overline{F(\nu)}$, then
+
+    $$H(\nu) = ||F(\nu)||^2 \tag{23}$$
+
+    The corresponding function $h(t)$ whose frequency components are
+    $H(\nu)$ is:
+
+    $$h(t) = \int_{-\infty}^\infty dt'\,f(t')\overline{f(t'-t)}
+    = \int_{-\infty}^\infty dt'\,f(t+t')\overline{f(t')} \tag{24}$$
+
+    This definition works as long as the signal $f(t)$ has finite
+    duration, or at least approaches zero both in the distant past and
+    in the distant future.  However, for a noise signal $f(t)$ of
+    infinite duration, the integral in equation (24) diverges.  This
+    is an important case in practice, so we need to develop an
+    alternative to (24) that works for a noise signal of infinite
+    duration.</p>
+  <p>Physically, if $||f(t)||^2$ has units of power, then the $h(t)$
+    defined by (24) has units of energy, while from equation (11), the
+    $H(\nu)$ of (23) has units of energy per unit frequency.  But if
+    the signal persists forever, the total energy for all time, per
+    unit frequency or for all frequencies, will also be infinite, so
+    we expect that both (24) and $F(\nu)$ in (23) will diverge.  The
+    easiest way to address this problem is to artificially chop the
+    signal off outside some very long time interval $T$, and redefine
+    $h(t)$ to be the mean over that long time interval:
+
+    $$h(t) = \lim_{T\rightarrow\infty} \frac{1}{T}
+    \int_{-T/2}^{T/2} dt'\,f(t+t')\overline{f(t')} \tag{25}$$
+
+    This $h(t)$ is the autocorrelation of the signal $f(t)$; it has
+    units of power, and will be finite even when $f(t)$ lasts
+    indefinitely.  In fact, this definition <em>only</em> applies to
+    signals $f(t)$ with infinite duration past and future.</p>
+  <p>The Fourier transform $H(\nu)$ of the autocorrelation $h(t)$ is
+    called the power spectrum; it has units of power per unit frequency.
+    $H(\nu)$ represents the power per unit frequency in the signal
+    with frequency $\nu$:
+
+    $$H(\nu) = \int_{-\infty}^\infty dt\,h(t) 1^{-\nu t} \tag{26}$$
+
+    From (25), $h(-t)=\overline{h(t)}$ (at least for $t\ll T$) which
+    implies $H(-\nu)=\overline{H(\nu)}.$ For the purposes of the power
+    spectrum, negative and positive frequencies are the same, so the
+    total power per unit frequency at frequency $|\nu|$ is the real
+    number $H(\nu)+H(-\nu).$ (This distinction matters only when the
+    signal $f(t)$ may be a complex number.)</p>
+  <p>Translating these defnitions back to the DFT case we arrive at
+    the finite versions of these definitions of autocorrelation
+    $h_m$ and power spectrum $H_n$:
+
+    $$\begin{align*}
+    h_m &= \frac{1}{N}\sum_{k=0}^{N-1} f_{m+k}\overline{f_k} \tag{27} \\
+    H_n &= \frac{1}{N}\sum_{m=0}^{N-1} h_m 1^{-mn/N} \tag{28}
+    \end{align*}$$
+
+    These are how autocorrelation is defined in practice.
+    Autocorrelation adds the $1/N$ normalization in (27) relative to
+    the convolution formula (15), so $h_m$ is an average rather than a
+    sum.  (Although we sometimes use the $1/N$ normalization for
+    discrete convolution, when we want to simulate the integral form
+    of convolution.  The real question is how we choose to normalize
+    the impulse response.)  In (28), the units of $H_n$ are power per
+    mode, rather than power per unit frequency.  Since the frequency
+    difference between successive modes is $1/T,$ you can multiply the
+    right hand side of (28) by $T$ to get the power per unit frequency
+    $H(\nu)$ of the integral formula (26).</p>
+
+  <h2>Coordinates in function space</h2>
+  <p>We can regard a function $f_m$ as the coordinates of a vector in
+    and $N$-dimensional space.  If we adopt this viewpoint, then the
+    DFT, equations (3) and (5), amounts to a coordinate
+    transformation.  The vector $1^{mn/N}$ for each $n$ is one of $N$
+    new basis vectors in this space, and $F_n$ are the coordinates of
+    the same vector in this new basis.  The inverse coordinate
+    transform is $1^{-mn/N}/N,$ which are the coordinates of the
+    original time basis vectors (which were $\delta_{mn}$) in the
+    frequency basis.</p>
+  <p>Occasionally you see the normalization $1^{\pm mn/N}/\sqrt{N}$
+    for these coordinate transforms.  This makes the transformation
+    not only orthogonal, but also orthonormal, so that the Fourier
+    transform becomes a true Euclidean rotation operation in the
+    $N$-dimensional function space.  Physically, this amounts to
+    normalizing each frequency mode to have unit energy per period,
+    rather than unit amplitude as we have done.  While a case can be
+    made for this normalization, it complicates at least half the
+    formulas without providing any significant benefits.  As a
+    practical matter, the normalization of Fourier transforms will
+    always be an issue you need to work out for each individual
+    situation.</p>
+  <p>Notice that in the continuum Fourier integral transform limit,
+    equations (10) and (11), the continuous time and frequency
+    coordinates $f(t)$ and $F(\nu)$ are related by a symmetric,
+    orthonormal integral transform.  It may be that this symmetric
+    form is equivalent to the $1/\sqrt{N}$ discrete normalization,
+    since it arises from a blending of the $N\rightarrow\infty$ at
+    constant period $T$ versus at constant spacing $\tau$ limits.
+    (Occasionally you will also see $1/\sqrt{2\pi}$ normalization in
+    Fourier integral formulas, which is normalization to unit energy
+    per radian.  This is just misguided both mathematically and
+    physically, and unrelated to the $1/\sqrt{N}$ normalization
+    question.)</p>
+  <p>Now in this $N$-dimensional Euclidean function space, there is a
+    distance function, or more generally a dot product, which remains
+    invariant under the time-frequency coordinate rotation.  This is a
+    special case of our convolution formula.  As for autocorrelation,
+    we begin by noting from (5) that the DFT of the conjugate of a time
+    reversed function $\overline{g_{-m}}$ is the conjugate of its DFT
+    $\overline{G_n},$ so the convolution formulas (15) and (16) become
+
+    $$\begin{align*}
+    h_m &= \sum_{k=0}^{N-1} f_k\overline{g_{k-m}} \\
+    H_n &= N F_n \overline{G_n} \\
+    h_m &= N \sum_{n=0}^{N-1} F_n \overline{G_n} 1^{mn/N},
+    \end{align*}$$
+
+    where the final line is equation (5).  Now for the special case
+    $m=0,$ this convolution formula is
+
+    $$\sum_{n=0}^{N-1} F_n \overline{G_n} = \frac{1}{N}
+    \sum_{m=0}^{N-1} f_m\overline{g_m} \tag{29}$$
+  </p>
+  <p>Aside from the $1/N$ normalization factor, this generalized dot
+    product is an invariant of the time-frequency coordinate rotation.
+    For the case that $g_m=f_m,$ this defines a distance metric in
+    the $N$-dimensional function space:
+
+    $$\sum_{n=0}^{N-1} ||F_n||^2 = \frac{1}{N}
+    \sum_{m=0}^{N-1} ||f_m||^2 \tag{30}$$
+
+    We recognize the right hand side as the time-average signal power
+    over the whole period.  Since the average power of each mode
+    $1^{mn/N}$ is $1$, the left hand side is the sum of the average
+    powers of each mode.  This shows that each individual frequency
+    mode contributes to the signal power independently of all the other
+    modes, which is a consequence of the orthogonality of the modes
+    or basis functions $1^{mn/N}.$</p>
+  <hr>
+  <p>This page quickly covers most of the formulas we use to decompose
+    a signal into components of different frequencies.  Seeing how to
+    apply these physical ideas to any particular problem is sometimes
+    easy, but just as often very tricky and subtle.  No matter how
+    long you work with Fourier transforms, you will almost never get
+    the practical numerical details right on your first attempt.
+    Nevertheless, these tools are critical in so many fields of
+    science and engineering that you need to begin studying the ideas
+    early and practice their application as frequently as
+    possible.</p>
+</div></body>
+</html>
