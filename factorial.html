@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Factorial of a Fraction</title>
+  <meta name="description"
+    content="Euler's analytic continuation of factorial.">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script>MathJax = {tex: { inlineMath: [["$", "$"], ["\\(", "\\)"]] }};
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"
+          id="MathJax-script">
+  </script>
+  <style>
+    div {
+      -moz-box-sizing: border-box;
+      box-sizing: border-box;
+    }
+    .textcolumn {
+      padding-left: 1em;
+      padding-right: 1em;
+      min-width: 22em;
+      max-width: 52em;
+      margin: 0 auto;
+    }
+    .halfwide {
+      width: 60%;
+      float: right;
+    }
+    @media only screen and (max-width: 620px) {
+      .halfwide {
+        width: 100%;
+      }
+    }
+  </style>
+</head><body><div class="textcolumn">
+  <h1 style="text-align: center;"><a href="index.html">
+      Factorial of a Fraction</a></h1>
+
+  <h2>Introduction</h2>
+  <p>A factorial, which we emphatically write $n!,$ is the product of
+    the first $n$ integers, $n\cdot(n-1)...3\cdot2\cdot1.$ We learn
+    about factorials in school in connection with counting the number
+    of permutations and combinations of $n$ objects.  In computer
+    programming, factorial is the go-to example of recursion: We can
+    define a function $f(n)$ by the recurrence relation
+    $f(n+1)=(n+1)f(n),$ which tells us how to compute $f(n+1)$
+    provided we know its value $f(n)$ a step earlier.  In addition to
+    this functional equation, we need a base case to prevent the
+    recursion from becoming an infinite loop.  (Like answering,
+    "Why?")  In the case of factorial, the base case is that $f(1)=1.$
+    Thus, we define $n!$ as the function for which $1!=1$ and
+    $(n+1)!=(n+1)n!.$</p>
+  <p>But there is a simpler example of recursion: raising a number $b$
+    to a power $b^n$, by which we mean the product $b\cdot b\cdot
+    b...\cdot b$ with $n$ factors of $b.$ Just as for the case of
+    factorial, semantically this basic definition amounts to a
+    recurrence.  In the case of raising to a power, the base case is
+    $f(1)=b,$ while the functional relation is $f(n+1)=bf(n).$ (In
+    fact, the basic definition of multiplication also is a recursion
+    where the operation to advance a step is addition instead of
+    multiplication.  But we'll stick with raising to a power because
+    eventually we want to circle back to factorial.)</p>
+  <p>A mathematician will always wonder about the base case.  We have
+    the feeling that the functional equation that gives $f(n+1)$ in
+    terms of $f(n)$ contains the real essence of the function $f$ -
+    the base case seems secondary and perhaps even arbitrary.  In
+    other words, the equation $f(1)=b$ talks about a specific single
+    fact, while the recurrence $f(n+1)=bf(n)$ is a general statement
+    about relationships.  Algebra is all about relationships, and from
+    that viewpoint the base case isn't algebra at all; it's merely a
+    single observation as opposed to a statement relating many
+    observations.</p>
+  <p>When you think about it this way, you naturally ask about
+    extending the domain of our function.  What might we mean by
+    $f(0)$? f(-1)? f(1/2)?  Is our recursive definition enough to
+    uniquely answer all these questions?  For the case of the
+    exponential function $f(n)=b^n,$ yes.  Our recurrence relation
+    does indeed allow us to extend the meaning of $b^n$ far beyond the
+    counting numbers $n.$ For this simple recursion, we can obviously
+    run it backwards as easily as forwards by simply solving for
+    $f(n)=f(n+1)/b,$ or in other words $f(n-1)=f(n)/b.$ Starting with
+    $n=1,$ we immediately find $f(0)=1,$ showing that $b^0=1$ for
+    every exponent base $b.$ Running the recurrence farther backward,
+    we define the meaning of negative powers $b^{-n}=1/b^n.$ We see
+    that our functional equation $f(n+1)=bf(n)$ really defined $b^n$
+    not just for the counting numbers $n,$ but for all integer $n$
+    both positive and negative.</p>
+  <p>We can go even farther and define $b^{1/2}$ and other fractional
+    powers by studying the role of the base of the exponent $b$ in our
+    recursion.  Namely, we can ask what happens when we use a number
+    which is itself a power, say $b^m,$ as the base for raising to
+    other powers, $(b^m)^n.$ Thinking about how to extend the domain
+    of the function starting from the counting numbers inherent in all
+    recursive definitions to other kinds of arguments is a spectacular
+    success in the case of exponential functions.  The recurrence
+    relation in fact determines the meaning of $b^x$ for any number
+    $x,$ positive or negative, whole or fractional.</p>
+  <p>So what about the factorial recurrence $f(n+1)=(n+1)f(n)$?  Can
+    we use it to define $x!$ for any number $x$ as we did in the case
+    of $b^x$?  We start down the same path by running it backwards
+    $f(n-1)=f(n)/n.$ That gives us $0!=1!/1=1.$ So far so good.  On to
+    negative numbers $(-1)!=0!/0=1/0=\infty.$ Uh-oh.  And from then on
+    $(-n)!=\pm\infty,$ infinity with alternating sign for all negative
+    integers.  At first this seems like a show stopper.  However, many
+    perfectly good functions, like $f(x)=1/x,$ blow up to infinity at
+    isolated points, and so it will be for the factorial function.
+    But we'll need to be a lot cleverer to define $x!$ than we needed
+    to be for $b^x.$</p>
+
+  <h2>Infinite product definition of factorial</h2>
+  <p>Enter the supremely clever Leonhard Euler.  To set the context
+    for Euler's definition of $x!$ we begin by describing his much
+    more famous and important work on the exponential function
+    $b^x.$</p>
+  <p>Long before Euler, money lenders had studied the formula
+    $(1+r/n)^n,$ which still governs how we describe loans.  If $r$ is
+    the rate per annum a bank quotes for a loan, what they generally
+    mean is that the rate per month is $r/12.$ If you do not pay them
+    anything until the end of the year, however, you will owe
+    $(1+r/12)^12$ times the loan amount (not counting late payment
+    penalties) because the interest is compounded monthly.  This is
+    greater than $1+r,$ what you would have owed if the interest were
+    compounded yearly.  A natural question is what would happen if
+    interest were compounded daily?  Or hourly?</p>
+  <p>Euler studied this compound interest function $f(x;n)=(1+x/n)^n,$
+    and in particular what happens when you increase the "interest
+    rate" $x$ by a whopping $100\%$ to $x+1$:
+
+    $$\begin{align*}
+    f(1+x; n) &= \left(1+\frac{(1+x)}{n}\right)^n \\
+    &= \left(1+\frac{1}{n}+\frac{x}{n}\right)^n \\
+    &= \left(1+\frac{1}{n}\right)^n\left(1+\frac{x}{n+x}\right)^n \\
+    &= \left(1+\frac{1}{n}\right)^n f(x; n+x)
+    \left(1+\frac{x}{n+x}\right)^{-x}
+    \end{align*}$$
+  </p>
+  <p>For small values of $n,$ this is just a complicated mess.  What
+    interested Euler was that in the limit that $n$ becomes infinite
+    (while $x$ remains fixed), we have a function which satifies the
+    fundamental recurrence relation for raising something to the power
+    $x.$ In that limit, the final factor goes to $1$, so
+
+    $$f(1+x;\infty) = f(x;\infty)
+    \lim_{n\rightarrow\infty}\left(1+\frac{1}{n}\right)^n.$$
+
+    Since $f(0;\infty)=1,$we see that $f(1+x;\infty)$ exactly
+    matches the recursive definition of the exponential
+    $b^{1+x}=b^x\cdot b$ for the particular base $b$ defined by
+
+    $$e = b = \lim_{n\rightarrow\infty}\left(1+\frac{1}{n}\right)^n$$
+
+    So that
+
+    $$\lim_{n\rightarrow\infty}\left(1+\frac{x}{n}\right)^n = e^x$$
+    
+    Euler popularized the famous constant $e,$ which the most
+    important exponent base in calculus.  His formula relates the
+    exponential function $e^x$ to a limit of polynomial functions
+    $(1+x/n)^n.$</p>
+  <p>The most important feature of Euler's formula for $e^x,$ however,
+    is that it works for completely arbitrary values of $x$ right from
+    the beginning.  The natural recursive definition of $b^n$ is
+    simple, but we had to work hard to extend its domain to define
+    arbitrary $b^x.$ Euler's definition looks more complicated at
+    first, but makes up for that by very naturally allowing arbitrary
+    values of $x.$ In fact, it even works for complex numbers $x,$ an
+    extension which turns out to be one of the most crucial insights
+    in the history of mathematics.</p>
+  <p>We now return to the factorial function.  Notice first that if we
+    define $x!$ in any single interval $n\lt x\le n+1$, the forward
+    and backward recursions $(x+1)!=(x+1)x!$ and $(x-1)!=x!/x$ fix the
+    value of $x!$ all $x.$ Euler asks what would happen if we defined
+
+    $$(n+x)! = (n+1)^xn!,$$
+
+    where $0\lt x\le 1.$ More formally, we define a function $f(x;n)$
+    which satisfies the factorial recursion $$f(1+x;n)=(1+x)f(x;n)$$
+    everywhere, the base case $f(1;n)=1,$ and $f(n+x;n)=(n+1)^xn!$ for
+    $0\lt x\le 1.$ By virtue of the recursion and base case, we know
+    that for all integer $m,$ $f(m;n)=m!$ Starting from the special
+    interval, we recurse backwards to find
+
+    $$f(x;n) = \frac{f(n+x;n)}{(n+x)(n-1+x)...(1+x)}
+    = \frac{(n+1)^xn!}{\prod_{k=1}^n(k+x)}.$$
+
+    Here $\prod$ is the standard mathematical notation for a product.
+    Euler notices that $n!$ is also a product $\prod_{k=1}^n k.$
+    Finally, Euler makes the inspired observation that $(n+1)$
+    can be written as the telescoping product
+
+    $$n+1 = \prod_{k=1}^{n}\frac{k+1}{k}
+    = \prod_{k=1}^{n}\left(1+\frac{1}{k}\right).$$
+
+    Putting all this together, we rewrite our defintion
+    $f(n+x;n)=(n+1)^xn!$ in the interval between $n$ and $n+1$ as a
+    single product for $x$ in the interval between $0$ and $1$:
+
+    $$f(x;n) = \prod_{k=1}^n\frac{(1+1/k)^x}{(1+x/k)}.$$
+    </p>
+  <p>Proceeding as he did for $e^x,$ Euler considers the limit of
+    very large $n$:
+
+    $$f(x;\infty) = \prod_{k=1}^\infty\frac{(1+1/k)^x}{(1+x/k)}$$
+
+    For finite $n,$ we had to restrict $0\lt x\le 1$ and apply the
+    factorial recurrence relation separately to get $f$ in all other
+    intervals.  In the limit of infinite $n,$ on the other hand,
+
+    $$\begin{align*}
+    f(1+x;\infty) &=
+    \prod_{k=1}^{\infty}\frac{(1+1/k)\left(1+1/k\right)^x}{1+1/k+x/k} \\
+    &= \prod_{k=1}^{\infty}\frac{\left(1+1/k\right)^x}{1+x/(k+1)} \\
+    &= (1+x) \prod_{k=1}^{\infty}\frac{\left(1+1/k\right)^x}{1+x/k} \\
+    &= (1+x) f(x;\infty)
+    \end{align*}$$
+
+    That is, $f(x;\infty)$ already satisfies the factorial recurrence
+    relation; unlike for finite $n,$ we need not restrict $x.$
+    Since $f(1;\infty)=1,$ for any integer value $n,$ $f(x;\infty)=n!.$
+    Euler therefore defines
+
+    $$x! = \prod_{k=1}^\infty\frac{(1+1/k)^x}{(1+x/k)}$$
+
+    for any value $x$; like his definition of $e^x$ this expression
+    converges even for complex values of $x,$ extending the factorial
+    function over the whole complex plane.  As for the limit
+    definition of $e^x,$ this indifference to what kind of number $x$
+    might be is the big attraction of this complicated way to write
+    what we mean by factorial.</p>
+  <p>There is one new complication for extending factorial beyond the
+    integers, which did not arise (or is at least much more subtle) in
+    the case of exponentials: Euler's factorial construction is not
+    unique; other perfectly smooth functions match the value of
+    factorial at every integer point.  That is, the factorial
+    recurrence does not uniquely specify an extension of the function
+    beyond the integers.  To demonstrate the problem, suppose another
+    function $f(x)$ besides Euler's $x!$ also satisfies $f(1)=1$ and
+    $f(1+x)=(1+x)f(x).$ Then
+
+    $$\frac{f(1+x)}{(1+x)!} = \frac{f(x)}{x!}$$
+
+    In other words, the function $g(x)=f(x)/x!$ is periodic with
+    period $1.$ Additionally, $g(n)=1$ for all integer $n.$ That is,
+    any function $f(x)=g(x)x!,$ where $x!$ is Euler's factorial
+    extension and $g(x)$ is periodic with period $1$ and equals $1$ at
+    all integer values, we could take to be the extension of factorial
+    to non-integer values.</p>
+  <p>What other condition, then, distinguishes Euler's extension from
+    all these other possibilites?  The answer is that Euler's is the
+    only one which approaches the form $(n+x)!=(n+1)^x n!$ in the
+    limit of large $n.$ Euler constructed his formula using this limit
+    as his starting point.  For any other factorial extension $g(x)x!$
+    we have
+
+    $$g(n+x)(n+x)! = g(x) (n+1)^x n!$$
+
+    because $g(n+x)=g(x).$ Therefore, unless $g(x)=1$ for all $x,$
+    $g(n+x)(n+x)!$ does not approach $(n+1)^x n!$ as
+    $n\rightarrow\infty$ because the factor $g(x)$ remains unchanged
+    no matter how large $n$ becomes.</p>
+  <hr/>
+  <p>One more question about Euler's factorial construction will
+    arise: How quickly does $x!=f(x;\infty)$ approach the defining
+    behavior $(n+x)!=(n+1)^x n!$ as $n$ grows?
+
+    $$\begin{align*}
+    (n+x)! &= \prod_{k=1}^n (k+x)
+    \prod_{k=1}^\infty \frac{(1+1/k)^x}{1+x/k} \\
+    &= (n+1)^x n! \prod_{k=n+1}^\infty \frac{(1+1/k)^x}{1+x/k} 
+    \end{align*}$$
+
+    where $0\le x \le 1.$ The logarithm of the final term on the right
+    hand side is
+
+    $$\begin{align*}
+    \sum_{k=n+1}^\infty (x\log(1+1/k) - \log(1+x/k))
+    &\approx \sum_{k=n+1}^\infty -x(1-x)/(2k^2) \\
+    &\approx (-x(1-x)/2) \sum_{k=n+1}^\infty 1/(k(k-1)) \\
+    &= (-x(1-x)/2) \sum_{k=n+1}^\infty (1/(k-1) - 1/k) \\
+    &= -x(1-x)/(2n)
+    \end{align*}$$
+
+    Therefore, for the Euler definition of $x!$ we have
+
+    $$(n+x)! \approx (n+1)^x n! (1 - x(1-x)/(2n)).$$
+
+    In other words, the infinite product approaches the defining form
+    on the interval between $n$ and $n+1$ from below, with a relative
+    error decreasing as $1/n.$</p>
+
+  <h2>Integral definition of factorial</h2>
+  <p>For science and engineering students, and most math students as
+    well, factorials of fractions are always introduced by way of the
+    integral identity
+
+    $$n! = \int_0^\infty dt\, t^n e^{-t}.$$
+
+    This simple integral pops up in a wide variety of situations both
+    in physics and in statistics.  Note that it is true for $n=0,$ and
+    that the integral, regarded as a function of $n,$ satisfies the
+    recursive functional equation that defines the factorial, which
+    you will see proven as a simple example of integration by parts.
+    As long as $x\gt-1,$ we can use this integral to define factorial
+    for non-integers by
+
+    $$x! = \int_0^\infty dt\, t^x e^{-t}.$$
+
+    Notice that the infinite product definition, unlike this one,
+    places no restrictions on $x$ - it works perfectly well for any
+    negative $x,$ except for negative integers.  The integral
+    definition is inferior mathematically, because it does not extend
+    the meaning of factorial as broadly as possible; if you start here
+    you will have left yourself more work to do.  (This integral
+    definition is also due to Euler.  We never truly understand
+    anything in mathematics, or physics for that matter, until we have
+    looked at it from several different angles.)</p>
+  <p>Is this integral definition identical to the infinite product
+    definition?  The only way to answer this question is to check that
+    in the limit of large $n$ it satisfies
+    $(n+x)!\rightarrow(n+1)^xx!.$ Thus, we need to look at the
+    asymptotic behavior of this integral in the limit of large $x.$ To
+    do this, we need to study the integrand, $t^xe^{-t}.$</p>
+  <p>The reason we teach students the integral definition first is
+    because the function $t^xe^{-t}$ is extremely common and important
+    in statistics.  For example, in physics $e^{-t}$ is the
+    probability per unit time of <em>not</em> observing a radioactive
+    decay if the <em>average</em> decay rate is one decay per second.
+    In other words, it represents the distribution of the gaps between
+    the clicks of a Geiger counter.  Mathematically, $e^{-t}$ is
+    precisely the mathematical function whose rate of decrease is
+    itself: The fact that you've already waited $\tau$ seconds without
+    hearing a click does not change how much longer you expect to have
+    to wait for the next click.  (Untrained people find this fact
+    notoriously counterintuitive, like other gambler's paradoxes.)</p>
+  <p>If $e^{-t}$ is the probability of zero clicks in $t$ seconds,
+    what is the probability of exactly one click in $t$ seconds?  If
+    the one click happens at time $t_1$ between $0$ and $t,$ that means
+    you first waited $t_1$ with zero clicks before it came, then $t-t_1$
+    with zero clicks afterwards.  If there is one click per second on
+    average, then the probability of a click between $t_1$ and $t_1+dt_1$
+    where $dt_1$ is a very short time, maybe a microsecond, is simply
+    $dt_1.$ Thus the probability of exactly one click within $dt_1$ of
+    $t_1$ over a total span of $t$ seconds is $e^{-t_1}dt_1e^{-(t-t_1)},$
+    or $e^{-t}dt_1.$ Just as we assumed, this probability depends only
+    on the duration of the small window $dt_1$ for the click and not on
+    the time $t_1$ the click occurred.  In fact, the property that
+    $f(t_1)f(t-t_1)=f(t)$ is unique to exponential functions, which is
+    why the probability of zero clicks is $e^{-t}.$ To get the
+    probability of exactly one click, we need to add up all the small
+    windows $dt_1$ from $t_1=0$ to $t_1=t$, which is just $t.$ This
+    sum is precisely what integral notation means,
+
+    $$\int_0^t dt_1 = t.$$
+
+    So the answer is that the probability of exactly one click in
+    $t$ seconds is $te^{-t}.$</p>
+  <p>You begin to see the pattern: $e^{-t}$ is the probability of zero
+    Geiger counter clicks in $t$ seconds, $te^{-t}$ is the probability
+    of one click... Perhaps $t^ne^{-t}$ is the probability of exactly
+    $n$ clicks in time $t$?  Almost, but not quite.  For exactly two
+    clicks, we can apply the same analysis we did for one click, but
+    now we label the times of the two clicks $t_1$ and $t_2$ and their
+    separate small windows $dt_1$ and $dt_2.$ The probability of
+    exactly two clicks is $e^{-t_1}dt_1e^{-(t_2-t_1)}
+    dt_2e^{-(t-t_2)}.$ Once again, the magical exponential factors all
+    collapse, by design, so the probability of clicks at $t_1$ and
+    $t_2$ is just $e^{-t}dt_1dt_2.$ The complication arises when we
+    try to add up all the intermediate times.  We only want to count
+    the times with $t_1\lt t_2.$ If we didn't care about the order,
+    adding up all the $dt_1dt_2$ for every possible $t_1$ and $t_2$
+    between $0$ and $t$ would obviously produce $t^2.$ But just as
+    obviously, we've double counted, since disregarding the order led
+    to $t_2\lt t_1$ just as often as $t_1\lt t_2.$ Hence, the
+    probability of exactly two clicks in time $t$ is
+    $\tfrac{1}{2}t^2e^{-t}.$</p>
+  <p>The two click analysis generalizes to $n$ clicks.  If $t_1, t_2,
+    ..., t_n$ are the times of the $n$ clicks, the exponentials in the
+    probability of no click before $t_1,$ click within $dt_1,$ no
+    click between $t_1$ and $t_2$, click within $dt_2,$ and so on,
+    always collapse to the full interval $t$ to give
+    $e^{-t}dt_1dt_2...dt_n.$ If you think about it, this makes perfect
+    sense: We always choose the windows $dt_k$ so small that even
+    their sum is negligible, so the total length of time we don't hear
+    any clicks is always $t,$ with its associated probability
+    $e^{-t}.$ Once again, if we add up all the possible small windows
+    from $0$ to $t$ without regard to the order of the $t_k$ we simply
+    get $t^ne^{-t}.$ But this overcounts because we are only
+    interested in case that the $t_k$ are arranged in increasing
+    order.  Since there are $n!$ different orders or permutations of
+    $n$ times, the probability of exactly $n$ clicks in $t$ seconds
+    must be $\tfrac{1}{n!}t^ne^{-t}.$</p>
+  <p>So the probability of exactly $n$ clicks of a Geiger counter in
+    time $t$ is, apart from the factor of $n!,$ exactly our integrand.
+    Now we ask a slighly rephrased question: What is the probability
+    that the $n+1^{\text{st}}$ click occurs between time $t$ and
+    $t+dt$?  Again, $dt$ is the probability of a click in any short
+    window of time.  The probability of the $n+1^{\text{st}}$ click
+    that close to $t$ is therefore the probability of exactly $n$
+    clicks in $t$ times $dt.$ If we add up the probabilites of hearing
+    the $n+1^{\text{st}}$ click in every time window from now to
+    doomsday, we must get certainty:
+
+    $$\int_0^\infty dt \frac{1}{n!}t^ne^{-t} = 1.$$
+
+    Multiplying both sides by $n!$ reproduces the integral definition
+    of factorial.  The physical interpretation of the integrand as the
+    probability of hearing exactly $n$ clicks of a Geiger counter in
+    time $t$ makes the relationship to factorials quite natural: $n!$
+    is the number of different orderings of any set of $n$ click
+    times.</p>
+  <p>We must digress briefly to point out one other immediate
+    consequence of the physical interpretation of
+    $\tfrac{1}{n!}t^ne^{-t}.$ What is the probability of
+    hearing <em>any</em> number of clicks (including zero) in time
+    $t$?  Again, because we are certain to hear some number of clicks
+    in any interval $t,$ we must have
+
+    $$\begin{align*}
+    1 &= \sum_{n=0}^\infty \frac{1}{n!}t^ne^{-t} \\
+    e^t &= \sum_{n=0}^\infty \frac{1}{n!}t^n
+    \end{align*}$$
+
+    This relationship to the Taylor series for $e^t,$ arguably the
+    most celebrated of all Taylor series, is another reason teachers
+    are so attracted to the integral definition of factorial.</p>
+  <p>So the integral definition of factorial satisfies the factorial
+    recursion $f(1+x)=(1+x)f(x)$ even for non-integer $x,$ and it
+    agrees with factorial for all non-negative integer $x.$ But we saw
+    that all this is not sufficient to guarantee that it is identical
+    to the infinite product definition.  In order to prove the
+    equivalence of the two definitions, we need to demonstrate that
+    $f(n+x)\rightarrow (n+1)^xf(x)$ in the limit that
+    $n\rightarrow\infty$ where $f(x)$ is the integral definition of
+    $x!.$  In order to do this, we must study the integrand even
+    more closely.</p>
+  <p>We know that $\tfrac{1}{n!}t^ne^{-t}$ is the probability of
+    hearing $n$ clicks of a Geiger counter in $t$ seconds.  In
+    statistics we learn how to use these distributions to answer
+    many other questions.  For example, how many clicks do we expect
+    to hear on average in $t$ seconds?  We can get this by adding up
+    all of the probabilities, weighted by the number of clicks they
+    represent:
+
+    $$\langle n\rangle = \sum_{n=0}^\infty n \frac{1}{n!} t^n e^{-t}.$$
+
+    Here the angle brackets indicate the average over some probability
+    distribution.  This particular infinite sum is far easier to evaluate
+    than it might seem:
+
+    $$\begin{align*}
+    \langle n\rangle &= \sum_{n=1}^\infty \frac{1}{(n-1)!} t^n e^{-t} \\
+    &= \sum_{n=0}^\infty \frac{1}{n!} t^{n+1} e^{-t} \\
+    &= t \sum_{n=0}^\infty \frac{1}{n!} t^n e^{-t} \\
+    &= t
+    \end{align*}$$
+
+    That is, the average number of clicks we hear per unit time,
+    $\langle n\rangle/t,$ equals one per second, just as we assumed
+    from the beginning - one click per second on average.</p>
+  <p>Statistics is a very subtle subject because it gets tied up in
+    the semantics of the language we speak.  What is the average
+    length of time it takes to hear $n$ clicks?  Since we just
+    demonstrated that we hear, on average, $n$ clicks per second, our
+    first thought is that the average time to hear $n$ clicks must be
+    $n$ seconds.  That is roughly the right answer, but not exactly;
+    having an average event rate is different than the average time
+    for events.  For the same reason, average gas mileage and average
+    volume of gas consumed per mile are not reciprocals - the subject
+    of many a test question.  Abbreviating
+    $\tfrac{1}{n!}t^ne^{-t}=p_n(t),$ the average time it takes to hear
+    exactly $n$ clicks is
+
+    $$\begin{align*}
+    \langle t\rangle &= \int_0^\infty dt\, t\, p_n(t) \\
+    &= (n+1) \int_0^\infty dt\, p_{n+1}(t) \\
+    &= n+1
+    \end{align*}$$
+
+    That is, the average time to hear $n$ clicks is $n+1$ seconds, even
+    though the average number of clicks in $n$ seconds is $n.$</p>
+  <p>So the mean $\langle t\rangle$ of the probability distribution
+    for exactly $n$ clicks $p_n(t)$ is $n+1,$ longer and longer as the
+    number of clicks we require increases.  But the other thing that
+    happens as $n$ increases is that the width of $p_n(t)$ decreases -
+    it becomes less and less likely that the time elapsed to hear $n$
+    clicks will differ appreciably from its mean value $n+1.$  This
+    is what you expect from the law of averages, and what you mean by
+    the average rate of clicks being constant.  The simplest measure of
+    the width of a distribution is its variance, or mean square deviation
+    from the mean
+
+    $$\text{Var}(t) = \left\langle\left(t=\langle t\rangle\right)^2\right\rangle
+    = \langle t^2\rangle - \langle t\rangle^2.$$
+
+    Since $\langle t^2\rangle$ is $(n+2)(n+1)$ because it is related to
+    $p_{n+2}(t)$ in the same way that $\langle t\rangle$ is related to
+    $p_{n+1}(t),$ we calculate
+
+    $$\text{Var}(t) = (n+2)(n+1) - (n+1)^2 = n+1.$$
+
+    That is, the variance in the time for $n$ clicks to arrive is
+    $n+1,$ which means its standard deviation from its mean is
+    $\sqrt(n+1).$ In other words, we expect it to take $100$ seconds
+    on average for $99$ clicks to arrive, plus or minus $10$ seconds,
+    or $10\%$ of the wait time.  We expect to wait $10,000$ seconds
+    for $9,999$ clicks, plus or minus only $100$ seconds, or $1\%$ of
+    the wait time.  So $p_n(t)$ is becoming relatively a sharper and
+    sharper peak around $t=n+1$ as $n$ increases; the charateristic
+    width of $p_n(t)$ is $\Delta t=\pm\sqrt{n+1}$ seconds.</p>
+  <p>Armed with these results, we are ready to tackle the asymptotic
+    behavior of the integral defintion of factorial in the limit of
+    large $x.$  Since we already know the integral is exactly $n!$ for
+    integer $x,$ we write the argument as $n+x$ where $n$ is a large
+    integer and $x$ is some fraction between $0$ and $1.$  The
+    mean and variance of the function $t^ne^{-t}$ are the same as
+    the distribution $p_n(t),$ since they differ only by the constant
+    factor $n!.$  Since $p_n(t)$ is very sharply peaked near $t=n+1,$
+    most of the value of the integral will come from a relatively small
+    region of a few times $\sqrt{n+1}$ around that peak.  Therefore,
+    we write
+
+    $$\begin{align*}
+    (n+x)! &= \int_0^\infty dt\,t^{n+x}e^{-t} \\
+    &= (n+1)^x \int_0^\infty dt\,\left(\frac{t}{n+1}\right)^xt^ne^{-t} \\
+    &= (n+1)^x\int_0^\infty dt\,\left(1+\frac{t-(n+1)}{n+1}\right)^xt^ne^{-t}\\
+    &= (n+1)^xn!\int_0^\infty dt\,\left(1+\frac{t-
+    \langle t\rangle}{n+1}\right)^xp_n(t)
+    \end{align*}$$
+
+    Now the factor multiplying $p_n(t)$ inside the final integral is of
+    the form $(1+u)^x$ where $u$ is small, of order $1/\sqrt{n+1}$, for
+    all $t$ where the integrand is large.  Hence, we can expand it with
+    the generalized binomial series
+
+    $$(1+u)^x = 1 + xu + \frac{x(x-1)}{2\cdot 1}u^2 +
+    \frac{x(x-1)(x-2)}{3\cdot 2\cdot 1}u^3 + ...$$
+
+    The final integral becomes
+
+    $$\begin{align*}
+    \int_0^\infty dt\,\left(1+u\right)^xp_n(t) =
+    &\int_0^\infty dt\,p_n(t) + x\int_0^\infty dt\,up_n(t) \\
+    &+ \frac{x(x-1)}{2}\int_0^\infty dt\,u^2p_n(t) + ...
+    \end{align*}$$
+
+    We've already evaluated all three of the right hand side
+    integrals: The first is the normalization integral, which is $1.$
+    The second is $0$ by the definition of $\langle t\rangle=n+1.$ The
+    third is the variance integral, divided by $(n+1)^2,$ for a final
+    result of $1/(n+1).$  The remaining terms of the biomial expansion
+    contribute only larger reciprocal powers of $n.$</p>
+  <p>The asymptotic behavior of the integral definition is therefore
+
+    $$(n+x)! = (n+1)^x n! \left(1 + \frac{x(x-1)}{2(n+1)} + ...\right)$$
+
+    In the limit of $n\rightarrow\infty$ this indeed approaches
+    arbitrarily closely to the same form as the infinite product
+    definition, which proves that the two definitions yield exactly
+    the same result.  You may prefer the infinite product or the
+    integral definition, but they are really different views of the
+    same extension of factorial to non-integer values.  The correct
+    thing to do is, like Euler, to embrace both, and be able to use
+    the best one for whatever application you may encounter.</p>
+  <p>In the following section, we derive an important property of
+    the factorial function which is easiest to think about starting
+    from the infinite product formula.  In the section after that,
+    we discuss a well-known result for which the integral formula
+    is the natural starting point.</p>
+
+  <h2>The factorial reflection formula</h2>
+  <p>Since the extension of factorial beyond the non-negative integers
+    is not unique, why do we prefer the version defined by Euler's
+    infinite product or integral formulas?  Euler's formulas define a
+    function which has very interesting relationships to other
+    important functions we know.  In particular, it satisfies a second
+    functional equation, beyond the factorial recurrence
+    $f(1+x)=(1+x)f(x),$ which relates the generalized factorial
+    function to the $\sin$ function familiar from trigonometry.
+    Deriving this relationship requires a bit more advanced
+    mathematics than what we needed to understand either of Euler's
+    definitions, but it should be within reach if you enjoy a good
+    challenge.</p>
+  <p>We already remarked that the factorial becomes infinite at all
+    the negative integers, even though it is well defined at every
+    other negative number.  This suggests investigating its reciprocal,
+
+    $$\frac{1}{x!} = \prod_{n=1}^\infty\frac{1+x/n}{(1+1/n)^x}$$
+
+    This function is well-behaved for all $x,$ and evidently has zeros
+    where $x$ is a negative integer (and nowhere else).</p>
+  <p>We can both cancel the $x$ powers in the denominator and get
+    zeros at all the integers if we multiply this by itself but flipped
+    with $x\rightarrow-1-x$:
+
+    $$\begin{align*}
+    \frac{1}{x!(-1-x)!} &= \prod_{n=1}^\infty\frac{1+x/n}{(1+1/n)^x}
+    \prod_{n=1}^\infty\frac{1-1/n-x/n}{(1+1/n)^{-1-x}} \\
+    &= -x \prod_{n=1}^\infty(1+x/n)(1-1/(n+1)-x/(n+1))(1+1/n) \\
+    &= -x \prod_{n=1}^\infty(1+x/n)(1-x/n)(1-1/(n+1))(1+1/n) \\
+    &= -x \prod_{n=1}^\infty(1+x/n)(1-x/n) = -f(x),
+    \end{align*}$$
+
+    Where we define the function $f(x)$ by the remarkably simple
+    infinite product in the final line.</p>
+  <p>Now this $f(x),$ the reciprocal of the product of the factorial
+    function with itself when reflected about $x=-1/2,$ evidently has
+    a zero at every integer value of $x,$ positive or negative.  What
+    else can we learn about it?  Look at what happens when we shift
+    $x$ by $1,$ which we can compute from the factorial recurrence:
+
+    $$f(1+x) = \frac{1}{(1+x)!}\frac{1}{(-1-x-1)!}
+    = \frac{1}{(1+x)x!}\frac{-1-x}{(-1-x)!} = -f(x)$$
+
+    Therefore, $f(2+x)=f(x),$ or in other words $f(x)$ is an odd
+    periodic function with period $2$ and a zero at every integer
+    value.  Dare we hope that $f(x)\propto\sin\pi x$?</p>
+  <p>Euler simply asserted that $f(x)=(\sin\pi x)/\pi,$ since that
+    function has the correct derivative at $x=0$ and shares the same
+    zeros.  (It would be true of the polynomial of finite degree you
+    get by truncating the product at some value of $n.$) But of
+    course, there are plenty of other periodic functions which share
+    the same zeros and derivatives at their zeros with the $\sin$
+    function, so this is not a real proof.</p>
+  <p>There is no really simple way to prove Euler's infinite product
+    for the sine function (that we know).  Here's the best argument
+    we've found, but we'll need to assume you know calculus and
+    Fourier analysis.  We begin with the logarithmic derivative of
+    $f,$ in order to convert the infinite product into an infinite
+    sum:
+
+    $$\frac{f'(x)}{f(x)} = \frac{1}{x} +
+    \sum_{n=1}^\infty\left(\frac{1}{x+n}+\frac{1}{x-n}\right)$$
+
+    These terms suggest coefficients of a Fourier series.  Consider
+    the Fourier series for the function $e^{ixt},$ regarded as a
+    function of a new variable $t,$ with $x$ as a parameter.  We want
+    the Fourier frequency components to have the form $e^{-int}$ to
+    get the $x+n$ we are interested in, but $e^{ixt}$ does not
+    naturally have the correct period in $t$ of $2\pi$.  However, if
+    we artificially cut our the chunk of $e^{ixt}$ between $-\pi\le
+    t\le \pi$ and make copies of this chunk in all other intervals of
+    length $2\pi,$ we get a discontinuous periodic function, which we
+    can use to develop a Fourier series:
+
+    $$e^{ixt} = \sum_{n=-\infty}^\infty a_n e^{-int}$$
+
+    The Fourier coefficients of this series are
+
+    $$\begin{align*}
+    a_n &= \frac{1}{2\pi} \int_{-\pi}^\pi dt\, e^{ixt}e^{int} \\
+    &= \frac{1}{\pi}\frac{\sin\pi(x+n)}{x+n} \\
+    &= \frac{1}{\pi}\frac{(-1)^n\sin\pi x}{x+n}
+    \end{align*}$$
+
+    These $a_n$ have the denominator $x+n$ we were after.  Reassembling
+    the series, we have
+
+    $$\pi e^{ixt} =
+    \sum_{n=-\infty}^\infty\frac{(-1)^n\sin\pi x}{x+n}e^{-int}.$$
+    </p>
+  <p>The real part of this is
+
+    $$\begin{align*}
+    \pi\cos(xt)&=\sin\pi x\sum_{n=-\infty}^\infty\frac{(-1)^n\cos(nt)}{x+n} \\
+    &= \sin\pi x\left(\frac{1}{x} + \sum_{n=1}^\infty(-1)^n\cos(nt)
+    \left(\frac{1}{x+n} + \frac{1}{x-n}\right)\right)
+    \end{align*}$$
+
+    Now we never really wanted the Fourier wave variable $t$, and we
+    notice that replacing $t$ by the particular value $t=\pi,$ we find
+
+    $$\frac{\pi\cos\pi x}{\sin\pi x} =
+    \frac{1}{x} + \sum_{n=1}^\infty\left(\frac{1}{x+n} + \frac{1}{x-n}\right)$$
+
+    The series on the right is exactly $f'(x)/f(x).$ Furthermore, we
+    can easily identify $f(x)\propto\sin\pi x$ from the left hand side.
+    All that remains is to identify the constant of proportionality.
+    The easiest way to do this is to take the derivative term by term
+    without dividing by $f(x)$:
+
+    $$f'(x) = \prod_{n=1}^\infty(1-x^2/n^2) -
+    x^2\sum_{n=1}^\infty (2/n^2)\prod_{k=1,k\ne n}^\infty(1-x^2/k^2)$$
+
+    Thus, $f'(0)=1,$ which means that, as Euler asserted,
+    $f(x)=(\sin\pi x)/\pi.$
+  </p>
+  <p>After all of this, we are left with the remarkable reflection
+    formula for Euler's factorial function, a second functional
+    equation it satisfies beyond the factorial recurrence:
+
+    $$\frac{1}{x!(-1-x)!} = -\frac{\sin\pi x}{\pi}$$
+
+    This relationship between factorial and the $\sin$ function of
+    trigonometry neatly fits with the infinite value of the factorial
+    at all the negative integers.  By reflecting the factorial around
+    $x=-1/2$ we produce a function with poles at all the integers,
+    which turns out to be just the reciprocal of $\sin\pi x.$ This
+    second functional equation distinguishes the Euler extension of
+    factorial from all the other extensions, and is the real
+    justification for preferring his infinite product and integral
+    definitions to any others.</p>
+  <p>The fixed point of our reflection is $x=-1/2,$ and by plugging
+    that value into the factorial reflection formula we just derived,
+    we make a remarkable discovery:
+
+    $$(-1/2)! = \sqrt{\pi}.$$
+
+    We can step this forward and backward with the factorial
+    recurrence to calculate the factorial of all half-integers.  For
+    example, $(1/2)!=\sqrt{\pi}/2.$</p>
+  <p>The reflection formula also makes Euler's integral definition
+    much more useful.  By itself, the integral definition is useless
+    for computing factorials when $x\le-1.$ But with the factorial
+    reflection formula, we can evaluate the integral for an $x\gt
+    -1/2$ then use
+
+    $$x! = \frac{-\pi(-1-x)!}{\sin\pi x}$$
+
+    to compute the factorial of the reflected point with $x\lt -1/2.$
+  </p>
+  <p>The infinite product for the sine function, incidentally, is
+    another of Euler's most famous results, which led him to the
+    solution of the so-called Basel problem.  He got there by
+    expanding the infinite product into a power series:
+
+    $$\begin{align*}
+    \sin\pi x &= \pi x\prod_{n=1}^\infty\left(1-\frac{x^2}{n^2}\right) \\
+    &= \pi x\left(1 - \left(\sum_{n=1}^\infty \frac{1}{n^2}\right)x^2
+    + \left(\sum_{n=1}^\infty\sum_{m\gt n}\frac{1}{n^2m^2}\right)x^4-...\right)
+    \end{align*}$$
+
+    This must equal, term by term, the Taylor series for sine
+
+    $$\sin\pi x = \pi x\left(1 - (\pi x)^2/6 + (\pi x)^4/120 -...\right),$$
+
+    leading to a whole series of identities.  The first one solves the
+    Basel problem, to find the sum of the squares of the reciprocals of
+    the counting numbers:
+
+    $$\sum_{n=1}^\infty \frac{1}{n^2} = \frac{\pi^2}{6}$$
+
+    The second, after some work, gives the sum of the reciprocal fourth
+    powers, which shows up in the Stephan-Boltzmann equation relating the
+    power output radiated by a hot body like the sun to its temperature.
+    The work consists of rewriting the double sum like this
+
+    $$\sum_{n=1}^\infty\sum_{m\gt n} \frac{1}{n^2m^2} =
+    \frac{1}{2}\left(\sum_{n=1}^\infty \frac{1}{n^2}\right)^2 -
+    \frac{1}{2}\sum_{n=1}^\infty \frac{1}{n^4}.$$
+
+    Setting this equal to the Taylor series coefficient $\pi^4/120$ and
+    solving for the inverse fourth power sum gives
+
+    $$\sum_{n=1}^\infty \frac{1}{n^4} = \left(\frac{\pi^2}{6}\right)^2
+    - 2\frac{\pi^4}{120} = \frac{\pi^4}{90}.$$
+
+    With increasing amounts of effort, we can derive similar
+    expressions for the sum of the reciprocals raised to any even
+    power.  These are the values of the Riemann zeta function at the
+    even integers; Euler's factorial function, and the factorial
+    reflection formula in particular, is important in the celebrated
+    Riemann hypothesis.</p>
+
+  <h2>The Stirling approximation</h2>
+  <p>Anyone who meets the factorial function quickly realizes that it
+    increases very, very rapidly.  The number $52!,$ the number of
+    different ways to shuffle a deck of cards, has 68 digits.  In
+    other words, it quickly becomes impractical to compute factorials
+    by actually multiplying out the result.  We need a quicker way to
+    estimate factorials of even modest numbers.  The Stirling
+    approximation is the earliest and simplest formula to fill that
+    need, dating from about the same time as Euler's landmark work.</p>
+  <p>We can get a very quick estimate of $x!$ for large $x$ from the
+    work we already did on the asymptotic form of the integral
+    definition.  There we found the integrand $t^xe^{-t}$ was a sharply
+    peaked function near $t=x$, with an average $t$ of $x+1$ and a
+    half-width (standard deviation) of $\sqrt{x+1}.$ Dropping the "$+1$"
+    for our very rough estimate, we quickly estimate
+
+    $$x! = \int_0^\infty dt\,t^xe^{-t} \sim 2\sqrt{x}x^xe^{-x}.$$
+
+    Stirling's claim to fame is that he discovered the constant
+    replacing our "$2$" that makes this estimate exact in the limit
+    $x\rightarrow\infty,$ and additionally provided formulas for the
+    error when $x$ is finite.</p>
+  <p>Like the reflection formula, a complete discussion of the
+    Stirling formula leads into some quite advanced mathematical
+    topics, in particular, into the subject of asymptotic series.  The
+    method we will show here requires a rather unusual application of
+    the technique of changing the variable of integration, a technique
+    from elementary calculus.  It is not quite as miraculous as the
+    "consider the Fourier series of" argument we needed for the
+    reflection formula, but it is clearly in that category.</p>
+  <p>We begin with the logarithm of the integrand,
+
+    $$\log(t^xe^{-t}) = x\log t - t.$$
+
+    From its derivative $x/t-1,$ we see that its maximum is at
+    the point $t=x,$ which means that is the maximum of the integrand
+    as well.  In other words, the integrand is largest just slightly
+    before its mean value $x+1.$  As a first, very minor, change of
+    variables, we rewrite this in terms of the variable $u,$ where
+    $t=x(1+u).$  In terms of $u,$ the whole integral looks like this
+
+    $$x! = x^{1+x}e^{-x}\int_{-1}^\infty du\,e^{-xf(u)},$$
+
+    where we define
+
+    $$f(u) = u - \log(1+u).$$
+  </p>
+  <p>The function $f(u)$ blows up to infinity at the endpoints of this
+    new integral, $u=-1$ and $u=\infty.$ We chose $u$ to make $f(u)$
+    come to a single smooth minimum at $u=f(u)=0.$ As $x$ increases, the
+    remaining factor of $x$ in the exponent makes the integrand more
+    and more sharply peaked; we know that since $u\sim t/x,$ the peak
+    width decreases as $1/\sqrt{x}.$  In fact, near the minimum at
+    $u=0,$ we can expand $log(1+u)=u-u^2/2+u^3/3-u^4/4+...$ and this
+    expansion will become more and more accurate with increasing $x$
+    because the important values of $u$ in the integral will decrease.</p>
+  <p>Now is the time for the unusual change of variables.  Define $v$
+    by
+
+    $$\begin{align*}
+    v^2 &= 2\left(u - \log(1+u)\right) \\
+    &= u^2 - \tfrac{2}{3}u^3 + \tfrac{1}{2}u^4 - \tfrac{2}{5}u^5
+    + \tfrac{1}{3}u^6 -...
+    \end{align*}$$
+
+    This is a very subtle and unusual change of variables, because the
+    inverse function on both the right and left hand sides is double
+    valued.  The function $v(u)$ we are defining here is the
+    infinitely smooth analytic function we get by taking $v$ to have
+    the same sign as $u$.  As we cross from the $v\lt 0$ branch to the
+    $v\gt 0$ branch on the left side, we also cross from the $u\lt 0$
+    to the $u\gt 0$ branch on the right side.  Note that the Taylor
+    series in the second line only converges for $|u|\lt 1,$ even
+    though the integral extends to unbounded $u\gt 1.$ Since the
+    interesting $u$ are less than a few times $1/\sqrt{u},$ we will
+    ignore this problem.</p>
+  <p>This very clever change of variables produces the integral
+
+    $$x! = x^{1+x}e^{-x}\int_{-\infty}^\infty dv\,e^{-xv^2/2}du/dv.$$
+
+    The reason for working with $v$ becomes clear: The Gaussian
+    function $e^{-xv^2/2}$ is the cornerstone of most of the science
+    of statistics; it is the most common sharply peaked function.
+    This particular Gaussian has variance $1/x,$ or standard deviation
+    $1/\sqrt{x},$ so it is the same width as our $u$ integrand.  The
+    limits of integration also run over the whole range of $v$ from
+    $-\infty$ to $+\infty.$</p>
+  <p>The moments of the Gaussian distribution are exceedingly well
+    understood.  In fact, they reduce to a special case of our
+    extended factorial function - the factorials of the half integers -
+    as you can see by a simple change of variables from $v$ to
+    $w=xv^2/2.$  Since $e^{-xv^2/2}$ is an even function of $v,$ all
+    its odd moments vanish.  Its even moments are
+
+    $$\begin{align*}
+    \int_{-\infty}^\infty dv\,v^{2n}e^{-xv^2/2} &=
+    2\int_0^\infty dv\,v^{2n}e^{-xv^2/2} \\
+    &= (2/x)^{n+1/2}\int_0^\infty dw\,w^{n-1/2}e^{-w} \\
+    &= (2/x)^{n+1/2} (n-1/2)!
+    \end{align*}$$
+
+    Thus, if we can develop a power series for our change of variables
+    $u(v),$ we will have an infinite series for $x!.$</p>
+  <p>The process of developing a power series for $u(v)$ is a variant
+    of the general problem of inverting a power series.  We can solve
+    it by extending the series one term at a time.  For small $u,$ we
+    know $u\approx v.$  The next term will be $u=v+av^2,$ where
+
+    $$\begin{align*}
+    \tfrac{1}{2}v^2 &= \tfrac{1}{2}(v+av^2)^2 -
+    \tfrac{1}{3}(v+av^2)^3 + \tfrac{1}{4}(v+av^2)^4 + ... \\
+    0 &= av^3 - \tfrac{1}{3}v^3 + v^4(...) \\
+    a &= \tfrac{1}{3}
+    \end{align*}$$
+
+    Thus $a=1/3,$ so in the next approximation $u=v+\tfrac{1}{3}v^2.$
+    We've divided both sides by a factor of two here to take advantage
+    of the following trick: If we simply plug our expansion up to the
+    $v^2$ term in, we know everything through $v^3$ cancels and we can
+    just read the $v^4$ terms off as
+
+    $$\begin{align*}
+    \tfrac{1}{2}v^2 &= \tfrac{1}{2}(v+\tfrac{1}{3}v^2)^2 -
+    \tfrac{1}{3}(v+\tfrac{1}{3}v^2)^3+\tfrac{1}{4}(v+\tfrac{1}{3}v^2)^4+... \\
+    0 &= (1/18-1/3+1/4)v^4 + v^5(...) \\
+    a &= -\tfrac{1}{36}v^4 + v^5(...)
+    \end{align*}$$
+
+    The trick is that you can now read off the coefficient for the $v^3$
+    term in the expansion for $u$.  It is minus the $v^4$ coefficient,
+    because that is what will be added by the leading term when a new
+    $v^3$ term is added.  So we have $u=v+\tfrac{1}{3}v^2+\tfrac{1}{36}v^3.$
+    Plugging this in and computing only the $v^5$ terms gives the $v^4$
+    term in the $u$ series, and so on.  The first half dozen terms of
+    the power series for $u(v)$ are therefore
+
+    $$\begin{align*}
+    u &= v + \frac{1}{3}v^2 + \frac{1}{36}v^3 - \frac{1}{270}v^4 +
+    \frac{1}{4320}v^5 + \\
+    &\quad\frac{1}{17010}v^6 - \frac{139}{5443200}v^7 +...
+    \end{align*}$$
+  </p>
+  <p>To compute the integral, we need only the even terms of $du/dv,$
+
+    $$\frac{du}{dv} = 1 + ... + \frac{1}{12}v^2 + ... + \frac{1}{864}v^4
+     + ... - \frac{139}{777600}v^6 + ...$$
+
+    Putting all this together we find, using the factorial recursion
+    $(x+1)!=(x+1)x!$:
+
+    $$x! = x^{1+x}e^{-x}\left(\frac{2}{x}\right)^{\tfrac{1}{2}}
+    \left(-\frac{1}{2}\right)!\left(1 + \frac{1}{12x} + \frac{1}{288x^2} -
+    \frac{139}{51840x^3} + ...\right)$$
+
+    Since we know $(-1/2)!=\sqrt{\pi},$ we can write Sterling's
+    approximation as he did:
+
+    $$x! = \sqrt{2\pi x}\,x^xe^{-x} \left(1 + \frac{1}{12x} +
+    \frac{1}{288x^2} - \frac{139}{51840x^3} + ...\right)$$
+
+    It turns out this series is an asymptotic serries, which means it
+    does not converge, so there is no point in computing a large number
+    of terms.  However, any fixed number of terms produces a more and
+    more accurate value for $x!$ as $x$ increases, so the series is
+    still useful for understanding the behavior of $x!$ as $x$ increases.
+    In particular, the $x^x$ term makes it clear exactly how rapidly
+    factorial increases with increasing $x.$</p>
+</div></body>
+</html>
