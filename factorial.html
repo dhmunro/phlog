@@ -695,11 +695,7 @@
     trigonometry neatly fits with the infinite value of the factorial
     at all the negative integers.  By reflecting the factorial around
     $x=-1/2$ we produce a function with poles at all the integers,
-    which turns out to be just the reciprocal of $\sin\pi x.$ This
-    second functional equation distinguishes the Euler extension of
-    factorial from all the other extensions, and is the real
-    justification for preferring his infinite product and integral
-    definitions to any others.</p>
+    which turns out to be just the reciprocal of $\sin\pi x.$</p>
   <p>The fixed point of our reflection is $x=-1/2,$ and by plugging
     that value into the factorial reflection formula we just derived,
     we make a remarkable discovery:
@@ -761,6 +757,17 @@
     even integers; Euler's factorial function, and the factorial
     reflection formula in particular, is important in the celebrated
     Riemann hypothesis.</p>
+  <p>We might wonder whether the combination of the reflection formula
+    and the factorial recurrence together is sufficient to uniquely
+    determine a single function.  The answer is no.  The reflection
+    formula merely adds one more minor constraint on the function
+    $g(x)=f(x)/x!.$ Namely, $\log g(x)$ must not only have period $1$
+    be $0$ at $x=0,$ but for $f(x)$ to satisfy the reflection formula
+    it must also be an odd function of $x.$ You can easily construct
+    as many such functions as you like as linear combinations of $\sin
+    2\pi nx$ ith integer $n.$ The only property which distinguishes
+    Euler's factorial extension from any other is the asymptotic
+    $(n+x)!\rightarrow(n+1)^xn!$ behavior.</p>
 
   <h2>The Stirling approximation</h2>
   <p>Anyone who meets the factorial function quickly realizes that it
@@ -929,5 +936,84 @@
     series is still very useful for understanding the behavior of $x!$
     for large $x$.  In particular, the $x^x$ term makes it clear
     exactly how rapidly factorial increases with increasing $x.$</p>
+
+  <h2>Conclusion</h2>
+  <p>After the success of extending the definition of exponential
+    functions $b^n$ from their definition for counting numbers $n$ all
+    the way to $b^x$ for any real or complex $x,$ we naturally
+    wondered whether the factorial function, which is also defined by
+    a recurrence for the counting numbers $n$ can also be extended to
+    $x!$ for arbitrary real or complex $x.$ The answer is a resounding
+    yes, with the minor caveat that unlike exponentials, the
+    recurrence by itself does not uniquely determine the extension.
+    We introduce a second property, a particularly simple asymptotic
+    form in the limit of large $x,$ in order to uniquely specify a
+    particularly nice extension of $x!$ to arbitrary values of $x.$
+    Thus, $x!$ is the unique function which satisfies the factorial
+    base case and recurrence formula, and which has Euler's asymptotic
+    form as the integer $n\rightarrow\infty$:
+
+    $$\begin{align*}
+    1! &= 1 \\
+    (x+1)! &= (x+1)x! \\
+    (n+x)! &\rightarrow (n+1)^x n!
+    \end{align*}$$
+  </p>
+  <p>Euler found two rather different explicit definitions of this
+    function.  The more general follows from the three defining
+    properties by straightforward algebra:
+
+    $$x! = \prod_{k=1}^\infty \frac{(1+1/k)^x}{1+x/k}.$$
+
+    This infinite product converges for any $x,$ real or complex,
+    defining a smooth analytic function on the whole complex plane.
+    The second involves an integral whose integrand is a common and
+    important probability distribution, which represents, for example,
+    the probability of hearing $x$ clicks of a Geiger counter during a
+    time $t$:
+
+    $$x! = \int_0^\infty dt\,t^x e^{-t}.$$
+  </p>
+  <p>The infinite product for factorial is very similar to a more
+    famous asymptotic formula Euler derived for the exponential function,
+
+    $$e^x = \lim_{n\rightarrow\infty} (1+x/n)^n.$$
+
+    The connection is that unlike the basic definition of raising the
+    number $e$ to a counting number, Euler's formula works for any
+    value of $x,$ real or complex.</p>
+  <p>Using the infinite product definition, we discovered the
+    reflection property of the factorial function, which relates
+    the function and its reflection through $x=-1/2$:
+
+    $$x!(-1-x)! = \frac{\pi}{\sin\pi x}.$$
+
+    One immediate consequence is that $(-1/2)!=\sqrt{\pi},$ from which
+    we can compute the factorial of any half-integer from the
+    recurrence formula.  The reflection formula is a direct
+    consequence of another famos result of Euler's, the infinite
+    product representation of the sine function:
+
+    $$ \sin\pi x = \pi x\prod_{n=1}^\infty (1 - x^2/n^2).$$
+  </p>
+  <p>Using the integral defintion, we demonstrated the Stirling
+    approximation of $x!$ for large $x$:
+
+    $$x! \approx \sqrt{2\pi x}\,x^xe^{-x}.$$
+
+    We also showed how to estimate its error with an asymptotic
+    series.</p>
+  <p>So the simple question of whether we could extend factorial
+    beyond the counting numbers just as we extended the exponential
+    function leads some extremely rich and interesting mathematics.
+    We leave the topic by noting that our extended factorial function
+    is usually called the gamma function, $\Gamma(x+1)=x!.$ The shift
+    of $x$ by $1$ puts the first pole of $\Gamma(x)$ at $x=0$ instead
+    of at $x=-1,$ and makes the reflection formula constrain
+    $\Gamma(x)\Gamma(1-x)$ which looks slightly nicer than
+    $x!(-1-x)!.$ Otherwise, all of the simple properties we presented
+    here look nicer without shifting, which is why we have stuck to
+    the slightly non-standard notation $x!$ on this page.
+  </p>
 </div></body>
 </html>
