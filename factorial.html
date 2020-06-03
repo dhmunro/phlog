@@ -109,7 +109,7 @@
     to be for $b^x.$</p>
 
   <h2>Infinite product definition of factorial</h2>
-  <p>Enter the supremely clever Leonhard Euler.  To set the context
+  <p>Enter the supremely clever Leonhard Euler.  To set the stage
     for Euler's definition of $x!$ we begin by describing his much
     more famous and important work on the exponential function
     $b^x.$</p>
@@ -118,7 +118,7 @@
     the rate per annum a bank quotes for a loan, what they generally
     mean is that the rate per month is $r/12.$ If you do not pay them
     anything until the end of the year, however, you will owe
-    $(1+r/12)^12$ times the loan amount (not counting late payment
+    $(1+r/12)^{12}$ times the loan amount (not counting late payment
     penalties) because the interest is compounded monthly.  This is
     greater than $1+r,$ what you would have owed if the interest were
     compounded yearly.  A natural question is what would happen if
@@ -490,7 +490,7 @@
     the width of a distribution is its variance, or mean square deviation
     from the mean
 
-    $$\text{Var}(t) = \left\langle\left(t=\langle t\rangle\right)^2\right\rangle
+    $$\text{Var}(t) = \left\langle\left(t-\langle t\rangle\right)^2\right\rangle
     = \langle t^2\rangle - \langle t\rangle^2.$$
 
     Since $\langle t^2\rangle$ is $(n+2)(n+1)$ because it is related to
@@ -501,7 +501,7 @@
 
     That is, the variance in the time for $n$ clicks to arrive is
     $n+1,$ which means its standard deviation from its mean is
-    $\sqrt(n+1).$ In other words, we expect it to take $100$ seconds
+    $\sqrt{n+1}.$ In other words, we expect it to take $100$ seconds
     on average for $99$ clicks to arrive, plus or minus $10$ seconds,
     or $10\%$ of the wait time.  We expect to wait $10,000$ seconds
     for $9,999$ clicks, plus or minus only $100$ seconds, or $1\%$ of
@@ -576,7 +576,7 @@
     important functions we know.  In particular, it satisfies a second
     functional equation, beyond the factorial recurrence
     $f(1+x)=(1+x)f(x),$ which relates the generalized factorial
-    function to the $\sin$ function familiar from trigonometry.
+    function to the sine function familiar from trigonometry.
     Deriving this relationship requires a bit more advanced
     mathematics than what we needed to understand either of Euler's
     definitions, but it should be within reach if you enjoy a good
@@ -620,7 +620,7 @@
     zeros.  (It would be true of the polynomial of finite degree you
     get by truncating the product at some value of $n.$) But of
     course, there are plenty of other periodic functions which share
-    the same zeros and derivatives at their zeros with the $\sin$
+    the same zeros and derivatives at their zeros with the sine
     function, so this is not a real proof.</p>
   <p>There is no really simple way to prove Euler's infinite product
     for the sine function (that we know).  Here's the best argument
@@ -762,12 +762,12 @@
     determine a single function.  The answer is no.  The reflection
     formula merely adds one more minor constraint on the function
     $g(x)=f(x)/x!.$ Namely, $\log g(x)$ must not only have period $1$
-    be $0$ at $x=0,$ but for $f(x)$ to satisfy the reflection formula
-    it must also be an odd function of $x.$ You can easily construct
-    as many such functions as you like as linear combinations of $\sin
-    2\pi nx$ ith integer $n.$ The only property which distinguishes
-    Euler's factorial extension from any other is the asymptotic
-    $(n+x)!\rightarrow(n+1)^xn!$ behavior.</p>
+    and be $0$ at $x=0,$ but for $f(x)$ to satisfy the reflection
+    formula it must also be an odd function of $x.$ You can easily
+    construct as many such functions as you like as linear
+    combinations of $\sin 2\pi nx$ with integer $n.$ The only property
+    which distinguishes Euler's factorial extension from any other is
+    the asymptotic $(n+x)!\rightarrow(n+1)^xn!$ behavior.</p>
 
   <h2>The Stirling approximation</h2>
   <p>Anyone who meets the factorial function quickly realizes that it
@@ -822,7 +822,7 @@
     remaining factor of $x$ in the exponent makes the integrand more
     and more sharply peaked; we know that since $u\sim t/x,$ the peak
     width decreases as $1/\sqrt{x}.$  In fact, near the minimum at
-    $u=0,$ we can expand $log(1+u)=u-u^2/2+u^3/3-u^4/4+...$ and this
+    $u=0,$ we can expand $\log(1+u)=u-u^2/2+u^3/3-u^4/4+...$ and this
     expansion will become more and more accurate with increasing $x$
     because the important values of $u$ in the integral will decrease.</p>
   <p>Now is the time for the unusual change of variables.  Define $v$
@@ -991,7 +991,7 @@
     One immediate consequence is that $(-1/2)!=\sqrt{\pi},$ from which
     we can compute the factorial of any half-integer from the
     recurrence formula.  The reflection formula is a direct
-    consequence of another famos result of Euler's, the infinite
+    consequence of another famous result of Euler's, the infinite
     product representation of the sine function:
 
     $$ \sin\pi x = \pi x\prod_{n=1}^\infty (1 - x^2/n^2).$$
