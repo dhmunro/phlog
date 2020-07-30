@@ -1,0 +1,1612 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Special Relativity</title>
+  <meta name="description"
+    content="How light connects time and space in spacetime geometry.">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script>MathJax = {tex: { inlineMath: [["$", "$"], ["\\(", "\\)"]] }};
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"
+          id="MathJax-script">
+  </script>
+  <style>
+    div {
+      -moz-box-sizing: border-box;
+      box-sizing: border-box;
+    }
+    .textcolumn {
+      padding-left: 1em;
+      padding-right: 1em;
+      min-width: 22em;
+      max-width: 52em;
+      margin: 0 auto;
+    }
+    .halfwide {
+      width: 60%;
+      float: right;
+    }
+    .clickable {
+      cursor: pointer;
+    }
+    .backlit {
+      background-color: #d8d8d8;
+    }
+    svg {
+      background-color: #ffffff;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      width: 100%;
+      height: 100%;
+    }
+    .belowsvg {
+      font: italic bold large serif;
+      padding-top: 0px;
+      margin-top: 0px;
+      margin-left: auto;
+      margin-right: auto;
+      text-align: center;
+    }
+    .svgtxt {
+      font: bold 0.45px sans-serif;
+    }
+    @media only screen and (max-width: 620px) {
+      .halfwide {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="textcolumn">
+  <h1 style="text-align: center;">
+    <a href="index.html">Special Relativity</a></h1>
+
+
+  <h2>Introduction</h2>
+
+  <p>Nothing can travel faster than light.  Why not?</p>
+  <p>To answer that question we need to understand time and position
+    as different directions in spacetime, like up and right are
+    different directions in the Euclidean plane of this page.  To a
+    certain extent this is obvious; a graph in which we plot time
+    vertically and position horizontally depicts two dimensions of
+    spacetime.  Motion at different speeds is the spacetime analog of
+    rotation by different angles in ordinary plane geometry, which
+    will connect spacetime geometry back to our question about
+    superluminal motion.</p>
+  <p>There is nothing special about light waves; the behavior of light
+    is merely an indicator of a deeper connection between time and
+    space.  The speed of any wave is a property of the medium in which
+    it propagates.  For example, the speed of sound is a property of
+    air; air has the stiffness and density to produce that speed
+    whether or not any sound is present.  Since light propagates
+    through empty space, its speed is a property of empty space
+    itself, whether or not any light is present.  That's why the speed
+    of light $c$ appears in $E=mc^2$ and other formulas which have
+    nothing to do with light.</p>
+  <p>In empty space, there is no preferred reference frame or state of
+    motion.  Without looking out at the surrounding universe, there is
+    no way to tell if we are moving.  If any physical laws depended on
+    our absolute motion, we would not be in truly empty space.  Empty
+    means no wind, however subtle.  The possibility of space being
+    empty in this sense is an experimental fact.  Once people realized
+    light is an electromagnetic wave, they tried very hard to
+    establish our absolute motion through the ether, a tenuous medium
+    everyone assumed must fill space - stuff for light waves to
+    vibrate so they can reach us from distant stars.  All such
+    experiments failed.  Light needs no ether; it can travel through
+    empty space.</p>
+  <p>Once you understand the emptiness of space (which everyone else
+    calls the "principle of relativity") by working through its
+    consequences, your reward is a completely new kind of geometry -
+    spacetime geometry - that beautifully complements Euclidean
+    geometry.  The fact that we can see stars across the void
+    inexorably leads us to conclude that the phrase "faster than
+    light" makes no sense in spacetime geometry.  Here we follow that
+    logical path by introducing the geometry of spacetime in two
+    dimensions, one of time and one of space.  We will compare and
+    contrast the spacetime plane with the Euclidean plane.</p>
+
+  <h2>Spacetime diagrams</h2>
+  <p>We begin with some spacetime jargon.  A point in spacetime is
+    called an event (supposing <em>something</em> must be happening
+    everywhere all the time).  We will plot time upwards and position
+    rightwards, which is the usual convention for a spacetime diagram.
+    Any object will have some position at every time, which is a
+    (maybe curved) line on our spacetime diagram.  This is called the
+    world line of the object.  A stationary object has a straight
+    vertical world line, and an object moving at a constant speed has
+    a straight inclined world line.  Two objects moving at the same
+    speed have parallel world lines; otherwise world lines intersect
+    at the event where objects either collide or pass.</p>
+  <blockquote>[Drawing with two or three pre-drawn world lines and one
+    you draw yourself.  A line below the diagram shows the line in
+    space; when you begin to drag your point, the spacetime diagram
+    begins to unfold from the bottom, stopping when you
+    release.]</blockquote>
+  <p>You can add your own world line to this spacetime diagram by
+    dragging the round marker on the line below the figure to the left
+    or right.  When you press down, the diagram above the line records
+    your dragging movements by scrolling upward at a constant rate.
+    The square markers move in a predetermined way while you move the
+    round marker however you please.  The slower you move your marker,
+    the more vertical its world line; faster motion corresponds to a
+    more horizontal world line.</p>
+  <p>We have simply asserted that we plot time vertically and position
+    horizontally.  By this, we mean that we plot the locus of events
+    at a fixed position in space as a vertical line, and the locus of
+    events at some fixed instant in time as a horizontal line.  What
+    constitutes a "fixed position" obviously depends on the state of
+    motion of the observer: A moving observer will regard anything
+    moving with the same velocity to have a "fixed position" relative
+    to themselves.  Thus, our spacetime diagram must always adopt the
+    point of view of an observer with some particular state of motion
+    which we arbitrarily call "stationary".  In spacetime, the point
+    of view of an observer comprises not only their location, but also
+    their velocity.</p>
+
+  <h2>Synchronizing clocks relates directions in spacetime</h2>
+  <p>Since horizontal lines in our diagram are supposed to represent
+    all events which happen simultaneously, we need a procedure for
+    synchronizing any pair of stationary clocks (which have vertical
+    world lines) in order to know where to plot events occuring at the
+    clock positions.  Without moving the clocks, the only way to
+    synchronize them is to send a signal from one to the other, say
+    from left to right.  By subtracting the signal transit time from
+    its arrival time at the right clock, we find the time on the right
+    clock corresponding to the departure time of the signal from the
+    left clock.  Assuming we can send signals through the same channel
+    (wire or fiber optic or just empty space) in both directions at
+    the same speed, the one way transit time will be half of the round
+    trip travel time.  The left clock, say, can time the round trip
+    whether we have synchronized the clocks or not.
+  </p>
+
+  <h2>Symmetry between observers relates scales in spacetime</h2>
+
+  <p>In ordinary plane geometry, we begin constructing a system of
+    coordinates by selecting an origin and a line we will use as
+    reference direction.  Euclid then tells us how to construct
+    parallel and perpendicular lines we can use to build a coordinate
+    grid.  Parallel lines involve the operation of translation, which
+    amounts to shifting our origin point, and which we can imagine in
+    the spacetime plane just as easily as in the Euclidean plane.
+    However, Euclid's construction of perpendicular lines makes no
+    sense in a spacetime plane; we need to invent a new procedure to
+    define the analog of perpendicularity in order to construct a
+    spacetime coordinate grid.</p>
+  <p>The key to creating a coordinate system in the spacetime plane is
+    synchronizing two identical clocks which are a substantial
+    distance apart.  The next figure shows you one way to do that.
+    The gray lines are inclined at the speed of light: A light flash
+    traveling to the right will be parallel to the right-sloping
+    lines, while a leftward traveling flash will be parallel to the
+    left-sloping lines.  Light moves the same speed in either
+    direction, so the slopes are equal and opposite.  The parallel
+    blue lines are the world lines of two clocks.  A light flash
+    begins at the left clock, reflects off the right clock, and
+    returns to the left clock; we note start and stop times of this
+    round trip on the left clock, and the reflection time on the right
+    clock.  To synchronize the clocks, subtract half the round trip
+    time (as measured by the left clock) from the reflection time on
+    the right clock to find the right clock time simultaneous with the
+    start time on the left clock.</p>
+  <blockquote>[Gray diagonal grid with adjustable slope in background.
+    Two parallel clock world lines in blue, initially vertical.  A
+    dark gray flash of light world line starts at left clock, reflects
+    from the right and returns to the left.  The left clock world line
+    is bold from start to stop, and a gray line runs from the midpoint
+    on the left world line to the reflection point on the right, with
+    a bold half-length extending backwards to that point.  A blue tick
+    marks the start time on the left world line, and a similar blue
+    tick sits at an arbitrary point on the right.  You can drag that
+    tick to adjust the origin of the right clock; when it reaches the
+    base of the bold half-length section, a light blue grid appears,
+    with the full unit square bold.  A blue dot at the top of the left
+    clock line drags to adjust the velocity of the clocks.  A blue dot
+    at the top of the right world line drags to adjust the spacing
+    between clocks.  A gray dot at the upper right of the gray grid
+    drags to adjust the slope of the speed of light
+    grid.]</blockquote>
+  <ol>
+    <li>The blue ticks mark the zero time for the left and right
+      clocks.  Drag the right tick along its world line until it is
+      half the round trip time before the reflection event, which will
+      cause a blue grid to appear.  The two tick marks are now
+      simultaneous, so the clocks are synchronized, and serve as the
+      basis of a spacetime coordinate grid.</li>
+    <li>Drag the dot marker at the top of the left clock world line to
+      change the slope of the two clock world lines, so they represent
+      two clocks moving at a common speed.  The gray world lines of
+      light flashes do not change slope, even if their source at the
+      left clock is moving.  Repeat the synchronization exercise (1),
+      noticing that the slope of lines representing simultaneous events
+      has changed along with the clock speed.</li>
+    <li>Drag the dot marker at the top of the right clock world line
+      to change the spatial separation between the two clocks.  Notice
+      that the lines of simultaneity, light the clock world lines, do
+      not change slope.  Changing the scale of the coordinate grid
+      does not change which events are simultaneous.</li>
+    <li>Drag the dot marker at the top right of the gray diagonal
+      grid to change the slope corresponding the the speed of light.
+      This is a purely cosmetic change to show that our procedure for
+      constructing spacetime coordinates does not depend on how we
+      plot the diagram or on our choice of units for measuring time
+      or space.</li>
+  </ol>
+  <p>The surprise about this synchronization procedure, which amounts
+    to nothing more than correcting for the travel time of the
+    synchronizing light flashes, is that whether we judge two events
+    to be simultaneous depends on our state of motion: After
+    synchronizing the two clocks in the figure to reveal the line of
+    events simultaneous with zero time, try changing the slope of the
+    left world line and watch how the line of simultaneity also
+    changes slope.  You will find that the phrase "at the same time as"
+    has no absolute meaning for distinct events; simultaneity
+    is <em>relative</em> to your state of motion.  Two distinct events
+    which you judge simultaneous are not simultaneous from the point
+    of view of someone who is moving relative to you.</p>
+  <p>Furthermore, notice that as you explore all clock world line
+    slopes corresponding to velocities less than the speed of light,
+    the line of simultaneity sweeps over all the slopes corresponding
+    to velocities greater than the speed of light.  That is, any line
+    closer to horizontal than the gray light-diagonals is the line of
+    simultaneity for some pair of clocks whose world lines are closer
+    to the vertical than the gray diagonals.  We can therefore divide
+    directions in spacetime into two categories: Spacelike lines are
+    closer to horizontal than the gray grid lines, while timelike
+    lines are closer to vertical.  These designations reflect the fact
+    that timelike lines are world lines for objects moving slower than
+    the speed of light, while spacelike lines are lines of
+    simultaneity for some observer moving slower than light.  Every
+    straight line in the spacetime plane is either spacelike or
+    timelike, except for lines parallel to left and right moving light
+    flashes which mark the transition from spacelike to timelike.  The
+    Euclidean plane has no analog for this dichotomy between timelike
+    and spacelike directions.</p>
+  <p>The operation of synchronizing clocks defines a unique spacelike
+    direction for any given timelike direction and vice versa.  This
+    association between two directions in spacetime is the analog of
+    perpendicularity in the Euclidean plane.  Euclid provides methods
+    for constructing perpendiculars to any given line in ordinary
+    plane geometry; synchronizing clocks using light flashes is a
+    method for constructing lines of simultaneity for any given world
+    line in spacetime geometry.</p>
+  <p>There is no place in this picture for observers moving faster
+    than light.  Every direction in the spacetime plane is either the
+    direction of time or the direction of position for some
+    slower-than-light observer (or the direction of a light flash).
+    In fact, our clock synchronization procedure would not work for a
+    faster-than-light observer, because a light flash from their
+    trailing clock would never reach their leading clock.  We will
+    explore later what happens when an observer accelerates forever,
+    but it will turn out that their world line never becomes
+    spacelike.  There is no such thing as a faster-than-light
+    observer.</p>
+
+  <h3>Historical objections</h3>
+  <p>Every physicist before Einstein would have rejected our procedure
+    for synchronizing clocks.</p>
+  <p>Those like Newton who believed light consists of particles would
+    have rejected the idea that a light flash emitted from a moving
+    source would follow the same trajectory through empty space as a
+    flash emitted from a stationary source.  They would insist the
+    light particles inherit the velocity of their emitter.  From this
+    point of view, our synchronization procedure fails because we
+    assume a light flash from a moving clock will propagate along the
+    same line through spacetime as a flash from a stationary
+    clock.</p>
+  <p>Those like Maxwell who believed light is an electromagnetic wave
+    would have rejected our correction of the reflection time of the
+    synchronizing flash by half the round trip time.  They would
+    insist that space is not empty but filled with ether, and that our
+    correction only applies when the clocks are at rest relative to
+    that ether.  When this ether flows past the clocks, they would
+    insist that light travels faster downstream than upstream and the
+    proper correction for light travel time must take this directional
+    difference into account.</p>
+  <p>Ultimately, only very careful experiments with very accurate
+    clocks moving at very high speeds can answer these objections,
+    which come from the most authoritative sources possible.  There is
+    no ether because we find that light always travels the same speed
+    through empty space no matter how fast you are moving, and light
+    emitted from moving sources travels at the same speed as from
+    stationary ones.  More subtly, complicated theories (for example
+    that a moving light source drags some ether along with it) are
+    unnecessary, because the simple clock synchronization procedure we
+    have described here perfectly explains all the experimental
+    results.</p>
+  <p>Even the most surprising consequences of the fact that light
+    travels through empty space at the same speed relative to any
+    observer regardless of their motion were experimentally confirmed
+    in every detail within a few decades of Einstein's 1905
+    publication of his theory of special relativity.  Some
+    consequences seem strange because we can have no direct experience
+    with things moving anywhere near as fast as a flash of light; to
+    our senses, light is present or absent instantaneously.  In the
+    previous figure, you can drag the gray lines until both diagonal
+    directions collapse into horizontal lines.  That is the limit in
+    which all our intuitions about motion were formed: Instead of a
+    whole range of distinct spacelike directions, there is only a
+    single spacelike direction, a line of constant absolute time.
+    Only when you are forced to work in situations where the speed of
+    light is not effectively infinite can you understand the
+    inadequacy of the concept of absolute time.</p>
+
+  <h2>Proper time and distance</h2>
+  <p>Simultaneity, defined by clock synchronization, determines the
+    direction of the spatial axis of a spacetime coordinate system,
+    given the direction of its time axis.  In Euclidean geometry, this
+    is analogous to perpendicularity determining the direction of the
+    second axis of a rectangular coordinate system given the direction
+    of the first axis.  But direction alone does not specify a
+    coordinate rotation - we also need to work out how rotated and
+    unrotated coordinates must be related in order to preserve
+    distance in the rotated coordinate system.  In the Euclidean
+    plane, the Pythagorean theorem provides this relationship.  We
+    must discover the analog of the Pythagorean theorem in the
+    spacetime plane.</p>
+  <p>We begin with the spacetime parallelogram which appears in our
+    clock synchronization procedure.  The diagonals of this
+    parallelogram are world lines of oppositely directed light
+    flashes.  Any such parallelogram is the spacetime analog of a
+    square in Euclidean geometry.  Now consider another spacetime
+    square with a timelike edge in a different direction,
+    corresponding to a moving observer.  How big does this new square
+    need to be in order for the moving clocks to measure a timelike
+    edge of the same duration as the stationary clocks measure for the
+    timelike edge of the first square?</p>
+
+  <p>Our clock synchronization procedure defines a unique spacelike
+    direction associated with every timelike direction, namely the
+    lines of simultaneity associated with a timelike world line.  This
+    association is the spacetime analog of perpendicularity: A
+    spacelike line is "perpendicular" to a timelike line when the
+    spacelike line is a line of simultaneity for an observer whose
+    world line is the timelike line.  The analogy in the Euclidean
+    plane is that two lines are perpendicular if aligning the first
+    line with the horizontal direction of the graph paper causes the
+    second line to be parallel to the vertical direction of the graph
+    paper.</p>
+  <p>Newton divided the spacetime plane into two regions, past and
+    future.  For him, the present had no finite extent - it was just a
+    single line of simultaneity separating the half-plane of the past
+    from the half-plane of the future.  In the Minkowski spacetime of
+    Einstein's theory of relativity, our practical procedure for
+    synchronizing clocks shows that the set of all spacelike
+    directions fills a finite area of spacetime, just like the past
+    future.  The present has become a third region of spacetime.  You
+    can watch the present collapse into a single Newtonian line by
+    changing the slope of the gray grid in the figure to be nearly
+    horizontal, corresponding to a nearly infinite speed of light.
+    Newton's conception of spacetime is very nearly correct when the
+    adjustment to account for the finite speed of light in our
+    synchronization procedure is negligibly small.  Errors appear only
+    when material objects are moving at an appreciable fraction of the
+    speed of light, or when you need exceedingly accurate results.
+    Newtonian mechanics is not so much wrong as an approximation that
+    is usually very accurate.</p>
+  <p>The spacetime analog of a
+    Euclidean square is a parallelogram whose diagonals are parallel
+    to light flash world lines, like the bold parallelogram which
+    appears when you have synchronized the two clocks.  Tiling
+    spacetime with these "square" parallelograms produces a coordinate
+    system in the spacetime plane analogous to square-grid graph paper
+    in the Euclidean plane.</p>
+
+  <h2>Adding and multiplying with rulers</h2>
+  <p>A number line is an idealized infinite ruler, a coordinate system
+    for the points on the line.  The point associated with the number
+    zero is called the origin, and the distance from the origin to the
+    point associated with the number one is the unit of the ruler.
+    Both origin and unit are arbitrary.  We draw a circle at the
+    origin and draw a square at the point corresponding to the number
+    one; the thick segment connecting them is one unit long.</p>
+  <p>To add two numbers we use two rulers, here blue and orange, with the
+    same units but different origins: Drag the origin of the orange
+    ruler to the first addend on the blue scale, then drag the gray slider
+    to the second addend on the orange scale.  Read the sum as the position
+    of the slider on the blue scale.</p>
+  <svg xmlns="http://www.w3.org/2000/svg"
+       viewBox="-6 -0.5 12 1.0" onload="add1d_interactions(evt)"
+       stroke-width="0.03">
+    <path fill="none" stroke="#0080ff"
+      d="M -5.8,0 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.2 v .4 m .2,-.4 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.2 v .4 m .2,-.4 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.2 v .4 m .2,-.4 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.2 v .4 m .2,-.4 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.2 v .4 m .2,-.4 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.2 v .4 m .2,-.4 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.2 v .4 m .2,-.4 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.2 v .4 m .2,-.4 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.2 v .4 m .2,-.4 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.2 v .4 m .2,-.4 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.2 v .4 m .2,-.4 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2"/>
+    <path id="add1t" fill="none" stroke="#ff8000" transform="translate(0.00,0)"
+      d="M -12.8,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2"/>
+    <line stroke="black" stroke-width="0.04" x1="-6" y1="0" x2="6" y2="0" />
+    <line stroke="#0080ff" stroke-width="0.08" x1="0" y1="0" x2="1" y2="0" />
+    <circle fill="#0080ff" stroke="#0080ff"
+            cx="0" cy="0" r="0.1" />
+    <rect fill="#0080ff" stroke="#0080ff"
+          x="0.9" y="-0.1" width="0.2" height="0.2" />
+    <g id="add1ug" transform="translate(0.00,0)">
+      <line stroke="#ff8000" stroke-width="0.08" x1="0" y1="0" x2="1" y2="0" />
+      <circle id="add1uc" fill="#ff8000" stroke="#ff8000"
+              cx="0" cy="0" r="0.1" />
+      <rect fill="#ff8000" stroke="#ff8000"
+            x="0.9" y="-0.1" width="0.2" height="0.2" />
+    </g>
+    <polygon id="add1s" fill="black" stroke="black" opacity="0.5"
+             transform="translate(1.8,0)"
+             points="-0.14142,0, 0,-0.14142, 0.14142,0, 0,0.14142"/>
+  </svg>
+  <p class="belowsvg">
+    <span id="add1x" class="" style="color: #0080ff;">0.00</span> +
+    <span id="add1y" class="" style="color: #ff8000;">1.80</span> =
+    <span id="add1z" class="" style="color: #0080ff;">1.80</span></p>
+  <p>Similarly, to multiply two numbers we can use two rulers with the
+    same origins but different units: Drag the square marker of the
+    orange ruler to the first multiplicand on the blue scale (which is
+    the new unit of the stretched orange ruler), then drag the gray
+    slider to the second multiplicand on the orange scale.  Read the
+    product as the position of the slider on the blue scale.  Be sure
+    to notice what happens when you drag the orange square to the left
+    of the common origin - a negative unit sometimes makes sense.</p>
+  <svg xmlns="http://www.w3.org/2000/svg"
+       viewBox="-6 -0.5 12 1.0" onload="mul1d_interactions(evt)"
+       stroke-width="0.03">
+    <path fill="none" stroke="#0080ff"
+      d="M -5.8,0 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.2 v .4 m .2,-.4 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.2 v .4 m .2,-.4 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.2 v .4 m .2,-.4 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.2 v .4 m .2,-.4 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.2 v .4 m .2,-.4 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.2 v .4 m .2,-.4 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.2 v .4 m .2,-.4 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.2 v .4 m .2,-.4 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.2 v .4 m .2,-.4 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.2 v .4 m .2,-.4 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.2 v .4 m .2,-.4 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2"/>
+    <path id="mul1t" fill="none" stroke="#ff8000" stroke-width="0.03"
+      transform="scale(1.00,1)"
+      d="M -32.8,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2
+      m .2,-.4 v .4 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2 m .2,-.2 v .2"/>
+    <line stroke="black" x1="-6" y1="0" x2="6" y2="0" />
+    <line stroke="#0080ff" stroke-width="0.08" x1="0" y1="0" x2="1" y2="0" />
+    <circle fill="#0080ff" stroke="#0080ff"
+            cx="0" cy="0" r="0.1" />
+    <rect fill="#0080ff" stroke="#0080ff"
+          x="0.9" y="-0.1" width="0.2" height="0.2" />
+    <line id="mul1ul" stroke="#ff8000" stroke-width="0.08"
+          x1="0" y1="0" x2="1.00" y2="0" />
+    <circle fill="#ff8000" stroke="#ff8000"
+            cx="0" cy="0" r="0.1" />
+    <rect id="mul1ur" fill="#ff8000" stroke="#ff8000"
+          x="0.90" y="-0.1" width="0.2" height="0.2" />
+    <polygon id="mul1s" fill="black" stroke="black" opacity="0.5"
+      transform="translate(1.8,0)"
+      points="-0.14142,0, 0,-0.14142, 0.14142,0, 0,0.14142"/>
+  </svg>
+  <p class="belowsvg">
+    <span id="mul1x" class="" style="color: #0080ff;">1.00</span> &times;
+    <span id="mul1y" class="" style="color: #ff8000;">1.80</span> =
+    <span id="mul1z" class="" style="color: #0080ff;">1.8000</span></p>
+  <p>Addition of numbers corresponds to displacing the coordinate
+    origin.  Multiplication of numbers corresponds to changing the
+    coordinate unit.  Thus, a number may play several different roles:
+    As a coordinate, a number represents a position.  As an addend, a
+    number represents a displacement.  And as a multiplier, a number
+    represents a change of scale.</p>
+
+  <h2>Adding and multiplying with graph paper</h2>
+  <p>Graph paper provides a coordinate system for the points in a
+    plane.  Our unit on the plane is a square instead of a segment;
+    one corner goes at an arbitrary origin point, then we tile the
+    remainder of the plane into a grid of our unit squares.  Two
+    coordinate numbers are associated with each point of the plane,
+    the row and column numbers of the point in our grid.  Generally we
+    write the coordinates as the pair $(x, y)$, the horizontal number
+    followed by the vertical number.  However, here we write $x + iy$,
+    although we have not yet defined either the $+$ sign or the symbol
+    $i$ that multiplies $y$.  This notation will turn out to be
+    consistent with our upcoming definitions of "addition" and
+    "multiplication"; until then you may regard $x + iy$ as simply an
+    eccentric way to write $(x, y)$.</p>
+  <p>By analogy with our definitions in one dimension, we will define
+    two dimensional "addition" as changing the origin with a fixed
+    unit square, and "multiplication" as changing the unit square with
+    a fixed origin.</p>
+  <div class="halfwide">
+  <svg xmlns="http://www.w3.org/2000/svg" style="padding-left: 0.5em"
+       viewBox="-4.1 -4.1 8.2 8.2" onload="add2d_interactions(evt)"
+       stroke-width="0.03">
+    <defs>
+      <marker id="arrow-gray" orient="auto" viewBox="0 -3 6 6"
+              refX="6" markerWidth="6" markerHeight="6">
+        <polygon fill="#808080" stroke="#808080" stroke-width="1"
+                 points="0,-3, 6,0, 0,3"/>
+      </marker>
+      <marker id="arrow-blue" orient="auto" viewBox="0 -3 6 6"
+              refX="6" markerWidth="6" markerHeight="6">
+        <polygon fill="#0080ff" stroke="#0080ff" stroke-width="1"
+                 points="0,-3, 6,0, 0,3"/>
+      </marker>
+      <marker id="arrow-orange" orient="auto" viewBox="0 -3 6 6"
+              refX="6" markerWidth="6" markerHeight="6">
+        <polygon fill="#ff8000" stroke="#ff8000" stroke-width="1"
+                 points="0,-3, 6,0, 0,3"/>
+      </marker>
+    </defs>
+    <path fill="none" stroke="#0080ff" opacity="0.33"
+      d="M -5,-6 v 12
+      m 1,-12 v 12 m 1,-12 v 12 m 1,-12 v 12 m 1,-12 v 12 m 1,-12 v 12
+      m 1,-12 v 12 m 1,-12 v 12 m 1,-12 v 12 m 1,-12 v 12 m 1,-12 v 12
+      M -6,-5 h 12
+      m -12,1 h 12 m -12,1 h 12 m -12,1 h 12 m -12,1 h 12 m -12,1 h 12
+      m -12,1 h 12 m -12,1 h 12 m -12,1 h 12 m -12,1 h 12 m -12,1 h 12"/>
+    <path id="add2t" fill="none" stroke="#ff8000" opacity="0.33"
+      stroke-width="0.03" transform="translate(0.00,0.00)"
+      d="M -12,-13 v 26
+         m 1,-26 v 26 m 1,-26 v 26 m 1,-26 v 26 m 1,-26 v 26 m 1,-26 v 26
+         m 1,-26 v 26 m 1,-26 v 26 m 1,-26 v 26 m 1,-26 v 26 m 1,-26 v 26
+         m 1,-26 v 26 m 1,-26 v 26 m 1,-26 v 26 m 1,-26 v 26 m 1,-26 v 26
+         m 1,-26 v 26 m 1,-26 v 26 m 1,-26 v 26 m 1,-26 v 26 m 1,-26 v 26
+         m 1,-26 v 26 m 1,-26 v 26 m 1,-26 v 26 m 1,-26 v 26
+         M -13,-12 h 26
+         m -26,1 h 26 m -26,1 h 26 m -26,1 h 26 m -26,1 h 26 m -26,1 h 26
+         m -26,1 h 26 m -26,1 h 26 m -26,1 h 26 m -26,1 h 26 m -26,1 h 26
+         m -26,1 h 26 m -26,1 h 26 m -26,1 h 26 m -26,1 h 26 m -26,1 h 26
+         m -26,1 h 26 m -26,1 h 26 m -26,1 h 26 m -26,1 h 26 m -26,1 h 26
+         m -26,1 h 26 m -26,1 h 26 m -26,1 h 26 m -26,1 h 26"/>
+    <polygon stroke="#0080ff" fill="none" stroke-width="0.1"
+             points="0,0, 1,0, 1,-1, 0,-1" />
+    <circle fill="#0080ff" stroke="#0080ff"
+            cx="0" cy="0" r="0.125" />
+    <rect fill="#0080ff" stroke="#0080ff" stroke-width="0.05"
+          x="0.9" y="-0.1" width="0.25" height="0.25" />
+    <polygon id="add2gg" fill="none" stroke="#808080" stroke-width="0.05"
+              points="0.0,0.0, 1.8,0.0, 1.8,-0.8, 0.0,-0.8" />
+    <polygon id="add2gb" fill="none" stroke="#0080ff" stroke-width="0.05"
+              points="0.0,0.0, 0.0,0.0, 0.0,0.0, 0.0,0.0" />
+    <polygon id="add2go" fill="none" stroke="#ff8000" stroke-width="0.05"
+              points="0.0,0.0, 1.8,0.0, 1.8,-0.8, 0.0,-0.8" />
+    <g id="add2ug" transform="translate(0.00,0)">
+      <polygon stroke="#ff8000" fill="none" stroke-width="0.1"
+               points="0,0, 1,0, 1,-1, 0,-1"/>
+      <circle id="add2uc" fill="#ff8000" stroke="#ff8000"
+              cx="0" cy="0" r="0.125" />
+      <rect fill="#ff8000" stroke="#ff8000"
+            x="0.90" y="-0.1" width="0.25" height="0.25" />
+    </g>
+    <line id="add2vo" fill="#ff8000" stroke="#ff8000" stroke-width="0.05"
+          marker-end="none" x1="0" y1="0" x2="0" y2="0"/>
+    <line id="add2vb" fill="#0080ff" stroke="#0080ff" stroke-width="0.05"
+          marker-end="none" x1="0" y1="0" x2="0" y2="0"/>
+    <line id="add2vg" fill="#808080" stroke="#808080" stroke-width="0.05"
+          marker-end="url(#arrow-gray)" x1="0" y1="0" x2="1.8" y2="-0.8"/>
+    <circle id="add2ucx" fill="#ff8000" stroke="#ff8000" opacity="0.0"
+            transform="translate(0.00,0)" cx="0" cy="0" r="0.125" />
+    <polygon id="add2s" fill="black" stroke="black" opacity="0.5"
+      transform="translate(1.8,-0.8)"
+      points="-0.1768,0, 0,-0.1768, 0.1768,0, 0,0.1768"/>
+  </svg>
+  <p class="belowsvg">
+    (<span id="add2x" class="" style="color: #0080ff;">1.00 + i0.00</span>) +
+    (<span id="add2y" class="" style="color: #ff8000;">1.80 + i0.80</span>) =
+    <span id="add2z" class="" style="color: #808080;">1.80 + i0.80</span></p>
+  </div>
+  <p>To explore this idea, we need two overlapping sheets of graph
+    paper which initially overlay each other.  We choose the lower left
+    corner of our unit square to be the origin, drawn with a circular
+    marker here.  We also need to specify which edge of our unit square
+    corresponds to the $x$ axis (our first coordinate); here drawn with
+    a square marker.</p>
+  <p>To add two points in the plane, we drag the origin of the orange
+    sheet to first addend on the blue sheet, then drag the gray diamond
+    marker to the second addend on the orange sheet.  Read the sum as the
+    position of the gray diamond on the blue sheet.  We've drawn arrows
+    corresponding to the first and second addends (blue and orange) and
+    to their sum (gray).  Note that you are to read the gray coordinates
+    on the blue plane, not on the orange plane.</p>
+  <p>Please convince yourself that this definition of "addition"
+    of planar coordinate pairs amounts to simply adding each of the
+    two components separately:
+    $$(a+ib) + (x+iy) = (a+x) + i(b+y).$$
+  </p>
+</div><div class="textcolumn" style="clear: right; margin-top: 0.3em;">
+  <div class="halfwide">
+  <svg xmlns="http://www.w3.org/2000/svg" style="padding-left: 0.5em"
+       viewBox="-4.1 -4.1 8.2 8.2" onload="mul2d_interactions(evt)"
+       stroke-width="0.03">
+    <path fill="none" stroke="#0080ff" opacity="0.33"
+      d="M -5,-6 v 12
+      m 1,-12 v 12 m 1,-12 v 12 m 1,-12 v 12 m 1,-12 v 12 m 1,-12 v 12
+      m 1,-12 v 12 m 1,-12 v 12 m 1,-12 v 12 m 1,-12 v 12 m 1,-12 v 12
+      M -6,-5 h 12
+      m -12,1 h 12 m -12,1 h 12 m -12,1 h 12 m -12,1 h 12 m -12,1 h 12
+      m -12,1 h 12 m -12,1 h 12 m -12,1 h 12 m -12,1 h 12 m -12,1 h 12"/>
+    <path id="mul2t" fill="none" stroke="#ff8000" opacity="0.33"
+      stroke-width="0.03" transform="scale(1.00,1.00)"
+      d="M -32,-33 v 66
+         m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66
+         m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66
+         m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66
+         m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66
+         m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66
+         m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66
+         m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66
+         m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66
+         m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66
+         m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66
+         m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66
+         m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66
+         m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66
+         M -33,-32 h 66
+         m -66,1 h 66 m -66,1 h 66 m -66,1 h 66 m -66,1 h 66 m -66,1 h 66
+         m -66,1 h 66 m -66,1 h 66 m -66,1 h 66 m -66,1 h 66 m -66,1 h 66
+         m -66,1 h 66 m -66,1 h 66 m -66,1 h 66 m -66,1 h 66 m -66,1 h 66
+         m -66,1 h 66 m -66,1 h 66 m -66,1 h 66 m -66,1 h 66 m -66,1 h 66
+         m -66,1 h 66 m -66,1 h 66 m -66,1 h 66 m -66,1 h 66 m -66,1 h 66
+         m -66,1 h 66 m -66,1 h 66 m -66,1 h 66 m -66,1 h 66 m -66,1 h 66
+         m -66,1 h 66 m -66,1 h 66 m -66,1 h 66 m -66,1 h 66 m -66,1 h 66
+         m -66,1 h 66 m -66,1 h 66 m -66,1 h 66 m -66,1 h 66 m -66,1 h 66
+         m -66,1 h 66 m -66,1 h 66 m -66,1 h 66 m -66,1 h 66 m -66,1 h 66
+         m -66,1 h 66 m -66,1 h 66 m -66,1 h 66 m -66,1 h 66 m -66,1 h 66
+         m -66,1 h 66 m -66,1 h 66 m -66,1 h 66 m -66,1 h 66 m -66,1 h 66
+         m -66,1 h 66 m -66,1 h 66 m -66,1 h 66 m -66,1 h 66 m -66,1 h 66
+         m -66,1 h 66 m -66,1 h 66 m -66,1 h 66 m -66,1 h 66"/>
+    <polygon stroke="#0080ff" fill="none" stroke-width="0.1"
+             points="0,0, 1,0, 1,-1, 0,-1" />
+    <circle fill="#0080ff" stroke="#0080ff"
+            cx="0" cy="0" r="0.125" />
+    <rect fill="#0080ff" stroke="#0080ff" stroke-width="0.05"
+          x="0.9" y="-0.1" width="0.25" height="0.25" />
+    <polygon id="mul2gg" fill="none" stroke="#808080" stroke-width="0.05"
+             points="0.0,0.0, 1.8,0.0, 1.8,-0.8, 0.0,-0.8" />
+    <polygon id="mul2gb" fill="none" stroke="#0080ff" stroke-width="0.05"
+             points="0.0,0.0, 0.0,0.0, 0.0,0.0, 0.0,0.0" />
+    <polygon id="mul2go" fill="none" stroke="#ff8000" stroke-width="0.05"
+             points="0.0,0.0, 1.8,0.0, 1.8,-0.8, 0.0,-0.8" />
+    <polygon id="mul2ul" stroke="#ff8000" fill="none" stroke-width="0.1"
+             points="0,0, 1,0, 1,-1, 0,-1"/>
+    <circle fill="#ff8000" stroke="#ff8000" cx="0" cy="0" r="0.125" />
+    <polygon id="mul2ur" fill="#ff8000" stroke="#ff8000"
+             transform="matrix(1.0, 0.0, 0.0, 1.0, 1.0, 0.0)"
+             points="-0.125,-0.125, 0.125,-0.125, 0.125,0.125, -0.125,0.125" />
+    <line id="mul2vb" fill="#0080ff" stroke="#0080ff" stroke-width="0.05"
+          marker-end="url(#arrow-blue)" x1="0" y1="0" x2="1.0" y2="0.0"/>
+    <line id="mul2vec" fill="#808080" stroke="#808080" stroke-width="0.05"
+          marker-end="url(#arrow-gray)" x1="0" y1="0" x2="1.8" y2="-0.8"/>
+    <polygon id="mul2urx" fill="#ff8000" stroke="#ff8000" opacity="0.0"
+             transform="matrix(1.0, 0.0, 0.0, 1.0, 1.0, 0.0)"
+             points="-0.125,-0.125, 0.125,-0.125, 0.125,0.125, -0.125,0.125" />
+    <polygon id="mul2s" fill="black" stroke="black" opacity="0.5"
+      transform="translate(1.8,-0.8)"
+      points="-0.1768,0, 0,-0.1768, 0.1768,0, 0,0.1768" />
+  </svg>
+  <p class="belowsvg">
+    (<span id="mul2x" class="" style="color: #0080ff;">1.00 + i0.00</span>)
+    &times;
+    (<span id="mul2y" class="" style="color: #ff8000;">1.80 + i0.80</span>) =
+    <span id="mul2z" class="" style="color: #808080;">1.8000 + i0.8000</span>
+  </p>
+  </div>
+  <p>Multiplication is far more interesting.  We can scale our unit
+    square by dragging its lower right corner, the one we marked with
+    a square at the point $1+i0$, to the first multiplicand on the
+    blue sheet.  Then drag the gray diamond marker to the second
+    multiplicand on the orange sheet.  Read the product as the
+    position of the gray diamond on the blue sheet.  We've drawn
+    arrows as for addition, but this time the orange arrow always
+    coincides with the gray arrow, so you only see the gray arrow.
+    The orange and gray guideline rectangles from the arrow tip back
+    to their respective coordinate axes are more useful for reading
+    the orange and blue coordinates, respectively.</p>
+  <p>If we drag the orange square marker directly to the left or right
+    along the $x$-axis (to points $x+i0$ where $y=0$), we change only
+    the scale of the unit square, and this definition of
+    multiplication exactly matches our one dimensional interpretation
+    of multiplication with rulers when both multiplicands have $y=0$.
+    But our orange unit square can be tilted as well as rescaled, and
+    dragging the orange square marker off the $x$-axis does exactly
+    that.  In other words, changing unit squares in two dimensions may
+    rotate our coordinate system in addition to merely rescaling it --
+    we can orient our graph paper however we like as well as making
+    the unit square any size we like.</p>
+  <div style="width: 175px; float: left;">
+  <svg xmlns="http://www.w3.org/2000/svg"
+       viewBox="-1.0 -3.2 3.5 3.8" stroke-width="0.03">
+    <polygon stroke="#0080ff" fill="none" stroke-width="0.1"
+             points="0,0, 1,0, 1,-1, 0,-1" />
+    <circle fill="#0080ff" stroke="#0080ff"
+            cx="0" cy="0" r="0.125" />
+    <rect fill="#0080ff" stroke="#0080ff"
+          x="0.9" y="-0.1" width="0.25" height="0.25" />
+    <polygon fill="none" stroke="#808080"
+             points="0.0,0.0, 0.61,0.0, 0.61,-2.75, 0.0,-2.75" />
+    <polygon fill="none" stroke="#0080ff"
+             points="0.0,0.0, 0.0,0.0, 0.0,0.0, 0.0,0.0" />
+    <polygon fill="none" stroke="#ff8000"
+             points="0.0,0.0, 1.53,-0.68, 0.61,-2.75, -0.92,-2.07" />
+    <polygon stroke="#ff8000" fill="none" stroke-width="0.1"
+             points="0,0, 1.8,-0.8, 1,-2.6, -0.8,-1.8"/>
+    <circle fill="#ff8000" stroke="#ff8000" cx="0" cy="0" r="0.125" />
+    <polygon fill="#ff8000" stroke="#ff8000"
+             transform="matrix(0.91381, -0.40614, 0.40614, 0.91381, 1.8, -0.8)"
+             points="-0.125,-0.125, 0.125,-0.125, 0.125,0.125, -0.125,0.125" />
+    <line fill="#0080ff" stroke="#0080ff" stroke-width="0.05"
+          marker-end="url(#arrow-blue)" x1="0" y1="0" x2="1.8" y2="-0.8"/>
+    <line fill="#808080" stroke="#808080" stroke-width="0.05"
+          marker-end="url(#arrow-gray)" x1="0" y1="0" x2="0.61" y2="-2.75"/>
+    <text class="svgtxt" x="0.0" y="0.5" style="text-anchor: end;">O</text>
+    <text class="svgtxt" x="1.0" y="0.5">U</text>
+    <text class="svgtxt" fill="#0080ff" x="1.8" y="-0.3">V</text>
+    <text class="svgtxt" fill="#808080" x="0.61" y="-2.75">W</text>
+  </svg></div>
+  <p>Consider this labeled snapshot of the interactive picture: The
+    the distance of point V from the origin O measured in blue units
+    represents the ratio of the distance between any two points in
+    blue units to the distance between the same two points in orange
+    units, because OV has length one in orange units.  Hence, OW in
+    blue units is OW in orange units times OV in blue units: The
+    distance of the two dimensional product from O is the ordinary
+    product of the distances of the multiplicands from O.
+    Furthermore, the first multiplicand, OV, is at an angle UOV up
+    from the blue $x$-axis (OU), while the second multiplicand, OW
+    represented by orange coordinates, is at an angle VOW up from the
+    orange $x$-axis (OV).  The product OW represented by blue
+    coordinates is at an angle UOW up from the blue $x$-axis.  Since
+    the sum of angles OUV and VOW equals angle UOW, the angle of a two
+    dimensional product from the $x$-axis is the sum of the angles of
+    the multiplicands.</p>
+  <p>To summarize, our two dimensional multiplication rule is that
+    angles from the $x$-axis add and the distances from the origin
+    multiply.</p>
+  <p>Finally, we can justify our eccentric coordinate notation $x +
+    iy$, by interpreting all the symbols as points and operations
+    using our two dimensional definitions of addition and
+    multiplication: First, interpreting the two dimensional product
+    $iy$ as $(0 + i1)(y + i0)$, the first multiplicand $i$ rotates the
+    point at $y$ on the $x$-axis ninety degrees, so that $iy = 0 +
+    iy$.  And under two dimensional addition, interpreting $x$ as $x +
+    i0$ means that the sum produces exactly $x + iy$.  Hence, the
+    eccentric notation turns out to exactly match the behavior of our
+    two dimensional arithmetic operations.</p>
+
+  <h2>Complex numbers</h2>
+  <p>Our two dimensional numbers $x + iy$, the coordinates of points
+    in a plane in a slightly eccentric notation, are called complex
+    numbers.  Addition corresponds to changing the coordinate origin
+    with a fixed unit square, while multiplication corresponds to
+    changing the unit square with a fixed origin.  This is a direct
+    generalization of ordinary arithmetic, simply replacing the unit
+    segment of a ruler with the unit square of a sheet of graph paper.
+    You can verify these definitions of addition and multiplication
+    satisfy the same three properties as ordinary arithmetic, namely
+    both operations are commutative and associative, and the
+    distributive law of multiplication over addition applies.  The
+    ordinary numbers are embedded within the complex numbers as the
+    line where $y = 0$, the $x$-axis.</p>
+  <p>The complex number $i = 0 + i1$ is called the imaginary unit, a
+    terrible name which came about because it has the curious property
+    that $i^2 = -1$, which is famously impossible for any ordinary
+    number -- hence imaginary.  For us, $i$ is just the corner of the
+    unit square diagonally opposite the corner we labeled $1$.  The
+    $x$ coordinate is called the real part of a complex number, while
+    the $y$ coordinate is called its imaginary part.  The $x$ and $y$
+    axes are called the real and imaginary axes, respectively.  The
+    angle from the real axis is called the argument of a complex
+    number, while the distance from the origin is called its modulus.
+    Hence, to add complex numbers, we separately add their real and
+    imaginary parts, and to multiply complex numbers, we add their
+    arguments and multiply their moduli.</p>
+  <div style="width: 160px; float: right;">
+  <svg xmlns="http://www.w3.org/2000/svg"
+       viewBox="-1.5 -2.8 3.0 3.9" stroke-width="0.03">
+    <g transform="translate(0,-1.5)">
+    <polygon stroke="#0080ff" fill="none" stroke-width="0.1"
+             points="0,0, 1,0, 1,-1, 0,-1" />
+    <circle fill="#0080ff" stroke="#0080ff"
+            cx="0" cy="0" r="0.125" />
+    <rect fill="#0080ff" stroke="#0080ff"
+          x="0.9" y="-0.1" width="0.25" height="0.25" />
+    <polygon stroke="#ff8000" fill="none" stroke-width="0.1"
+             points="0,0, 0,-1, -1,-1, -1,0"/>
+    <circle fill="#ff8000" stroke="#ff8000" cx="0" cy="0" r="0.125" />
+    <rect fill="#ff8000" stroke="#ff8000"
+          x="-0.1" y="-1.1" width="0.25" height="0.25" />
+    <line fill="#0080ff" stroke="#0080ff" stroke-width="0.05"
+          marker-end="url(#arrow-blue)" x1="0" y1="0" x2="0" y2="-1"/>
+    </g>
+    <polygon stroke="#0080ff" fill="none" stroke-width="0.1"
+             points="0,0, 1,0, 1,-1, 0,-1" />
+    <circle fill="#0080ff" stroke="#0080ff"
+            cx="0" cy="0" r="0.125" />
+    <rect fill="#0080ff" stroke="#0080ff"
+          x="0.9" y="-0.1" width="0.25" height="0.25" />
+    <polygon stroke="#ff8000" fill="none" stroke-width="0.1"
+             points="0,0, -1,0, -1,1, 0,1"/>
+    <circle fill="#ff8000" stroke="#ff8000" cx="0" cy="0" r="0.125" />
+    <rect fill="#ff8000" stroke="#ff8000"
+          x="-1.1" y="-0.1" width="0.25" height="0.25" />
+    <line fill="#0080ff" stroke="#0080ff" stroke-width="0.05"
+          marker-end="url(#arrow-blue)" x1="0" y1="0" x2="-1" y2="0"/>
+  </svg></div>
+  <p>Complex multiplication by $i$ represents a ninety degree rotation
+    of the unit square (upper sketch), while multiplication by $-1$
+    represents a hundred eighty degree rotation of the unit square
+    (lower sketch).  Since two ninety degree rotations produce a
+    hundred eighty degree rotation, $i^2 = -1$ is perfectly natural in
+    two dimensions, not imaginary at all.</p>
+  <p>With this property of $i$, we can use the distributive law to
+    find the general formula for complex multiplication:
+    $$(a + ib)(x + iy) = ax + iay + ibx + i^2by = (ax-by) + i(ay+bx)$$
+    
+    Note that we need four ordinary multiplies and two ordinary adds
+    to carry out one complex multiply; multiplication is more
+    complicated than addition, because rotation mixes the $x$ and $y$
+    coordinates.</p>
+  <div style="width: 96px; float: left;">
+  <svg xmlns="http://www.w3.org/2000/svg"
+       viewBox="-0.4 -1.3 1.8 2.6" stroke-width="0.03">
+    <polygon stroke="#0080ff" fill="none" stroke-width="0.1"
+             points="0,0, 1,0, 1,-1, 0,-1" />
+    <circle fill="#0080ff" stroke="#0080ff"
+            cx="0" cy="0" r="0.125" />
+    <rect fill="#0080ff" stroke="#0080ff"
+          x="0.9" y="-0.1" width="0.25" height="0.25" />
+    <polygon stroke="#ff8000" fill="none" stroke-width="0.1"
+             points="0,0, 0,1, 1,1, 1,0"/>
+    <circle fill="#ff8000" stroke="#ff8000" cx="0" cy="0" r="0.125" />
+    <rect fill="#ff8000" stroke="#ff8000"
+          x="0.9" y="-0.1" width="0.25" height="0.25" />
+  </svg></div>
+  <p>We have defined complex addition and multiplication to correspond
+    to physical operations of translation, rotation, and scaling.
+    That omits one important physical operation: reflection.
+    Reflection does not correspond to any number of add or multiply
+    operations in two dimensions.  (In one dimension, multiplying by
+    -1 does correspond to reflection, but in two dimensions,
+    multiplying by -1 is a hundred eighty degree rotation.)  Addition
+    and multiplication can only produce the effects of sliding the
+    graph paper around on the plane or of scaling its unit to a
+    different size.  Reflection corresponds to flipping the graph
+    paper over, for example by switching the order of the $x$ and $y$
+    coordinates, or by multiplying just one of the coordinates by -1.
+    In complex arithmetic, the operation of reflection through the
+    $x$-axis, that is, of changing the sign of the $y$ coordinate, is
+    called taking the complex conjugate.  In terms of our unit
+    squares, complex conjugation flips the unit square vertically, as
+    shown in the sketch to the left.</p>
+  <p>The product of any complex number with its conjugate gives the
+    square of its modulus (according to the Pythagorean theorem):
+    $(a+ib)(a-ib) = a^2 - (ib)^2 = a^2+b^2$.  Note that this relation
+    also provides the formula for the reciprocal of a complex number,
+    $1/(a+ib) = (a-ib)/(a^2+b^2)$.  In general, the quotient of two
+    complex numbers has the quotient of their moduli and the
+    difference of their arguments, so this reciprocal formula produces
+    very interesting algorithms for computing differences in
+    angle.</p>
+
+  <h2>Complex mappings</h2>
+  <p>The key feature of complex numbers and their arithmetic is that a
+    complex number may represent a position (coordinates in a plane),
+    a displacement (addend), or a change of unit (multiplicand).
+    Complex addition and multiplication are interesting because they
+    model the physical operations of translation, rotation, and
+    scaling in the plane.  The situation is exactly analogous to the
+    case of real numbers, which may be coordinates, displacements, or
+    scalings on a line.  Just as you think of a number line, complex
+    arithmetic lets you think about a number plane.  As the name
+    suggests, it gets more complicated, but you won't get bored with
+    a number plane nearly as quickly as with a number line.</p>
+  <div class="halfwide">
+  <svg xmlns="http://www.w3.org/2000/svg" style="padding-left: 0.5em"
+       viewBox="-2 -5 6.1 6.1" onload="orion_interactions(evt)"
+       stroke-width="0.04">
+    <defs>
+      <circle id="graycirc"
+              fill="#d0e0ff" stroke="none" cx="0" cy="0" r="0.05" />
+      <circle id="orangecirc"
+              fill="#ff8000" stroke="none" cx="0" cy="0" r="0.05" />
+    </defs>
+    <use href="#graycirc" x="0.0532" y="-3.3702"/>
+    <use href="#graycirc" x="1.3419" y="-2.8980"/>
+    <use href="#graycirc" x="1.2648" y="-0.2000"/>
+    <use href="#graycirc" x="-0.2648" y="-0.2489"/>
+    <use href="#graycirc" x="0.3354" y="-1.5678"/>
+    <use href="#graycirc" x="0.5668" y="-1.6581"/>
+    <use href="#graycirc" x="0.7888" y="-1.7785"/>
+    <use href="#graycirc" x="0.4238" y="-0.8096"/>
+    <use href="#graycirc" x="0.4520" y="-0.9018"/>
+    <use href="#graycirc" x="0.4633" y="-1.0053"/>
+    <line fill="none" stroke="#d0e0ff" x1="0" y1="0" x2="1" y2="0"/>
+    <circle fill="#d0e0ff" stroke="none" cx="0" cy="0" r="0.1"/>
+    <rect fill="#d0e0ff" stroke="none"
+          x="0.9" y="-0.1" width="0.2" height="0.2"/>
+    <g id="oriong" transform="matrix(1,0,0,1,0,0)">  <!-- orion -->
+      <use href="#orangecirc" x="0.0532" y="-3.3702"/>
+      <use href="#orangecirc" x="1.3419" y="-2.8980"/>
+      <use href="#orangecirc" x="1.2648" y="-0.2000"/>
+      <use href="#orangecirc" x="-0.2648" y="-0.2489"/>
+      <use href="#orangecirc" x="0.3354" y="-1.5678"/>
+      <use href="#orangecirc" x="0.5668" y="-1.6581"/>
+      <use href="#orangecirc" x="0.7888" y="-1.7785"/>
+      <use href="#orangecirc" x="0.4238" y="-0.8096"/>
+      <use href="#orangecirc" x="0.4520" y="-0.9018"/>
+      <use href="#orangecirc" x="0.4633" y="-1.0053"/>
+      <line id="oline" fill="none" stroke="#ff8000" stroke-width="0.04"
+            x1="0" y1="0" x2="1" y2="0"/>
+    </g>
+    <circle id="orion0" fill="#ff8000" stroke="none" cx="0" cy="0" r="0.1"
+            transform="translate(0,0)"/>
+    <rect id="orion1" fill="#ff8000" stroke="none"
+          x="-0.1" y="-0.1" width="0.2" height="0.2"
+          transform="matrix(1,0,0,1,1,0)"/>
+  </svg>
+  <p class="belowsvg">
+    w =
+    (<span id="oriona" class="" style="color: black;">1.00 + i0.00</span>)z +
+    (<span id="orionb" class="" style="color: black;">0.00 + i0.00</span>)
+  </p>
+  </div>
+  <p>Here we plot ten complex numbers whose coordinates match the
+    pattern of the constellation Orion.  The unit segment, one edge of
+    the unit square we chose, is drawn below them.  You can drag the
+    circle origin marker to translate Orion, or the square unit marker
+    to scale and rotate him.</p>
+  <p>We can label the original coordinate complex numbers $z_k$ for
+    $k=0$ through $9$.  (Say Rigel, Orion's right foot, is $z_0$, and
+    Betelgeuse, his left shoulder, is $z_1$, and so on in order of
+    decreasing brightness, ending with $z_9$ for one of the nebulae in
+    his sword.)  When we select a unit, we are selecting a complex
+    multiplicand, say $a$, and when we select an origin, we are
+    selecting a complex addend, say $b$.  In the original coordinate
+    system, we write $w_k$ for the coordinates of the translated,
+    scaled, and rotated points of Orion.  For each point, $w_k=az_k +
+    b.$  We could add as many points as we please to the pattern, and
+    accomplish the common translation of all of them with the single
+    rule, $w=az+b.$</p>
+  <p>This complex function $w = f(z) = az + b$ maps any point in the
+    complex $z$ plane to a new point $f(z)$ in the complex $w$ plane.
+    We call it a linear mapping.  The complex constants $a$ and $b$
+    represent the rotation and scaling ($a$) and translation ($b$) of
+    the mapping.  Other smooth complex functions, like $w=z^2$,
+    distort figures in the plane, but only by causing the amount of
+    displacement, rotation, and scaling to vary smoothly from place to
+    place -- in small regions around nearly every point every mapping
+    is linear.  Mappings which leave small shapes unchanged except for
+    rotation and scaling are called conformal, and their study is the
+    theory of analytic functions.  Analytic function theory remains a
+    very active and fruitful branch of mathematics.</p>
+  <p>And all of this boils down to how well we understand graph paper
+    and rulers.</p>
+</div>
+<!--
+colors: orangered #ff4500   gold #ffd700
+        dodgerblue #1e90ff
+        blue: #0080ff  orange: #ff8000
+  -->
+<script>
+  var tracking = null;
+
+  function add_trackers(svg, targets, start, track, stop) {
+    // svg = svg element
+    // targets = array of elements in svg to listen for mouse down events
+    // start(index, coords) --> tracking (or null to abort)
+    //   index = index into targets
+    //   coords = event coordinates in svg coordinate system
+    // track(tracking, coords) --> tracking (or null to abort)
+    //   tracking = returned by start
+    //   coords = event coordinates in svg coordinate system
+    // stop(tracking)
+    //   tracking = returned by start
+
+    function svgcoords(evt) {  // return event coordinates
+      var CTM = svg.getScreenCTM();
+      if (evt.touches) {
+        evt = evt.touches[0];
+      }
+      return {
+        x: (evt.clientX - CTM.e) / CTM.a,
+        y: (evt.clientY - CTM.f) / CTM.d
+      };
+    }
+
+    function wrapstart(evt) {
+      if (tracking !== null) {
+        wrapstop(evt);
+      }
+      var t = evt.target;
+      var index = targets.indexOf(t);
+      if (index < 0) {
+        return;
+      }
+      evt.stopPropagation();
+      evt.preventDefault();  // make usable for touch events
+      tracking = start(index, svgcoords(evt));
+    }
+
+    function wraptrack(evt) {
+      if (tracking === null) {
+        return;
+      }
+      evt.stopPropagation();
+      evt.preventDefault();  // make usable for touch events
+      tracking = track(tracking, svgcoords(evt));
+    }
+
+    function wrapstop(evt) {
+      if (tracking === null) {
+        return;
+      }
+      evt.stopPropagation();
+      evt.preventDefault();  // make usable for touch events
+      stop(tracking);
+      tracking = null;
+    }
+
+    svg.addEventListener("mousedown", wrapstart);
+    svg.addEventListener("mousemove", wraptrack);
+    svg.addEventListener("mouseup", wrapstop);
+    svg.addEventListener("mouseleave", wrapstop);
+    svg.addEventListener("touchstart", wrapstart);
+    svg.addEventListener("touchmove", wraptrack);
+    svg.addEventListener("touchend", wrapstop);
+    svg.addEventListener("touchcancel", wrapstop);
+  }
+
+  function get_element(id) {
+    return document.getElementById(id);
+  }
+
+  var round = Math.round;
+  var abs = Math.abs;
+  var sqrt = Math.sqrt;
+
+  function add1d_interactions(evt) {
+    var add1d = evt.target;
+    var a1handle = ["add1uc", "add1s"].map(get_element);
+    var xyz = ["add1x", "add1y", "add1z"].map(get_element);
+    var cl_xyz = xyz.map(function(e)
+                         {return e.getAttributeNodeNS(null, "class");});
+    // xyz[0].textContent = value; (old way xyz[0].innerHTML = value;)
+    // textContent not supported by IE8 and lower, but neither is SVG
+    var xnow = 0.0;
+    var ynow = 1.8;
+    var xf_tick = get_element("add1t").getAttributeNodeNS(null, "transform");
+    var xf_unit = get_element("add1ug").getAttributeNodeNS(null, "transform");
+    var xf_slid = get_element("add1s").getAttributeNodeNS(null, "transform");
+
+    function start(index, coords) {
+      cl_xyz[index].value = "backlit";
+      return [index, coords.x - (index? ynow : xnow)];
+    }
+
+    function track(tracking, coords) {
+      var index = tracking[0];
+      var x = round(20.*(coords.x - tracking[1])) * 0.05;
+      if (x > 5.8 || x < -5.8) {
+        x = index? 1.8 : 0.0;
+        cl_xyz[index].value = "";
+        tracking = null;
+      }
+      var xform = "translate(" + x + ",0.0)";
+      if (index === 0) {
+        xf_tick.value = xform;
+        xf_unit.value = xform;
+        xnow = x;
+        xyz[0].textContent = xnow.toFixed(2);
+        xyz[1].textContent = (ynow - xnow).toFixed(2);
+      } else {
+        xf_slid.value = xform;
+        ynow = x;
+        xyz[1].textContent = (ynow - xnow).toFixed(2);
+      }
+      xyz[2].textContent = ynow.toFixed(2);
+      return tracking;
+    }
+
+    function stop(tracking) {
+      if (tracking !== null) {
+        cl_xyz[tracking[0]].value = "";
+      }
+      return;
+    }
+
+    add_trackers(add1d, a1handle, start, track, stop);
+  }
+
+  function mul1d_interactions(evt) {
+    var mul1d = evt.target;
+    var m1handle = ["mul1ur", "mul1s"].map(get_element);
+    var xyz = ["mul1x", "mul1y", "mul1z"].map(get_element);
+    var cl_xyz = xyz.map(function(e)
+                         {return e.getAttributeNodeNS(null, "class");});
+    var xf_tick = get_element("mul1t").getAttributeNodeNS(null, "transform");
+    var xf_slid = get_element("mul1s").getAttributeNodeNS(null, "transform");
+    var xnow = 1.0;
+    var ynow = 1.8;
+    var xul = get_element("mul1ul").getAttributeNodeNS(null, "x2");
+    var xur = get_element("mul1ur").getAttributeNodeNS(null, "x");
+    var twidth = get_element("mul1t").getAttributeNodeNS(null, "stroke-width");
+
+    function start(index, coords) {
+      cl_xyz[index].value = "backlit";
+      var z = xnow * ynow;
+      return [index, coords.x - (index? z : xnow), z];
+    }
+
+    function track(tracking, coords) {
+      var index = tracking[0];
+      var x = coords.x - tracking[1];
+      var z = tracking[2];
+      if (x > 5.8 || x < -5.8) {
+        x = index? 1.8 : 1.0;
+        cl_xyz[index].value = "";
+        tracking = null;
+      }
+      if (index === 0) {
+        if (abs(x) > 0.05) {
+          x = round(20.*x) * 0.05;
+        } else {
+          x = 0.05;
+        }
+        xf_tick.value = "scale(" + x + ",1.0)";
+        twidth.value = "" + (0.03 / abs(x));
+        ynow = round(20.*(z / x)) * 0.05;  // in orange coordinates
+        xnow = x;
+        xul.value = "" + xnow;
+        xur.value = "" + (xnow - 0.1);
+        xyz[0].textContent = xnow.toFixed(2);
+      } else {
+        ynow = round(20.*(x / xnow)) * 0.05;  // in orange coordinates
+      }
+      xf_slid.value = "translate(" + (xnow * ynow) + ",0.0)";
+      xyz[1].textContent = ynow.toFixed(2);
+      xyz[2].textContent = (xnow * ynow).toFixed(4);
+      return tracking;
+    }
+
+    function stop(tracking) {
+      if (tracking !== null) {
+        cl_xyz[tracking[0]].value = "";
+      }
+      return;
+    }
+
+    add_trackers(mul1d, m1handle, start, track, stop);
+  }
+
+  function str_complex(spanel, ndig, xy, xy0) {
+    var x = xy[0];
+    var y = xy[1];
+    if (xy0 !== null) {
+      x -= xy0[0];
+      y -= xy0[1];
+    }
+    y = -y;
+    var sgn = " + i";
+    if (y < 0) {
+      y = -y;
+      sgn = " &minus; i";
+    }
+    spanel.innerHTML = x.toFixed(ndig) + sgn + y.toFixed(ndig);
+  }
+
+  function setvector(vecs, i, xy, color, xy0) {
+    var x = xy[0];
+    var y = xy[1];
+    vecs[0][i].value = "" + x;
+    vecs[1][i].value = "" + y;
+    if (xy0 !== null) {
+      x -= xy0[0];
+      y -= xy0[1];
+    }
+    if (abs(x) + abs(y) < 0.3) {
+      vecs[2][i].value = "none";
+    } else {
+      vecs[2][i].value = "url(#arrow-" + color + ")";
+    }
+  }
+
+  function add2d_interactions(evt) {
+    var add2d = evt.target;
+    var a2handle = ["add2ucx", "add2s"].map(get_element);
+    var xyz = ["add2x", "add2y", "add2z"].map(get_element);
+    var cl_xyz = xyz.map(function(e)
+                         {return e.getAttributeNodeNS(null, "class");});
+    // xyz[0].textContent = value; (old way xyz[0].innerHTML = value;)
+    // textContent not supported by IE8 and lower, but neither is SVG
+    var xnow = [0.0, 0.0];
+    var ynow = [1.8, -0.8];
+    var xf_tick = get_element("add2t").getAttributeNodeNS(null, "transform");
+    var xf_unit = get_element("add2ug").getAttributeNodeNS(null, "transform");
+    var xfux = a2handle[0].getAttributeNodeNS(null, "transform");
+    var xf_slid = get_element("add2s").getAttributeNodeNS(null, "transform");
+    var add2gg = get_element("add2gg").getAttributeNodeNS(null, "points");
+    var add2gb = get_element("add2gb").getAttributeNodeNS(null, "points");
+    var add2go = get_element("add2go").getAttributeNodeNS(null, "points");
+    var v = ["add2vb", "add2vo", "add2vg"].map(get_element);
+    vecs = [v.map(function(e) {return e.getAttributeNodeNS(null, "x2");}),
+            v.map(function(e) {return e.getAttributeNodeNS(null, "y2");}),
+            v.map(function(e)
+                  {return e.getAttributeNodeNS(null, "marker-end");})];
+    var vox1 = v[1].getAttributeNodeNS(null, "x1");
+    var voy1 = v[1].getAttributeNodeNS(null, "y1");
+
+    function start(index, coords) {
+      cl_xyz[index].value = "backlit";
+      var dx = coords.x - (index? ynow[0] : xnow[0]);
+      var dy = coords.y - (index? ynow[1] : xnow[1]);
+      return [index, [dx, dy]];
+    }
+
+    function track(tracking, coords) {
+      var index = tracking[0];
+      var dxy = tracking[1];
+      var x = round(20.*(coords.x - dxy[0])) * 0.05;
+      var y = round(20.*(coords.y - dxy[1])) * 0.05;
+      if (x > 3.8 || x < -3.8) {
+        cl_xyz[index].value = "";
+        index = 0;
+        xnow = [0.0, 0.0];
+        ynow = [1.8, -0.8];
+        x = y = 0.0;
+        tracking = null;
+      }
+      if (y > 3.8 || y < -3.8) {
+        cl_xyz[index].value = "";
+        index = 0;
+        xnow = [0.0, 0.0];
+        ynow = [1.8, -0.8];
+        x = y = 0.0;
+        tracking = null;
+      }
+      var xform = "translate(" + x + "," + y + ")";
+      if (index === 0) {
+        xf_tick.value = xform;
+        xf_unit.value = xfux.value = xform;
+        var p = ynow[0];
+        var q = ynow[1];
+        add2gb.value = "0,0, " + x + ",0, " + x + "," + y + ", 0," + y;
+        add2go.value = x+","+y+", "+p+","+y+", "+p+","+q+", "+x+","+q;
+        xnow = [x, y];
+        str_complex(xyz[0], 2, xnow, null);
+        str_complex(xyz[1], 2, ynow, xnow);
+        setvector(vecs, 0, xnow, "blue", null);
+        setvector(vecs, 1, ynow, "orange", xnow);
+        vox1.value = xnow[0];
+        voy1.value = xnow[1];
+      }
+      if (tracking === null) {
+        index = 1;
+        x = 1.8;
+        y = -0.8;
+        xform = "translate(" + x + "," + y + ")";
+      }
+      if (index !== 0) {
+        xf_slid.value = xform;
+        var p = xnow[0];
+        var q = xnow[1];
+        add2gg.value = "0,0, " + x + ",0, " + x + "," + y + ", 0," + y;
+        add2go.value = p+","+q+", "+x+","+q+", "+x+","+y+", "+p+","+y;
+        ynow = [x, y];
+        str_complex(xyz[1], 2, ynow, xnow);
+        setvector(vecs, 1, ynow, "orange", xnow);
+        vox1.value = xnow[0];
+        voy1.value = xnow[1];
+      }
+      str_complex(xyz[2], 2, ynow, null);
+      setvector(vecs, 2, ynow, "gray", null);
+      return tracking;
+    }
+
+    function stop(tracking) {
+      if (tracking !== null) {
+        cl_xyz[tracking[0]].value = "";
+      }
+      return;
+    }
+
+    add_trackers(add2d, a2handle, start, track, stop);
+  }
+
+  function mul2d_interactions(evt) {
+    var mul2d = evt.target;
+    var m2handle = ["mul2urx", "mul2s"].map(get_element);
+    var xyz = ["mul2x", "mul2y", "mul2z"].map(get_element);
+    var cl_xyz = xyz.map(function(e)
+                         {return e.getAttributeNodeNS(null, "class");});
+    var xf_tick = get_element("mul2t").getAttributeNodeNS(null, "transform");
+    var xf_slid = m2handle[1].getAttributeNodeNS(null, "transform");
+    var xnow = [1.0, 0.0];
+    var ynow = [1.8, -0.8];
+    var xyul = get_element("mul2ul").getAttributeNodeNS(null, "points");
+    var xfur = get_element("mul2ur").getAttributeNodeNS(null, "transform");
+    var xfurx = m2handle[0].getAttributeNodeNS(null, "transform");
+    var twidth = get_element("mul2t").getAttributeNodeNS(null, "stroke-width");
+    var mul2gg = get_element("mul2gg").getAttributeNodeNS(null, "points");
+    var mul2gb = get_element("mul2gb").getAttributeNodeNS(null, "points");
+    var mul2go = get_element("mul2go").getAttributeNodeNS(null, "points");
+    var vec = get_element("mul2vec");
+    vec = [[vec.getAttributeNodeNS(null, "x2")],
+           [vec.getAttributeNodeNS(null, "y2")],
+           [vec.getAttributeNodeNS(null, "marker-end")]];
+    var vbx2 = get_element("mul2vb");
+    var vby2 = vbx2.getAttributeNodeNS(null, "y2");
+    vbx2 = vbx2.getAttributeNodeNS(null, "x2");
+
+    function start(index, coords) {
+      cl_xyz[index].value = "backlit";
+      var znow = [xnow[0]*ynow[0] - xnow[1]*ynow[1],
+                  xnow[0]*ynow[1] + xnow[1]*ynow[0]];
+      var dx = coords.x - (index? znow[0] : xnow[0]);
+      var dy = coords.y - (index? znow[1] : xnow[1]);
+      return [index, [dx, dy], znow];
+    }
+
+    function track(tracking, coords) {
+      var index = tracking[0];
+      var xy = tracking[1];
+      var x = coords.x - xy[0];
+      var y = coords.y - xy[1];
+      var z = tracking[2];
+      if (x > 3.8 || x < -3.8) {
+        cl_xyz[index].value = "";
+        index = 0;
+        xnow = [1.0, 0.0];
+        ynow = [1.8, -0.8];
+        z = ynow;
+        x = 1.0;
+        y = 0.0;
+        tracking = null;
+      }
+      if (y > 3.8 || y < -3.8) {
+        cl_xyz[index].value = "";
+        index = 0;
+        xnow = [1.0, 0.0];
+        ynow = [1.8, -0.8];
+        z = ynow;
+        x = 1.0;
+        y = 0.0;
+        tracking = null;
+      }
+      if (index === 0) {
+        if (x*x + y*y < 0.05) {
+          x = 0.05;
+          y = 0.0;
+        } else {
+          x = round(20.*x) * 0.05;
+          y = round(20.*y) * 0.05;
+        }
+        var r = x*x + y*y;
+        var rx = x / r;
+        var ry = -y / r;  // rx + i*ry = 1 / (x + i*y)
+        r = sqrt(r);
+        xf_tick.value = "matrix("+x+","+y+","+(-y)+","+x+",0.0,0.0)";
+        twidth.value = "" + (0.03 / r);
+        var zox = [rx*z[0] - ry*z[1], rx*z[1] + ry*z[0]];
+        ynow = [round(20.*zox[0]) * 0.05, round(20.*zox[1]) * 0.05];
+        xnow = [x, y];
+        // orange unit square is (0,0), xnow, xnow+perp, perp
+        var perp = [xnow[1], -xnow[0]];  // remember +y is downward
+        xyul.value = ("0.0,0.0, " + xnow[0] + "," + xnow[1] + ", " +
+                      (xnow[0]+perp[0]) + "," + (xnow[1]+perp[1]) + ", " +
+                      perp[0] + "," + perp[1]);
+        mul2gb.value = "0,0, " + x+",0, " + x+","+y + ", 0,"+y;
+        x /= r;
+        y /= r;
+        xfur.value = xfurx.value = (
+          "matrix(" + x + "," + y + "," + (-y) + "," + x + "," +
+            xnow[0] + "," + xnow[1] + ")");
+        vbx2.value = xnow[0];
+        vby2.value = xnow[1];
+        str_complex(xyz[0], 2, xnow, null);
+      } else {
+        // in mul1d:   ynow = round(20.*(x / xnow)) * 0.05;
+        var rr2 = 20. / (xnow[0]*xnow[0] + xnow[1]*xnow[1]);
+        ynow = [round(rr2*(x*xnow[0]+y*xnow[1])) * 0.05,
+                round(rr2*(y*xnow[0]-x*xnow[1])) * 0.05];
+      }
+      var znow = [xnow[0]*ynow[0] - xnow[1]*ynow[1],
+                  xnow[0]*ynow[1] + xnow[1]*ynow[0]];
+      xf_slid.value = "translate(" + znow[0] + "," + znow[1] + ")";
+      mul2gg.value = ("0,0, " + znow[0]+",0, " + znow[0]+","+znow[1] +
+                      ", 0,"+znow[1]);
+      mul2go.value = ("0,0, " + (xnow[0]*ynow[0])+","+(xnow[1]*ynow[0]) +
+                      ", " + znow[0]+","+znow[1]+", " +
+                      (-xnow[1]*ynow[1])+","+(xnow[0]*ynow[1]));
+      setvector(vec, 0, znow, "gray", null);
+      str_complex(xyz[1], 2, ynow, null);
+      str_complex(xyz[2], 4, znow, null);
+      return tracking;
+    }
+
+    function stop(tracking) {
+      if (tracking !== null) {
+        cl_xyz[tracking[0]].value = "";
+      }
+      return;
+    }
+
+    add_trackers(mul2d, m2handle, start, track, stop);
+  }
+
+  function orion_interactions(evt) {
+    var orion = evt.target;
+    var o2handle = ["orion0", "orion1"].map(get_element);
+    var xfcirc = get_element("orion0").getAttributeNodeNS(null, "transform");
+    var xfrect = get_element("orion1").getAttributeNodeNS(null, "transform");
+    var xfg = get_element("oriong").getAttributeNodeNS(null, "transform");
+    var wline = get_element("oline").getAttributeNodeNS(null, "stroke-width");
+    var roc = get_element("orangecirc").getAttributeNodeNS(null, "r");
+    var xyz = ["orionb", "oriona"].map(get_element);
+    var cl_xyz = xyz.map(function(e)
+                         {return e.getAttributeNodeNS(null, "class");});
+
+    var now0 = [0.0, 0.0];  // current coords of orion0
+    var now1 = [1.0, 0.0];  // current coords of orion1
+
+    function start(index, coords) {
+      var dx = coords.x - (index? now1[0] : now0[0]);
+      var dy = coords.y - (index? now1[1] : now0[1]);
+      cl_xyz[index].value = "backlit";
+      return [index, [dx, dy]];
+    }
+
+    function track(tracking, coords) {
+      var index = tracking[0];
+      var dxy = tracking[1];
+      var x = coords.x - dxy[0];
+      var y = coords.y - dxy[1];
+      var r;
+      if (x > 3.9 || x < -1.8 || y > 0.9 || y < -4.8) {
+        cl_xyz[index].value = "";
+        now0 = [0.0, 0.0];
+        now1 = [1.0, 0.0];
+        index = 0;
+        x = y = 0.0;
+        tracking = null;
+      }
+      if (index === 0) {
+        now1 = [now1[0] - now0[0] + x, now1[1] - now0[1] + y];
+        now0 = [x, y];
+        str_complex(xyz[0], 2, now0, null);
+      } else {
+        dxy = [x - now0[0], y - now0[1]];
+        if (abs(dxy[0]) < 0.1 && abs(dxy[1]) < 0.1) {
+          r = sqrt(dxy[0]*dxy[0] + dxy[1]*dxy[1]);
+          if (r == 0.0) {
+            dxy = [0.1, 0.0];
+          } else {
+            dxy = [0.1 * dxy[0]/r, 0.1 * dxy[1]/r];
+          }
+          now1 = [now0[0] + dxy[0], now0[1] + dxy[1]];
+        } else {
+          now1 = [x, y];
+        }
+      }
+      dxy = [now1[0] - now0[0], now1[1] - now0[1]];
+      r = sqrt(dxy[0]*dxy[0] + dxy[1]*dxy[1]);  // scaling factor
+      var xy0 = now0[0] + "," + now0[1]
+      xfcirc.value = "translate(" + xy0 + ")";
+      xfg.value = ("matrix("+dxy[0]+","+dxy[1]+","+(-dxy[1])+","+dxy[0]+","+
+                   xy0 + ")");
+      if (index === 1 || tracking === null) {
+        str_complex(xyz[1], 2, dxy, null);
+      }
+      dxy = [dxy[0]/r, dxy[1]/r];
+      xfrect.value = ("matrix("+dxy[0]+","+dxy[1]+","+(-dxy[1])+","+dxy[0]+","+
+                      now1[0] + "," + now1[1] + ")");
+      roc.value = "" + (0.05 / r);
+      wline.value = "" + (0.04 / r);
+      return tracking;
+    }
+
+    function stop(tracking) {
+      if (tracking !== null) {
+        cl_xyz[tracking[0]].value = "";
+      }
+      return;
+    }
+
+    add_trackers(orion, o2handle, start, track, stop);
+  }
+</script>
+</body>
+</html>
