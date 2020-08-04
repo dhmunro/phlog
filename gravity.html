@@ -67,6 +67,7 @@
 
 
   <h2>Introduction</h2>
+
   <p>In 1687 Isaac Newton published "Philosophiae Naturalis Principia
     Mathematica," arguably the most influential science book ever
     written.  In addition to providing the framework still used for
@@ -402,8 +403,216 @@
     point in position space, which is the length of the blue vector,
     changes depending on which way it is moving relative to the center
     velocity.</p>
-  <p>
-  </p>
+
+
+  <h2>Angular Momentum</h2>
+
+  <p>Gravity is an attraction between any two masses, according to
+    Newton.  The strength of attraction is proportional to mass, and
+    in the case of the sun and the planets, the mass of the sun is so
+    much larger than the mass of any planet, that to a good
+    approximation you can ignore the attractions of the planets to one
+    another, and consider only their attraction toward the sun.  (It
+    turns out that this is also the accuracy of Kepler's Laws, which
+    themselves are only approximate.)  A force which is always
+    directed toward a fixed point - in this case the sun - is called a
+    central force.  For any central force, Newton's first two laws of
+    motion turn out to produce Kepler's equal area law, as the next
+    figure indicates.</p>
+  <div class="halfwide">
+  <svg xmlns="http://www.w3.org/2000/svg"
+       viewBox="-10.5 -5.5 21 11" onload="fig4_interactions(evt)"
+       stroke-width="0.1">
+    <path id="area4" fill="#d0f0ff" stroke="#d0f0ff"
+          d="M 0.0,4.0 L 2.0,-1.0 L -0.5,-2.0 Z"/>
+    <path id="velw4" fill="none" stroke="#0080ff" marker-end="url(#arrowb)"
+          d="M 1.06067,5.06067 a 1.5,1.5 0 0,0 0.0,-2.12132" />
+    <path id="path4" fill="none" stroke="#c0c0c0"
+          d="M 4.5,0.0 L 2.0,-1.0" />
+    <path id="rect4" fill="none" stroke="#c0d8ff"
+          d="M 0.0,4.0 L -2.5,3.0 L -0.5,-2.0" />
+    <circle id="dotw4" fill="#c0d8ff" cx="-2.5" cy="3.0" r="0.2" />
+    <path id="velv4" fill="none" stroke="#0080ff" marker-end="url(#arrowb)"
+          d="M 2.0,-1.0 L -0.5,-2.0" />
+    <circle id="dotv4" class="clickable" fill="#0080ff" stroke="transparent"
+            stroke-width="0.3" cx="-0.5" cy="-2.0" r="0.2" />
+    <path id="posp4" fill="none" stroke="black"
+          marker-end="url(#arrowk)" d="M 0.0,4.0 L 2.0,-1.0" />
+    <circle id="dotp4" class="clickable" fill="black" stroke="transparent"
+            stroke-width="0.3" cx="2.0" cy="-1.0" r="0.2" />
+    <circle id="dots4" fill="black" cx="0.0" cy="4.0" r="0.2" />
+    <text class="svgtxt" id="txt4o" fill="#0080ff" x="1.7" y="4.2">
+      &#x03c9;</text>
+    <text class="svgtxt" id="txt4s" fill="black" x="-0.2" y="4.9">S</text>
+    <text class="svgtxt" id="txt4p" fill="black" x="1.973" y="-1.307">P</text>
+    <text class="svgtxt" id="txt4v" fill="black" x="-1.357" y="-1.973">V</text>
+    <text class="svgtxt" id="txt4w" fill="black" x="-3.543" y="2.953">W</text>
+    <text class="svgtxt" id="txt4r" fill="black" x="1.892" y="0.314">r</text>
+    <text class="svgtxt" id="txt4vt" fill="#0080ff" x="0.244" y="-1.948">
+      v&#x03c4;</text>
+  </svg>
+  </div>
+  <p>Here S is the sun, the center of attraction, and P is the planet
+    at distance $r$ from the sun, moving with velocity $v.$ Again, we
+    can draw the blue velocity vector in this position plane by
+    plotting the point V the planet would reach in a time $\tau$ if it
+    continued in a straight line at its current speed.  The shaded
+    blue triangle is the area which the radius vector would sweep out
+    were it to follow that course.  This area is half the parallelogram
+    SPVW; we have added point W such that SW is parallel to PV and the
+    same length.</p>
+  <p>Now according to Newton's first law of motion, if there were no
+    force acting on the planet P, it would continue along PV at a constant
+    speed $v.$  You can drag the point P along this no-force trajectory.
+    Notice that no matter where the point lies on the line PV, the area
+    of the parallelogram (hence of triangle SPV) remains unchanged, since
+    the parallelogram always has base SW and lies between the parallel
+    lines SW and PV.</p>
+  <p>On the other hand, according to Newton's second law of motion,
+    any force on the planet P directed towards (or away from) S causes
+    its velocity to change in the direction PS, which is parallel to
+    VW.  You can drag the point V along the line VW to see all the
+    different velocities a central force toward (or away from) S could
+    produce.  Once again, the area of SPVW (hence of SPV) remains the
+    same, no matter how strong the deflection in the direction of S.</p>
+  <p>The shaded area is what would be swept over by the radius if P
+    were to continue along its trajectory for a time $\tau.$ In other
+    words, the rate of change of area swept out by the radius SP is
+    the shaded area divided by $\tau.$ In order to calculate how the
+    point P actually moves, we can break the motion into a sequence of
+    very short time steps (much smaller than the $\tau$ in the
+    figure).  In each time step, the velocity changes only slightly,
+    so we can use the current velocity to compute a new position.
+    Similarly, the position changes only slightly, so we can use the
+    acceleration due to the central force at the current position to
+    compute the change in velocity.  We take the next step from the
+    new position with the new velocity.  What the figure shows is that
+    both parts of each of these time steps - the calculation of the
+    change in position and the calculation of the change in velocity
+    - leave the rate of change of swept area unchanged.  That is, the
+    rate of change of swept area remains constant as the planet P
+    moves along its path as long as its acceleration is centrally
+    directed, no matter how that force changes along its trajectory.</p>
+  <p>Instead of the area SPV swept out by the radius vector, we will
+    write a formula for twice that area, SPVW.  The rate of change of
+    parallelogram area is called the angular momentum of the planet P
+    relative to the center S.  (Actually, it is the angular momnetum
+    per unit planetary mass.)  What we have shown is that for a
+    central force directed toward S, the angular momentum remains
+    constant throughout the orbit; we will denote this rate of change
+    of parallelogram area by $L.$ And this conservation of angular
+    momentum is equivalent to Kepler's law that the planet's radius
+    vector sweeps out equal areas in equal times.</p>
+  <p>The area of SPVW is the length of its base SP, which is the
+    sun-planet distance $r,$ times the component of the velocity
+    normal to SP times $\tau.$ This normal component of the velocity
+    is $\omega r,$ where $\omega$ is the angular speed of P around S,
+    measured in radians per unit time.  That is, the area SPVW is
+    $(r)(\omega r)(\tau).$ The rate of change of this area is the
+    angular momentum $L=\omega r^2.$ This formula relates the
+    unchanging angular momentum to the changing distance $r$ and
+    angular speed $\omega.$</p>
+
+
+  <h2>An Ellipse with the Sun at One Focus</h2>
+
+  <p>Our three preliminary studies - the construction of an ellipse
+    and its tangent lines from its two focus points, motion with
+    velocity constrained to a circle, and the fact that central force
+    laws produce orbits which conserve angular momentum - fit together
+    like puzzle pieces.  We now assemble the puzzle, showing that an
+    inverse square law for gravity is equivalent to elliptical
+    planetary orbits with the sun at one focus.</p>
+  <p>We begin with the formula we wrote for angular momentum, which we
+    rewrite as an equation for the angular speed $\omega$ of the
+    planet around its center of attraction, the sun: $\omega=L/r^2,$
+    where the angular momentum $L$ (twice the rate of change of area
+    swept out by the radius vector) remains constant as the planet
+    orbits.  In other words, for any central force law, the angular
+    speed of the planet around the sun is inversely proportional to
+    the square of its distance from the sun - the closer it gets, the
+    faster it goes around.  If the gravitational acceleration of the
+    planet toward the sun <em>also</em> varies inversely as the square
+    of the distance - $g=M/r^2,$ where the constant $M,$ Newton
+    argues, is proportional to the mass of the sun - that means its
+    acceleration will be proportional to its angular speed.  In fact,
+    $g=\omega M/L,$ where $M$ is the solar mass constant, and $L$ is
+    the constant angular momentum of the planet as it orbits.</p>
+  <p>From our study of circular motion in velocity space, we found
+    that acceleration toward the center in velocity space is
+    proportional to angular speed around that center: $g=\omega v,$
+    where $v$ is the radius of the circle in velocity space.  Thus, if
+    we could arrange for the center of the circle in velocity space to
+    somehow coincide with the sun in position space, we would know the
+    planetary orbit is a circle in velocity space with radius
+    $v=M/L.$</p>
+  <div class="halfwide">
+  <svg xmlns="http://www.w3.org/2000/svg"
+       viewBox="-10.5 -10.5 21 21" onload="fig5_interactions(evt)"
+       stroke-width="0.1">
+    <path fill="none" stroke="#c0c0c0"
+          marker-end="url(#arrowg)" d="M -6.0,0.0 L 0.0,0.0" />
+    <path id="sq5" fill="none" stroke="#c0c0c0"
+          marker-end="url(#arrowg)" d="M 0.0,0.0 L 0.0,-10.0" />
+    <path id="oq5" fill="none" stroke="#0080ff"
+          marker-end="url(#arrowb)" d="M -6.0,0.0 L 0.0,-10.0" />
+    <circle fill="none" stroke="#c0c0c0" cx="0" cy="0" r="10.0" />
+    <ellipse id="ell5" fill="none" stroke="black" stroke-width="0.13"
+             cx="-3.0" cy="0" rx="5.0" ry="4.0" />
+    <circle id="focs5" fill="black" cx="0" cy="0" r="0.2" />
+    <path id="snq5" fill="none" stroke="transparent"
+          d="M 0.0,0.0 L -3.0,-5.0 L 0.0,-10.0 M -6.0,0.0 L -3.0 -5.0" />
+    <circle id="pntn5" class="clickable" fill="transparent" stroke="transparent"
+            stroke-width="0.3" cx="-3" cy="-5" r="0.2" />
+    <circle id="foco5" class="clickable" fill="black" stroke="transparent"
+            stroke-width="0.3" cx="-6.0" cy="0" r="0.2" />
+    <circle id="pntq5" class="clickable" fill="black" stroke="transparent"
+            stroke-width="0.3" cx="0" cy="-10.0" r="0.2" />
+    <path id="inset5" fill="white" stroke="#f0f0f0" stroke-width="0.4"
+          transform="rotate(0.0)"
+          d="M 5.5,2.0 L 10.4,2.0 L 10.4,10.4 L 2.0,10.4 L 2.0,5.5 Z"/>
+    <path id="posu5" fill="none" stroke="#c0c0c0"
+          marker-end="url(#arrowg)" d="M 0.0,-3.2 L 0.0,-5.18" />
+    <path id="posr5" fill="none" stroke="#c0c0c0"
+          marker-end="url(#arrowg)" d="M 0.0,-5.18 L -3.2,-5.18" />
+    <path id="posv5" fill="none" stroke="#0080ff"
+          marker-end="url(#arrowb)" d="M 0.0,-3.2 L -3.2,-5.18" />
+    <circle id="pntp5" fill="black" cx="0" cy="-3.2" r="0.2" />
+    <g id="vplane5" transform="translate(6.2,6.2)">
+      <circle fill="none" stroke="#a0d0ff" cx="0" cy="0" r="3.2"/>
+      <path fill="none" stroke="#c0c0c0"
+            marker-end="url(#arrowg)" d="M 0.0,1.92 L 0.0,0.0" />
+      <path id="velr5" fill="none" stroke="#c0c0c0"
+            marker-end="url(#arrowg)" d="M 0.0,0.0 L -3.2,0.0" />
+      <path id="velg5" fill="none" stroke="#ff8000"
+            marker-end="url(#arrowo)" d="M -3.2,0.0 L -3.2,2.0" />
+      <path id="velv5" fill="none" stroke="#0080ff"
+            marker-end="url(#arrowb)" d="M 0.0,1.92 L -3.2,0.0" />
+      <text class="svgtxt" fill="#0080ff" x="0.0" y="-3.6">velocity</text>
+    </g>
+    <text class="svgtxt" x="-9.0" y="-9.0">position</text>
+    <text class="svgtxt" id="txs5" x="-0.3" y="0.9">S</text>
+    <text class="svgtxt" id="txo5" x="-6.3" y="0.9">O</text>
+    <text class="svgtxt" id="txp5" x="0.29" y="-3.188">P</text>
+    <text class="svgtxt" id="txq5" x="0.2" y="-9.2">Q</text>
+  </svg>
+  </div>
+  <p>Our diagram of ellipse geometry shows us how to arrange that the
+    velocity space circle connects to a Keplerian ellipse in exactly
+    this way: The three vectors OS, SQ, and OQ look exactly like the
+    decompostion of the velocity into a drift component (OS) and a
+    radial component (SQ) to make a total velocity (OQ), which is
+    constrained to lie on a circle in velocity space.  The only
+    difference is that the velocity diagram must be rotated ninety
+    degrees clockwise relative to the OSQ position space triangle.
+    Since we demonstrated that the tangent to the ellipse at P is
+    perpendicular to OQ, the blue velocity vector is tangent to the
+    ellipse.  The drift velocity component is always vertical in the
+    diagram, perpendicular to OS.  Finally, the radial velocity
+    component is perpendicular to PS, which means that the orange
+    acceleration vector is parallel to PS.  That is, the acceleration
+    of the planet P is directly toward the sun S.</p>
+
 
 
 
@@ -429,133 +638,6 @@
     Principia, no one even suspected that the gravity we feel on earth
     is the same force that bends the planets into their paths around
     the sun.</p>
-
-
-  <h2>Adding and multiplying with graph paper</h2>
-  <p>Graph paper provides a coordinate system for the points in a
-    plane.  Our unit on the plane is a square instead of a segment;
-    one corner goes at an arbitrary origin point, then we tile the
-    remainder of the plane into a grid of our unit squares.  Two
-    coordinate numbers are associated with each point of the plane,
-    the row and column numbers of the point in our grid.  Generally we
-    write the coordinates as the pair $(x, y)$, the horizontal number
-    followed by the vertical number.  However, here we write $x + iy$,
-    although we have not yet defined either the $+$ sign or the symbol
-    $i$ that multiplies $y$.  This notation will turn out to be
-    consistent with our upcoming definitions of "addition" and
-    "multiplication"; until then you may regard $x + iy$ as simply an
-    eccentric way to write $(x, y)$.</p>
-  <p>By analogy with our definitions in one dimension, we will define
-    two dimensional "addition" as changing the origin with a fixed
-    unit square, and "multiplication" as changing the unit square with
-    a fixed origin.</p>
-  <p>To explore this idea, we need two overlapping sheets of graph
-    paper which initially overlay each other.  We choose the lower left
-    corner of our unit square to be the origin, drawn with a circular
-    marker here.  We also need to specify which edge of our unit square
-    corresponds to the $x$ axis (our first coordinate); here drawn with
-    a square marker.</p>
-  <p>To add two points in the plane, we drag the origin of the orange
-    sheet to first addend on the blue sheet, then drag the gray diamond
-    marker to the second addend on the orange sheet.  Read the sum as the
-    position of the gray diamond on the blue sheet.  We've drawn arrows
-    corresponding to the first and second addends (blue and orange) and
-    to their sum (gray).  Note that you are to read the gray coordinates
-    on the blue plane, not on the orange plane.</p>
-  <p>Please convince yourself that this definition of "addition"
-    of planar coordinate pairs amounts to simply adding each of the
-    two components separately:
-    $$(a+ib) + (x+iy) = (a+x) + i(b+y).$$
-  </p>
-</div><div class="textcolumn" style="clear: right; margin-top: 0.3em;">
-  <div class="halfwide">
-  <svg xmlns="http://www.w3.org/2000/svg" style="padding-left: 0.5em"
-       viewBox="-4.1 -4.1 8.2 8.2" onload="mul2d_interactions(evt)"
-       stroke-width="0.03">
-    <path fill="none" stroke="#0080ff" opacity="0.33"
-      d="M -5,-6 v 12
-      m 1,-12 v 12 m 1,-12 v 12 m 1,-12 v 12 m 1,-12 v 12 m 1,-12 v 12
-      m 1,-12 v 12 m 1,-12 v 12 m 1,-12 v 12 m 1,-12 v 12 m 1,-12 v 12
-      M -6,-5 h 12
-      m -12,1 h 12 m -12,1 h 12 m -12,1 h 12 m -12,1 h 12 m -12,1 h 12
-      m -12,1 h 12 m -12,1 h 12 m -12,1 h 12 m -12,1 h 12 m -12,1 h 12"/>
-    <path id="mul2t" fill="none" stroke="#ff8000" opacity="0.33"
-      stroke-width="0.03" transform="scale(1.00,1.00)"
-      d="M -32,-33 v 66
-         m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66
-         m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66
-         m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66
-         m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66
-         m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66
-         m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66
-         m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66
-         m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66
-         m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66
-         m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66
-         m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66
-         m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66
-         m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66 m 1,-66 v 66
-         M -33,-32 h 66
-         m -66,1 h 66 m -66,1 h 66 m -66,1 h 66 m -66,1 h 66 m -66,1 h 66
-         m -66,1 h 66 m -66,1 h 66 m -66,1 h 66 m -66,1 h 66 m -66,1 h 66
-         m -66,1 h 66 m -66,1 h 66 m -66,1 h 66 m -66,1 h 66 m -66,1 h 66
-         m -66,1 h 66 m -66,1 h 66 m -66,1 h 66 m -66,1 h 66 m -66,1 h 66
-         m -66,1 h 66 m -66,1 h 66 m -66,1 h 66 m -66,1 h 66 m -66,1 h 66
-         m -66,1 h 66 m -66,1 h 66 m -66,1 h 66 m -66,1 h 66 m -66,1 h 66
-         m -66,1 h 66 m -66,1 h 66 m -66,1 h 66 m -66,1 h 66 m -66,1 h 66
-         m -66,1 h 66 m -66,1 h 66 m -66,1 h 66 m -66,1 h 66 m -66,1 h 66
-         m -66,1 h 66 m -66,1 h 66 m -66,1 h 66 m -66,1 h 66 m -66,1 h 66
-         m -66,1 h 66 m -66,1 h 66 m -66,1 h 66 m -66,1 h 66 m -66,1 h 66
-         m -66,1 h 66 m -66,1 h 66 m -66,1 h 66 m -66,1 h 66 m -66,1 h 66
-         m -66,1 h 66 m -66,1 h 66 m -66,1 h 66 m -66,1 h 66 m -66,1 h 66
-         m -66,1 h 66 m -66,1 h 66 m -66,1 h 66 m -66,1 h 66"/>
-    <polygon stroke="#0080ff" fill="none" stroke-width="0.1"
-             points="0,0, 1,0, 1,-1, 0,-1" />
-    <circle fill="#0080ff" stroke="#0080ff"
-            cx="0" cy="0" r="0.125" />
-    <rect fill="#0080ff" stroke="#0080ff" stroke-width="0.05"
-          x="0.9" y="-0.1" width="0.25" height="0.25" />
-    <polygon id="mul2gg" fill="none" stroke="#808080" stroke-width="0.05"
-             points="0.0,0.0, 1.8,0.0, 1.8,-0.8, 0.0,-0.8" />
-    <polygon id="mul2gb" fill="none" stroke="#0080ff" stroke-width="0.05"
-             points="0.0,0.0, 0.0,0.0, 0.0,0.0, 0.0,0.0" />
-    <polygon id="mul2go" fill="none" stroke="#ff8000" stroke-width="0.05"
-             points="0.0,0.0, 1.8,0.0, 1.8,-0.8, 0.0,-0.8" />
-    <polygon id="mul2ul" stroke="#ff8000" fill="none" stroke-width="0.1"
-             points="0,0, 1,0, 1,-1, 0,-1"/>
-    <circle fill="#ff8000" stroke="#ff8000" cx="0" cy="0" r="0.125" />
-    <polygon id="mul2ur" fill="#ff8000" stroke="#ff8000"
-             transform="matrix(1.0, 0.0, 0.0, 1.0, 1.0, 0.0)"
-             points="-0.125,-0.125, 0.125,-0.125, 0.125,0.125, -0.125,0.125" />
-    <line id="mul2vb" fill="#0080ff" stroke="#0080ff" stroke-width="0.05"
-          marker-end="url(#arrow-blue)" x1="0" y1="0" x2="1.0" y2="0.0"/>
-    <line id="mul2vec" fill="#808080" stroke="#808080" stroke-width="0.05"
-          marker-end="url(#arrow-gray)" x1="0" y1="0" x2="1.8" y2="-0.8"/>
-    <polygon id="mul2urx" fill="#ff8000" stroke="#ff8000" opacity="0.0"
-             transform="matrix(1.0, 0.0, 0.0, 1.0, 1.0, 0.0)"
-             points="-0.125,-0.125, 0.125,-0.125, 0.125,0.125, -0.125,0.125" />
-    <polygon id="mul2s" fill="black" stroke="black" opacity="0.5"
-      transform="translate(1.8,-0.8)"
-      points="-0.1768,0, 0,-0.1768, 0.1768,0, 0,0.1768" />
-  </svg>
-  <p class="belowsvg">
-    (<span id="mul2x" class="" style="color: #0080ff;">1.00 + i0.00</span>)
-    &times;
-    (<span id="mul2y" class="" style="color: #ff8000;">1.80 + i0.80</span>) =
-    <span id="mul2z" class="" style="color: #808080;">1.8000 + i0.8000</span>
-  </p>
-  </div>
-  <p>Multiplication is far more interesting.  We can scale our unit
-    square by dragging its lower right corner, the one we marked with
-    a square at the point $1+i0$, to the first multiplicand on the
-    blue sheet.  Then drag the gray diamond marker to the second
-    multiplicand on the orange sheet.  Read the product as the
-    position of the gray diamond on the blue sheet.  We've drawn
-    arrows as for addition, but this time the orange arrow always
-    coincides with the gray arrow, so you only see the gray arrow.
-    The orange and gray guideline rectangles from the arrow tip back
-    to their respective coordinate axes are more useful for reading
-    the orange and blue coordinates, respectively.</p>
 </div>
 <script>
   var tracking = null;
@@ -981,8 +1063,6 @@
     add_trackers(fig2, f2handle, start, track, stop);
   }
 
-  // spanel.innerHTML = x.toFixed(ndig) + sgn + y.toFixed(ndig);
-
   function fig3_interactions(evt) {
     var fig3 = evt.target;
     var f3handle = ["press3", "dotc3"].map(get_element);
@@ -1195,125 +1275,361 @@
     add_trackers(fig3, f3handle, start, track, stop);
   }
 
-  function mul2d_interactions(evt) {
-    var mul2d = evt.target;
-    var m2handle = ["mul2urx", "mul2s"].map(get_element);
-    var xyz = ["mul2x", "mul2y", "mul2z"].map(get_element);
-    var cl_xyz = xyz.map(function(e)
-                         {return e.getAttributeNodeNS(null, "class");});
-    var xf_tick = get_element("mul2t").getAttributeNodeNS(null, "transform");
-    var xf_slid = m2handle[1].getAttributeNodeNS(null, "transform");
-    var xnow = [1.0, 0.0];
-    var ynow = [1.8, -0.8];
-    var xyul = get_element("mul2ul").getAttributeNodeNS(null, "points");
-    var xfur = get_element("mul2ur").getAttributeNodeNS(null, "transform");
-    var xfurx = m2handle[0].getAttributeNodeNS(null, "transform");
-    var twidth = get_element("mul2t").getAttributeNodeNS(null, "stroke-width");
-    var mul2gg = get_element("mul2gg").getAttributeNodeNS(null, "points");
-    var mul2gb = get_element("mul2gb").getAttributeNodeNS(null, "points");
-    var mul2go = get_element("mul2go").getAttributeNodeNS(null, "points");
-    var vec = get_element("mul2vec");
-    vec = [[vec.getAttributeNodeNS(null, "x2")],
-           [vec.getAttributeNodeNS(null, "y2")],
-           [vec.getAttributeNodeNS(null, "marker-end")]];
-    var vbx2 = get_element("mul2vb");
-    var vby2 = vbx2.getAttributeNodeNS(null, "y2");
-    vbx2 = vbx2.getAttributeNodeNS(null, "x2");
+  function fig4_interactions(evt) {
+    var fig4 = evt.target;
+    var f4handle = ["dotp4", "dotv4"].map(get_element);
+    var xform = f4handle[0].getAttributeNodeNS(null, "transform");
+    var paths = ["posp4", "velv4", "rect4", "area4", "path4"].map(get_element);
+    var pathd = paths.map(function(e)
+                          {return e.getAttributeNodeNS(null, "d");});
+    var circs = ["dotp4", "dotv4", "dotw4"].map(get_element);
+    var circx = circs.map(function(e)
+                          {return e.getAttributeNodeNS(null, "cx");});
+    var circy = circs.map(function(e)
+                          {return e.getAttributeNodeNS(null, "cy");});
+    var texts = ["txt4p", "txt4v", "txt4w", "txt4r", "txt4vt"].map(get_element);
+    var textx = texts.map(function(e)
+                          {return e.getAttributeNodeNS(null, "x");});
+    var texty = texts.map(function(e)
+                          {return e.getAttributeNodeNS(null, "y");});
+
+    var center = 4.0;
+    var rx0 = 2.0;
+    var ry0 = 5.0;
+    var vtx0 = -2.5;
+    var vty0 = 1.0;
+    var rx = rx0;
+    var ry = ry0;
+    var vtx = vtx0;
+    var vty = vty0;
+
+    function redraw() {
+      circx[0].value = "" + rx;
+      circy[0].value = "" + (center - ry);
+      circx[1].value = "" + (rx + vtx);
+      circy[1].value = "" + (center - ry - vty);
+      circx[2].value = "" + vtx;
+      circy[2].value = "" + (center - vty);
+      pathd[0].value = "M 0.0," + center + " L " + rx + "," + (center-ry);
+      pathd[1].value = ("M " + rx + "," + (center-ry) + " L " +
+                        (rx+vtx) + "," + (center-ry-vty));
+      pathd[2].value = ("M 0.0,"+center + " L "+vtx+","+(center-vty) +
+                        " L "+(rx+vtx)+","+(center-ry-vty));
+      pathd[3].value = ("M 0.0,"+center + " L "+rx+","+(center-ry) +
+                        " L "+(rx+vtx)+","+(center-ry-vty) + "Z");
+      pathd[4].value = ("M " + (rx-vtx) + "," + (center-ry+vty) + 
+                        " L " + rx + "," + (center-ry));
+      var r = sqrt(rx*rx + ry*ry);
+      var x = rx / r;
+      var y = ry / r;
+      var v = sqrt(vtx*vtx + vty*vty);
+      var vx = vtx / v;
+      var vy = vty / v;
+      textx[0].value = "" + (0.6*x + rx - 0.25);
+      texty[0].value = "" + (-0.6*y + center - ry + 0.25);
+      textx[1].value = "" + (0.6*vx + vtx + rx - 0.3);
+      texty[1].value = "" + (-0.6*vy + center - vty - ry + 0.25);
+      textx[2].value = "" + (0.8*vx + vtx - 0.3);
+      texty[2].value = "" + (-0.8*vy + center - vty + 0.25);
+      textx[3].value = "" + (-1.0*x+0.5*y + rx - 0.2);
+      texty[3].value = "" + (1.0*y+0.5*x + center - ry + 0.2);
+      textx[4].value = "" + (-1.1*vx+0.6*vy + vtx + rx - 0.5);
+      texty[4].value = "" + (1.1*vy+0.6*vx + center - vty - ry + 0.2);
+    }
+    redraw();
 
     function start(index, coords) {
-      cl_xyz[index].value = "backlit";
-      var znow = [xnow[0]*ynow[0] - xnow[1]*ynow[1],
-                  xnow[0]*ynow[1] + xnow[1]*ynow[0]];
-      var dx = coords.x - (index? znow[0] : xnow[0]);
-      var dy = coords.y - (index? znow[1] : xnow[1]);
-      return [index, [dx, dy], znow];
+      if (index === 0) {  // P
+        return [index, rx-coords.x, ry-center+coords.y];
+      } else if (index === 1) {  // V
+        return [index, rx+vtx-coords.x, ry+vty-center+coords.y];
+      }
+      return null;
+    }
+
+    function track(tracking, coords) {
+      if (tracking === null) {
+        return null;
+      }
+      // (x, y) position of P or V relative to (0,-center), where y>0 is up
+      var x = coords.x + tracking[1];
+      var y = center - coords.y + tracking[2];
+      var xydot;
+      if (vtx < -9.0 || vty - center < -5.0) {
+        tracking = null;  // W off left or bottom edge
+      } else if (tracking[0] === 0) {
+        // P: (x, y-center)  V: (x+vtx, y+vty-center)  W: (vtx, vty-center)
+        if (x > 9. || x+vtx < -9. || y+vty-center > 5. || y-center > 5.) {
+          tracking = null;
+        } else {
+          // project (x-rx,y-ry) onto line PV
+          xydot = ((x-rx)*vtx + (y-ry)*vty) / (vtx*vtx + vty*vty);
+          rx += vtx*xydot;
+          ry += vty*xydot;
+        }
+      } else {
+        // P: (x-vtx, y-vty-center)  V: (x, y-center)  W: (vtx, vty-center)
+        if (x-vtx > 9. || x < -9. || y-center > 5. || y-vty-center > 5.) {
+          tracking = null;
+        } else {
+          // project (x-rx-vtx,y-ry-vty) onto line VW
+          xydot = ((x-rx-vtx)*rx + (y-ry-vty)*ry) / (rx*rx + ry*ry);
+          vtx += rx*xydot;
+          vty += ry*xydot;
+        }
+      }
+      if (tracking === null) {
+        rx = rx0;
+        ry = ry0;
+        vtx = vtx0;
+        vty = vty0;
+      }
+      redraw();
+      return tracking;
+    }
+
+    function stop(tracking) {
+      return;
+    }
+
+    add_trackers(fig4, f4handle, start, track, stop);
+  }
+
+  function fig5_interactions(evt) {
+    var fig5 = evt.target;
+    var f5handle = ["foco5", "pntq5", "pntn5"].map(get_element);
+    var pntcx = f5handle.map(function(e)
+                             {return e.getAttributeNodeNS(null, "cx");});
+    var pntcy = f5handle.map(function(e)
+                             {return e.getAttributeNodeNS(null, "cy");});
+    var ellipse = get_element("ell5");
+    var ellcx = ellipse.getAttributeNodeNS(null, "cx");
+    var ellry = ellipse.getAttributeNodeNS(null, "ry");
+    var circs = ["foco5", "pntp5", "pntq5", "pntm5", "pntn5"].map(get_element);
+    var circx = circs.map(function(e)
+                          {return e.getAttributeNodeNS(null, "cx");});
+    var circy = circs.map(function(e)
+                          {return e.getAttributeNodeNS(null, "cy");});
+    var paths = ["sp5", "opq5", "oq5", "pm5", "snq5"].map(get_element);
+    var pathd = paths.map(function(e)
+                          {return e.getAttributeNodeNS(null, "d");});
+    var texts = ["txs5", "txo5", "txp5", "txq5", "txm5",
+                 "txn5"].map(get_element);
+    var textx = texts.map(function(e)
+                          {return e.getAttributeNodeNS(null, "x");});
+    var texty = texts.map(function(e)
+                          {return e.getAttributeNodeNS(null, "y");});
+    var snqstroke = paths[4].getAttributeNodeNS(null, "stroke");
+    var pntnfill = circs[4].getAttributeNodeNS(null, "fill");
+    var txtnfill = texts[5].getAttributeNodeNS(null, "fill");
+    var a = 5.0;  // fixed - do not change
+    var c = 3.0;
+    var xq = 0.0;
+    var yq = 10.0;
+    var xp = 0.0;
+    var yp = 3.2;
+    var xn = -3.0;
+    var yn = 5.0;
+    var nhidden = true;
+
+    function nhide(on) {
+      if (on) {
+        snqstroke.value = pntnfill.value = txtnfill.value = "transparent";
+        nhidden = true;
+      } else {
+        snqstroke.value = pntnfill.value = txtnfill.value = "#ff8000";
+        nhidden = false;
+      }
+    }
+
+    function seto(x) {
+      c = -0.5 * x;
+      circx[0].value = "" + x;
+      textx[1].value = "" + (x - 0.3);
+      ellcx.value = "" + (-c);
+      ellry.value = "" + sqrt(a*a - c*c);
+      setq(xq, yq);
+    }
+
+    function setq(qx, qy) {
+      var ychange = (yq < 0.) != (qy < 0.);
+      xq = qx;  yq = qy;
+      xn = 0.5*xq - c;  yn = 0.5*yq;
+      qx /= a;  qy /= a;
+      var s = (2.*a - qx*c) / (qx*qx + yq*yq/(a*a - c*c));
+      xp = s*qx;  yp = s*qy;
+      circx[1].value = "" + xp;  circy[1].value = "" + (-yp);
+      circx[2].value = "" + xq;  circy[2].value = "" + (-yq);
+      circx[3].value = circx[4].value = "" + (0.5*xq - c);
+      circy[3].value = circy[4].value = "" + (-0.5*yq);
+      pathd[0].value = "M 0.0,0.0 L " + xp + "," + (-yp);
+      var mo = "M " + (-2.0*c) + ",0.0 L "
+      pathd[1].value = mo + xp + "," + (-yp) + " L " + xq + "," + (-yq);
+      pathd[2].value = mo + xq + "," + (-yq);
+      // Compute endpoints of PM on circle concentric with ellipse and
+      // halfway between ellipse and Q-circle, center (0,-c) radius (3a-c)/2
+      var cc = xp + c;
+      var xoq = xq + 2.*c;
+      var aa = xoq*xoq + yq*yq;
+      var bb = yq*cc - xoq*yp;  // -B/2 in quadratic equation
+      cc = cc*cc + yp*yp - 0.25*(3.*a - c)**2;
+      var dd = bb*bb - aa*cc;
+      if (dd < 0.0) {
+        dd = 0.0;  // guard against rounding error
+      }
+      dd = sqrt(dd);
+      cc = (bb - dd)/aa;  bb = (bb + dd)/aa;  // two roots or quadratic
+      // (xp,yp) + (-yq,xoq)*root are endpoints
+      pathd[3].value = ("M " + (xp-yq*bb) + "," + (-yp-xoq*bb) +
+                        " L " + (xp-yq*cc) + "," + (-yp-xoq*cc));
+      if (ychange) {
+        if (yq >= 0.) {
+          texty[0].value = texty[1].value = "0.9";
+        } else {
+          texty[0].value = texty[1].value = "-0.3";
+        }
+      }
+      // compute Q letter position
+      var qx = sqrt(xq*xq + yq*yq);
+      var qy = yq / qx;
+      qx = xq / qx;
+      if (yq >= 0.0) {  // xprime=(qy,-qx) and yprime=(qx,qy)
+        s = xq + 0.5*qy - 0.5*qx;
+        qy = yq - 0.5*qx - 0.5*qy;
+        qx = s;
+      } else {
+        s = xq - 0.5*qy - 0.5*qx;
+        qy = yq + 0.5*qx - 0.5*qy;
+        qx = s;
+      }
+      textx[3].value = "" + (qx-0.3);
+      texty[3].value = "" + (0.3-qy);
+      // compute P letter position
+      qx = sqrt((2.*c+xp)**2 + yp**2);
+      qy = yp / qx;
+      qx = (2.*c+xp) / qx;
+      qx = xp + 0.612*qx;
+      qy = yp + 0.612*qy;
+      textx[2].value = "" + (qx-0.25);
+      texty[2].value = "" + (0.3-qy);
+      // compute M letter position
+      qx = 0.5*xq - c;
+      qy = 0.5*yq;
+      if (yq >= 0.0) {
+        textx[4].value = "" + (qx-0.4);
+        texty[4].value = "" + (-0.4-qy);
+      } else {
+        textx[4].value = "" + (qx-0.4);
+        texty[4].value = "" + (1.0-qy);
+      }
+    }
+
+    function setn(x, y) {
+      xn = x;  yn = y;
+      // d="M 0.0,0.0 L -3.0,-5.0 L 0.0,-10.0 M -6.0,0.0 L -3.0 -5.0"
+      circx[4].value = "" + xn;
+      circy[4].value = "" + (-yn);
+      pathd[4].value = ("M 0.0,0.0 L " + xn + "," + (-yn) +
+                        " L " + xq + "," + (-yq) +
+                        " M " + (-2.*c) + ",0.0 L " + xn + "," + (-yn));
+      // compute N letter position
+      if (yq >= 0.0) {
+        textx[5].value = "" + (xn-0.4);
+        texty[5].value = "" + (-0.4-yn);
+      } else {
+        textx[5].value = "" + (xn-0.4);
+        texty[5].value = "" + (1.0-yn);
+      }
+    }
+
+    function fullreset() {
+      xq = 0.0;  yq = 10.0;
+      seto(-6.0);
+    }
+
+    function start(index, coords) {
+      var dx = coords.x;
+      var dy = coords.y;
+      if (index === 0) {  // point O
+        dx = -2.*c - dx;
+        xn = 0.5*xq - c;
+        yn = 0.5*yq;
+        setn(0.5*xq - c, 0.5*yq);
+        nhide(true);
+      } else if (index === 1) {  // point Q
+        dx = xq - dx;
+        dy = yq + dy;
+        setn(0.5*xq - c, 0.5*yq);
+        nhide(true);
+      } else {  // point N
+        if (nhidden) {  // use point M coordinates
+          xn = 0.5*xq - c;
+          yn = 0.5*yq;
+        }
+        dx = xn - dx;
+        dy = yn + dy;
+        setn(xn, yn);
+      }
+      return [index, dx, dy];
     }
 
     function track(tracking, coords) {
       var index = tracking[0];
-      var xy = tracking[1];
-      var x = coords.x - xy[0];
-      var y = coords.y - xy[1];
-      var z = tracking[2];
-      if (x > 3.8 || x < -3.8) {
-        cl_xyz[index].value = "";
-        index = 0;
-        xnow = [1.0, 0.0];
-        ynow = [1.8, -0.8];
-        z = ynow;
-        x = 1.0;
-        y = 0.0;
-        tracking = null;
-      }
-      if (y > 3.8 || y < -3.8) {
-        cl_xyz[index].value = "";
-        index = 0;
-        xnow = [1.0, 0.0];
-        ynow = [1.8, -0.8];
-        z = ynow;
-        x = 1.0;
-        y = 0.0;
-        tracking = null;
-      }
-      if (index === 0) {
-        if (x*x + y*y < 0.05) {
-          x = 0.05;
-          y = 0.0;
-        } else {
-          x = round(20.*x) * 0.05;
-          y = round(20.*y) * 0.05;
+      var x = coords.x + tracking[1];
+      var y = tracking[2] - coords.y;
+      var twoa = a + a;
+      var r;
+      if (index === 0) {  // point O
+        if (x > 0.2 || x < 0.4 - twoa) {
+          fullreset();
+          return null;
         }
-        var r = x*x + y*y;
-        var rx = x / r;
-        var ry = -y / r;  // rx + i*ry = 1 / (x + i*y)
-        r = sqrt(r);
-        xf_tick.value = "matrix("+x+","+y+","+(-y)+","+x+",0.0,0.0)";
-        twidth.value = "" + (0.03 / r);
-        var zox = [rx*z[0] - ry*z[1], rx*z[1] + ry*z[0]];
-        ynow = [round(20.*zox[0]) * 0.05, round(20.*zox[1]) * 0.05];
-        xnow = [x, y];
-        // orange unit square is (0,0), xnow, xnow+perp, perp
-        var perp = [xnow[1], -xnow[0]];  // remember +y is downward
-        xyul.value = ("0.0,0.0, " + xnow[0] + "," + xnow[1] + ", " +
-                      (xnow[0]+perp[0]) + "," + (xnow[1]+perp[1]) + ", " +
-                      perp[0] + "," + perp[1]);
-        mul2gb.value = "0,0, " + x+",0, " + x+","+y + ", 0,"+y;
-        x /= r;
-        y /= r;
-        xfur.value = xfurx.value = (
-          "matrix(" + x + "," + y + "," + (-y) + "," + x + "," +
-            xnow[0] + "," + xnow[1] + ")");
-        vbx2.value = xnow[0];
-        vby2.value = xnow[1];
-        str_complex(xyz[0], 2, xnow, null);
-      } else {
-        // in mul1d:   ynow = round(20.*(x / xnow)) * 0.05;
-        var rr2 = 20. / (xnow[0]*xnow[0] + xnow[1]*xnow[1]);
-        ynow = [round(rr2*(x*xnow[0]+y*xnow[1])) * 0.05,
-                round(rr2*(y*xnow[0]-x*xnow[1])) * 0.05];
+        if (x > 0.0) {
+          x = 0.0;
+        }
+        seto(x);
+      } else if (index === 1) {  // point Q
+        r = sqrt(x*x + y*y);
+        if (r > 0.1) {
+          x = twoa * x / r;
+          y = twoa * y / r;
+        }
+        setq(x, y);
+      } else {  // point N
+        // project (x, y) onto the line PM, (-yoq, xoq)
+        var xoq = xq + 2.*c;
+        var r = sqrt(xoq*xoq + yq*yq);
+        var yoq = yq / r;
+        xoq /= r;
+        r = (y-yp)*xoq - (x-xp)*yoq;
+        x = xp - r*yoq;  y = yp + r*xoq;  // (x, y) now on line PM
+        r = sqrt((x + c)**2 + y**2);
+        if (r > 0.5*(3.*a - c)) {
+          return null;
+        }
+        var xm = 0.5*xq - c;
+        var ym = 0.5*yq;
+        if ((x-xm)**2 + (y-ym)**2 > 0.25) {  // N has moved off M
+          nhide(false);
+        } else {
+          nhide(true);
+        }
+        setn(x, y);
       }
-      var znow = [xnow[0]*ynow[0] - xnow[1]*ynow[1],
-                  xnow[0]*ynow[1] + xnow[1]*ynow[0]];
-      xf_slid.value = "translate(" + znow[0] + "," + znow[1] + ")";
-      mul2gg.value = ("0,0, " + znow[0]+",0, " + znow[0]+","+znow[1] +
-                      ", 0,"+znow[1]);
-      mul2go.value = ("0,0, " + (xnow[0]*ynow[0])+","+(xnow[1]*ynow[0]) +
-                      ", " + znow[0]+","+znow[1]+", " +
-                      (-xnow[1]*ynow[1])+","+(xnow[0]*ynow[1]));
-      setvector(vec, 0, znow, "gray", null);
-      str_complex(xyz[1], 2, ynow, null);
-      str_complex(xyz[2], 4, znow, null);
       return tracking;
     }
 
     function stop(tracking) {
       if (tracking !== null) {
-        cl_xyz[tracking[0]].value = "";
+        if (tracking[0] === 2 && nhidden) {
+          xn = 0.5*xq - c;
+          yn = 0.5*yq;
+        }
       }
       return;
     }
 
-    add_trackers(mul2d, m2handle, start, track, stop);
+    add_trackers(fig5, f5handle, start, track, stop);
   }
 </script>
 </body>
