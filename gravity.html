@@ -28,6 +28,10 @@
       width: 60%;
       float: right;
     }
+    .thirdwide {
+      width: 40%;
+      float: right;
+    }
     .clickable {
       cursor: pointer;
     }
@@ -56,6 +60,9 @@
     @media only screen and (max-width: 620px) {
       .halfwide {
         width: 100%;
+      }
+      .thirdwide {
+        width: 55%;
       }
     }
   </style>
@@ -136,7 +143,7 @@
     <circle fill="none" stroke="#c0c0c0" cx="0" cy="0" r="10.0" />
     <ellipse id="ell1" fill="none" stroke="black" stroke-width="0.13"
              cx="-3.0" cy="0" rx="5.0" ry="4.0" />
-    <circle id="focs1" fill="black" cx="0" cy="0" r="0.2" />
+    <circle fill="black" cx="0" cy="0" r="0.2" />
     <circle id="pntp1" fill="black" cx="0" cy="-3.2" r="0.2" />
     <circle id="pntm1" fill="black" cx="-3" cy="-5" r="0.2" />
     <path id="snq1" fill="none" stroke="transparent"
@@ -550,7 +557,7 @@
   <svg xmlns="http://www.w3.org/2000/svg"
        viewBox="-10.5 -10.5 21 21" onload="fig5_interactions(evt)"
        stroke-width="0.1">
-    <path fill="none" stroke="#c0c0c0"
+    <path id="os5" fill="none" stroke="#c0c0c0"
           marker-end="url(#arrowg)" d="M -6.0,0.0 L 0.0,0.0" />
     <path id="sq5" fill="none" stroke="#c0c0c0"
           marker-end="url(#arrowg)" d="M 0.0,0.0 L 0.0,-10.0" />
@@ -559,11 +566,7 @@
     <circle fill="none" stroke="#c0c0c0" cx="0" cy="0" r="10.0" />
     <ellipse id="ell5" fill="none" stroke="black" stroke-width="0.13"
              cx="-3.0" cy="0" rx="5.0" ry="4.0" />
-    <circle id="focs5" fill="black" cx="0" cy="0" r="0.2" />
-    <path id="snq5" fill="none" stroke="transparent"
-          d="M 0.0,0.0 L -3.0,-5.0 L 0.0,-10.0 M -6.0,0.0 L -3.0 -5.0" />
-    <circle id="pntn5" class="clickable" fill="transparent" stroke="transparent"
-            stroke-width="0.3" cx="-3" cy="-5" r="0.2" />
+    <circle fill="black" cx="0" cy="0" r="0.2" />
     <circle id="foco5" class="clickable" fill="black" stroke="transparent"
             stroke-width="0.3" cx="-6.0" cy="0" r="0.2" />
     <circle id="pntq5" class="clickable" fill="black" stroke="transparent"
@@ -580,12 +583,12 @@
     <circle id="pntp5" fill="black" cx="0" cy="-3.2" r="0.2" />
     <g id="vplane5" transform="translate(6.2,6.2)">
       <circle fill="none" stroke="#a0d0ff" cx="0" cy="0" r="3.2"/>
-      <path fill="none" stroke="#c0c0c0"
+      <path id="velu5" fill="none" stroke="#c0c0c0"
             marker-end="url(#arrowg)" d="M 0.0,1.92 L 0.0,0.0" />
       <path id="velr5" fill="none" stroke="#c0c0c0"
             marker-end="url(#arrowg)" d="M 0.0,0.0 L -3.2,0.0" />
       <path id="velg5" fill="none" stroke="#ff8000"
-            marker-end="url(#arrowo)" d="M -3.2,0.0 L -3.2,2.0" />
+            marker-end="url(#arrowo)" d="M -3.2,0.0 L -3.2,0.9375" />
       <path id="velv5" fill="none" stroke="#0080ff"
             marker-end="url(#arrowb)" d="M 0.0,1.92 L -3.2,0.0" />
       <text class="svgtxt" fill="#0080ff" x="0.0" y="-3.6">velocity</text>
@@ -597,47 +600,172 @@
     <text class="svgtxt" id="txq5" x="0.2" y="-9.2">Q</text>
   </svg>
   </div>
-  <p>Our diagram of ellipse geometry shows us how to arrange that the
-    velocity space circle connects to a Keplerian ellipse in exactly
-    this way: The three vectors OS, SQ, and OQ look exactly like the
+  <p>Our diagram of ellipse geometry shows us how to arrange for the
+    velocity space circle to connect to a Keplerian ellipse in exactly
+    this way: The three vectors OS, SQ, and OQ resemble the
     decompostion of the velocity into a drift component (OS) and a
     radial component (SQ) to make a total velocity (OQ), which is
     constrained to lie on a circle in velocity space.  The only
-    difference is that the velocity diagram must be rotated ninety
+    difference is that we must rotate the velocity diagram ninety
     degrees clockwise relative to the OSQ position space triangle.
-    Since we demonstrated that the tangent to the ellipse at P is
-    perpendicular to OQ, the blue velocity vector is tangent to the
-    ellipse.  The drift velocity component is always vertical in the
-    diagram, perpendicular to OS.  Finally, the radial velocity
-    component is perpendicular to PS, which means that the orange
-    acceleration vector is parallel to PS.  That is, the acceleration
-    of the planet P is directly toward the sun S.</p>
+    With that rotation, the blue velocity vector indeed becomes
+    parallel to the ellipse tangent, since that tangent is
+    perpendicular to OQ.  Furthermore, the drift component velocity is
+    now perpendicular to OS, in other words vertical, and the radial
+    velocity component is perpendicular to the sun-planet direction SQ
+    or SP.  Since the radial velocity component is perpendicular to
+    PS, the orange acceleration vector is parallel to PS.  That is,
+    the acceleration of the planet P is directly toward the sun S.
+    The puzzle pieces indeed fit perfectly.</p>
+  <p>You can drag the points O and Q around as before to show that
+    our construction works for any ellipse shape and for any position
+    of the planet P on its orbital ellipse.</p>
+  <p>A planet which obeys $F=ma$ with the force directed toward the
+    sun and varying inversely as the square of its distance will
+    indeed orbit in an ellipse with the sun at one focus.  We already
+    found that for any central force law the planet's radius vector
+    will sweep over equal areas in equal times, so we have proven
+    the first two of Kepler's laws are equivalent to Newton's
+    inverse square law.  We have learned the additional fact, which
+    Kepler did not notice, that the velocity vector of the planet
+    orbits in a circle in the velocity plane.</p>
 
 
+  <h2>The Cube-Square Law</h2>
+
+  <p>Since Kepler's first two laws merely describe the motion of a
+    single planet, he wanted a third law to relate the orbits of the
+    different planets.  More than a decade elapsed between his
+    publication of his ellipse and equal area laws and his discovery
+    of the third law, that the cubes of the semi-major axes are
+    proportional to the squares of the orbital periods.  In contrast,
+    Newton explains Kepler's first two laws as consequences of an
+    inverse square force law, $g=M/r^2,$ in which the constant of
+    proportionality $M$ is a property of the sun - in fact, a measure
+    of the mass of the sun.  Therefore, in the Newtonian system,
+    the same force law already applies to all the planets, so he does
+    not need any additional laws relating the orbits of different
+    planets.</p>
+  <p>Our proof that the inverse square law produces elliptical orbits
+    completely sidestepped the question of when the planet reaches any
+    point on its orbit.  However, since we know that the rate of
+    change of area swept out by the radius is constant, $L/2$ in fact,
+    we can use the area between any fixed radius, say the point of
+    closest approach to the sun, and any point P on the ellipse to
+    compute the time when the planet will reach P.  We will not derive
+    this equation of time in detail (it requires some trigonometry).
+    However, we do need a formula for the orbital period $T$ - the
+    length of the planet's year.</p>
+  <p>The area of an ellipse with semi-major axis $a$ and semi-minor
+    axis $b$ is $\pi ab,$ a generalization of the celebrated formula
+    $\pi r^2$ for a circle.  Since the constant angular momentum $L$
+    is twice the rate of change of the area, the time for one complete
+    orbit must be $T=2\pi ab/L.$</p>
+  <div class="thirdwide">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="-9.0 -7.5 12 12"
+       stroke-width="0.1">
+    <path fill="none" stroke="#c0c0c0"
+          d="M -3.0,-4.0 L 2.0,-4.0 L 2.0,0.0 L 0.0,0.0"/>
+    <path fill="none" stroke="#c0c0c0" d="M -6.0,0.0 L 0.0,0.0"/>
+    <path fill="none" stroke="#c0c0c0" d="M 0.0,0.0 L -3.0,-4.0 L -3.0,0.0"/>
+    <!-- <path fill="none" stroke="#0080ff"
+          marker-end="url(#arrowb)" d="M -6.0,0.0 L -6.0,-8.0"/> -->
+    <ellipse fill="none" stroke="black" stroke-width="0.13"
+             cx="-3.0" cy="0" rx="5.0" ry="4.0"/>
+    <path fill="none" stroke="#c0c0c0"
+          marker-end="url(#arrowg)" d="M -3.0,-4.0 L -3.0,-7.0"/>
+    <path fill="none" stroke="#c0c0c0"
+          marker-end="url(#arrowg)" d="M -3.0,-7.0 L -7.0,-4.0"/>
+    <path fill="none" stroke="#0080ff"
+          marker-end="url(#arrowb)" d="M -3.0,-4.0 L -7.0,-4.0"/>
+    <circle fill="black" cx="0" cy="0" r="0.2"/>
+    <circle fill="black" cx="-6.0" cy="0" r="0.2"/>
+    <!-- <circle fill="black" cx="-6.0" cy="-8.0" r="0.2"/> -->
+    <circle fill="black" cx="-3.0" cy="-4.0" r="0.2"/>
+    <text class="svgtxt" x="-0.3" y="0.9">S</text>
+    <text class="svgtxt" x="-6.3" y="0.9">O</text>
+    <text class="svgtxt" x="-2.85" y="-4.25">P</text>
+    <text class="svgtxt" x="-3.65" y="-5.2">u</text>
+    <text class="svgtxt" x="-5.6" y="-5.5">v</text>
+    <text class="svgtxt" x="-0.5" y="-4.15">a</text>
+    <text class="svgtxt" x="-3.65" y="-1.6">b</text>
+    <text class="svgtxt" x="-2.0" y="-0.15">c</text>
+    <text class="svgtxt" x="-1.4" y="-2.0">a</text>
+    <!-- <text class="svgtxt" x="-5.5" y="-7.8">Q</text> -->
+  </svg>
+  </div>
+  <p>Now SQ, the string length for constructing the ellipse, is twice
+    its semi-major axis, or $2a.$ We define $c$ to be the distance
+    from the center of the ellipse to either focus, so that OS is
+    $2c.$ In the velocity plane, we have already named the radius of
+    the circle $v=M/L.$ We now give the name $u$ to the drift
+    component of the velocity.  Since the velocity plane triangle is
+    similar to OSQ in the position plane, the ratio OS/SP equals
+    $u/v=c/a.$</p>
+  <p>To derive Kepler's cube-square law, consider the moment when the
+    planet P is equidistant from the foci O and S.  At that instant,
+    the total velocity is horizontal with magnitude $\sqrt{v^2-u^2}$,
+    and the point P is a distance $b$ above OS.  Since $u/v=c/a,$
+    $\sqrt{v^2-u^2}=vb/a.$ The angular momentum is therefore
+    $L=vb^2/a.$ Since $v=M/L,$ we have $M=v^2b^2/a.$ We can eliminate
+    the velocity $v$ to find an expression relating $M,$ $L,$ $a,$ and
+    $b,$ namely $M=L^2a/b^2.$ The final step is to square our
+    expression for the period $T^2=4\pi^2 a^2b^2/L^2.$ Rearranging
+    this, we have $a^3/T^2 = L^2a/b/(4\pi^2),$ which is
+    $a^3/T^2=M/(4\pi^2).$ Thus, we identify Kepler's third law
+    constant as Newton's solar mass constant $M$ divided by $4\pi^2.$
+    Since the mass $M$ is a property of the sun, the constant is the
+    same for every planetary orbit, completing our demonstration that
+    the Newtonian law of gravity produces Keplerian orbits.</p>
 
 
+  <h2>Conclusion</h2>
 
-  <hr/>
-  <p>The derivation of Kepler's third law leads into a discussion of
-    the equation of time.  We usually think of Newton's laws as
-    producing a trajectory through space as a function of time.
-    However, in the case of planetary orbits, the mathematics works
-    backwards: Given a point on its elliptical orbit, we can calculate
-    when the planet will reach that position, rather than vice-versa.
-    In practice, we can only invert this relationship by an iterative
-    approach to find where the planet will be at a given time.</p>
-
-
-
-
-
-<p>Even more dramatically, from the inverse square law Newton deduces
-    that the every day gravity we experience on the surface of the
-    earth is the same force that holds the moon in orbit around the
-    earth, and hence the planets in orbit around the sun.  Before
-    Principia, no one even suspected that the gravity we feel on earth
-    is the same force that bends the planets into their paths around
-    the sun.</p>
+  <p>Kepler's three laws describe planetary motion without giving any
+    insight into what causes the orbital shapes or speeds.  Newton's
+    law of motion $F=ma,$ on the other hand, applies to the motion of
+    everyday objects on earth.  While there isn't any more cause for
+    Newton's inverse square law of gravitational force $g=M/r^2$ than
+    for Kepler's laws, it is far simpler and the fact that planets
+    respond to this simple force law by moving in Keplerian orbits
+    shows us that planets move according to the same rules as rocks on
+    earth.  A planet is just a large rock, moving as rocks move.</p>
+  <p>Despite its apparently simpler form, Newtonian gravity is really
+    dramatically more complicated because of its universal character.
+    Newtonian gravity acts between every pair of objects, between
+    every atom of the sun or planet or rock.  Before Principia, no one
+    had any idea that the force holding the planets in their orbits
+    around the sun is identical to the force that makes a rock fall to
+    earth.</p>
+  <p>With Newtonian gravity, we can compare the acceleration of the
+    moon in orbit around the earth to the downward acceleration of a
+    rock: A sidereal month is 27.3 days or about 2.36 million seconds
+    and the moon is about 60 earth radii away, so $\omega^2 r$ for the
+    moon is $(2\pi/2.36\times 10^6)^2\times 60=4.3\times 10^{-10}$
+    earth radii per second per second.  According to the inverse
+    square law, the acceleration of gravity at the surface of the
+    earth, 60 times closer, should be $60^2=3600$ times greater.
+    Since the radius of the earth is about $6.4\times 10^6$ meters,
+    the gravity holding the moon in its orbit would have an
+    acceleration of $4.3\times 10^{-10} \times 3600\times 6.4\times
+    10^6=9.9$ meters per second per second.  When you drop a rock, it
+    falls to earth with an acceleration of 9.8 meters per second per
+    second, "which answers pretty nearly," as Newton put it.</p>
+  <p>Because of all of the gravitational attractions to other planets
+    as well as to the sun, the Newtonian theory of universal gravity
+    predicts that planetary orbits should not quite be ellipses with
+    the sun at one focus sweeping out equal areas in equal times -
+    they should wobble about in slightly irregular orbits.  The moon
+    is an extreme case, because its attraction to the sun is an
+    appreciable fraction of its attraction to the earth, which causes
+    the orbit of the moon to be particularly irregular, nowhere near a
+    Keplerian ellipse.  Newton himself spent years computing these
+    orbital perturbations, particularly for the moon.  In every case,
+    the observed deviations from perfect Keplerian ellipses and equal
+    area sweep rates match what you expect from all those more
+    complicated interactions.  In other words, the complexity of
+    Newtonian universal gravitation appears to match the complexity we
+    observe in the real world.</p>
 </div>
 <script>
   var tracking = null;
@@ -864,6 +992,7 @@
 
     function fullreset() {
       xq = 0.0;  yq = 10.0;
+      texty[0].value = texty[1].value = "0.9";
       seto(-6.0);
     }
 
@@ -1397,7 +1526,7 @@
 
   function fig5_interactions(evt) {
     var fig5 = evt.target;
-    var f5handle = ["foco5", "pntq5", "pntn5"].map(get_element);
+    var f5handle = ["foco5", "pntq5"].map(get_element);
     var pntcx = f5handle.map(function(e)
                              {return e.getAttributeNodeNS(null, "cx");});
     var pntcy = f5handle.map(function(e)
@@ -1405,45 +1534,39 @@
     var ellipse = get_element("ell5");
     var ellcx = ellipse.getAttributeNodeNS(null, "cx");
     var ellry = ellipse.getAttributeNodeNS(null, "ry");
-    var circs = ["foco5", "pntp5", "pntq5", "pntm5", "pntn5"].map(get_element);
+    var circs = ["foco5", "pntp5", "pntq5"].map(get_element);
     var circx = circs.map(function(e)
                           {return e.getAttributeNodeNS(null, "cx");});
     var circy = circs.map(function(e)
                           {return e.getAttributeNodeNS(null, "cy");});
-    var paths = ["sp5", "opq5", "oq5", "pm5", "snq5"].map(get_element);
+    var paths = ["os5", "sq5", "oq5", "posu5", "posr5", "posv5",
+                 "velu5", "velr5", "velv5", "velg5"].map(get_element);
     var pathd = paths.map(function(e)
                           {return e.getAttributeNodeNS(null, "d");});
-    var texts = ["txs5", "txo5", "txp5", "txq5", "txm5",
-                 "txn5"].map(get_element);
+    var xforms = ["inset5", "vplane5"].map(get_element);
+    xforms = xforms.map(function(e)
+                        {return e.getAttributeNodeNS(null, "transform");});
+    var texts = ["txs5", "txo5", "txp5", "txq5"].map(get_element);
     var textx = texts.map(function(e)
                           {return e.getAttributeNodeNS(null, "x");});
     var texty = texts.map(function(e)
                           {return e.getAttributeNodeNS(null, "y");});
-    var snqstroke = paths[4].getAttributeNodeNS(null, "stroke");
-    var pntnfill = circs[4].getAttributeNodeNS(null, "fill");
-    var txtnfill = texts[5].getAttributeNodeNS(null, "fill");
     var a = 5.0;  // fixed - do not change
     var c = 3.0;
     var xq = 0.0;
     var yq = 10.0;
     var xp = 0.0;
     var yp = 3.2;
-    var xn = -3.0;
-    var yn = 5.0;
+    var vr = 3.2;  // coincidence, independent of initial yp
+    var gmax = 2.4;
+    var vx = -vr;
+    var vy = 0.0;
+    var vc = vr * c/a;
     var nhidden = true;
-
-    function nhide(on) {
-      if (on) {
-        snqstroke.value = pntnfill.value = txtnfill.value = "transparent";
-        nhidden = true;
-      } else {
-        snqstroke.value = pntnfill.value = txtnfill.value = "#ff8000";
-        nhidden = false;
-      }
-    }
 
     function seto(x) {
       c = -0.5 * x;
+      vc = vr * c/a;
       circx[0].value = "" + x;
       textx[1].value = "" + (x - 0.3);
       ellcx.value = "" + (-c);
@@ -1453,35 +1576,34 @@
 
     function setq(qx, qy) {
       var ychange = (yq < 0.) != (qy < 0.);
+      var in4th = (yq < 0.) && (xq > 0.);
       xq = qx;  yq = qy;
-      xn = 0.5*xq - c;  yn = 0.5*yq;
       qx /= a;  qy /= a;
       var s = (2.*a - qx*c) / (qx*qx + yq*yq/(a*a - c*c));
       xp = s*qx;  yp = s*qy;
+      qx *= 0.5;
+      qy *= 0.5;
+      vx = -qy * vr;
+      vy = qx * vr;
+      // perihelion is r=a-c, want g = gmax there
+      var g = gmax * (a-c)**2 / (xp*xp + yp*yp);
       circx[1].value = "" + xp;  circy[1].value = "" + (-yp);
       circx[2].value = "" + xq;  circy[2].value = "" + (-yq);
-      circx[3].value = circx[4].value = "" + (0.5*xq - c);
-      circy[3].value = circy[4].value = "" + (-0.5*yq);
-      pathd[0].value = "M 0.0,0.0 L " + xp + "," + (-yp);
       var mo = "M " + (-2.0*c) + ",0.0 L "
-      pathd[1].value = mo + xp + "," + (-yp) + " L " + xq + "," + (-yq);
+      pathd[0].value = mo + "0.0,0.0";
+      pathd[1].value = "M 0.0,0.0 L " + xq + "," + (-yq);
       pathd[2].value = mo + xq + "," + (-yq);
-      // Compute endpoints of PM on circle concentric with ellipse and
-      // halfway between ellipse and Q-circle, center (0,-c) radius (3a-c)/2
-      var cc = xp + c;
-      var xoq = xq + 2.*c;
-      var aa = xoq*xoq + yq*yq;
-      var bb = yq*cc - xoq*yp;  // -B/2 in quadratic equation
-      cc = cc*cc + yp*yp - 0.25*(3.*a - c)**2;
-      var dd = bb*bb - aa*cc;
-      if (dd < 0.0) {
-        dd = 0.0;  // guard against rounding error
-      }
-      dd = sqrt(dd);
-      cc = (bb - dd)/aa;  bb = (bb + dd)/aa;  // two roots or quadratic
-      // (xp,yp) + (-yq,xoq)*root are endpoints
-      pathd[3].value = ("M " + (xp-yq*bb) + "," + (-yp-xoq*bb) +
-                        " L " + (xp-yq*cc) + "," + (-yp-xoq*cc));
+      mo = "M 0.0," + vc + " L ";
+      pathd[6].value = mo + "0.0,0.0";
+      pathd[7].value = "M 0.0,0.0 L " + vx + "," + (-vy);
+      pathd[8].value = mo + vx + "," + (-vy);
+      pathd[9].value = ("M " + vx + "," + (-vy) + " L " +
+                        (vx-qx*g) + "," + (-vy+qy*g));
+      mo = "M " + xp + "," + (-yp) + " L ";
+      pathd[3].value = mo + xp + "," + (-yp-vc);
+      pathd[4].value = ("M " + xp + "," + (-yp-vc) + " L " +
+                        (xp+vx) + "," + (-yp-vc-vy));
+      pathd[5].value = mo + (xp+vx) + "," + (-yp-vc-vy);
       if (ychange) {
         if (yq >= 0.) {
           texty[0].value = texty[1].value = "0.9";
@@ -1490,8 +1612,8 @@
         }
       }
       // compute Q letter position
-      var qx = sqrt(xq*xq + yq*yq);
-      var qy = yq / qx;
+      qx = sqrt(xq*xq + yq*yq);
+      qy = yq / qx;
       qx = xq / qx;
       if (yq >= 0.0) {  // xprime=(qy,-qx) and yprime=(qx,qy)
         s = xq + 0.5*qy - 0.5*qx;
@@ -1512,38 +1634,23 @@
       qy = yp + 0.612*qy;
       textx[2].value = "" + (qx-0.25);
       texty[2].value = "" + (0.3-qy);
-      // compute M letter position
-      qx = 0.5*xq - c;
-      qy = 0.5*yq;
-      if (yq >= 0.0) {
-        textx[4].value = "" + (qx-0.4);
-        texty[4].value = "" + (-0.4-qy);
-      } else {
-        textx[4].value = "" + (qx-0.4);
-        texty[4].value = "" + (1.0-qy);
-      }
-    }
-
-    function setn(x, y) {
-      xn = x;  yn = y;
-      // d="M 0.0,0.0 L -3.0,-5.0 L 0.0,-10.0 M -6.0,0.0 L -3.0 -5.0"
-      circx[4].value = "" + xn;
-      circy[4].value = "" + (-yn);
-      pathd[4].value = ("M 0.0,0.0 L " + xn + "," + (-yn) +
-                        " L " + xq + "," + (-yq) +
-                        " M " + (-2.*c) + ",0.0 L " + xn + "," + (-yn));
-      // compute N letter position
-      if (yq >= 0.0) {
-        textx[5].value = "" + (xn-0.4);
-        texty[5].value = "" + (-0.4-yn);
-      } else {
-        textx[5].value = "" + (xn-0.4);
-        texty[5].value = "" + (1.0-yn);
+      // flip inset when Q in fourth quadrant
+      if (in4th != ((yq < 0.) && (xq > 0.))) {
+        if (in4th) {
+          xforms[0].value = "rotate(0.0)";
+          xforms[1].value = "translate(6.2,6.2)";
+        } else {
+          xforms[0].value = "rotate(-90.0)";
+          xforms[1].value = "translate(6.2,-6.2)";
+        }
       }
     }
 
     function fullreset() {
       xq = 0.0;  yq = 10.0;
+      texty[0].value = texty[1].value = "0.9";
+      xforms[0].value = "rotate(0.0)";
+      xforms[1].value = "translate(6.2,6.2)";
       seto(-6.0);
     }
 
@@ -1552,23 +1659,9 @@
       var dy = coords.y;
       if (index === 0) {  // point O
         dx = -2.*c - dx;
-        xn = 0.5*xq - c;
-        yn = 0.5*yq;
-        setn(0.5*xq - c, 0.5*yq);
-        nhide(true);
       } else if (index === 1) {  // point Q
         dx = xq - dx;
         dy = yq + dy;
-        setn(0.5*xq - c, 0.5*yq);
-        nhide(true);
-      } else {  // point N
-        if (nhidden) {  // use point M coordinates
-          xn = 0.5*xq - c;
-          yn = 0.5*yq;
-        }
-        dx = xn - dx;
-        dy = yn + dy;
-        setn(xn, yn);
       }
       return [index, dx, dy];
     }
@@ -1595,26 +1688,6 @@
           y = twoa * y / r;
         }
         setq(x, y);
-      } else {  // point N
-        // project (x, y) onto the line PM, (-yoq, xoq)
-        var xoq = xq + 2.*c;
-        var r = sqrt(xoq*xoq + yq*yq);
-        var yoq = yq / r;
-        xoq /= r;
-        r = (y-yp)*xoq - (x-xp)*yoq;
-        x = xp - r*yoq;  y = yp + r*xoq;  // (x, y) now on line PM
-        r = sqrt((x + c)**2 + y**2);
-        if (r > 0.5*(3.*a - c)) {
-          return null;
-        }
-        var xm = 0.5*xq - c;
-        var ym = 0.5*yq;
-        if ((x-xm)**2 + (y-ym)**2 > 0.25) {  // N has moved off M
-          nhide(false);
-        } else {
-          nhide(true);
-        }
-        setn(x, y);
       }
       return tracking;
     }
