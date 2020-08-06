@@ -750,22 +750,80 @@
     acceleration of $4.3\times 10^{-10} \times 3600\times 6.4\times
     10^6=9.9$ meters per second per second.  When you drop a rock, it
     falls to earth with an acceleration of 9.8 meters per second per
-    second, "which answers pretty nearly," as Newton put it.</p>
+    second, "which answers pretty nearly," as Newton put it; the
+    inverse square law describes how both the moon and the rock
+    move.  No one before Newton connected the two.</p>
   <p>Because of all of the gravitational attractions to other planets
-    as well as to the sun, the Newtonian theory of universal gravity
-    predicts that planetary orbits should not quite be ellipses with
-    the sun at one focus sweeping out equal areas in equal times -
-    they should wobble about in slightly irregular orbits.  The moon
-    is an extreme case, because its attraction to the sun is an
-    appreciable fraction of its attraction to the earth, which causes
-    the orbit of the moon to be particularly irregular, nowhere near a
-    Keplerian ellipse.  Newton himself spent years computing these
-    orbital perturbations, particularly for the moon.  In every case,
-    the observed deviations from perfect Keplerian ellipses and equal
-    area sweep rates match what you expect from all those more
-    complicated interactions.  In other words, the complexity of
-    Newtonian universal gravitation appears to match the complexity we
-    observe in the real world.</p>
+    as well as to the sun, the planetary orbits should not quite be
+    ellipses with the sun at one focus sweeping out equal areas in
+    equal times - they should wobble about in slightly irregular
+    orbits.  The moon is an extreme case, because its attraction to
+    the sun is an appreciable fraction of its attraction to the earth,
+    which causes the orbit of the moon to be particularly irregular,
+    deviating obviously from a Keplerian ellipse.  Newton himself
+    spent years computing these orbital perturbations, particularly
+    for the moon.  In every case, the observed deviations from perfect
+    Keplerian ellipses and equal area sweep rates match what you
+    expect from all those additional inverse square attractions.  In
+    other words, the complexity of Newtonian universal gravitation
+    appears to match the complexity we observe in the real world.</p>
+  <div class="halfwide">
+  <svg xmlns="http://www.w3.org/2000/svg"
+       viewBox="-10.5 -6.0 21 11" onload="fig7_interactions(evt)"
+       stroke-width="0.1">
+    <defs>
+      <marker id="arrowk" orient="auto" viewBox="0 -3 6 6"
+              refX="6" markerWidth="6" markerHeight="6">
+        <polygon fill="black" stroke="black" stroke-width="1"
+                 points="0,-3, 6,0, 0,3"/>
+      </marker>
+      <marker id="arrowg" orient="auto" viewBox="0 -3 6 6"
+              refX="6" markerWidth="6" markerHeight="6">
+        <polygon fill="#c0c0c0" stroke="#c0c0c0" stroke-width="1"
+                 points="0,-3, 6,0, 0,3"/>
+      </marker>
+      <marker id="arrowb" orient="auto" viewBox="0 -3 6 6"
+              refX="6" markerWidth="6" markerHeight="6">
+        <polygon fill="#0080ff" stroke="#0080ff" stroke-width="1"
+                 points="0,-3, 6,0, 0,3"/>
+      </marker>
+      <marker id="arrowo" orient="auto" viewBox="0 -3 6 6"
+              refX="6" markerWidth="6" markerHeight="6">
+        <polygon fill="#ff8000" stroke="#ff8000" stroke-width="1"
+                 points="0,-3, 6,0, 0,3"/>
+      </marker>
+    </defs>
+    <path fill="none" stroke="#f0f0f0" stroke-width="0.3"
+          d="M 0.0,-4.85 L 0.0,3.7"/>
+    <ellipse id="ell7" fill="none" stroke="#c0c0c0"
+             cx="-5.0" cy="0" rx="4.4" ry="3.52"/>
+    <circle fill="none" stroke="#a0d0ff" cx="5.0" cy="0" r="4.4"/>
+    <path id="posr7" fill="none" stroke="black" marker-end="url(#arrowk)"
+          d="M -2.36,0.0 L -5.0,-3.52"/>
+    <path id="posv7" fill="none" stroke="#0080ff" marker-end="url(#arrowb)"
+          d="M -5.0,-3.52 l -2.0,0.0"/>
+    <circle id="dots7" class="clickable" fill="black" stroke="transparent"
+            stroke-width="0.3" cx="-2.36" cy="0.0" r="0.2"/>
+    <circle id="doto7" class="clickable" fill="#c0c0c0" stroke="transparent"
+            stroke-width="0.3" cx="-7.64" cy="0.0" r="0.2"/>
+    <circle id="dotr7" fill="black" cx="-5.0" cy="-3.52" r="0.2"/>
+    <path id="velu7" fill="none" stroke="#c0c0c0" marker-end="url(#arrowg)"
+          d="M 5.0,2.64 L 5.0,0.0"/>
+    <path id="velc7" fill="none" stroke="#c0c0c0" marker-end="url(#arrowg)"
+          d="M 5.0,0.0 L 1.48,2.64"/>
+    <path id="velv7" fill="none" stroke="#0080ff" marker-end="url(#arrowb)"
+          d="M 5.0,2.64 L 1.48,2.64"/>
+    <path id="velg7" fill="none" stroke="#ff8000" marker-end="url(#arrowo)"
+          d="M 1.47,2.64 l 0.24,0.32"/>
+    <circle fill="#c0c0c0" cx="5.0" cy="0.0" r="0.2"/>
+    <circle id="dotc7" fill="#0080ff" cx="5.0" cy="2.64" r="0.2"/>
+    <circle id="dotv7" fill="#0080ff" cx="1.48" cy="2.64" r="0.2"/>
+    <circle id="press7" class="clickable" fill="#b0b0b0" stroke="#606060"
+            stroke-width="0.2" cx="0.0" cy="4.5" r="0.4"/>
+    <text class="svgtxt" x="-6.6" y="-5.0">position</text>
+    <text class="svgtxt" fill="#0080ff" x="3.5" y="-5.0">velocity</text>
+  </svg>
+  </div>
 </div>
 <script>
   var tracking = null;
@@ -1160,7 +1218,7 @@
       var x = xnow - ynow*dth;
       var y = ynow + xnow*dth;
       var r = radius / sqrt(x*x + y*y);
-      redraw(x*r, y*r)
+      redraw(x*r, y*r);
     }
 
     function start(index, coords) {
@@ -1703,6 +1761,136 @@
     }
 
     add_trackers(fig5, f5handle, start, track, stop);
+  }
+
+  function fig7_interactions(evt) {
+    var fig7 = evt.target;
+    var f7handle = ["press7", "dots7", "doto7"].map(get_element);
+    var ellipse = get_element("ell7");
+    var ellry = ellipse.getAttributeNodeNS(null, "ry");
+    var paths = ["posr7", "velv7", "posv7", "velg7",
+                 "velc7", "velu7"].map(get_element);
+    var pathd = paths.map(function(e)
+                          {return e.getAttributeNodeNS(null, "d");});
+    var circs = ["dotr7", "dotv7", "dots7", "doto7", "dotc7"].map(get_element);
+    var circx = circs.map(function(e)
+                          {return e.getAttributeNodeNS(null, "cx");});
+    var circy = circs.map(function(e)
+                          {return e.getAttributeNodeNS(null, "cy");});
+
+    var center = 5.0;
+    var radius = 4.4;
+    var a = radius;
+    var b = 0.8 * a;
+    var c = 0.6 * a;
+    var dscale = 2.5 / radius;
+    var xnow = 0.0;
+    var ynow = 0.8 * radius;
+    var u = radius * c/a;
+    var vcx = -radius * b/a;
+    var vcy = -u;
+    var gscale = 2.5;
+    var gnow = 0.16;
+    var dt = 0.03;
+
+    function reshape(cc) {
+      c = cc;
+      b = sqrt(a*a - c*c);
+      u = radius * c/a;
+      gnow = (a - c)**2 / ((xnow - c)**2 + ynow**2);
+      ellry.value = "" + b;
+      circx[2].value = "" + (c-center);
+      circx[3].value = "" + (-c-center);
+      circy[4].value = "" + u;
+      pathd[5].value = "M " + center + "," + u + " L " + center + ",-0.00001";
+    }
+
+    function redraw(x, y) {
+      var xn = sqrt((x-c)**2 + y**2);
+      var yn = y / xn;
+      xn = (x-c) / xn;
+      xnow = x;
+      ynow = y;
+      vcx = -yn * radius;
+      vcy = xn * radius;
+      var g = gscale * gnow;
+      circx[0].value = "" + (x - center);
+      circy[0].value = "" + (-y);
+      circx[1].value = "" + (center + vcx);
+      circy[1].value = "" + (-vcy);
+      pathd[0].value = "M " + (c-center) + ",0.0 L " + (x-center) + "," + (-y);
+      pathd[1].value = "M "+center+","+u+" L "+(center+vcx)+","+(-vcy);
+      pathd[2].value = ("M " + (x-center) + "," + (-y) + " l " +
+                        (dscale*vcx) + "," + (-dscale*(vcy+u)));
+      pathd[3].value = ("M " + (center + vcx) + "," + (-vcy) + " l " +
+                        (-g*xn) + "," + (g*yn));
+      pathd[4].value = "M " + center + ",0.0 L " + (center+vcx) + "," + (-vcy);
+    }
+
+    function stepper() {
+      gnow = (a - c)**2 / ((xnow - c)**2 + ynow**2);
+      var vx = vcx;
+      var vy = vcy;
+      vx = vcx - vcy*gnow*dt;
+      vy = vcy + vcx*gnow*dt;
+      var norm = radius / sqrt(vx*vx + vy*vy);
+      vx *= norm;
+      vy *= norm;
+      var x = xnow + 0.5*(vx+vcx)*dt;
+      var y = ynow + (0.5*(vy+vcy) + u)*dt;
+      vcx = vx;
+      vcy = vy;
+      // adjust new point to lie exactly on ellipse
+      norm = 1. / sqrt((x/a)**2 + (y/b)**2);
+      x *= norm;
+      y *= norm;
+      redraw(x, y);
+    }
+
+    function start(index, coords) {
+      var dx = null;
+      if (index === 0) {
+        dx = setInterval(stepper, 20);  // 50 frames/sec
+      } else if (index === 1) {
+        dx = coords.x + center - c;
+      } else if (index === 2) {
+        dx = coords.x + center + c;
+      }
+      return [index, dx];
+    }
+
+    function track(tracking, coords) {
+      var cc = null;
+      if (tracking !== null) {
+        if (tracking[0] === 1) {
+          cc = coords.x - tracking[1] + center;
+        } else if (tracking[0] === 2) {
+          cc = -(coords.x - tracking[1] + center);
+        }
+      }
+      if (cc !== null) {
+        if (cc > 0.9*radius || cc < -0.5) {
+          cc = 0.6 * radius;
+          tracking = null;
+        } else if (cc < 0.0) {
+          cc = 0.0;
+        }
+        reshape(cc);
+        redraw(0.0, b);
+      }
+      return tracking;
+    }
+
+    function stop(tracking) {
+      if (tracking !== null) {
+        if (tracking[0] === 0) {
+          clearInterval(tracking[1]);
+        }
+      }
+      return;
+    }
+
+    add_trackers(fig7, f7handle, start, track, stop);
   }
 </script>
 </body>
