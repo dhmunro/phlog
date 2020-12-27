@@ -181,23 +181,23 @@
     needs about $75$ ($100/7\times 5$) terms of the $1/5$ series (up
     to about $t^{150}$).  For the $1/239$ series, $1/239\sim 4/1000$
     which means $239^{-5}\sim 10^3/10^{15} = 10^{-12}$, so every $5$
-    terms of that series adds another $12$ digits.  A hundred digits
-    therefore requires about $40$ terms of the $1/239$ series, in
+    terms of that series adds another $24$ digits.  A hundred digits
+    therefore requires about $21$ terms of the $1/239$ series, in
     addition to about $75$ terms of the $1/5$ series.</p>
   <p>Each term requires one multiply by $t^2$ (which is dividing by
     $239^2$ for that series), plus one small integer divide (for the
     coefficient of the inverse tangent series), and one add to
-    accumulate the final result.  All up, we're talking about $115$
-    hundred digit adds, $75$ hundred digit multiplies, and $155$
-    hundred digit divides ($40$ of which are by the daunting $239^2$).
+    accumulate the final result.  All up, we're talking about $96$
+    hundred digit adds, $75$ hundred digit multiplies, and $117$
+    hundred digit divides ($21$ of which are by the daunting $239^2$).
     I imagine each of those divides might take a couple of hours, so
     the whole process ought to be possible with several hundred hours
     work.  That's why I'm guessing it took Machin a few months to
     perform and check his calculation.  It also seems to me that he
-    would have spent the bulk of his time on the $40$ terms of the
-    $1/239$ series.  Even though it is only half as many terms, the
-    arithmetic work is considerably more than twice as great per
-    term.</p>
+    would have spent the bulk of his time on the $21$ terms of the
+    $1/239$ series.  Even though it has three and a half times fewer
+    terms, the arithmetic work is considerably more than three and a
+    half times as great per term.</p>
   <p>We can all appreciate the level of effort Machin expended to
     complete this calculation, although the sustained level of
     concentration required for the task is something most of us will
@@ -206,20 +206,20 @@
   <h2>Euler's method</h2>
   <p>That brings us to Euler, one of the two or three greatest
     mathematicians of all time.  His one hour calculation of twenty
-    digits of $\pi$ probably took place in or near 1766, sixty
-    years after Machin's hundred digit calculation.  Euler's method is
-    based on what Machin did - he certainly would have known of the
-    hundred digit calculation.  His major improvement was to find
-    an inverse tangent decomposition into two parts, like Machin, but
-    for which <em>both</em> series involve small terminating base ten
-    decimals.  That is, Euler eliminates the nasty $1/239$ series that
-    Machin probably spent most of his time on.</p>
-  <p>Unlike Machin, his hour long $\pi$ calculation hardly deserves a
-    footnote in the catalog of Euler's achievements - he spent an hour
-    on it compared to the staggering 92 volumes of his collected
-    works.  Euler didn't set out to compute $\pi$ at all.  Instead, he
-    was working on a general technique for what we now call
-    accelerating the convergence of any alternating series.  His
+    digits of $\pi$ probably took place in or near 1766, sixty years
+    after Machin's hundred digit calculation.  Euler's method is based
+    on what Machin did - he certainly would have known of the hundred
+    digit calculation.  His major improvement was to find an inverse
+    tangent decomposition into two parts, for which <em>both</em>
+    series involve small terminating base ten decimals.  That is,
+    Euler eliminates the nasty $1/239$ series that Machin probably
+    spent most of his time on.</p>
+  <p>Unlike Machin, Euler's hour long $\pi$ calculation hardly
+    deserves a footnote in the catalog of his achievements - he spent
+    an hour on it compared to the staggering 92 volumes of his
+    collected works.  Euler didn't set out to compute $\pi$ at all.
+    Instead, he was working on a general technique for what we now
+    call accelerating the convergence of any alternating series.  His
     technique is now called the Euler transform, which he published in
     1766.  It is a way to convert any infinite sum whose terms
     alternate in sign into a new infinite sum which converges faster
