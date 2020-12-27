@@ -71,7 +71,7 @@
     series (because $\pi$ is transcendental).  What distinguishes them
     is how rapidly they converge, that is, how many iterations until
     further corrections are smaller than the accuracy you want.  This
-    is a tradeoff engineers and scientists, as well as mathematicians,
+    is a trade-off engineers and scientists, as well as mathematicians,
     face daily: How much time should I spend improving the technique
     before I dive in and do the work?  For computing $\pi$ to twenty
     places, the answer is a lot.  Archimedes's direct method is
@@ -82,7 +82,7 @@
   <p>The advent of calculus in the late 1600s provided a very
     different way to approach calculating $\pi$.  In simple terms,
     calculus allows you to begin with an infinite-sided polygon, whose
-    sides exactly match an infinitessimal section of circular arc, and
+    sides exactly match an infinitesimal section of circular arc, and
     work backwards to a finite angle.  The idea is to develop a power
     series for a function with values related to $\pi$.  By far the
     simplest such series is for the inverse tangent function
@@ -102,7 +102,7 @@
     $$1/(1+t^2) = 1 - t^2 + t^4 - t^6 + ...$$
 
     This is perhaps the best known infinite series, which you can
-    easily verify by mulitplying both sides by the denominator on the
+    easily verify by multiplying both sides by the denominator on the
     left side.
   </p>
   <p>Plugging $t=1$ into the inverse tangent series produces the
@@ -174,18 +174,18 @@
     each of the two series, and Machin must have worked that out in
     advance: How else did he choose a hundred digits as a reasonable
     goal?  For the $1/5$ series, each term is a factor of a bit more
-    than $5^2=25$ less than the previous.  Now $5^{-10}=2^10/10^10$ is
-    just a bit more than $10^{-7}$, which means that each $5$ (that
-    is, $10/2$) terms of the series adds another $7$ digits.  To get a
-    hundred digits, therefore, Machin needs about $75$ ($100/7\times
-    5$) terms of the $1/5$ series (up to about $t^{150}$).  For the
-    $1/239$ series, $1/239\sim 4/1000$ which means $239^{-5}\sim
-    10^3/10^{15} = 10^{-12}$, so every $5$ terms of that series adds
-    another $12$ digits.  A hundred digits therefore requires about
-    $40$ terms of the $1/239$ series, in addition to about $75$ terms
-    of the $1/5$ series.</p>
-  <p>Each term requires one multiply by $t$ (which is dividing by
-    $239$ for that series), plus one small integer divide (for the
+    than $5^2=25$ less than the previous.  Now
+    $5^{-10}=2^{10}/10^{10}$ is just a bit more than $10^{-7}$, which
+    means that each $5$ (that is, $10/2$) terms of the series adds
+    another $7$ digits.  To get a hundred digits, therefore, Machin
+    needs about $75$ ($100/7\times 5$) terms of the $1/5$ series (up
+    to about $t^{150}$).  For the $1/239$ series, $1/239\sim 4/1000$
+    which means $239^{-5}\sim 10^3/10^{15} = 10^{-12}$, so every $5$
+    terms of that series adds another $12$ digits.  A hundred digits
+    therefore requires about $40$ terms of the $1/239$ series, in
+    addition to about $75$ terms of the $1/5$ series.</p>
+  <p>Each term requires one multiply by $t^2$ (which is dividing by
+    $239^2$ for that series), plus one small integer divide (for the
     coefficient of the inverse tangent series), and one add to
     accumulate the final result.  All up, we're talking about $115$
     hundred digit adds, $75$ hundred digit multiplies, and $155$
@@ -208,7 +208,7 @@
     mathematicians of all time.  His one hour calculation of twenty
     digits of $\pi$ probably took place in or near 1766, sixty
     years after Machin's hundred digit calculation.  Euler's method is
-    based on what Machin did - he certainly would have known the
+    based on what Machin did - he certainly would have known of the
     hundred digit calculation.  His major improvement was to find
     an inverse tangent decomposition into two parts, like Machin, but
     for which <em>both</em> series involve small terminating base ten
@@ -218,17 +218,18 @@
     footnote in the catalog of Euler's achievements - he spent an hour
     on it compared to the staggering 92 volumes of his collected
     works.  Euler didn't set out to compute $\pi$ at all.  Instead, he
-    was working on a general technique for what we now call accelerating
-    the convergence of any alternating series.  His major achievement
-    is now called the Euler transform, which he published in 1766.  It
-    is a way to convert any infinite sum whose terms alternate in sign
-    into a new infinite sum which converges faster than the original.
-    The Euler transform is far too complicated to explain here, but
-    it is a very important result.  (Not just a few digits of $\pi$.)</p>
+    was working on a general technique for what we now call
+    accelerating the convergence of any alternating series.  His
+    technique is now called the Euler transform, which he published in
+    1766.  It is a way to convert any infinite sum whose terms
+    alternate in sign into a new infinite sum which converges faster
+    than the original.  The Euler transform is far too complicated to
+    explain here, but it is a very important result, unlike a few
+    digits of $\pi$.</p>
   <p>Since the inverse tangent series is one of the most famous
     alternating infinite sums, Euler certainly would have used it as
-    an example of his general method.  This produces Euler's transformed
-    series for the inverse tangent function:
+    an example of his general method.  Euler's transformed series for
+    the inverse tangent function is:
 
     $$\tan^{-1}t = \frac{x}{t}\left(1 + \frac{2}{3}x +
     \frac{2\cdot 4}{3\cdot 5}x^2 + \frac{2\cdot 4\cdot 6}{3\cdot 5\cdot 7}x^3
@@ -240,8 +241,8 @@
 
     Plugging in $t=1$ and $x=1/2$ yields a usable series for computing
     a few digits of $\pi$ immediately, unlike the original inverse
-    tangent series.  However, Machin's series after his decomposition
-    both converge far more quickly.</p>
+    tangent series.  However, Machin's pair of series ($1/5$ and
+    $1/239$) both converge far more quickly.</p>
   <p>But Euler also discovered a two term inverse tangent decomposition
     which is tailor-made for his different inverse tangent series:
 
@@ -253,15 +254,15 @@
     as bad as $1/239$.  But look at their values of $x$!  $t=1/7$
     becomes $x=1/50=0.02$ and $t=3/79$ becomes $x=9/6250=0.00144$.
     Not one, but both of the two series involve powers which are
-    very easy to calculate by hand in base ten.</p>
-  <p>As for Machin's decomposition, the existence of any decompostion
-    as nice as Euler's is wildly improbable serendipity.  In the case
-    of Machin's decompostion, even a hack mathematician like me could
-    easily have stumbled across it and recognized its significance.
-    Euler's decompostion, on the other hand, is far beyond anything I
-    can imagine discovering myself.</p>
+    very easy to calculate by hand in base ten!</p>
+  <p>Like Machin's decomposition, the fact that any decomposition as
+    nice as Euler's exists is wildly improbable serendipity.  In the
+    case of Machin's decomposition, even a hack mathematician like me
+    could easily have stumbled across it and recognized its
+    significance.  Euler's decomposition, on the other hand, is far
+    beyond anything I can imagine discovering myself.</p>
   <p>I haven't been able to find any description of how people hunt
-    for such decompostions.  At least several thousand such inverse
+    for such decompositions.  At least several thousand such inverse
     tangent decompositions are known today (perhaps many more), but
     they are rare enough that probably only a few had been discovered
     in Euler's time, and as the greatest mathematician of his age, he
@@ -272,24 +273,26 @@
     became interested in inverse tangent decompositions, which belong
     to an intriguing branch of number theory involving complex numbers
     with integer real and imaginary parts.  While studying them, he
-    added his own $1/7$ plus $3/79$ decomposition (at least) before he
-    ever began to think about accelerating series convergence.</p>
-  <p>If he had the decomposition first, and had studied them enough to
-    know they weren't all that common, then it is easy to understand
-    how he would have simply checked all the known decompositions to
-    see if any happened to have nice values of $x$, like Machin's nice
-    value of $t=1/5$.  If so, he would have been just a shocked as we
-    are to find that both $x$ values were nice numbers.  Even better,
-    it is a decomposition that he himself discovered a decode before.
-    If this is an accurate reconstruction of the history, it really
-    brings home Euler's dominance of eighteenth century mathematics.</p>
+    added his own $1/7$ plus $3/79$ decomposition (and perhaps others)
+    before he ever began to think about accelerating series
+    convergence.</p>
+  <p>If Euler had the decomposition first, and had studied them enough
+    to know they weren't all that common, then it is easy to
+    understand how he would have simply checked all the known
+    decompositions to see if any happened to have nice values of $x$,
+    like Machin's nice value of $t=1/5$.  If so, he would have been
+    just a shocked as we are to find that both $x$ values were nice
+    numbers.  Even better, it is a decomposition that he himself
+    discovered a decode before.  If this is an accurate reconstruction
+    of the history, it really brings home Euler's dominance of
+    eighteenth century mathematics.</p>
   <p>That still doesn't explain how Euler discovered his
-    decomposition.  Unlike the Machin decompostion, it isn't just a
+    decomposition.  Unlike the Machin decomposition, it isn't just a
     matter of noticing that some multiple of a small fraction is
     extremely close to $45^\circ$, and subtracting to find the
     remainder.  The factor of $2$ in front of the $3/79$ term breaks
     that simple approach.  And unlike four times $1/5$, five times
-    $1/7$ is not unususally close to $45^\circ$.  I wouldn't have
+    $1/7$ is not unusually close to $45^\circ$.  I wouldn't have
     found this decomposition in a century.  Euler too must have had
     some method he discovered to narrow his search, but I've been unable
     to find out what it was.</p>
@@ -320,7 +323,7 @@
 
     Since the final equality is indeed true, $\pi/4 = 5\tan^{-1}1/7 +
     2\tan^{-1}3/79$, as Euler says.  If you search for "Machin-like
-    formulas" you'll find a lot of research on these decompostions,
+    formulas" you'll find a lot of research on these decompositions,
     continuing to the present day.</p>
   <p>It would be pointless for me to carry out a twenty digit
     calculation of $\pi$ by hand if I had not also proven for myself
@@ -329,7 +332,7 @@
     tangent based on some ideas I found in my web research.  Remember
     that Euler would have applied his much more powerful and general
     Euler transform; like the above proof of his $45^\circ$
-    decomposition, this one is constructed backwards from the series
+    decomposition, this proof is constructed backwards from the series
     itself.</p>
   <p>First, note that if $t=\tan\alpha$, then $x=\sin^2\alpha$.
     Hence, $\alpha=\tan^{-1}t=\sin^{-1}\sqrt{x}$.  Consider the function
@@ -357,7 +360,7 @@
 
     This recurrence for $b_n$, together with the fact that
     $\sqrt{x(1-x)}=x/t$, produces the Euler series for inverse tangent.</p>
-  <p>However much serendipty was involved, Euler's method is arguably the
+  <p>However much serendipity was involved, Euler's method is arguably the
     easiest way to compute an accurate value of $\pi$ with pencil and paper
     which has ever been discovered.  If Euler could get twenty digits in an
     hour as an afterthought, I decided I would try my hand at it.</p>
@@ -390,7 +393,7 @@
     exact answer, so we simply need to go until the next term is
     smaller than the accuracy we want.  However, the Euler series does
     not alternate, so we need a way to bound the sum of all remaining
-    terms.  Fortunately, because the $b_n/b_{n-1}$ approaches $1$ from
+    terms.  Fortunately, because $b_n/b_{n-1}$ approaches $1$ from
     below as $n$ increases, we know that:
 
     $$\begin{array}{l}
