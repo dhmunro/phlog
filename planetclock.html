@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Planet Clock Test</title>
+  <meta name="description"
+    content="Test of planetclock.js and ephemeris.js.">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script>MathJax = {tex: { inlineMath: [["$", "$"], ["\\(", "\\)"]] }};
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"
+          id="MathJax-script">
+  </script>
+</head>
+
+<body>
+
+  <div id="top-div" class="clock-container-left"
+       style="position: relative; display: flex; flex-flow: row wrap;">
+    <div id="top-clock"
+         style="min-width: 450px; max-width: 800px; flex: 2 0 60%"></div>
+    <div style="min-width: 370px; flex: 1 0 40%">
+      <h1>Planet Clock</h1>
+      <p>Here is a visualization of a solar system model from the JPL page
+        <a href="https://ssd.jpl.nasa.gov/planets/approx_pos.html">
+          <em>Approximate Positions of the Planets</em></a>.</p>
+      <p>The black ring represents a ribbon of sky around the ecliptic
+        plane, that is, the great circle through the fixed stars the Sun
+        traverses each year.  The coordinates are
+        <a href="https://en.wikipedia.org/wiki/Ecliptic_coordinate_system">
+          J2000.0 ecliptic coordinates</a>, with longitude increasing
+        around the ring, and latitude increasing outward.  The ring is
+        really a thin ribbon standing on edge out of the plane of this
+        page - it has been flattened into the page to be able to draw
+        it in 2D.  (You can think of ecliptic longitude as sign of the
+        Zodiac.)</p>
+      <p>The gold circle and line show the position of the Sun
+        relative to the fixed stars.  The yellow ring shows the date
+        at which the Sun reaches each position.  Drag the Sun point to
+        change its position, and notice that each time you move it
+        from Dec to Jan (or Dec to Jan), the yellow year button
+        increments (or decrements).  Click on the year button to jump
+        many years.  Notice that the yellow month ring very slowly
+        rotates over the centuries due to
+        <a href="https://en.wikipedia.org/wiki/Axial_precession">
+          precession of the equinoxes</a>.  The blue sector represents
+        the part of the sky that is too near the Sun - when the sky is
+        not fully dark after sunset in the evening or before sunrise
+        in the morning - to be able to see any stars (at or below
+        mid-latitudes).</p>
+      <p>The colored dots represent the five planets visible by naked
+        eye.  As you move the Sun around, the planets generally move
+        in the same direction, but periodically reverse direction -
+        called <em>retrograde</em> motion.  Mercury and Venus are
+        always near the Sun, slowly overtaking the Sun as they move
+        from morning to evening side, then rapidly retrograde from
+        evening to morning side.  Mars, Jupiter, and Saturn move
+        around slower than the Sun, going retrograde as they approach
+        opposition (180 degrees from the Sun).  While the Sun remains
+        exactly at ecliptic latitude zero, the planets drift
+        alternately to slightly positive (north) and negative (south)
+        latitude.</p>
+    </div>
+  </div>
+
+<!-- J2000 Zodiac boundaries:
+Pisces 28.687 Aries 53.417 Taurus 90.140 Gemini 117.988 Cancer 138.038
+Leo 173.851 Virgo 217.810 Libra 241.047 Scorpius 247.638 Ophiuchus 266.238
+Sagittarius 299.656 Capricornus 327.488 Aquarius 351.650 Pisces
+
+~400 BC?  beginning of Cancer at beta-Geminorum, of Aquarius at delta-Capricorn
+Pisces 0 Aries 30 Taurus 60 Gemini 90 Cancer 120 Leo 150 Virgo 180
+Libra 210 Scorpio 240 Sagittarius 270 Capricornus 300 Aquarius 330 Pisces
+-->
+
+<!-- Load d3 library.  Later should grab only pieces used.
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.4.4/d3.min.js"></script>
+-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.4.4/d3.js"></script>
+<script src="./ephemeris.js"></script>
+<script src="./planetclock.js"></script>
+<script>
+
+  let clock = new PlanetClock(d3.select("#top-clock"));
+
+  let button = d3.select("#top-div").append("div")
+      .style("position", "absolute")
+      .style("top", "1%").style("left", "1%")
+      .append("button")
+      .style("cursor", "pointer")
+      .text("Show Moon");
+  let moon = {state: false};
+  function toggler() {
+    if (moon.state) {
+      clock.turnOffMoon();
+      moon.state = false;
+      button.text("Show Moon");
+    } else {
+      clock.turnOnMoon();
+      moon.state = true;
+      button.text("Hide Moon");
+    }
+  }
+  button.on("click", toggler);
+
+</script>
+
+
+</body>
+</html>
