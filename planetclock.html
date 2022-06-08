@@ -18,9 +18,17 @@
   <div id="top-div" class="clock-container-left"
        style="position: relative; display: flex; flex-flow: row wrap;">
     <div id="top-clock"
-         style="min-width: 450px; max-width: 800px; flex: 2 0 60%"></div>
-    <div style="min-width: 370px; flex: 1 0 40%">
-      <h1>Planet Clock</h1>
+         style="min-width: 450px; max-width: 750px; flex: 1"></div>
+    <div id="right-side"
+         style="position: relative; min-width: 400px; max-width: 650px; flex: 1">
+      <!-- <h1>Planet Clock</h1> -->
+      <select id="main-menu" name="main-menu" onchange="mainMenuSelect()"
+              style="font-family: serif; font-size: 24pt;">
+        <option value="#intro" selected>Introduction</option>
+        <option value="#orb-view">Orbit View</option>
+      </select>
+      <div id="intro"
+           style="position: absolute; top: 50px; left: 0; display: block;">
       <p>Here is a visualization of a solar system model from the JPL page
         <a href="https://ssd.jpl.nasa.gov/planets/approx_pos.html">
           <em>Approximate Positions of the Planets</em></a>.</p>
@@ -32,8 +40,7 @@
         around the ring, and latitude increasing outward.  The ring is
         really a thin ribbon standing on edge out of the plane of this
         page - it has been flattened into the page to be able to draw
-        it in 2D.  (You can think of ecliptic longitude as sign of the
-        Zodiac.)</p>
+        it in 2D.  (Ecliptic longitude is sign of the Zodiac.)</p>
       <p>The gold circle and line show the position of the Sun
         relative to the fixed stars.  The yellow ring shows the date
         at which the Sun reaches each position.  Drag the Sun point to
@@ -56,10 +63,16 @@
         from morning to evening side, then rapidly retrograde from
         evening to morning side.  Mars, Jupiter, and Saturn move
         around slower than the Sun, going retrograde as they approach
-        opposition (180 degrees from the Sun).  While the Sun remains
-        exactly at ecliptic latitude zero, the planets drift
-        alternately to slightly positive (north) and negative (south)
-        latitude.</p>
+        opposition (180 degrees from the Sun).  Unlike the Sun, the
+        planets drift in ecliptic latitude.  Click on a planet dot in
+        the central legend to toggle a line between the planet and
+        earth.</p>
+      </div>
+      <div style="position: absolute; top: 50px; left: 0;">
+        <div id="orb-view"
+             style="position: static; width: 100%; height: 100%; display: none;">
+        </div>
+      </div>
     </div>
   </div>
 
@@ -102,6 +115,28 @@ Libra 210 Scorpio 240 Sagittarius 270 Capricornus 300 Aquarius 330 Pisces
     }
   }
   button.on("click", toggler);
+
+  let orbView = new OrbitView(d3.select("#orb-view"), clock);
+
+  function mainMenuSelect() {
+    ["mercury", "venus", "jupiter", "saturn"].forEach(
+      p => clock.setHandVisibility(p, false));
+    let sel = document.getElementById("main-menu");
+    sel = sel.options[sel.selectedIndex].value;
+    ["#intro", "#orb-view"].forEach(
+      id => {
+        let d3Div = d3.select(id);
+        if (id == sel) {
+          d3Div.style("display", "block");
+          clock.setHandVisibility("mars", id == "#orb-view");
+        } else {
+          d3Div.style("display", "none");
+        }
+      });
+  }
+
+  // On page reload, select element remembers previous setting, so
+  mainMenuSelect();
 
 </script>
 

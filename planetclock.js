@@ -236,7 +236,8 @@ class PlanetClock {
       mercury: "hidden", venus: "hidden", mars: "hidden",
       jupiter: "hidden", saturn: "hidden"};
     this.planetColors = {mercury: "#f0f", venus: "#fff", mars: "#f00",
-                         jupiter: "#0f0", saturn: "#ff0"};
+                         jupiter: "#0f0", saturn: "#ff0", earth: "#00f",
+                         sun: "#fc0"};
     this.svg.append("g").call(
       g => {
         let xdots = -30;
@@ -251,7 +252,7 @@ class PlanetClock {
           .style("stroke", "none");
         g.append("circle")
           .attr("stroke", "none")
-          .attr("fill", "#fc0")
+          .attr("fill", this.planetColors.sun)
           .attr("cx", xdots)
           .attr("cy", ytop - 5)
           .attr("r", 10);
@@ -293,7 +294,7 @@ class PlanetClock {
     this.sunHand = this.svg.append("g").call(
       g => {
         g.append("line")
-          .attr("stroke", "#fc0")
+          .attr("stroke", this.planetColors.sun)
           .attr("stroke-width", 3)
           .attr("x1", -rOuter)
           .attr("y1", 0.)
@@ -301,7 +302,7 @@ class PlanetClock {
           .attr("y2", 0.);
         g.append("circle")
           .attr("stroke", "none")
-          .attr("fill", "#fc0")
+          .attr("fill", this.planetColors.sun)
           .attr("cx", 0.5*(rInner+rOuter))
           .attr("cy", 0.)
           .attr("r", 10);
@@ -352,7 +353,7 @@ class PlanetClock {
       });
     planetGroup.append("circle")  // earth is at center
       .attr("stroke", "none")
-      .attr("fill", "#00f")
+      .attr("fill", this.planetColors.earth)
       .attr("r", 4);
   }
 
@@ -529,6 +530,7 @@ class PlanetClock {
         this.planetHands[i].attr("x2", r*xp).attr("y2", -r*yp)
           .attr("visibility", this.planetHandVisibility[p]);
       });
+    this.slaves.forEach(s => s(this));
   }
 
   setHandVisibility(planet, on) {
@@ -543,5 +545,266 @@ class PlanetClock {
     let visibility = on? "visible" : "hidden";
     this.planetHandVisibility[planet] = visibility;
     this.planetHands[i].attr("visibility", visibility);
+    this.slaves.forEach(s => s(this));
+  }
+
+  addSlave(callback) {
+    this.slaves.push(callback);
+    callback(this);
+  }
+
+  removeSlave(callback) {
+    const i = this.slaves.index(callback);
+    if (i > -1) {
+      this.slaves.splice(i, 1);
+    }
+  }
+
+  slaves = [];
+}
+
+
+class OrbitView {
+  static #width = 750;
+  static #height = OrbitView.#width;
+
+  constructor(d3Parent, clock) {
+    let [width, height] = [OrbitView.#width, OrbitView.#height];
+
+    this.svg = d3Parent.append("svg")
+      .attr("xmlns", "http://www.w3.org/2000/svg")
+      .attr("xmlns:xlink", "http://www.w3.org/1999/xlink")
+      .attr("class", "OrbitView")
+      .attr("viewBox", [-width/2, -height/2, width, height])
+      .style("display", "block")
+      .style("margin", "20px")  // padding does not work for SVG?
+      .style("background-color", "#ddd")
+      .attr("text-anchor", "middle")
+      .attr("font-family", "sans-serif")
+      .attr("font-weight", "bold")
+      .attr("font-size", 12)
+      .attr("stroke-linejoin", "round")
+      .attr("stroke-linecap", "round");
+
+    this.clock = clock;
+    this.updateOrigin = () => this.heliocentric();
+    // aphelions: Mars 1.6660 au, Jupiter 5.4570 au, Saturn 10.1238 au
+    // zoom factors are a bit more than twice these (plus 1 au for geocentric)
+    this.zoomFactor = [3.6, 5.5, 14, 23];
+    this.zoomFactor = this.zoomFactor.map(s => 0.01*width/s);
+    this.zoomLevel = 0;
+    let scale = this.zoomFactor[this.zoomLevel];
+
+    let [xbox, ybox] = [-width/2, -height/2];
+    let dbox = 0.045*width;
+    let gap = 0.01*width;
+    this.svg.append("path").call(
+      p => {
+        let d3p = d3.path();
+        d3p.moveTo(xbox+gap, ybox+dbox);
+        d3p.lineTo(xbox+gap, ybox+gap);
+        d3p.lineTo(xbox+dbox, ybox+gap);
+        d3p.closePath();
+        p.style("cursor", "pointer")
+          .style("stroke", "#888")
+          .style("stroke-width", 3)
+          .style("fill", "#444")
+          .attr("d", d3p)
+          .on("click", (() => this.zoomer(0)).bind(this));
+      });
+    this.svg.append("path").call(
+      p => {
+        let d3p = d3.path();
+        d3p.moveTo(xbox+dbox+0.5*gap, ybox+1.5*gap);
+        d3p.lineTo(xbox+dbox+0.5*gap, ybox+dbox+0.5*gap);
+        d3p.lineTo(xbox+1.5*gap, ybox+dbox+0.5*gap);
+        d3p.closePath();
+        p.style("cursor", "pointer")
+          .style("stroke", "#888")
+          .style("stroke-width", 3)
+          .style("fill", "#444")
+          .attr("d", d3p)
+          .on("click", (() => this.zoomer(1)).bind(this));
+      });
+    let originCycler = (() => this.cycleOrigin()).bind(this);
+    this.svg.append("rect").call(
+      rect => {
+        rect.style("fill", "#ffd")
+          .style("stroke", "#000")
+          .style("stroke-width", 1)
+          .style("cursor", "pointer")
+          .attr("x", width/2 - 150 - gap)
+          .attr("y", -height/2 + gap)
+          .attr("height", 28)
+          .attr("width", 150)
+          .attr("rx", 5)
+          .on("click", originCycler);
+      });
+    this.originText = this.svg.append("text")
+      .attr("font-size", 20)
+      .attr("x", width/2 - 82)
+      .attr("y", -height/2 + gap + 21)
+      .style("cursor", "pointer")
+      .text("heliocentric")
+      .on("click", originCycler);
+    this.currentOrigin = "heliocentric";
+
+    /* Warning:
+       All paths and (x, y) coordinates are multiplied by 100 here to
+       avoid bizarre huge pixellation caused by translate() transform
+       in the geocentric view.  While dragging the sun around, the
+       OrbitView displays the blurred pixelated drawing, but when you
+       stop and click on the OrbitView SVG, it redraws as expected.
+       The effect is worse at high magnification, which suggested the
+       coordinate scaling might be a solution - some renderer appears
+       to be dropping the non-integer part of coordinate values.
+     */
+
+    // Planet positions
+    this.planetMarkers = new Array(7);
+    this.planetHands = new Array(6);
+    this.planetOrbits = new Array(6);
+    // Note that translate() happens before scale()
+    this.planetGroup = this.svg.append("g")
+        .style("pointer-events", "none")
+        .attr("transform", `scale(${scale}) translate(0, 0)`);
+    let period = [87.969257, 224.700799, 686.967971, 4332.820129,
+                  10755.698644, 365.256355];  // J2000 sidereal periods (days)
+    ["mercury", "venus", "mars", "jupiter", "saturn", "earth"].forEach(
+      (p, i) => {
+        let d3p = d3.path();
+        let dt = period[i] * 0.01;
+        let t = 0.0;
+        let [x, y] = positionOf(p, t);
+        d3p.moveTo(100*x, -100*y);
+        for (let j = 1 ; j < 100 ; j += 1) {
+          t += dt;
+          [x, y] = positionOf(p, t);
+          d3p.lineTo(100*x, -100*y);
+        }
+        d3p.closePath()
+        this.planetOrbits[i] = this.planetGroup.append("path")
+          .style("stroke", clock.planetColors[p])
+          .style("stroke-width", 5/scale)
+          .style("fill", "none")
+          .attr("opacity", "20%")
+          .attr("d", d3p);
+      }
+    );
+    let [xe, ye] = positionOf("earth", clock.dayNow);
+    ["mercury", "venus", "mars", "jupiter", "saturn"].forEach(
+      (p, i) => {
+        let [x, y] = positionOf(p, clock.dayNow);
+        this.planetMarkers[i] = this.planetGroup.append("circle")
+          .attr("stroke", "none")
+          .attr("fill", clock.planetColors[p])
+          .attr("cx", 100*x)
+          .attr("cy", -100*y)
+          .attr("r", 4/scale);
+        this.planetHands[i] = this.planetGroup.append("line")
+          .attr("visibility", clock.planetHandVisibility[p])
+          .attr("stroke", clock.planetColors[p])
+          .attr("stroke-width", 3/scale)
+          .attr("x1", 100*xe)
+          .attr("y1", -100*ye)
+          .attr("x2", 100*x)
+          .attr("y2", -100*y);
+      });
+    this.planetHands[5] = this.planetGroup.append("line")  // Earth-Sun line
+      .attr("stroke", clock.planetColors.sun)
+      .attr("stroke-width", 3/scale)
+      .attr("x1", 0)
+      .attr("y1", 0)
+      .attr("x2", 100*xe)
+      .attr("y2", -100*ye);
+    this.planetMarkers[5] = this.planetGroup.append("circle")  // Earth
+      .attr("stroke", "none")
+      .attr("fill", clock.planetColors.earth)
+      .attr("cx", 100*xe)
+      .attr("cy", -100*ye)
+      .attr("r", 4/scale);
+    this.planetMarkers[6] = this.planetGroup.append("circle")  // Sun
+      .attr("stroke", "none")
+      .attr("fill", clock.planetColors.sun)
+      .attr("cx", 0)
+      .attr("cy", 0)
+      .attr("r", 10/scale);
+
+    this.clock.addSlave((() => this.update()).bind(this));
+  }
+
+  update() {
+    if (this.svg.node().parentElement.style.display == "none") return;
+    this.updateOrigin();
+    let [xe, ye] = positionOf("earth", this.clock.dayNow);
+    ["mercury", "venus", "mars", "jupiter", "saturn"].forEach(
+      (p, i) => {
+        let [x, y] = positionOf(p, this.clock.dayNow);
+        this.planetMarkers[i].attr("cx", 100*x).attr("cy", -100*y);
+        this.planetHands[i]
+          .attr("x1", 100*xe)
+          .attr("y1", -100*ye)
+          .attr("x2", 100*x)
+          .attr("y2", -100*y);
+        this.planetHands[i].attr("visibility",
+                                 this.clock.planetHandVisibility[p]);
+      });
+    this.planetHands[5].attr("x2", 100*xe).attr("y2", -100*ye);
+    this.planetMarkers[5].attr("cx", 100*xe).attr("cy", -100*ye);
+  }
+
+  setOrigin(sys) {
+    if (sys == "heliocentric") {
+      this.updateOrigin = () => this.heliocentric();
+      let scale = this.zoomFactor[this.zoomLevel];
+      this.planetGroup.attr("transform", `scale(${scale})`);
+    } else if (sys == "geocentric") {
+      this.updateOrigin = () => this.geocentric();
+    }
+    this.update();
+  }
+
+  cycleOrigin() {
+    if (this.currentOrigin == "heliocentric") {
+      this.currentOrigin = "geocentric";
+      this.originText.text("geocentric");
+    } else if (this.currentOrigin == "geocentric") {
+      this.currentOrigin = "heliocentric";
+      this.originText.text("heliocentric");
+    }
+    this.setOrigin(this.currentOrigin);
+  }
+
+  zoomer(inout) {
+    let znow = this.zoomLevel;
+    if (inout == 0) {
+      if (znow > 2) return;
+      znow += 1;
+    } else {
+      if (znow < 1) return;
+      znow -= 1;
+    }
+    this.zoomLevel = znow;
+    let scale = this.zoomFactor[znow];
+    this.planetOrbits.forEach(orbit => orbit.style("stroke-width", 5/scale));
+    this.planetHands.forEach(hand => hand.attr("stroke-width", 3/scale));
+    this.planetMarkers.slice(0,6).forEach(hand => hand.attr("r", 4/scale));
+    this.planetMarkers[6].attr("r", 10/scale);
+    if (this.updateOrigin()) {
+      this.planetGroup.attr("transform", `scale(${scale})`);
+    }
+    this.update();
+  }
+
+  heliocentric() {
+    return true;  // planetGroup transform not set
+  }
+
+  geocentric() {
+    let scale = this.zoomFactor[this.zoomLevel];
+    let [xe, ye] = positionOf("earth", this.clock.dayNow);
+    this.planetGroup.attr("transform",
+                          `scale(${scale}) translate(${-100*xe}, ${100*ye})`);
+    return false;  // planetGroup transform set
   }
 }

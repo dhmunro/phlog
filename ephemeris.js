@@ -70,7 +70,7 @@ function dateOfDay(day) {
  * @param {number} day Time in Julian days relative to J2000 (that is
  *     Julian day - 2451545.0).  Use dayOfDate() to convert from Date.
  *
- * @return {Array<number>} (cos(longitude), sin(longitude), latitude).
+ * @return {Array<number>} [cos(longitude), sin(longitude), latitude].
  */
 function directionOf(planet, day) {
   day = parseFloat(day);
@@ -80,6 +80,26 @@ function directionOf(planet, day) {
   // Use ssModel1 from 1800 to 2050, otherwise ssModel2
   const ssModel = (day<-73048.0 || day>18263.0)? ssModel2 : ssModel1;
   return ssModel.direction(planet, day);
+}
+
+/**
+ * Return J2000 ecliptic position of planet for a given time.
+ *
+ * @param {string} planet name (mercury, venus, earth, mars, jupiter,
+ *     saturn, uranus, or neptune).
+ * @param {number} day Time in Julian days relative to J2000 (that is
+ *     Julian day - 2451545.0).  Use dayOfDate() to convert from Date.
+ *
+ * @return {Array<number>} ecliptic [x, y, z] in au (astronomical units).
+ */
+function positionOf(planet, day) {
+  day = parseFloat(day);
+  if (isNaN(day)) {
+    return undefined;
+  }
+  // Use ssModel1 from 1800 to 2050, otherwise ssModel2
+  const ssModel = (day<-73048.0 || day>18263.0)? ssModel2 : ssModel1;
+  return ssModel.xyz(planet, day);
 }
 
 /**
