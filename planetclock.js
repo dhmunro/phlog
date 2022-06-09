@@ -578,7 +578,7 @@ class OrbitView {
       .attr("viewBox", [-width/2, -height/2, width, height])
       .style("display", "block")
       .style("margin", "20px")  // padding does not work for SVG?
-      .style("background-color", "#ddd")
+      .style("background-color", "#aaa")
       .attr("text-anchor", "middle")
       .attr("font-family", "sans-serif")
       .attr("font-weight", "bold")
@@ -606,9 +606,9 @@ class OrbitView {
         d3p.lineTo(xbox+dbox, ybox+gap);
         d3p.closePath();
         p.style("cursor", "pointer")
-          .style("stroke", "#888")
-          .style("stroke-width", 3)
-          .style("fill", "#444")
+          .style("stroke", "#000")
+          .style("stroke-width", 2)
+          .style("fill", "#ffd")
           .attr("d", d3p)
           .on("click", (() => this.zoomer(0)).bind(this));
       });
@@ -620,9 +620,9 @@ class OrbitView {
         d3p.lineTo(xbox+1.5*gap, ybox+dbox+0.5*gap);
         d3p.closePath();
         p.style("cursor", "pointer")
-          .style("stroke", "#888")
-          .style("stroke-width", 3)
-          .style("fill", "#444")
+          .style("stroke", "#000")
+          .style("stroke-width", 2)
+          .style("fill", "#ffd")
           .attr("d", d3p)
           .on("click", (() => this.zoomer(1)).bind(this));
       });
@@ -631,7 +631,7 @@ class OrbitView {
       rect => {
         rect.style("fill", "#ffd")
           .style("stroke", "#000")
-          .style("stroke-width", 1)
+          .style("stroke-width", 2)
           .style("cursor", "pointer")
           .attr("x", width/2 - 150 - gap)
           .attr("y", -height/2 + gap)
@@ -691,6 +691,13 @@ class OrbitView {
           .attr("d", d3p);
       }
     );
+    this.planetOrbits[5].attr("transform", "rotate(0)");
+    this.planetMarkers[6] = this.planetGroup.append("circle")  // Sun
+      .attr("stroke", "none")
+      .attr("fill", clock.planetColors.sun)
+      .attr("cx", 0)
+      .attr("cy", 0)
+      .attr("r", 10/scale);
     let [xe, ye] = positionOf("earth", clock.dayNow);
     ["mercury", "venus", "mars", "jupiter", "saturn"].forEach(
       (p, i) => {
@@ -723,12 +730,6 @@ class OrbitView {
       .attr("cx", 100*xe)
       .attr("cy", -100*ye)
       .attr("r", 4/scale);
-    this.planetMarkers[6] = this.planetGroup.append("circle")  // Sun
-      .attr("stroke", "none")
-      .attr("fill", clock.planetColors.sun)
-      .attr("cx", 0)
-      .attr("cy", 0)
-      .attr("r", 10/scale);
 
     this.clock.addSlave((() => this.update()).bind(this));
   }
@@ -758,8 +759,11 @@ class OrbitView {
       this.updateOrigin = () => this.heliocentric();
       let scale = this.zoomFactor[this.zoomLevel];
       this.planetGroup.attr("transform", `scale(${scale})`);
+      this.planetOrbits[5].attr("transform", "rotate(0)");
+      this.planetOrbits[5].style("stroke", this.clock.planetColors.earth);
     } else if (sys == "geocentric") {
       this.updateOrigin = () => this.geocentric();
+      this.planetOrbits[5].style("stroke", this.clock.planetColors.sun);
     }
     this.update();
   }
@@ -805,6 +809,8 @@ class OrbitView {
     let [xe, ye] = positionOf("earth", this.clock.dayNow);
     this.planetGroup.attr("transform",
                           `scale(${scale}) translate(${-100*xe}, ${100*ye})`);
+    this.planetOrbits[5].attr(
+      "transform",`translate(${100*xe}, ${-100*ye}) rotate(180)`);
     return false;  // planetGroup transform set
   }
 }
