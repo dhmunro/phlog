@@ -285,6 +285,7 @@ class PlanetClock {
       return svg.append("g").call(
         g => {
           g.append("line")
+            .style("pointer-events", "none")
             .attr("stroke", color)
             .attr("stroke-width", 3)
             .attr("x1", 0.).attr("y1", 0.)
@@ -350,19 +351,13 @@ class PlanetClock {
       });
 
     // Put month dial on top of planets hands, below sun hand.
-    this.monthsSel = addMonthDial(this.svg, this.months);
+    this.monthSel = addMonthDial(this.svg, this.months);
     this.sunHand = addSunHand(this.svg, this.planetColors.sun);
 
     this.svg.append("circle")  // earth is at center
       .attr("stroke", "none")
       .attr("fill", this.planetColors.earth)
       .attr("r", 4);
-  }
-
-  setVisibility(on) {
-    if (on) {
-    } else {
-    }
   }
 
   turnOnMoon() {
@@ -636,7 +631,8 @@ class PlanetClock {
         let date = dateOfDay(this.elapsed0);
         let ymd = `${date.getUTCFullYear()} `;
         ymd += `${this.getDateText(this.elapsed0)} `;
-        ymd += `${date.getUTCHours()}:${date.getUTCMinutes()}`;
+        ymd += `${("0"+date.getUTCHours()).slice(-2)}`;
+        ymd += `:${("0"+date.getUTCMinutes()).slice(-2)}`;
         this.elapsed.select("g").select("text").text("from " + ymd);
       }
       this.elapsed.select("text").text(
