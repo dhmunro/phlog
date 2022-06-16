@@ -18,12 +18,12 @@
  * Convert Date to Julian day relative to J2000.
  * To get conventional Julian day number, add 2451545.0.
  *
- * @param {Date|string|Array<number>} date Either a Date object or
+ * @param {Date|string|Array<number>} date - Either a Date object or
  *     a string accepted by the Date constructor, or an array
  *     of numeric arguments to the Date constructor [year, month, day
  *     ...].  Unless the string specifies a timezone explicitly, this
  *     will be interpreted as a local time.
- * @param {bool} utcAdj If you want the date to be shifted from local
+ * @param {bool} utcAdj - If you want the date to be shifted from local
  *     time to UTC by adding the current timezone offset, specify
  *     utcAdj as true.  A javascript Date object is always in UTC and
  *     contains no timezone information.  However, the Date constructor
@@ -52,7 +52,7 @@ function dayOfDate(date, utcAdj=false) {
  * Convert Julian day relative to J2000 to Date object.
  * J2000 begins at Julian day 2451545.0.
  *
- * @param {day} day Julian day relative to J2000 (JD 2451545.0).
+ * @param {day} day - Julian day relative to J2000 (JD 2451545.0).
  *
  * @return {Date}
  */
@@ -63,11 +63,11 @@ function dateOfDay(day) {
 /**
  * Return J2000 ecliptic direction of planet for a given time.
  *
- * @param {string} planet name (mercury, venus, earth, mars, jupiter,
+ * @param {string} planet - name (mercury, venus, earth, mars, jupiter,
  *     saturn, uranus, or neptune).  Also accepts "sun", which gives the
  *     same result as "earth" because the direction from Earth to itself
  *     is undefined.
- * @param {number} day Time in Julian days relative to J2000 (that is
+ * @param {number} day - Time in Julian days relative to J2000 (that is
  *     Julian day - 2451545.0).  Use dayOfDate() to convert from Date.
  *
  * @return {Array<number>} [cos(longitude), sin(longitude), latitude].
@@ -85,9 +85,9 @@ function directionOf(planet, day) {
 /**
  * Return J2000 ecliptic position of planet for a given time.
  *
- * @param {string} planet name (mercury, venus, earth, mars, jupiter,
+ * @param {string} planet - name (mercury, venus, earth, mars, jupiter,
  *     saturn, uranus, or neptune).
- * @param {number} day Time in Julian days relative to J2000 (that is
+ * @param {number} day - Time in Julian days relative to J2000 (that is
  *     Julian day - 2451545.0).  Use dayOfDate() to convert from Date.
  *
  * @return {Array<number>} ecliptic [x, y, z] in au (astronomical units).
@@ -107,9 +107,9 @@ function positionOf(planet, day) {
  * At the returned time, the direction of the Sun will be parallel to (x, y)
  * to within about 1 arc minute.
  *
- * @param {number} x Unnormalized x coordinate in J2000 ecliptic plane.
- * @param {number} y Unnormalized y coordinate in J2000 ecliptic plane.
- * @param {number} nearDay as Julian day relative to J2000.
+ * @param {number} x - Unnormalized x coordinate in J2000 ecliptic plane.
+ * @param {number} y - Unnormalized y coordinate in J2000 ecliptic plane.
+ * @param {number} nearDay - as Julian day relative to J2000.
  *
  * @return {number} time as Julian day relative to J2000.
  */
@@ -155,9 +155,9 @@ class SolarSystem {
   /**
    * Return normalized direction in ecliptic and angle out of ecliptic.
    *
-   * @param {string} planet name (mercury, venus, earth, mars, jupiter,
+   * @param {string} planet - name (mercury, venus, earth, mars, jupiter,
    *     saturn, uranus, or neptune).  Here "earth" returns direction to sun.
-   * @param {number} day Julian day relative to J2000 (offset 2451545.0).
+   * @param {number} day - Julian day relative to J2000 (offset 2451545.0).
    *
    * @return {Array<number>} (cos(longitude), sin(longitude), latitude)
    */
@@ -170,10 +170,10 @@ class SolarSystem {
   /**
    * Return J20000 ecliptic (x, y, z) coordinates (au), relative to Earth.
    *
-   * @param {string} planet name (mercury, venus, earth, mars, jupiter,
+   * @param {string} planet - name (mercury, venus, earth, mars, jupiter,
    *     saturn, uranus, or neptune).  Here "earth" would always give [0, 0, 0],
    *     so instead returns position for sun.  Also accepts "sun".
-   * @param {number} day Julian day relative to J2000 (offset 2451545.0).
+   * @param {number} day - Julian day relative to J2000 (offset 2451545.0).
    *
    * @return {Array<number>} (x, y, z) ecliptic coordinates relative to Earth.
    */
@@ -197,9 +197,9 @@ class SolarSystem {
   /**
    * Return J20000 ecliptic (x, y, z) coordinates (au), relative to the Sun.
    *
-   * @param {string} planet name (mercury, venus, earth, mars, jupiter,
+   * @param {string} planet - name (mercury, venus, earth, mars, jupiter,
    *     saturn, uranus, or neptune).
-   * @param {number} day Julian day relative to J2000 (offset 2451545.0).
+   * @param {number} day - Julian day relative to J2000 (offset 2451545.0).
    *
    * @return {Array<number>} (x, y, z) J2000 ecliptic coordinates in au.
    */
@@ -271,9 +271,9 @@ class SolarSystem {
    * The position of the Sun at the returned time is within 1 arc minute
    * of the input (x, y) direction.
    *
-   * @param {number} x unnormalized Sun coordinate in ecliptic plane.
-   * @param {number} y unnormalized Sun coordinate in ecliptic plane.
-   * @param {number} nearDay Julian day relative to J2000 (offset 2451545.0).
+   * @param {number} x - unnormalized Sun coordinate in ecliptic plane.
+   * @param {number} y - unnormalized Sun coordinate in ecliptic plane.
+   * @param {number} nearDay - Julian day relative to J2000 (offset 2451545.0).
    *
    * @return {number} Julian day relative to J2000 when Sun crossed (x, y).
    */

@@ -76,7 +76,7 @@ class PlanetClock {
           });
         let rcen = 0.5*(rOuter + rInner);
         g.append("text")
-          .style("fill", "#8bf")
+          .style("fill", "#94c6ff")
           .style("stroke", "none")
           .style("stroke-width", 1)
           .style("pointer-events", "none")
@@ -155,46 +155,6 @@ class PlanetClock {
                 .clone(true)
                 .attr("y", d => d[1]));
       });
-    this.svg.append("g").call(
-      g => {
-        // months clock dial ring background
-        g.append("circle")
-          .style("fill", "none")
-          .style("stroke", "#ffd")
-          .style("stroke-width", 0.12*rInner)
-          .attr("r", 0.75*rInner);
-        g.append("circle")
-          .style("fill", "none")
-          .style("stroke", "#000")
-          .style("stroke-width", 2)
-          .attr("r", 0.69*rInner);
-        g.append("circle")
-          .style("fill", "none")
-          .style("stroke", "#000")
-          .style("stroke-width", 2)
-          .attr("r", 0.81*rInner);
-      });
-
-    // Month labels and radial separators
-    this.monthSel = this.svg.append("g").call(
-      g => g.selectAll("g")
-        .data(this.months)
-        .join("g")
-        .call(g => g.append("line")
-              .attr("stroke", "#000")
-              .attr("stroke-width", 2)
-              .attr("x1", d => 0.69*rInner*d[0][0])
-              .attr("y1", d => 0.69*rInner*d[0][1])
-              .attr("x2", d => 0.81*rInner*d[0][0])
-              .attr("y2", d => 0.81*rInner*d[0][1]))
-        .call(g => g.append("text")
-              .style("pointer-events", "none")
-              .attr("x", d => 0.75*rInner*d[1][0])
-              .attr("y", d => 0.75*rInner*d[1][1])
-              .attr("dy", "0.35em")
-              .attr("fill", "#000")
-              .text(d => d[2]))
-    );
 
     // Otherwise callback will not have correct this when triggered.
     let yearSetter = (() => this.setYear()).bind(this);
@@ -204,31 +164,16 @@ class PlanetClock {
 
     // Year indicator
     this.svg.append("rect").call(
-      g => g
-        .attr("x", -40)
-        .attr("y", -0.50*rInner - 24.5)
-        .attr("height", 32)
-        .attr("width", 80)
-        .attr("rx", 5)
-        .style("fill", "#ffd")
-        .style("stroke", "#000")
-        .style("stroke-width", 1)
-        .style("cursor", "pointer")
-        .on("click", yearSetter));
+      rect => buttonBox(rect, -40, -0.50*rInner - 25.5, 80, 32, yearSetter));
     this.yearText = this.svg.append("text").call(
-      g => g
-        .attr("font-size", 24)
-        .attr("x", 0)
-        .attr("y", -0.50*rInner)
-        .style("cursor", "pointer")
-        .text(dateOfDay(this.dayNow).getUTCFullYear())
-        .on("click", yearSetter));
+      t => buttonText(t, 0, -0.50*rInner,
+                      dateOfDay(this.dayNow).getUTCFullYear(), 24, yearSetter));
     this.prevDayYear = [this.dayNow, dateOfDay(this.dayNow).getUTCFullYear()];
     this.dateText = this.svg.append("text")
       .style("pointer-events", "none")
       .attr("font-size", 14)
       .attr("x", 0)
-      .attr("y", -0.42*rInner)
+      .attr("y", -0.5*rInner + 25)
       .text(this.getDateText(this.dayNow));
 
     // Planet legend
@@ -255,13 +200,13 @@ class PlanetClock {
           .attr("fill", this.planetColors.sun)
           .attr("cx", xdots)
           .attr("cy", ytop - 5)
-          .attr("r", 10);
+          .attr("r", 8);
         g.append("text")
           .style("pointer-events", "none")
           .attr("text-anchor", "start")
           .attr("font-size", 14)
           .attr("x", xdots + 15)
-          .attr("y", ytop - 1)
+          .attr("y", ytop)
           .text("Sun");
         ["mercury", "venus", "mars", "jupiter", "saturn"].forEach(
           (p, i) => {
@@ -275,12 +220,13 @@ class PlanetClock {
               .style("cursor", "pointer")
               .on("click", handToggler[i]);
             g.append("text")
-              .style("pointer-events", "none")
+              .style("cursor", "pointer")
               .attr("text-anchor", "start")
               .attr("font-size", 14)
               .attr("x", xdots + 15)
-              .attr("y", ytop + 19 + 20*i)
-              .text(planet);
+              .attr("y", ytop + 20 + 20*i)
+              .text(planet)
+              .on("click", handToggler[i]);
           });
         g.append("text")
           .style("pointer-events", "none")
@@ -290,35 +236,86 @@ class PlanetClock {
           .text("Earth");
       });
 
+
+    // Month dial
+    function addMonthDial(svg, months) {
+      // months clock dial ring background
+      svg.append("g").call(
+        g => {
+          g.append("circle")
+            .style("fill", "none")
+            .style("stroke", "#f8f8f8")
+            .style("stroke-width", 0.12*rInner)
+            .attr("r", 0.75*rInner);
+          g.append("circle")
+            .style("fill", "none")
+            .style("stroke", "#000")
+            .style("stroke-width", 2)
+            .attr("r", 0.69*rInner);
+          g.append("circle")
+            .style("fill", "none")
+            .style("stroke", "#000")
+            .style("stroke-width", 2)
+            .attr("r", 0.81*rInner);
+        });
+
+      // month labels and radial separators
+      return svg.append("g").call(
+        g => g.selectAll("g")
+          .data(months)
+          .join("g")
+          .call(g => g.append("line")
+                .attr("stroke", "#000")
+                .attr("stroke-width", 2)
+                .attr("x1", d => 0.69*rInner*d[0][0])
+                .attr("y1", d => 0.69*rInner*d[0][1])
+                .attr("x2", d => 0.81*rInner*d[0][0])
+                .attr("y2", d => 0.81*rInner*d[0][1]))
+          .call(g => g.append("text")
+                .style("pointer-events", "none")
+                .attr("x", d => 0.75*rInner*d[1][0])
+                .attr("y", d => 0.75*rInner*d[1][1])
+                .attr("dy", "0.35em")
+                .attr("fill", "#000")
+                .text(d => d[2])));
+    }
+
     // Sun position and clock hand
-    this.sunHand = this.svg.append("g").call(
-      g => {
-        g.append("line")
-          .attr("stroke", this.planetColors.sun)
-          .attr("stroke-width", 3)
-          .attr("x1", -rOuter)
-          .attr("y1", 0.)
-          .attr("x2", rOuter)
-          .attr("y2", 0.);
-        g.append("circle")
-          .attr("stroke", "none")
-          .attr("fill", this.planetColors.sun)
-          .attr("cx", 0.5*(rInner+rOuter))
-          .attr("cy", 0.)
-          .attr("r", 10);
-        g.append("rect")
-          .attr("x", rInner)
-          .attr("y", -(rOuter-rInner)/4)
-          .attr("height", (rOuter-rInner)/2)
-          .attr("width", rOuter-rInner)
-          .style("pointer-events", "all")
-          .style("cursor", "pointer")
-          .style("fill", "none")
-          .style("stroke", "none");
-        g.attr("transform", "rotate(0)")  // degrees clockwise
-          .call(d3.drag().on("drag", sunDragger))
-          .on("touchmove", sunDragger);
-      });
+    function addSunHand(svg, color) {
+      return svg.append("g").call(
+        g => {
+          g.append("line")
+            .attr("stroke", color)
+            .attr("stroke-width", 3)
+            .attr("x1", 0.).attr("y1", 0.)
+            .attr("x2", rOuter).attr("y2", 0.)
+            .clone(true)
+            .attr("opacity", "40%")
+            .attr("x1", -rOuter).attr("y1", 0.)
+            .attr("x2", -0.81*rInner).attr("y2", 0.)
+            .clone(true)
+            .attr("x1", -0.69*rInner).attr("y1", 0.)
+            .attr("x2", 0.).attr("y2", 0.);
+          g.append("circle")
+            .attr("stroke", "none")
+            .attr("fill", color)
+            .attr("cx", 0.5*(rInner+rOuter))
+            .attr("cy", 0.)
+            .attr("r", 8);
+          g.append("rect")
+            .style("pointer-events", "all")
+            .style("cursor", "pointer")
+            .style("fill", "none")
+            .style("stroke", "none")
+            .attr("x", rInner)
+            .attr("y", -(rOuter-rInner)/4)
+            .attr("height", (rOuter-rInner)/2)
+            .attr("width", rOuter-rInner);
+          g.attr("transform", "rotate(0)")  // degrees clockwise
+            .call(d3.drag().on("drag", sunDragger))
+            .on("touchmove", sunDragger);
+        });
+    }
 
     // Optional Moon marker
     this.moonGroup = this.svg.append("g");
@@ -351,10 +348,21 @@ class PlanetClock {
           .attr("x2", r*xp)
           .attr("y2", -r*yp);
       });
-    planetGroup.append("circle")  // earth is at center
+
+    // Put month dial on top of planets hands, below sun hand.
+    this.monthsSel = addMonthDial(this.svg, this.months);
+    this.sunHand = addSunHand(this.svg, this.planetColors.sun);
+
+    this.svg.append("circle")  // earth is at center
       .attr("stroke", "none")
       .attr("fill", this.planetColors.earth)
       .attr("r", 4);
+  }
+
+  setVisibility(on) {
+    if (on) {
+    } else {
+    }
   }
 
   turnOnMoon() {
@@ -396,6 +404,7 @@ class PlanetClock {
     this.updatePlanets();
     this.updateMoon();
     this.updateYear();
+    this.updateElapsed(false);
     this.dateText.text(this.getDateText(this.dayNow));
   }
 
@@ -408,10 +417,15 @@ class PlanetClock {
     this.updatePlanets();
     this.updateMoon();
     this.updateYear();
+    this.updateElapsed(false);
     this.dateText.text(this.getDateText(this.dayNow));
   }
 
   animateTo(day, step=3) {  // 3 is slow, 6 fast, 12 very fast
+    if (this.dayTimer) {
+      this.dayTimer.stop();
+      delete this.dayTimer;
+    }
     day = parseFloat(day);
     if (isNaN(day) || day <= 0) {
       return;
@@ -422,8 +436,8 @@ class PlanetClock {
     }
     this.dayStep = step;
     this.dayStop = day;
-    // set interval timer for 60 frames/sec
-    this.dayTimer = d3.interval((() => this.stepDay()).bind(this), 17);
+    // set timer makes callbacks at 60 frames/sec (use d3.interval for slower)
+    this.dayTimer = d3.timer((() => this.stepDay()).bind(this), 17);
   }
 
   stepDay() {
@@ -468,6 +482,7 @@ class PlanetClock {
       this.daySky.attr("transform", `rotate(${theta})`);
       this.updatePlanets();
       this.updateYear();
+      this.updateElapsed(true);
     }
   }
 
@@ -561,6 +576,76 @@ class PlanetClock {
   }
 
   slaves = [];
+
+  addElapsed(updateCallback) {
+    if (this.elapsed) {
+      this.removeElapsed();
+    }
+    let yElapsed = -0.25*PlanetClock.#rInner;
+    let resetElapsed = (() => this.updateElapsed(true)).bind(this);
+    this.elapsed0 = this.dayNow;
+    this.elapsed = this.svg.append("g").call(
+      g => {
+        g.append("text")
+          .style("pointer-events", "none")
+          .attr("font-size", 20)
+          .attr("x", 0)
+          .attr("y", yElapsed)
+          .text(`${(this.dayNow - this.elapsed0).toFixed(2)} days`);
+        g.append("g").call(
+          gg => {
+            let date = dateOfDay(this.elapsed0);
+            let ymd = `${date.getUTCFullYear()} `;
+            ymd += `${this.getDateText(this.elapsed0)} `;
+            ymd += `${date.getUTCHours()}:${date.getUTCMinutes()}`;
+            gg.append("text")
+              .style("pointer-events", "none")
+              .attr("text-anchor", "start")
+              .attr("font-size", 16)
+              .attr("x", -155)
+              .attr("y", yElapsed + 29)
+              .text("from " + ymd)
+            gg.append("rect").call(
+              rect => buttonBox(rect, 110-40, yElapsed + 8, 80, 28,
+                                resetElapsed));
+            gg.append("text").call(
+              t => buttonText(t, 110, yElapsed + 29, "Reset", 20,
+                              resetElapsed));
+          });
+      });
+    if (updateCallback) {
+      this.elapsedUpdater = updateCallback;
+    }
+  }
+
+  removeElapsed() {
+    if (this.elapsed) {
+      let day = this.elapsed0;
+      this.elapsed.remove();
+      delete this.elapsed;
+      delete this.elapsed0;
+      delete this.elapsedUpdater;
+      this.goToDay(day);
+    }
+  }
+
+  updateElapsed(reset) {
+    if (this.elapsed) {
+      if (reset) {
+        this.elapsed0 = this.dayNow;
+        let date = dateOfDay(this.elapsed0);
+        let ymd = `${date.getUTCFullYear()} `;
+        ymd += `${this.getDateText(this.elapsed0)} `;
+        ymd += `${date.getUTCHours()}:${date.getUTCMinutes()}`;
+        this.elapsed.select("g").select("text").text("from " + ymd);
+      }
+      this.elapsed.select("text").text(
+        `${(this.dayNow - this.elapsed0).toFixed(2)} days`);
+      if (this.elapsedUpdater) {
+        this.elapsedUpdater(reset);
+      }
+    }
+  }
 }
 
 
@@ -595,59 +680,24 @@ class OrbitView {
     this.zoomLevel = 0;
     let scale = this.zoomFactor[this.zoomLevel];
 
-    let [xbox, ybox] = [-width/2, -height/2];
-    let dbox = 0.045*width;
-    let gap = 0.01*width;
-    this.svg.append("path").call(
-      p => {
-        let d3p = d3.path();
-        d3p.moveTo(xbox+gap, ybox+dbox);
-        d3p.lineTo(xbox+gap, ybox+gap);
-        d3p.lineTo(xbox+dbox, ybox+gap);
-        d3p.closePath();
-        p.style("cursor", "pointer")
-          .style("stroke", "#000")
-          .style("stroke-width", 2)
-          .style("fill", "#ffd")
-          .attr("d", d3p)
-          .on("click", (() => this.zoomer(0)).bind(this));
-      });
-    this.svg.append("path").call(
-      p => {
-        let d3p = d3.path();
-        d3p.moveTo(xbox+dbox+0.5*gap, ybox+1.5*gap);
-        d3p.lineTo(xbox+dbox+0.5*gap, ybox+dbox+0.5*gap);
-        d3p.lineTo(xbox+1.5*gap, ybox+dbox+0.5*gap);
-        d3p.closePath();
-        p.style("cursor", "pointer")
-          .style("stroke", "#000")
-          .style("stroke-width", 2)
-          .style("fill", "#ffd")
-          .attr("d", d3p)
-          .on("click", (() => this.zoomer(1)).bind(this));
-      });
+    zoomButtons(width, this);
+    let gap = 0.01*width;  // matches gap in zoomButtons
     let originCycler = (() => this.cycleOrigin()).bind(this);
     this.svg.append("rect").call(
-      rect => {
-        rect.style("fill", "#ffd")
-          .style("stroke", "#000")
-          .style("stroke-width", 2)
-          .style("cursor", "pointer")
-          .attr("x", width/2 - 150 - gap)
-          .attr("y", -height/2 + gap)
-          .attr("height", 28)
-          .attr("width", 150)
-          .attr("rx", 5)
-          .on("click", originCycler);
-      });
-    this.originText = this.svg.append("text")
-      .attr("font-size", 20)
-      .attr("x", width/2 - 82)
-      .attr("y", -height/2 + gap + 21)
-      .style("cursor", "pointer")
-      .text("heliocentric")
-      .on("click", originCycler);
+      rect => buttonBox(rect, width/2 - 150 - gap, -height/2 + gap, 150, 28,
+                        originCycler));
+    this.originText = this.svg.append("text").call(
+      t => buttonText(t, width/2 - 82, -height/2 + gap + 21, "heliocentric", 20,
+                      originCycler));
     this.currentOrigin = "heliocentric";
+
+    // Crosshairs
+    this.svg.append("line")
+      .style("pointer-events", "none")
+      .attr("stroke", "#888").attr("stroke-width", 1)
+      .attr("x1", -width/2).attr("y1", 0).attr("x2", width/2).attr("y2", 0)
+      .clone(true)
+      .attr("x1", 0).attr("y1", -height/2).attr("x2", 0).attr("y2", height/2)
 
     /* Warning:
        All paths and (x, y) coordinates are multiplied by 100 here to
@@ -697,7 +747,7 @@ class OrbitView {
       .attr("fill", clock.planetColors.sun)
       .attr("cx", 0)
       .attr("cy", 0)
-      .attr("r", 10/scale);
+      .attr("r", 8/scale);
     let [xe, ye] = positionOf("earth", clock.dayNow);
     ["mercury", "venus", "mars", "jupiter", "saturn"].forEach(
       (p, i) => {
@@ -779,6 +829,9 @@ class OrbitView {
     this.setOrigin(this.currentOrigin);
   }
 
+  activate(on) {
+  }
+
   zoomer(inout) {
     let znow = this.zoomLevel;
     if (inout == 0) {
@@ -793,7 +846,7 @@ class OrbitView {
     this.planetOrbits.forEach(orbit => orbit.style("stroke-width", 5/scale));
     this.planetHands.forEach(hand => hand.attr("stroke-width", 3/scale));
     this.planetMarkers.slice(0,6).forEach(hand => hand.attr("r", 4/scale));
-    this.planetMarkers[6].attr("r", 10/scale);
+    this.planetMarkers[6].attr("r", 8/scale);
     if (this.updateOrigin()) {
       this.planetGroup.attr("transform", `scale(${scale})`);
     }
@@ -813,4 +866,111 @@ class OrbitView {
       "transform",`translate(${100*xe}, ${-100*ye}) rotate(180)`);
     return false;  // planetGroup transform set
   }
+}
+
+
+class EarthYear {
+  static #width = 750;
+  static #height = EarthYear.#width;
+
+  constructor(d3Parent, clock) {
+    let [width, height] = [EarthYear.#width, EarthYear.#height];
+
+    this.svg = d3Parent.append("svg")
+      .attr("xmlns", "http://www.w3.org/2000/svg")
+      .attr("xmlns:xlink", "http://www.w3.org/1999/xlink")
+      .attr("class", "EarthYear")
+      .attr("viewBox", [-width/2, -height/2, width, height])
+      .style("display", "block")
+      .style("margin", "20px")  // padding does not work for SVG?
+      .style("background-color", "#ccc")
+      .attr("text-anchor", "middle")
+      .attr("font-family", "sans-serif")
+      .attr("font-weight", "bold")
+      .attr("font-size", 12)
+      .attr("stroke-linejoin", "round")
+      .attr("stroke-linecap", "round");
+
+    this.clock = clock;
+
+    zoomButtons(width, this);
+    let gap = 0.01*width;  // matches gap in zoomButtons
+
+    this.clock.addSlave((() => this.update()).bind(this));
+  }
+
+  update() {
+    if (this.svg.node().parentElement.style.display == "none") return;
+  }
+
+  activate(on) {
+    if (on) {
+      this.clock.addElapsed();
+    } else {
+      this.clock.removeElapsed();
+    }
+  }
+
+  zoomer(inout) {
+  }
+}
+
+
+function buttonBox(rectSel, x, y, width, height, callback) {
+  rectSel.attr("x", x).attr("y", y)
+    .attr("width", width).attr("height", height)
+    .attr("rx", 5)
+    .style("fill", "#ffd")
+    .style("stroke", "#000")
+    .style("stroke-width", 2)
+    .style("cursor", "pointer")
+    .on("click", callback);
+}
+
+
+function buttonText(textSel, x, y, text, size, callback) {
+  textSel.attr("font-size", size)
+    .attr("x", x)
+    .attr("y", y)
+    .style("cursor", "pointer")
+    .text(text)
+    .on("click", callback);
+}
+
+
+function zoomButtons(width, objectThis) {
+  let [xbox, ybox] = [-width/2, -width/2];
+  let dbox = 0.045*width;
+  let gap = 0.01*width;
+  return objectThis.svg.append("g").call(
+    g => {
+      g.append("path").call(
+        p => {
+          let d3p = d3.path();
+          d3p.moveTo(xbox+gap, ybox+dbox);
+          d3p.lineTo(xbox+gap, ybox+gap);
+          d3p.lineTo(xbox+dbox, ybox+gap);
+          d3p.closePath();
+          p.style("cursor", "pointer")
+            .style("stroke", "#000")
+            .style("stroke-width", 2)
+            .style("fill", "#ffd")
+            .attr("d", d3p)
+            .on("click", (() => objectThis.zoomer(0)).bind(objectThis));
+        });
+      g.append("path").call(
+        p => {
+          let d3p = d3.path();
+          d3p.moveTo(xbox+dbox+0.5*gap, ybox+1.5*gap);
+          d3p.lineTo(xbox+dbox+0.5*gap, ybox+dbox+0.5*gap);
+          d3p.lineTo(xbox+1.5*gap, ybox+dbox+0.5*gap);
+          d3p.closePath();
+          p.style("cursor", "pointer")
+            .style("stroke", "#000")
+            .style("stroke-width", 2)
+            .style("fill", "#ffd")
+            .attr("d", d3p)
+            .on("click", (() => objectThis.zoomer(1)).bind(objectThis));
+        });
+    });
 }

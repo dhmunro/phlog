@@ -26,6 +26,7 @@
               style="font-family: serif; font-size: 24pt;">
         <option value="#intro" selected>Planet Clock</option>
         <option value="#orb-view">Orbit View</option>
+        <option value="#earth-year">Earth Year</option>
       </select>
       <div id="intro"
            style="position: absolute; top: 50px; left: 0; display: block;">
@@ -37,13 +38,13 @@
         traverses each year.  The coordinates are
         <a href="https://en.wikipedia.org/wiki/Ecliptic_coordinate_system">
           J2000.0 ecliptic coordinates</a>, with longitude increasing
-        around the ring, and latitude increasing outward.  The ring is
-        really a thin ribbon standing on edge out of the plane of this
-        page - it has been flattened into the page to be able to draw
-        it in 2D.  (Ecliptic longitude is sign of the Zodiac.)</p>
+        around the ring, and latitude increasing outward.  (Ecliptic
+        longitude is sign of the Zodiac.)  The ring is really a thin
+        ribbon standing on edge out of the plane of this page - it has
+        been flattened into the page to be able to draw it in 2D.</p>
       <p>The gold circle and line show the position of the Sun
-        relative to the fixed stars.  The yellow ring shows the date
-        at which the Sun reaches each position.  Drag the Sun point to
+        relative to the fixed stars.  The month ring shows the date
+        at which the Sun reaches each longitude.  Drag the Sun point to
         change its position, and notice that each time you move it
         from Dec to Jan (or Dec to Jan), the yellow year button
         increments (or decrements).  Click on the year button to jump
@@ -63,13 +64,18 @@
         from morning to evening side, then rapidly retrograde from
         evening to morning side.  Mars, Jupiter, and Saturn move
         around slower than the Sun, going retrograde as they approach
-        opposition (180 degrees from the Sun).  Unlike the Sun, the
-        planets drift in ecliptic latitude.  Click on a planet dot in
-        the central legend to toggle a line between the planet and
-        earth.</p>
+        opposition (180 degrees from the Sun, the dim gold line).
+        Unlike the Sun, the planets drift in ecliptic latitude.  Click
+        on a planet dot in the central legend to toggle a line between
+        the planet and earth.</p>
       </div>
       <div style="position: absolute; top: 50px; left: 0;">
         <div id="orb-view"
+             style="position: static; width: 100%; height: 100%; display: none;">
+        </div>
+      </div>
+      <div style="position: absolute; top: 50px; left: 0;">
+        <div id="earth-year"
              style="position: static; width: 100%; height: 100%; display: none;">
         </div>
       </div>
@@ -117,20 +123,28 @@ Libra 210 Scorpio 240 Sagittarius 270 Capricornus 300 Aquarius 330 Pisces
   button.on("click", toggler);
 
   let orbView = new OrbitView(d3.select("#orb-view"), clock);
+  let earthYear = new EarthYear(d3.select("#earth-year"), clock);
+  let slaves = [null, orbView, earthYear];
 
   function mainMenuSelect() {
     ["mercury", "venus", "jupiter", "saturn"].forEach(
       p => clock.setHandVisibility(p, false));
     let sel = document.getElementById("main-menu");
     sel = sel.options[sel.selectedIndex].value;
-    ["#intro", "#orb-view"].forEach(
-      id => {
+    ["#intro", "#orb-view", "#earth-year"].forEach(
+      (id, i) => {
         let d3Div = d3.select(id);
         if (id == sel) {
           d3Div.style("display", "block");
-          clock.setHandVisibility("mars", id == "#orb-view");
+          clock.setHandVisibility("mars", id != "#intro");
+          if (slaves[i] != null) {
+            slaves[i].activate(true);
+          }
         } else {
           d3Div.style("display", "none");
+          if (slaves[i] != null) {
+            slaves[i].activate(false);
+          }
         }
       });
   }
