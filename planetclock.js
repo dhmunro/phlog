@@ -163,18 +163,22 @@ class PlanetClock {
       p => (() => this.setHandVisibility(p)).bind(this));
 
     // Year indicator
-    this.svg.append("rect").call(
-      rect => buttonBox(rect, -40, -0.50*rInner - 25.5, 80, 32, yearSetter));
-    this.yearText = this.svg.append("text").call(
-      t => buttonText(t, 0, -0.50*rInner,
-                      dateOfDay(this.dayNow).getUTCFullYear(), 24, yearSetter));
+    this.centerGroup = this.svg.append("g").call(
+      g => {
+        g.append("rect").call(
+          r => buttonBox(r, -40, -0.50*rInner - 25.5, 80, 32, yearSetter));
+        this.yearText = g.append("text").call(
+          t => buttonText(t, 0, -0.50*rInner,
+                          dateOfDay(this.dayNow).getUTCFullYear(), 24,
+                          yearSetter));
+        this.dateText = g.append("text")
+          .style("pointer-events", "none")
+          .attr("font-size", 16)
+          .attr("x", 0)
+          .attr("y", -0.5*rInner + 25)
+          .text(this.getDateText(this.dayNow));
+      });
     this.prevDayYear = [this.dayNow, dateOfDay(this.dayNow).getUTCFullYear()];
-    this.dateText = this.svg.append("text")
-      .style("pointer-events", "none")
-      .attr("font-size", 14)
-      .attr("x", 0)
-      .attr("y", -0.5*rInner + 25)
-      .text(this.getDateText(this.dayNow));
 
     // Planet legend
     this.planetHandVisibility = {
@@ -422,7 +426,7 @@ class PlanetClock {
       delete this.dayTimer;
     }
     day = parseFloat(day);
-    if (isNaN(day) || day <= 0) {
+    if (isNaN(day)) {
       return;
     }
     step = parseFloat(step);
@@ -477,7 +481,7 @@ class PlanetClock {
       this.daySky.attr("transform", `rotate(${theta})`);
       this.updatePlanets();
       this.updateYear();
-      this.updateElapsed(true);
+      this.updateElapsed(true, true);
     }
   }
 
@@ -574,12 +578,12 @@ class PlanetClock {
 
   addElapsed(updateCallback) {
     if (this.elapsed) {
-      this.removeElapsed();
+      this.removeElapsed(true);
     }
     let yElapsed = -0.25*PlanetClock.#rInner;
     let resetElapsed = (() => this.updateElapsed(true)).bind(this);
     this.elapsed0 = this.dayNow;
-    this.elapsed = this.svg.append("g").call(
+    this.elapsed = this.centerGroup.append("g").call(
       g => {
         g.append("text")
           .style("pointer-events", "none")
@@ -613,18 +617,20 @@ class PlanetClock {
     }
   }
 
-  removeElapsed() {
+  removeElapsed(fromAdd=false) {
     if (this.elapsed) {
       let day = this.elapsed0;
       this.elapsed.remove();
       delete this.elapsed;
       delete this.elapsed0;
       delete this.elapsedUpdater;
-      this.goToDay(day);
+      if (!fromAdd) {
+        this.goToDay(day);
+      }
     }
   }
 
-  updateElapsed(reset) {
+  updateElapsed(reset, fromSetYear=false) {
     if (this.elapsed) {
       if (reset) {
         this.elapsed0 = this.dayNow;
@@ -638,7 +644,7 @@ class PlanetClock {
       this.elapsed.select("text").text(
         `${(this.dayNow - this.elapsed0).toFixed(2)} days`);
       if (this.elapsedUpdater) {
-        this.elapsedUpdater(reset);
+        this.elapsedUpdater(reset, fromSetYear);
       }
     }
   }
@@ -710,6 +716,8 @@ class OrbitView {
     this.planetMarkers = new Array(7);
     this.planetHands = new Array(6);
     this.planetOrbits = new Array(6);
+    this.planetHands = new Array(6);
+    this.planetRadii = new Array(5);
     // Note that translate() happens before scale()
     this.planetGroup = this.svg.append("g")
         .style("pointer-events", "none")
@@ -735,15 +743,19 @@ class OrbitView {
           .style("fill", "none")
           .attr("opacity", "20%")
           .attr("d", d3p);
+        if (i < 5) {
+          this.planetRadii[i] = this.planetGroup.append("line")
+            .attr("opacity", "20%")
+            .attr("stroke", clock.planetColors[p])
+            .attr("stroke-width", 5/scale)
+            .attr("x1", 0).attr("y1", 0);
+        }
       }
     );
-    this.planetOrbits[5].attr("transform", "rotate(0)");
-    this.planetMarkers[6] = this.planetGroup.append("circle")  // Sun
-      .attr("stroke", "none")
-      .attr("fill", clock.planetColors.sun)
-      .attr("cx", 0)
-      .attr("cy", 0)
-      .attr("r", 8/scale);
+    this.planetOrbits[5]
+      .attr("id", "orbit-view-sun")
+      .attr("transform", "rotate(0)");
+    this.epicycleCircles = this.planetGroup.append("g");
     let [xe, ye] = positionOf("earth", clock.dayNow);
     ["mercury", "venus", "mars", "jupiter", "saturn"].forEach(
       (p, i) => {
@@ -751,31 +763,31 @@ class OrbitView {
         this.planetMarkers[i] = this.planetGroup.append("circle")
           .attr("stroke", "none")
           .attr("fill", clock.planetColors[p])
-          .attr("cx", 100*x)
-          .attr("cy", -100*y)
+          .attr("cx", 100*x).attr("cy", -100*y)
           .attr("r", 4/scale);
         this.planetHands[i] = this.planetGroup.append("line")
           .attr("visibility", clock.planetHandVisibility[p])
           .attr("stroke", clock.planetColors[p])
           .attr("stroke-width", 3/scale)
-          .attr("x1", 100*xe)
-          .attr("y1", -100*ye)
-          .attr("x2", 100*x)
-          .attr("y2", -100*y);
+          .attr("x1", 100*xe).attr("y1", -100*ye)
+          .attr("x2", 100*x).attr("y2", -100*y);
+        this.planetRadii[i].attr("x2", 100*x).attr("y2", -100*y);
       });
     this.planetHands[5] = this.planetGroup.append("line")  // Earth-Sun line
       .attr("stroke", clock.planetColors.sun)
       .attr("stroke-width", 3/scale)
-      .attr("x1", 0)
-      .attr("y1", 0)
-      .attr("x2", 100*xe)
-      .attr("y2", -100*ye);
+      .attr("x1", 0).attr("y1", 0)
+      .attr("x2", 100*xe).attr("y2", -100*ye);
     this.planetMarkers[5] = this.planetGroup.append("circle")  // Earth
       .attr("stroke", "none")
       .attr("fill", clock.planetColors.earth)
-      .attr("cx", 100*xe)
-      .attr("cy", -100*ye)
+      .attr("cx", 100*xe).attr("cy", -100*ye)
       .attr("r", 4/scale);
+    this.planetMarkers[6] = this.planetGroup.append("circle")  // Sun
+      .attr("stroke", "none")
+      .attr("fill", clock.planetColors.sun)
+      .attr("cx", 0).attr("cy", 0)
+      .attr("r", 8/scale);
 
     this.clock.addSlave((() => this.update()).bind(this));
   }
@@ -789,12 +801,10 @@ class OrbitView {
         let [x, y] = positionOf(p, this.clock.dayNow);
         this.planetMarkers[i].attr("cx", 100*x).attr("cy", -100*y);
         this.planetHands[i]
-          .attr("x1", 100*xe)
-          .attr("y1", -100*ye)
-          .attr("x2", 100*x)
-          .attr("y2", -100*y);
-        this.planetHands[i].attr("visibility",
-                                 this.clock.planetHandVisibility[p]);
+          .attr("visibility", this.clock.planetHandVisibility[p])
+          .attr("x1", 100*xe).attr("y1", -100*ye)
+          .attr("x2", 100*x).attr("y2", -100*y);
+        this.planetRadii[i].attr("x2", 100*x).attr("y2", -100*y);
       });
     this.planetHands[5].attr("x2", 100*xe).attr("y2", -100*ye);
     this.planetMarkers[5].attr("cx", 100*xe).attr("cy", -100*ye);
@@ -807,9 +817,29 @@ class OrbitView {
       this.planetGroup.attr("transform", `scale(${scale})`);
       this.planetOrbits[5].attr("transform", "rotate(0)");
       this.planetOrbits[5].style("stroke", this.clock.planetColors.earth);
+      [2, 3, 4].forEach(i => {
+        this.planetOrbits[i].attr("transform", null);
+        this.planetRadii[i].attr("transform", null);
+      });
+      this.epicycleCircles.selectAll("*").remove();
     } else if (sys == "geocentric") {
       this.updateOrigin = () => this.geocentric();
       this.planetOrbits[5].style("stroke", this.clock.planetColors.sun);
+    } else if (sys == "epicycles") {
+      this.updateOrigin = () => this.epicycles();
+      this.planetOrbits[5].style("stroke", this.clock.planetColors.sun);
+      ["mars", "jupiter", "saturn"].forEach(
+        p => this.epicycleCircles
+          .append(() => this.planetHands[5].clone(true).node())
+          .attr("stroke", this.clock.planetColors.sun)
+          .attr("opacity", "20%"));
+      this.epicycleCircles.selectAll("path")
+        .data([2, 3, 4])
+        .join("path")
+        .attr("fill", "none")
+        .attr("stroke", this.clock.planetColors.sun)
+        .attr("opacity", "20%")
+        .attr("d", this.planetOrbits[5].attr("d"));
     }
     this.update();
   }
@@ -819,6 +849,9 @@ class OrbitView {
       this.currentOrigin = "geocentric";
       this.originText.text("geocentric");
     } else if (this.currentOrigin == "geocentric") {
+      this.currentOrigin = "epicycles";
+      this.originText.text("epicycles");
+    } else if (this.currentOrigin == "epicycles") {
       this.currentOrigin = "heliocentric";
       this.originText.text("heliocentric");
     }
@@ -839,12 +872,18 @@ class OrbitView {
     }
     this.zoomLevel = znow;
     let scale = this.zoomFactor[znow];
-    this.planetOrbits.forEach(orbit => orbit.style("stroke-width", 5/scale));
-    this.planetHands.forEach(hand => hand.attr("stroke-width", 3/scale));
-    this.planetMarkers.slice(0,6).forEach(hand => hand.attr("r", 4/scale));
+    this.planetOrbits.forEach(
+      orbit => orbit.style("stroke-width", 5/scale));
+    this.planetRadii.forEach(
+      orbit => orbit.style("stroke-width", 5/scale));
+    this.planetHands.forEach(
+      hand => hand.attr("stroke-width", 3/scale));
+    this.planetMarkers.slice(0,6).forEach(
+      hand => hand.attr("r", 4/scale));
     this.planetMarkers[6].attr("r", 8/scale);
     if (this.updateOrigin()) {
-      this.planetGroup.attr("transform", `scale(${scale})`);
+      this.planetGroup
+        .attr("transform", `scale(${scale})`);
     }
     this.update();
   }
@@ -859,7 +898,38 @@ class OrbitView {
     this.planetGroup.attr("transform",
                           `scale(${scale}) translate(${-100*xe}, ${100*ye})`);
     this.planetOrbits[5].attr(
-      "transform",`translate(${100*xe}, ${-100*ye}) rotate(180)`);
+      "transform", `translate(${100*xe}, ${-100*ye}) rotate(180)`);
+    return false;  // planetGroup transform set
+  }
+
+  epicycles() {
+    let scale = this.zoomFactor[this.zoomLevel];
+    let [xe, ye] = positionOf("earth", this.clock.dayNow);
+    let xyz = ["mars", "jupiter", "saturn"]
+        .map(p => positionOf(p, this.clock.dayNow));
+    this.planetGroup.attr("transform",
+                          `scale(${scale}) translate(${-100*xe}, ${100*ye})`);
+    ["mars", "jupiter", "saturn"].forEach((p, i) => {
+      this.planetOrbits[i+2].attr(
+        "transform", `translate(${100*xe}, ${-100*ye})`)
+      this.planetRadii[i+2].attr(
+        "transform", `translate(${100*xe}, ${-100*ye})`)
+    });
+    this.planetOrbits[5].attr(
+      "transform", `translate(${100*xe}, ${-100*ye}) rotate(180)`);
+    this.epicycleCircles.selectAll("line")
+      .data([0, 1, 2])
+      .attr("stroke-width", 5/scale)
+      .attr("x2", `${100*xe}`).attr("y2", `${-100*ye}`)
+      .attr("transform", i =>
+            `translate(${100*(xe+xyz[i][0])}, ${-100*(ye+xyz[i][1])})` +
+            " rotate(180)");
+    this.epicycleCircles.selectAll("path")
+      .data([0, 1, 2])
+      .attr("stroke-width", 5/scale)
+      .attr("transform", i =>
+            `translate(${100*(xe+xyz[i][0])}, ${-100*(ye+xyz[i][1])})` +
+            " rotate(180)");
     return false;  // planetGroup transform set
   }
 }
@@ -879,11 +949,11 @@ class EarthYear {
       .attr("viewBox", [-width/2, -height/2, width, height])
       .style("display", "block")
       .style("margin", "20px")  // padding does not work for SVG?
-      .style("background-color", "#ccc")
+      .style("background-color", "#ddd")
       .attr("text-anchor", "middle")
       .attr("font-family", "sans-serif")
       .attr("font-weight", "bold")
-      .attr("font-size", 12)
+      .attr("font-size", 16)
       .attr("stroke-linejoin", "round")
       .attr("stroke-linecap", "round");
 
@@ -893,21 +963,988 @@ class EarthYear {
     let gap = 0.01*width;  // matches gap in zoomButtons
 
     this.clock.addSlave((() => this.update()).bind(this));
+    if (!this.clock.elapsed) {
+      this.activate(true);
+    }
+
+    let [left, right, bottom, top] = [-width/2+80, width/2-30,
+                                      height/2-60, -height/2+60];
+
+    this.svg.append("clipPath").attr("id", "earth-year-clip")
+      .append("rect")
+      .attr("x", left).attr("width", right-left)
+      .attr("y", top).attr("height", bottom-top);
+
+    this.zoomLevel = 0;  // level 1 is 1-year, level 2 is deviation from mean
+    this.x = d3.scaleLinear().range([left, right])
+      .domain([-1, 11]);
+    this.y = d3.scaleLinear().range([bottom, top])
+      .domain([-365, 4015]);
+    this.xAxis = d3.axisBottom(this.x)
+      .ticks(6).tickSize(10).tickPadding(10).tickSizeOuter(0);
+    this.yAxis = d3.axisLeft(this.y)
+      .ticks(6).tickSize(10).tickPadding(10).tickSizeOuter(0);
+
+    this.gxAxis = this.svg.append("g").call(this.xAxis)
+        .style("color", "#000")
+        .attr("transform", `translate(0, ${bottom})`)
+        .attr("font-size", 16)
+        .attr("stroke-width", 2);
+    this.gyAxis = this.svg.append("g").call(this.yAxis)
+        .style("color", "#000")
+        .attr("transform", `translate(${left}, 0)`)
+        .attr("font-size", 16)
+        .attr("stroke-width", 2);
+
+    // Axis labels
+    this.svg.append("text").attr("x", left-10).attr("y", top-12)
+      .text("days");
+    this.svg.append("text").attr("x", right).attr("y", bottom+50)
+      .text("revs");
+
+    let xgen = (d => this.x(d[0])).bind(this);
+    this.lineGenerator = d3.line()
+      .x(xgen)
+      .y((d => this.y(d[1])).bind(this))
+      .curve(d3.curveNatural);
+    // Natural spline has continuous second derivative (C2).
+    // Catmull Rom only C1, each interval based on surrounding two only.
+    // .curve(d3.curveCatmullRom);
+    // Deviation generator produces deviation from mean sun:
+    this.deviationGenerator = d3.line()
+      .x(xgen)
+      .y((d => this.y(d[1] - d[0]*this.yearEstimate)).bind(this))
+      .curve(d3.curveNatural);
+
+    this.instructions = this.svg.append("g").call(
+      g => {
+        g.attr("pointer-events", "none")
+          .attr("display", "block");
+        g.append("text")
+          .attr("text-anchor", "start")
+          .attr("fill", "#960")
+          .attr("font-size", 20)
+          .attr("x", -260)
+          .attr("y", -height/2 + 100)
+          .text("1. Set start date using planet clock")
+          .clone(true)
+          .attr("y", -height/2 + 125)
+          .text("2. Click Reset to collect 10 years data")
+          .clone(true)
+          .attr("y", -height/2 + 150)
+          .text("3. Adjust period using slider at right")
+          .clone(true)
+          .attr("y", -height/2 + 175)
+          .text("4. Zoom in to make fine adjustments");
+      });
+
+    this.yearEstimate = 360;  // Have to start somewhere...
+    this.yearText = this.svg.append("text")
+      .attr("pointer-events", "none")
+      .attr("font-size", 20)
+      .attr("y", -height/2 + 30)
+      .text(`Period estimate: ${this.yearEstimate.toFixed(3)} days`);
+    let yearDragger = ((event, d) => this.yearDrag(event, d)).bind(this);
+    let yearStarter = ((event, d) => this.yearDragStart(event, d)).bind(this);
+    let d3p = d3.path();
+    let y0 = this.y(10*this.yearEstimate);
+    let x0 = width/2 - 25;
+    d3p.moveTo(x0-10, y0);
+    d3p.lineTo(x0, y0-7);
+    d3p.lineTo(x0, y0-17);
+    d3p.lineTo(x0+17, y0-17);
+    d3p.lineTo(x0+17, y0+17);
+    d3p.lineTo(x0, y0+17);
+    d3p.lineTo(x0, y0+7);
+    d3p.lineTo(x0-10, y0);
+    d3p.lineTo(x0-30, y0);
+    d3p.closePath();
+    this.sliderNow = this.slider0 = y0;
+    // slider itself goes last in svg to be on top
+
+    let [xr, yr] = [this.x(0), this.y(this.yearEstimate)];
+    let [dxr, dyr] = [this.x(1) - xr, this.y(0) - yr];
+
+    this.plot = this.svg.append("g")
+        .attr("clip-path", "url(#earth-year-clip)");
+    this.yearBoxes = this.plot.append("g").call(
+      g => g.append("line")
+        .style("pointer-events", "none")
+        .attr("stroke", "#ffd")  // buttonBox color
+        .attr("stroke-width", 2)
+    );
+    this.updateYearBoxes(true);
+    this.lineGroup = this.plot.append("g");
+    this.linePath = this.lineGroup.append("path")
+      .attr("id", "earth-year-line")
+      .style("pointer-events", "none")
+      .attr("fill", "none")
+      .attr("stroke", this.clock.planetColors.earth)
+      .attr("stroke-width", 2);
+    this.sunMarker = this.plot.append("circle")
+      .attr("display", "block")
+      .attr("fill", this.clock.planetColors.sun)
+      .attr("stroke", "none")
+      .attr("r", 8)
+      .attr("cx", this.x(0)).attr("cy", this.y(0));
+    this.sunMarker2 = this.sunMarker.clone(true).attr("display", "none");
+    this.sunMarkerPos = [0, 0];
+
+    this.slider = this.svg.append("path")
+      .style("pointer-events", "all")
+      .style("cursor", "pointer")
+      .attr("fill", "#ffd")  // buttonBox color
+      .attr("stroke", "#000")
+      .attr("stroke-width", 1)
+      .attr("d", d3p)
+      .call(d3.drag().on("start", yearStarter).on("drag", yearDragger))
+      .on("touchstart", yearStarter).on("touchmove", yearDragger);
   }
 
-  update() {
-    if (this.svg.node().parentElement.style.display == "none") return;
+  computeSun(t0) {
+    /* Collect ten years of directions to the Sun.  Begin and end
+     * with three points spaced only one day apart to try to capture
+     * curvature at ends, then a three day gap, and all the rest 5 day
+     * spacing, for a total of 3655 days.  Straight 5 day spacing would
+     * make 732 points, but with the two extra points in the first and
+     * last intervals, the total comes to 736.
+     */
+    const atan2 = Math.atan2;
+    const twoPI = 2 * Math.PI;
+    const nt = 736;
+    let time = new Array(nt);
+    time[0] = 0;
+    time[1] = 1;
+    time[2] = 2;
+    for (let i=3 ; i<nt-3 ; i+=1) time[i] = 5*(i-2);
+    time[nt-3] = 3653;
+    time[nt-2] = 3654;
+    time[nt-1] = 3655;
+    let revs = -1;
+    let prev;
+    return time.map(t => {
+      let [x, y] = directionOf("sun", t0+t);
+      let dlon = atan2(y, x) / twoPI;
+      if (revs < 0) {
+        this.revs0 = prev = dlon;
+        revs = 0;
+      } else {
+        [prev, dlon] = [dlon, dlon-prev];
+        if (dlon < 0) dlon += 1;
+        revs += dlon;
+      }
+      return [revs, t];
+    });
+  }
+
+  updateYearBoxes(noTransition=false) {
+    let collapse = this.zoomLevel > 0;
+    let offset = (new Array(10)).fill(0);
+    offset = offset.map((v, i) => [collapse? 0 : i, i]);
+    let [xr, yr] = [this.x(0), this.y(this.yearEstimate)];
+    let [dxr, dyr] = [this.x(1) - xr, this.y(0) - yr];
+    let y1 = yr + dyr;
+    let nboxes = collapse? 1 : 10;
+    let trans = noTransition? 0 : 1000;
+    if (this.zoomLevel < 2) {
+      this.yearBoxes.select("line")
+        .maybeTransition(trans)
+        .attr("x1", xr-0.1*nboxes*dxr).attr("x2", xr+1.1*nboxes*dxr)
+        .attr("y1", y1+0.1*nboxes*dyr).attr("y2", y1-1.1*nboxes*dyr);
+      this.yearBoxes.selectAll("rect")
+        .data(offset)
+        .join(
+          enter => enter.append("rect")
+            .datum(d => d)
+            .attr("fill", "#ddd0")  // background-color, transparent
+            .attr("stroke", "#ffd")  // buttonBox color
+            .attr("stroke-width", 2)
+            .attr("x", xr).attr("width", nboxes*dxr)
+            .attr("y", yr-(nboxes-1)*dyr).attr("height", nboxes*dyr)
+            .maybeTransition(trans)
+            .attr("x", d => xr+d[0]*dxr).attr("width", dxr)
+            .attr("y", d => yr-d[0]*dyr).attr("height", dyr),
+          update => update
+            .maybeTransition(trans)
+            .attr("x", d => xr+d[0]*dxr).attr("width", dxr)
+            .attr("y", d => yr-d[0]*dyr).attr("height", dyr),
+          exit => exit
+        );
+      if (collapse && !noTransition) {
+        this.svg.maybeTransition(trans).on(
+          "end",
+          () => this.yearBoxes.selectAll("rect").data([0]).join("rect"));
+      }
+    } else {
+      this.yearBoxes.select("line")
+        .maybeTransition(trans)
+        .attr("x1", xr-0.1*dxr).attr("x2", xr+1.1*dxr)
+        .attr("y1", y1).attr("y2", y1);
+      this.yearBoxes.selectAll("rect")
+        .data([0])
+        .join("rect")
+        .attr("fill", "none")
+        .attr("stroke", "#ffd")  // buttonBox color
+        .attr("stroke-width", 2)
+        .attr("x", xr).attr("width", dxr)
+        .attr("y", y1-dyr).attr("height", 2*dyr)
+    }
+    return this.yearBoxes;
+  }
+
+  updateLinePath(noTransition=false) {
+    let collapse = this.zoomLevel > 0;
+    if (this.linePath.attr("d")) {
+      let [xr, yr] = [this.x(0), this.y(this.yearEstimate)];
+      let [dxr, dyr] = [this.x(1) - xr, this.y(0) - yr];
+      let trans = noTransition? 0 : 1000;
+      if (collapse) {
+        if (this.zoomLevel < 2) {
+          this.linePath.maybeTransition(trans)
+            .attr("d", this.lineGenerator(this.revT));
+        } else {
+          this.linePath.maybeTransition(trans)
+            .attr("d", this.deviationGenerator(this.revT));
+          dyr = 0;
+        }
+        this.lineGroup.selectAll("use")
+          .data([1, 2, 3, 4, 5, 6, 7, 8, 9])
+          .join(
+            enter => enter.append("use")
+              .attr("href", "#earth-year-line")
+              .attr("x", 0).attr("y", 0)
+              .maybeTransition(trans)
+              .attr("x", d => -dxr*d).attr("y", d => dyr*d),
+            update => update
+              .maybeTransition(trans)
+              .attr("x", d => -dxr*d).attr("y", d => dyr*d),
+            exit => exit.remove()
+          );
+      } else {
+        this.linePath.maybeTransition(trans)
+          .attr("d", this.lineGenerator(this.revT));
+        this.lineGroup.selectAll("use").maybeTransition(trans)
+          .attr("x", 0).attr("y", 0).remove();
+      }
+    }
+  }
+
+  updateSunMarker(noTransition=false) {
+    let collapse = this.zoomLevel > 0;
+    let t0 = this.clock.elapsed0;
+    let t = this.clock.dayNow - t0;
+    if (this.revT && t >= 0 && t <= 3655) {
+      let trans = noTransition? 0 : 1000;
+      let [x, y] = directionOf("sun", t+t0);
+      let trueYear = 365.25636;
+      let revs = Math.atan2(y, x) / (2*Math.PI);
+      revs -= this.revs0;
+      if (revs < 0) revs += 1;
+      // revs is now fractional part of revs since elapsed0
+      let drevs = (revs < 0.5)? 1 : -1;  // for sunMarker2
+      let nrevs = Math.floor(t/trueYear + 1.e-9);
+      this.sunMarkerPos = [revs + nrevs, t];
+      if (collapse) {
+        t -= nrevs*this.yearEstimate;
+      } else {
+        revs += nrevs;
+      }
+      if (this.zoomLevel < 2) {
+        this.sunMarker.maybeTransition(trans)
+          .attr("cx", this.x(revs))
+          .attr("cy", this.y(t));
+        this.sunMarker2.maybeTransition(trans)
+          .attr("cx", this.x(revs + drevs))
+          .attr("cy", this.y(t + drevs*this.yearEstimate));
+      } else {
+        this.sunMarker.maybeTransition(trans)
+          .attr("cx", this.x(revs))
+          .attr("cy", this.y(t - revs*this.yearEstimate));
+        this.sunMarker2.maybeTransition(trans)
+          .attr("cx", this.x(revs + drevs))
+          .attr("cy", this.y(t - revs*this.yearEstimate));
+      }
+    }
+  }
+
+  elapsedUpdate(reset, inhibitReset=false) {
+    if (reset) {
+      // reset the days vs revs graph
+      const t0 = this.clock.elapsed0;
+      if (this.zoomLevel != 0) {
+        this.zoomLevel = 0;
+        this.multiYear(true);
+      }
+      this.linePath.attr("d", null);
+      if (inhibitReset) {
+        // Presumably from setting year with year button, start over.
+        delete this.revs0;
+        delete this.revT;
+        delete this.revTRange;
+        this.sunMarker.attr("cx", this.x(0)).attr("cy", this.y(0));
+        this.sunMarker2.attr("cx", this.x(0)).attr("cy", this.y(0));
+        this.sunMarkerPos = [0, 0];
+        this.instructions.attr("display", "block");
+      } else {
+        this.instructions.attr("display", "none");
+        this.clock.animateTo(t0 + 5.8*this.yearEstimate, 10);
+        this.revT = this.computeSun(t0);
+        this.revTRange = this.revT.reduce(
+          ([dtmin, dtmax], [revs, t]) => {  // note that tlon[0] = [0, 0]
+            let dt = t - revs*365.25636;  // relative to exact mean sun
+            if (dt < dtmin) {
+              dtmin = dt;
+            } else if (dt > dtmax) {
+              dtmax = dt;
+            }
+            return [dtmin, dtmax];  // dtmax - dtmin = 3.8833
+          });
+        this.linePath.attr("d", this.lineGenerator(this.revT));
+      }
+    } else if (this.revT) {
+      this.updateSunMarker(true);
+    }
   }
 
   activate(on) {
     if (on) {
-      this.clock.addElapsed();
+      this.clock.addElapsed(((r, ir) => this.elapsedUpdate(r, ir)).bind(this));
     } else {
       this.clock.removeElapsed();
     }
   }
 
+  update() {
+    // if (this.svg.node().parentElement.style.display == "none") return;
+  }
+
   zoomer(inout) {
+    var level = this.zoomLevel;
+    if (inout == 0) {  // Decrease magnification.
+      level -= 1;
+      if (level < 0) return;
+    } else {  // Increase magnification.
+      level += 1;
+      if (level > 2 || (level > 1 && !this.revTRange)) return;
+    }
+    this.zoomLevel = level;
+    if (level == 0) {
+      this.multiYear();
+    } else if (level == 1) {
+      this.singleYear();
+    } else {
+      this.hiMag();
+    }
+  }
+
+  multiYear(noTransition=false) {
+    let trans = noTransition? 0 : 1000;
+    this.x.domain([-1, 11]);
+    this.y.domain([-365, 4015]);
+    this.xAxis.scale(this.x);
+    this.yAxis.scale(this.y);
+    this.gxAxis.maybeTransition(trans).call(this.xAxis);
+    this.gyAxis.maybeTransition(trans).call(this.yAxis);
+    this.updateLinePath(noTransition);
+    this.sunMarker2.attr("display", "none");
+    this.updateSunMarker(noTransition);
+    this.updateYearBoxes(noTransition);
+    let y = this.y(10*this.yearEstimate);
+    this.sliderNow = y;
+    this.slider.attr("transform", `translate(0, ${y - this.slider0})`);
+  }
+
+  singleYear(noTransition=false) {
+    let trans = noTransition? 0 : 1000;
+    this.x.domain([-0.1, 1.1]);
+    this.y.domain([-36.5, 401.5]);
+    this.xAxis.scale(this.x);
+    this.yAxis.scale(this.y);
+    this.gxAxis.maybeTransition(trans).call(this.xAxis);
+    this.gyAxis.maybeTransition(trans).call(this.yAxis);
+    this.updateLinePath(noTransition);
+    this.sunMarker2.attr("display", "block");
+    this.updateSunMarker(noTransition);
+    this.updateYearBoxes(noTransition);
+    let y = this.y(this.yearEstimate);
+    this.sliderNow = y;
+    this.slider.attr("transform", `translate(0, ${y - this.slider0})`);
+  }
+
+  hiMag(noTransition=false) {
+    // Adjust yearEstimate to keep slider on scale if necessary.
+    if (this.yearEstimate < 364.925) {
+      this.yearEstimate = 364.925;
+      this.yearText.text(`Period estimate: 364.925 days`);
+    } else if (this.yearEstimate > 365.6) {
+      this.yearEstimate = 365.6;
+      this.yearText.text(`Period estimate: 365.600 days`);
+    }
+    let trans = noTransition? 0 : 1000;
+    this.x.domain([-0.1, 1.1]);
+    let dtAvg = 0.5*(this.revTRange[1] + this.revTRange[0]);
+    this.y.domain([dtAvg-3.5, dtAvg+3.5]);
+    this.xAxis.scale(this.x);
+    this.yAxis.scale(this.y);
+    this.gxAxis.maybeTransition(trans).call(this.xAxis);
+    this.gyAxis.maybeTransition(trans).call(this.yAxis);
+    this.updateLinePath();
+    this.updateSunMarker();
+    this.updateYearBoxes();
+    // Place exact year at midpoint of vertical scale.
+    let ymid = 0.5*(this.revTRange[0] + this.revTRange[1]);
+    let y = this.y(10*(this.yearEstimate - 365.25636) + ymid);
+    this.sliderNow = y;
+    this.slider.attr("transform", `translate(0, ${y - this.slider0})`);
+  }
+
+  yearDrag(event, d) {
+    let [x, y] = [event.x+1.e-20, event.y];
+    y += this.yDragOffset;
+    let [xr, yr] = [this.x(0), this.y(this.yearEstimate)];
+    let [dxr, dyr] = [this.x(1) - xr, this.y(0) - yr];
+    yr += dyr;  // (xr, yr) now the point at (revs, days) = (0, 0)
+    let factor = (this.zoomLevel > 0)? 1 : 10;
+    let days = this.y.invert(y);
+    if (this.zoomLevel < 2) {
+      if (days < 350*factor) {
+        days = 350*factor;
+        y = this.y(days);
+      } else if (days > 380*factor) {
+        days = 380*factor;
+        y = this.y(days);
+      }
+    } else {
+      let ymid = 0.5*(this.revTRange[0] + this.revTRange[1]);
+      days = 0.1*(days - ymid) + 365.25636;
+      if (days < 364.925) {
+        days = 364.925;
+        y = this.y(10*(this.yearEstimate - 365.25636) + ymid);
+      } else if (days > 365.6) {
+        days = 365.6;
+        y = this.y(10*(this.yearEstimate - 365.25636) + ymid);
+      }
+    }
+    this.sliderNow = y;
+    this.yearEstimate = days / factor;
+    this.slider.attr("transform", `translate(0, ${y - this.slider0})`);
+    this.yearText.text(`Period estimate: ${this.yearEstimate.toFixed(3)} days`);
+    this.updateYearBoxes(true);
+    this.updateLinePath(true);
+    this.updateSunMarker(true);
+  }
+
+  yearDragStart(event, d) {
+    let [x, y] = [event.x+1.e-20, event.y];
+    this.yDragOffset = this.sliderNow - y;
+  }
+}
+
+
+class MarsYear {
+  static #width = 750;
+  static #height = MarsYear.#width;
+
+  constructor(d3Parent, clock) {
+    let [width, height] = [MarsYear.#width, MarsYear.#height];
+
+    this.svg = d3Parent.append("svg")
+      .attr("xmlns", "http://www.w3.org/2000/svg")
+      .attr("xmlns:xlink", "http://www.w3.org/1999/xlink")
+      .attr("class", "MarsYear")
+      .attr("viewBox", [-width/2, -height/2, width, height])
+      .style("display", "block")
+      .style("margin", "20px")  // padding does not work for SVG?
+      .style("background-color", "#ddd")
+      .attr("text-anchor", "middle")
+      .attr("font-family", "sans-serif")
+      .attr("font-weight", "bold")
+      .attr("font-size", 16)
+      .attr("stroke-linejoin", "round")
+      .attr("stroke-linecap", "round");
+
+    this.clock = clock;
+
+    zoomButtons(width, this);
+    let gap = 0.01*width;  // matches gap in zoomButtons
+
+    this.clock.addSlave((() => this.update()).bind(this));
+    if (!this.clock.elapsed) {
+      this.activate(true);
+    }
+
+    let [left, right, bottom, top] = [-width/2+80, width/2-30,
+                                      height/2-60, -height/2+60];
+
+    this.svg.append("clipPath").attr("id", "earth-year-clip")
+      .append("rect")
+      .attr("x", left).attr("width", right-left)
+      .attr("y", top).attr("height", bottom-top);
+
+    this.zoomLevel = 0;  // level 1 is 1-year, level 2 is deviation from mean
+    this.x = d3.scaleLinear().range([left, right])
+      .domain([-1, 11]);
+    this.y = d3.scaleLinear().range([bottom, top])
+      .domain([-730, 8030]);
+    this.xAxis = d3.axisBottom(this.x)
+      .ticks(6).tickSize(10).tickPadding(10).tickSizeOuter(0);
+    this.yAxis = d3.axisLeft(this.y)
+      .ticks(6).tickSize(10).tickPadding(10).tickSizeOuter(0);
+
+    this.gxAxis = this.svg.append("g").call(this.xAxis)
+        .style("color", "#000")
+        .attr("transform", `translate(0, ${bottom})`)
+        .attr("font-size", 16)
+        .attr("stroke-width", 2);
+    this.gyAxis = this.svg.append("g").call(this.yAxis)
+        .style("color", "#000")
+        .attr("transform", `translate(${left}, 0)`)
+        .attr("font-size", 16)
+        .attr("stroke-width", 2);
+
+    // Axis labels
+    this.svg.append("text").attr("x", left-10).attr("y", top-12)
+      .text("days");
+    this.svg.append("text").attr("x", right).attr("y", bottom+50)
+      .text("revs");
+
+    let xgen = (d => this.x(d[0])).bind(this);
+    this.lineGenerator = d3.line()
+      .x(xgen)
+      .y((d => this.y(d[1])).bind(this))
+      .curve(d3.curveNatural);
+    // Natural spline has continuous second derivative (C2).
+    // Catmull Rom only C1, each interval based on surrounding two only.
+    // .curve(d3.curveCatmullRom);
+    // Deviation generator produces deviation from mean sun:
+    this.deviationGenerator = d3.line()
+      .x(xgen)
+      .y((d => this.y(d[1] - d[0]*this.yearEstimate)).bind(this))
+      .curve(d3.curveNatural);
+
+    this.instructions = this.svg.append("g").call(
+      g => {
+        g.attr("pointer-events", "none")
+          .attr("display", "block");
+        g.append("text")
+          .attr("text-anchor", "start")
+          .attr("fill", "#960")
+          .attr("font-size", 20)
+          .attr("x", -260)
+          .attr("y", -height/2 + 100)
+          .text("1. Set start date using planet clock")
+          .clone(true)
+          .attr("y", -height/2 + 125)
+          .text("2. Click Reset to collect 20 years data")
+          .clone(true)
+          .attr("y", -height/2 + 150)
+          .text("3. Adjust period using slider at right")
+          .clone(true)
+          .attr("y", -height/2 + 175)
+          .text("4. Zoom in to make fine adjustments");
+      });
+
+    this.yearEstimate = 680;  // Have to start somewhere...
+    this.yearText = this.svg.append("text")
+      .attr("pointer-events", "none")
+      .attr("font-size", 20)
+      .attr("y", -height/2 + 30)
+      .text(`Period estimate: ${this.yearEstimate.toFixed(3)} days`);
+    let yearDragger = ((event, d) => this.yearDrag(event, d)).bind(this);
+    let yearStarter = ((event, d) => this.yearDragStart(event, d)).bind(this);
+    let d3p = d3.path();
+    let y0 = this.y(10*this.yearEstimate);
+    let x0 = width/2 - 25;
+    d3p.moveTo(x0-10, y0);
+    d3p.lineTo(x0, y0-7);
+    d3p.lineTo(x0, y0-17);
+    d3p.lineTo(x0+17, y0-17);
+    d3p.lineTo(x0+17, y0+17);
+    d3p.lineTo(x0, y0+17);
+    d3p.lineTo(x0, y0+7);
+    d3p.lineTo(x0-10, y0);
+    d3p.lineTo(x0-30, y0);
+    d3p.closePath();
+    this.sliderNow = this.slider0 = y0;
+    // slider itself goes last in svg to be on top
+
+    let [xr, yr] = [this.x(0), this.y(this.yearEstimate)];
+    let [dxr, dyr] = [this.x(1) - xr, this.y(0) - yr];
+
+    this.plot = this.svg.append("g")
+        .attr("clip-path", "url(#earth-year-clip)");
+    this.yearBoxes = this.plot.append("g").call(
+      g => g.append("line")
+        .style("pointer-events", "none")
+        .attr("stroke", "#ffd")  // buttonBox color
+        .attr("stroke-width", 2)
+    );
+    this.updateYearBoxes(true);
+    this.lineGroup = this.plot.append("g");
+    this.linePath = this.lineGroup.append("path")
+      .attr("id", "earth-year-line")
+      .style("pointer-events", "none")
+      .attr("fill", "none")
+      .attr("opacity", "25%")
+      .attr("stroke", this.clock.planetColors.mars)
+      .attr("stroke-width", 2);
+    this.sunMarker = this.plot.append("circle")
+      .attr("display", "block")
+      .attr("fill", this.clock.planetColors.sun)
+      .attr("stroke", "none")
+      .attr("r", 8)
+      .attr("cx", this.x(0)).attr("cy", this.y(0));
+    this.sunMarker2 = this.sunMarker.clone(true).attr("display", "none");
+    this.sunMarkerPos = [0, 0];
+
+    this.slider = this.svg.append("path")
+      .style("pointer-events", "all")
+      .style("cursor", "pointer")
+      .attr("fill", "#ffd")  // buttonBox color
+      .attr("stroke", "#000")
+      .attr("stroke-width", 1)
+      .attr("d", d3p)
+      .call(d3.drag().on("start", yearStarter).on("drag", yearDragger))
+      .on("touchstart", yearStarter).on("touchmove", yearDragger);
+  }
+
+  computeMars(t0) {
+    /* Collect twenty years of directions to Mars.  Begin and end
+     * with three points spaced two days apart to try to capture
+     * curvature at ends, then a six day gap, and all the rest ten day
+     * spacing, for a total of 7310 days.  Straight 10 day spacing would
+     * make 732 points, but with the two extra points in the first and
+     * last intervals, the total comes to 736.
+     */
+    const atan2 = Math.atan2;
+    const twoPI = 2 * Math.PI;
+    const nt = 736;
+    let time = new Array(nt);
+    time[0] = 0;
+    time[1] = 2;
+    time[2] = 4;
+    for (let i=3 ; i<nt-3 ; i+=1) time[i] = 10*(i-2);
+    time[nt-3] = 7306;
+    time[nt-2] = 7308;
+    time[nt-1] = 7310;
+    let revs = -1;
+    let prev;
+    return time.map(t => {
+      let [x, y] = directionOf("mars", t0+t);
+      let dlon = atan2(y, x) / twoPI;
+      if (revs < 0) {
+        this.revs0 = prev = dlon;
+        revs = 0;
+      } else {
+        [prev, dlon] = [dlon, dlon-prev];
+        if (dlon < -0.5) dlon += 1;
+        if (dlon > 0.5) dlon -= 1;
+        revs += dlon;
+      }
+      return [revs, t];
+    });
+  }
+
+  updateYearBoxes(noTransition=false) {
+    let collapse = this.zoomLevel > 0;
+    let offset = (new Array(10)).fill(0);
+    offset = offset.map((v, i) => [collapse? 0 : i, i]);
+    let [xr, yr] = [this.x(0), this.y(this.yearEstimate)];
+    let [dxr, dyr] = [this.x(1) - xr, this.y(0) - yr];
+    let y1 = yr + dyr;
+    let nboxes = collapse? 1 : 10;
+    let trans = noTransition? 0 : 1000;
+    if (this.zoomLevel < 2) {
+      this.yearBoxes.select("line")
+        .maybeTransition(trans)
+        .attr("x1", xr-0.1*nboxes*dxr).attr("x2", xr+1.1*nboxes*dxr)
+        .attr("y1", y1+0.1*nboxes*dyr).attr("y2", y1-1.1*nboxes*dyr);
+      this.yearBoxes.selectAll("rect")
+        .data(offset)
+        .join(
+          enter => enter.append("rect")
+            .datum(d => d)
+            .attr("fill", "#ddd0")  // background-color, transparent
+            .attr("stroke", "#ffd")  // buttonBox color
+            .attr("stroke-width", 2)
+            .attr("x", xr).attr("width", nboxes*dxr)
+            .attr("y", yr-(nboxes-1)*dyr).attr("height", nboxes*dyr)
+            .maybeTransition(trans)
+            .attr("x", d => xr+d[0]*dxr).attr("width", dxr)
+            .attr("y", d => yr-d[0]*dyr).attr("height", dyr),
+          update => update
+            .maybeTransition(trans)
+            .attr("x", d => xr+d[0]*dxr).attr("width", dxr)
+            .attr("y", d => yr-d[0]*dyr).attr("height", dyr),
+          exit => exit
+        );
+      if (collapse && !noTransition) {
+        this.svg.maybeTransition(trans).on(
+          "end",
+          () => this.yearBoxes.selectAll("rect").data([0]).join("rect"));
+      }
+    } else {
+      this.yearBoxes.select("line")
+        .maybeTransition(trans)
+        .attr("x1", xr-0.1*dxr).attr("x2", xr+1.1*dxr)
+        .attr("y1", y1).attr("y2", y1);
+      this.yearBoxes.selectAll("rect")
+        .data([0])
+        .join("rect")
+        .attr("fill", "none")
+        .attr("stroke", "#ffd")  // buttonBox color
+        .attr("stroke-width", 2)
+        .attr("x", xr).attr("width", dxr)
+        .attr("y", y1-dyr).attr("height", 2*dyr)
+    }
+    return this.yearBoxes;
+  }
+
+  updateLinePath(noTransition=false) {
+    let collapse = this.zoomLevel > 0;
+    if (this.linePath.attr("d")) {
+      let [xr, yr] = [this.x(0), this.y(this.yearEstimate)];
+      let [dxr, dyr] = [this.x(1) - xr, this.y(0) - yr];
+      let trans = noTransition? 0 : 1000;
+      if (collapse) {
+        if (this.zoomLevel < 2) {
+          this.linePath.maybeTransition(trans)
+            .attr("d", this.lineGenerator(this.revT));
+        } else {
+          this.linePath.maybeTransition(trans)
+            .attr("d", this.deviationGenerator(this.revT));
+          dyr = 0;
+        }
+        this.lineGroup.selectAll("use")
+          .data([1, 2, 3, 4, 5, 6, 7, 8, 9])
+          .join(
+            enter => enter.append("use")
+              .attr("href", "#earth-year-line")
+              .attr("x", 0).attr("y", 0)
+              .maybeTransition(trans)
+              .attr("x", d => -dxr*d).attr("y", d => dyr*d),
+            update => update
+              .maybeTransition(trans)
+              .attr("x", d => -dxr*d).attr("y", d => dyr*d),
+            exit => exit.remove()
+          );
+      } else {
+        this.linePath.maybeTransition(trans)
+          .attr("d", this.lineGenerator(this.revT));
+        this.lineGroup.selectAll("use").maybeTransition(trans)
+          .attr("x", 0).attr("y", 0).remove();
+      }
+    }
+  }
+
+  updateSunMarker(noTransition=false) {
+    let collapse = this.zoomLevel > 0;
+    let t0 = this.clock.elapsed0;
+    let t = this.clock.dayNow - t0;
+    if (this.revT && t >= 0 && t <= 7310) {
+      let trans = noTransition? 0 : 1000;
+      let [x, y] = directionOf("sun", t+t0);
+      let trueYear = 686.97973;
+      let revs = Math.atan2(y, x) / (2*Math.PI);
+      revs -= this.revs0;
+      if (revs < 0) revs += 1;
+      // revs is now fractional part of revs since elapsed0
+      let drevs = (revs < 0.5)? 1 : -1;  // for sunMarker2
+      let nrevs = Math.floor(t/trueYear + 1.e-9);
+      this.sunMarkerPos = [revs + nrevs, t];
+      if (collapse) {
+        t -= nrevs*this.yearEstimate;
+      } else {
+        revs += nrevs;
+      }
+      if (this.zoomLevel < 2) {
+        this.sunMarker.maybeTransition(trans)
+          .attr("cx", this.x(revs))
+          .attr("cy", this.y(t));
+        this.sunMarker2.maybeTransition(trans)
+          .attr("cx", this.x(revs + drevs))
+          .attr("cy", this.y(t + drevs*this.yearEstimate));
+      } else {
+        this.sunMarker.maybeTransition(trans)
+          .attr("cx", this.x(revs))
+          .attr("cy", this.y(t - revs*this.yearEstimate));
+        this.sunMarker2.maybeTransition(trans)
+          .attr("cx", this.x(revs + drevs))
+          .attr("cy", this.y(t - revs*this.yearEstimate));
+      }
+    }
+  }
+
+  elapsedUpdate(reset, inhibitReset=false) {
+    if (reset) {
+      // reset the days vs revs graph
+      const t0 = this.clock.elapsed0;
+      if (this.zoomLevel != 0) {
+        this.zoomLevel = 0;
+        this.multiYear(true);
+      }
+      this.linePath.attr("d", null);
+      if (inhibitReset) {
+        // Presumably from setting year with year button, start over.
+        delete this.revs0;
+        delete this.revT;
+        delete this.revTRange;
+        this.sunMarker.attr("cx", this.x(0)).attr("cy", this.y(0));
+        this.sunMarker2.attr("cx", this.x(0)).attr("cy", this.y(0));
+        this.sunMarkerPos = [0, 0];
+        this.instructions.attr("display", "block");
+      } else {
+        this.instructions.attr("display", "none");
+        this.clock.animateTo(t0 + 5.8*this.yearEstimate, 10);
+        this.revT = this.computeMars(t0);
+        this.revTRange = this.revT.reduce(
+          ([dtmin, dtmax], [revs, t]) => {  // note that tlon[0] = [0, 0]
+            let dt = t - revs*686.97973;  // relative to exact mean sun
+            if (dt < dtmin) {
+              dtmin = dt;
+            } else if (dt > dtmax) {
+              dtmax = dt;
+            }
+            return [dtmin, dtmax];  // dtmax - dtmin = 3.8833
+          });
+        this.linePath.attr("d", this.lineGenerator(this.revT));
+      }
+    } else if (this.revT) {
+      this.updateSunMarker(true);
+    }
+  }
+
+  activate(on) {
+    if (on) {
+      this.clock.addElapsed(((r, ir) => this.elapsedUpdate(r, ir)).bind(this));
+    } else {
+      this.clock.removeElapsed();
+    }
+  }
+
+  update() {
+    // if (this.svg.node().parentElement.style.display == "none") return;
+  }
+
+  zoomer(inout) {
+    var level = this.zoomLevel;
+    if (inout == 0) {  // Decrease magnification.
+      level -= 1;
+      if (level < 0) return;
+    } else {  // Increase magnification.
+      level += 1;
+      if (level > 2 || (level > 1 && !this.revTRange)) return;
+    }
+    this.zoomLevel = level;
+    if (level == 0) {
+      this.multiYear();
+    } else if (level == 1) {
+      this.singleYear();
+    } else {
+      this.hiMag();
+    }
+  }
+
+  multiYear(noTransition=false) {
+    let trans = noTransition? 0 : 1000;
+    this.x.domain([-1, 11]);
+    this.y.domain([-730, 8030]);
+    this.xAxis.scale(this.x);
+    this.yAxis.scale(this.y);
+    this.gxAxis.maybeTransition(trans).call(this.xAxis);
+    this.gyAxis.maybeTransition(trans).call(this.yAxis);
+    this.updateLinePath(noTransition);
+    this.sunMarker2.attr("display", "none");
+    this.updateSunMarker(noTransition);
+    this.updateYearBoxes(noTransition);
+    let y = this.y(10*this.yearEstimate);
+    this.sliderNow = y;
+    this.slider.attr("transform", `translate(0, ${y - this.slider0})`);
+  }
+
+  singleYear(noTransition=false) {
+    let trans = noTransition? 0 : 1000;
+    this.x.domain([-0.1, 1.1]);
+    this.y.domain([-36.5, 803]);
+    this.xAxis.scale(this.x);
+    this.yAxis.scale(this.y);
+    this.gxAxis.maybeTransition(trans).call(this.xAxis);
+    this.gyAxis.maybeTransition(trans).call(this.yAxis);
+    this.updateLinePath(noTransition);
+    this.sunMarker2.attr("display", "block");
+    this.updateSunMarker(noTransition);
+    this.updateYearBoxes(noTransition);
+    let y = this.y(this.yearEstimate);
+    this.sliderNow = y;
+    this.slider.attr("transform", `translate(0, ${y - this.slider0})`);
+  }
+
+  hiMag(noTransition=false) {
+    // Adjust yearEstimate to keep slider on scale if necessary.
+    if (this.yearEstimate < 364.925) {
+      this.yearEstimate = 364.925;
+      this.yearText.text(`Period estimate: 364.925 days`);
+    } else if (this.yearEstimate > 365.6) {
+      this.yearEstimate = 365.6;
+      this.yearText.text(`Period estimate: 365.600 days`);
+    }
+    let trans = noTransition? 0 : 1000;
+    this.x.domain([-0.1, 1.1]);
+    let dtAvg = 0.5*(this.revTRange[1] + this.revTRange[0]);
+    this.y.domain([dtAvg-3.5, dtAvg+3.5]);
+    this.xAxis.scale(this.x);
+    this.yAxis.scale(this.y);
+    this.gxAxis.maybeTransition(trans).call(this.xAxis);
+    this.gyAxis.maybeTransition(trans).call(this.yAxis);
+    this.updateLinePath();
+    this.updateSunMarker();
+    this.updateYearBoxes();
+    // Place exact year at midpoint of vertical scale.
+    let ymid = 0.5*(this.revTRange[0] + this.revTRange[1]);
+    let y = this.y(10*(this.yearEstimate - 365.25636) + ymid);
+    this.sliderNow = y;
+    this.slider.attr("transform", `translate(0, ${y - this.slider0})`);
+  }
+
+  yearDrag(event, d) {
+    let [x, y] = [event.x+1.e-20, event.y];
+    y += this.yDragOffset;
+    let [xr, yr] = [this.x(0), this.y(this.yearEstimate)];
+    let [dxr, dyr] = [this.x(1) - xr, this.y(0) - yr];
+    yr += dyr;  // (xr, yr) now the point at (revs, days) = (0, 0)
+    let factor = (this.zoomLevel > 0)? 1 : 10;
+    let days = this.y.invert(y);
+    if (this.zoomLevel < 2) {
+      if (days < 350*factor) {
+        days = 350*factor;
+        y = this.y(days);
+      } else if (days > 380*factor) {
+        days = 380*factor;
+        y = this.y(days);
+      }
+    } else {
+      let ymid = 0.5*(this.revTRange[0] + this.revTRange[1]);
+      days = 0.1*(days - ymid) + 365.25636;
+      if (days < 364.925) {
+        days = 364.925;
+        y = this.y(10*(this.yearEstimate - 365.25636) + ymid);
+      } else if (days > 365.6) {
+        days = 365.6;
+        y = this.y(10*(this.yearEstimate - 365.25636) + ymid);
+      }
+    }
+    this.sliderNow = y;
+    this.yearEstimate = days / factor;
+    this.slider.attr("transform", `translate(0, ${y - this.slider0})`);
+    this.yearText.text(`Period estimate: ${this.yearEstimate.toFixed(3)} days`);
+    this.updateYearBoxes(true);
+    this.updateLinePath(true);
+    this.updateSunMarker(true);
+  }
+
+  yearDragStart(event, d) {
+    let [x, y] = [event.x+1.e-20, event.y];
+    this.yDragOffset = this.sliderNow - y;
   }
 }
 
@@ -970,3 +2007,10 @@ function zoomButtons(width, objectThis) {
         });
     });
 }
+
+
+// Oddball helper to make transition a no-op when duration is zero.
+// https://github.com/d3/d3-transition/issues/93
+d3.selection.prototype.maybeTransition = function(duration) {
+  return duration > 0 ? this.transition().duration(duration) : this;
+};

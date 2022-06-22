@@ -27,6 +27,7 @@
         <option value="#intro" selected>Planet Clock</option>
         <option value="#orb-view">Orbit View</option>
         <option value="#earth-year">Earth Period</option>
+        <option value="#mars-year">Mars Period</option>
       </select>
       <div id="intro"
            style="position: absolute; top: 50px; left: 0; display: block;">
@@ -79,6 +80,11 @@
              style="position: static; width: 100%; height: 100%; display: none;">
         </div>
       </div>
+      <div style="position: absolute; top: 50px; left: 0;">
+        <div id="mars-year"
+             style="position: static; width: 100%; height: 100%; display: none;">
+        </div>
+      </div>
     </div>
   </div>
 
@@ -124,19 +130,21 @@ Libra 210 Scorpio 240 Sagittarius 270 Capricornus 300 Aquarius 330 Pisces
 
   let orbView = new OrbitView(d3.select("#orb-view"), clock);
   let earthYear = new EarthYear(d3.select("#earth-year"), clock);
-  let slaves = [null, orbView, earthYear];
+  let marsYear = new MarsYear(d3.select("#mars-year"), clock);
+  let slaves = [null, orbView, earthYear, marsYear];
 
   function mainMenuSelect() {
     ["mercury", "venus", "jupiter", "saturn"].forEach(
       p => clock.setHandVisibility(p, false));
     let sel = document.getElementById("main-menu");
     sel = sel.options[sel.selectedIndex].value;
-    ["#intro", "#orb-view", "#earth-year"].forEach(
+    ["#intro", "#orb-view", "#earth-year", "#mars-year"].forEach(
       (id, i) => {
         let d3Div = d3.select(id);
         if (id == sel) {
           d3Div.style("display", "block");
-          clock.setHandVisibility("mars", id != "#intro");
+          clock.setHandVisibility(
+            "mars", ["#orb-view", "#mars-year"].indexOf(id) > -1);
           if (slaves[i] != null) {
             slaves[i].activate(true);
           }
