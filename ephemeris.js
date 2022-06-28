@@ -124,6 +124,130 @@ function timeSunAt(x, y, nearDay) {
 }
 
 /**
+ * Find x such that f(x) = 0, given bracketing initial x values.
+ * The initial values x0 and x1 must satisfy f(x0)*f(x1) <= 0.
+ * You can optionally pass [x0, f(x0)] and [x1, f(x1)] to avoid
+ * computing f for the initial points.
+ *
+ * @param {function} f - function to be solved
+ * @param {number | Array<number>} xy0 - x0 or [x0, f(x0)]
+ * @param {number | Array<number>} xy1 - x1 or [x1, f(x1)]
+ * @param {number} [tol] - absolute tolerance for result x (default 1.e-6)
+ * @param {number} [itmax] - maximum number of iterations (default 20)
+ *
+ * @return {number} value of x (within tol) where f(x) = 0
+ */
+function zbrent(f, xy0, xy1, tol=1.0e-5, itmax=25) {
+  // from Numerical Recipes, section 9.3 Van Wijngaarden-Dekker-Brent Method
+  // - same as netlib zeroin.f with minor rearrangements (same variable names)
+  let [a, fa] = Array.isArray(xy0)? xy0 : [xy0, f(xy0)];
+  let [b, fb] = Array.isArray(xy1)? xy1 : [xy1, f(xy1)];
+  if (fa * fb > 0) return undefined;
+  const [abs, min] = [Math.abs, Math.min];
+  let [c, fc] = [b, fb];
+  let d, e, xm, p, q, r, s;
+  let it = 0;
+  for (it=1 ; it<=itmax ; it+=1) {
+    if (fb*fc > 0) {
+      [c, fc] = [a, fa];
+      e = d = b - a;
+    }
+    if (abs(fc) < abs(fb)) {
+      [a, b, c] = [b, c, b];
+      [fa, fb, fc] = [fb, fc, fb];
+    }
+    xm = 0.5*(c - b);
+    if (abs(xm) <= tol || fb == 0) break;
+    if (abs(e) >= tol && abs(fa) > abs(fb)) {
+      s = fb / fa;
+      if (a == c) {  // only two points, try linear interpolation
+        p = 2 * xm * s;
+        q = 1 - s;
+      } else {  // try inverse quadratic interpolation
+        [q, r] = [fa / fc, fb / fc];
+        p = s*(2*xm*q*(q-r) - (b-a)*(r-1));
+        q = (q-1) * (r-1) * (s-1);
+      }
+      if (p > 0) q = -q;
+      else p = -p;
+      if (2*p < min(3*xm*q - abs(tol*q), abs(e*q))) {
+        [e, d] = [d, p / q];
+      } else {
+        e = d = xm;  // interpolation failed, use bisection
+      }
+    } else {
+      e = d = xm;  // bounds decreasing too slowly, use bisection
+    }
+    [a, fa] = [b, fb];  // a becomes previous best guess
+    if (abs(d) >= tol) b += d;
+    else if (xm > 0) b += tol;
+    else b -= tol;
+    fb = f(b);
+  }
+  return b;
+}
+
+/**
+ * Class to detect and refine planetary oppositions.
+ */
+class OppositionDetector {
+  constructor(planet, day) {
+    this.planet = planet;
+    this.found = [];
+    let initial = this.collectDay(day);
+    initial.unshift(0);
+    this.range = [initial, initial];
+  }
+
+  collectDay(day) {
+    let xyz = positionOf(this.planet, day);
+    let xyze = positionOf("earth", day);
+    let [x, y] = xyz;
+    let [xe, ye] = xyze;
+    return [day, xyz, xyze, x*ye - y*xe, x*xe + y*ye];
+  }
+
+  next(day) {
+    let front = day <= this.range[1][1];
+    if (front && day >= this.range[0][1]) return [false];
+    let prev = this.range[front? 0 : 1];
+    let current = this.collectDay(day);
+    let [cross, crossp] = [current[3], prev[4]];
+    let [dot, dotp] = [current[4], prev[5]];
+    // (dot, cross) are geocentric direction vector for planet
+    // compute change since prev and prepend revs to current
+    current.unshift(prev[0]);
+    current[0] += this.deltaRevs(prev, current);
+    this.range[front? 0 : 1] = current;
+    if (cross*crossp > 0 || dot < 0 || dotp < 0) {
+      return [false, current];
+    }
+    // An opposition (or inferior conjunction) is between prev and current.
+    // Use Brent's method to find it by finding zero of cross(day).
+    let dayp = prev[1];
+    let dayOpp = zbrent((d => this.collectDay(d)[3]).bind(this),
+                        [dayp, crossp], [day, cross]);
+    let opposition = this.collectDay(dayOpp);
+    opposition.unshift(prev[0]);
+    opposition[0] += this.deltaRevs(prev, opposition);
+    if (front) {  // keep found list sorted
+      this.found.unshift(opposition);
+    } else {
+      this.found.push(opposition);
+    }
+    return [true, opposition];
+  }
+
+  deltaRevs(prev, current) {
+    let [xp, yp] = prev[2].slice(0,2).map((x, i) => x - prev[3][i]);
+    let [x, y] = current[2].slice(0,2).map((x, i) => x - current[3][i]);
+    let drevs = Math.atan2(xp*y - yp*x, xp*x + yp*y) / (2 * Math.PI);
+    const twoPI = Math.PI*2;
+    return drevs;
+  }
+}
+
+/**
  * Solar system model class with constructor that accepts cut-and-pasted
  * JPL Web page tables.
  */

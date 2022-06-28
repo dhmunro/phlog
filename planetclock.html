@@ -138,23 +138,25 @@ Libra 210 Scorpio 240 Sagittarius 270 Capricornus 300 Aquarius 330 Pisces
       p => clock.setHandVisibility(p, false));
     let sel = document.getElementById("main-menu");
     sel = sel.options[sel.selectedIndex].value;
+    let isel = -1;
     ["#intro", "#orb-view", "#earth-year", "#mars-year"].forEach(
       (id, i) => {
-        let d3Div = d3.select(id);
-        if (id == sel) {
-          d3Div.style("display", "block");
-          clock.setHandVisibility(
-            "mars", ["#orb-view", "#mars-year"].indexOf(id) > -1);
-          if (slaves[i] != null) {
-            slaves[i].activate(true);
-          }
-        } else {
-          d3Div.style("display", "none");
+        if (id != sel) {
+          d3.select(id).style("display", "none");
           if (slaves[i] != null) {
             slaves[i].activate(false);
           }
+        } else {
+          isel = i;
         }
-      });
+      }
+    );
+    d3.select(sel).style("display", "block");
+    clock.setHandVisibility(
+      "mars", ["#orb-view", "#mars-year"].indexOf(sel) > -1);
+    if (slaves[isel] != null) {
+      slaves[isel].activate(true);
+    }
   }
 
   // On page reload, select element remembers previous setting, so
