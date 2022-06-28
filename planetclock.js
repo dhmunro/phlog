@@ -294,7 +294,7 @@ class PlanetClock {
             .attr("x1", 0.).attr("y1", 0.)
             .attr("x2", rOuter).attr("y2", 0.)
             .clone(true)
-            .attr("opacity", "40%")
+            .attr("opacity", 0.4)
             .attr("x1", -rOuter).attr("y1", 0.)
             .attr("x2", -0.81*rInner).attr("y2", 0.)
             .clone(true)
@@ -381,23 +381,30 @@ class PlanetClock {
       .attr("d", arrowr)
       .attr("transform", "rotate(-35)")
       .on("mousedown", (event, d) => this.startAnimation(false, 2))
+      .on("touchstart", (event, d) => this.startAnimation(false, 2))
       .clone(true)
       .attr("transform", "rotate(-45)")
       .on("mousedown", (event, d) => this.startAnimation(false, 5))
+      .on("touchstart", (event, d) => this.startAnimation(false, 5))
       .clone(true)
       .attr("transform", "rotate(-55)")
       .on("mousedown", (event, d) => this.startAnimation(false, 12))
+      .on("touchstart", (event, d) => this.startAnimation(false, 12))
       .clone(true)
       .attr("d", arrowl)
       .attr("transform", "rotate(35)")
       .on("mousedown", (event, d) => this.startAnimation(true, 2))
+      .on("touchstart", (event, d) => this.startAnimation(true, 2))
       .clone(true)
       .attr("transform", "rotate(45)")
       .on("mousedown", (event, d) => this.startAnimation(true, 5))
+      .on("touchstart", (event, d) => this.startAnimation(true, 5))
       .clone(true)
       .attr("transform", "rotate(55)")
-      .on("mousedown", (event, d) => this.startAnimation(true, 12));
+      .on("mousedown", (event, d) => this.startAnimation(true, 12))
+      .on("touchstart", (event, d) => this.startAnimation(true, 12));
     this.svg.on("mouseup", (event, d) => this.stopAnimation())
+      .on("touchend", (event, d) => this.stopAnimation())
       .on("mouseleave", (event, d) => this.stopAnimation());
   }
 
@@ -786,11 +793,11 @@ class OrbitView {
           .style("stroke", clock.planetColors[p])
           .style("stroke-width", 5/scale)
           .style("fill", "none")
-          .attr("opacity", "20%")
+          .attr("opacity", 0.2)
           .attr("d", d3p);
         if (i < 5) {
           this.planetRadii[i] = this.planetGroup.append("line")
-            .attr("opacity", "20%")
+            .attr("opacity", 0.2)
             .attr("stroke", clock.planetColors[p])
             .attr("stroke-width", 5/scale)
             .attr("x1", 0).attr("y1", 0);
@@ -877,13 +884,13 @@ class OrbitView {
         p => this.epicycleCircles
           .append(() => this.planetHands[5].clone(true).node())
           .attr("stroke", this.clock.planetColors.sun)
-          .attr("opacity", "20%"));
+          .attr("opacity", 0.2));
       this.epicycleCircles.selectAll("path")
         .data([2, 3, 4])
         .join("path")
         .attr("fill", "none")
         .attr("stroke", this.clock.planetColors.sun)
-        .attr("opacity", "20%")
+        .attr("opacity", 0.2)
         .attr("d", this.planetOrbits[5].attr("d"));
     }
     this.update();
@@ -1586,7 +1593,7 @@ class MarsYear {
           .text("1. Set start date using planet clock")
           .clone(true)
           .attr("y", -height/2 + 125)
-          .text("2. Click Reset to collect 20 years data")
+          .text("2. Reset to collect 20 years opposition data")
           .clone(true)
           .attr("y", -height/2 + 150)
           .text("3. Adjust period using slider at right")
@@ -1634,13 +1641,13 @@ class MarsYear {
     this.linePath = this.lineGroup.append("path")
       .attr("id", "mars-year-line")
       .style("pointer-events", "none")
-      .attr("opacity", "20%")
+      .attr("opacity", 0.2)
       .attr("fill", "none")
       .attr("stroke", this.clock.planetColors.mars)
       .attr("stroke-width", 5);
     this.marsMarker = this.plot.append("circle")
       .attr("display", "none")
-      .attr("opacity", "30%")
+      .attr("opacity", 0.3)
       .attr("fill", this.clock.planetColors.mars)
       .attr("stroke", "none")
       .attr("r", 5)
@@ -1756,10 +1763,10 @@ class MarsYear {
       if (collapse) {
         if (this.zoomLevel < 2) {
           this.linePath.maybeTransition(trans)
-            .attr("opacity", "5%")
+            .attr("opacity", 0.05)
             .attr("d", this.lineGenerator(this.revT));
         } else {
-          this.linePath.maybeTransition(trans).attr("opacity", "0%");
+          this.linePath.maybeTransition(trans).attr("opacity", 0);
           dyr = 0;
         }
         this.lineGroup.selectAll("use")
@@ -1777,7 +1784,7 @@ class MarsYear {
           );
       } else {
         this.linePath.maybeTransition(trans)
-          .attr("opacity", "20%")
+          .attr("opacity", 0.2)
           .attr("d", this.lineGenerator(this.revT));
         this.lineGroup.selectAll("use").maybeTransition(trans)
           .attr("x", 0).attr("y", 0).remove();
