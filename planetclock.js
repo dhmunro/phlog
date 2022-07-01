@@ -33,6 +33,8 @@ class PlanetClock {
 
     let [rInner, rOuter] = [PlanetClock.#rInner, PlanetClock.#rOuter];
 
+    this.disabled = false;  // set true to disable controls
+
     let initDay = new Date("Jan 1 2000 12:00 GMT");  // J2000 time origin
     initDay.setUTCFullYear(initYear);
     // begin at vernal equinox
@@ -439,6 +441,7 @@ class PlanetClock {
   }
 
   dragSun(event, d) {
+    if (this.disabled) return;
     let [x, y] = [event.x+1.e-20, event.y];
     let theta = Math.atan2(y, x) * 180. / Math.PI
     this.sunHand.attr("transform", `rotate(${theta})`);
@@ -481,6 +484,7 @@ class PlanetClock {
   }
 
   startAnimation(backward, step=3) {
+    if (this.disabled) return;
     this.animateTo(this.dayNow + (backward? -1.0e7 : 1.0e7), step);
   }
 
@@ -520,6 +524,7 @@ class PlanetClock {
   }
 
   setYear() {
+    if (this.disabled) return;
     let dateNow = dateOfDay(this.dayNow);
     let yearNow = dateNow.getUTCFullYear();
     let year = parseInt(prompt("Jump to Year:", yearNow.toString()));
@@ -2093,6 +2098,223 @@ class MarsYear {
   yearDragStart(event, d) {
     let [x, y] = [event.x+1.e-20, event.y];
     this.yDragOffset = this.sliderNow - y;
+  }
+}
+
+
+class SurveyOrbits {
+  static #width = 750;
+  static #height = SurveyOrbits.#width;
+
+  constructor(d3Parent, clock, mars, earth) {
+    let [width, height] = [SurveyOrbits.#width, SurveyOrbits.#height];
+
+    this.svg = d3Parent.append("svg")
+      .attr("xmlns", "http://www.w3.org/2000/svg")
+      .attr("xmlns:xlink", "http://www.w3.org/1999/xlink")
+      .attr("class", "SurveyOrbits")
+      .attr("viewBox", [-width/2, -height/2, width, height])
+      .style("display", "block")
+      .style("margin", "20px")  // padding does not work for SVG?
+      .style("background-color", "#aaa")
+      .attr("text-anchor", "middle")
+      .attr("font-family", "sans-serif")
+      .attr("font-weight", "bold")
+      .attr("font-size", 12)
+      .attr("stroke-linejoin", "round")
+      .attr("stroke-linecap", "round");
+
+    this.clock = clock;
+    this.mars = mars;
+    this.earth = earth;
+
+    // Scale is 1 AU = width/3.6, same as zoomLevel=0 in OrbitView.
+    const AU = width / 3.6;
+    this.AU = AU;
+    const sin15 = Math.sin(Math.PI / 12);
+    // J2000 periods
+    this.earthYear = 365.256355;
+    this.marsYear = 686.967971;
+
+    // Crosshairs
+    this.svg.append("line")
+      .style("pointer-events", "none")
+      .attr("stroke", "#888").attr("stroke-width", 1)
+      .attr("x1", -width/2).attr("y1", 0).attr("x2", width/2).attr("y2", 0)
+      .clone(true)
+      .attr("x1", 0).attr("y1", -height/2).attr("x2", 0).attr("y2", height/2)
+    // Approximate too-close-to-sun circle
+    this.svg.append("circle")
+      .attr("stroke", "none")
+      .attr("fill", "#bdf")
+      .attr("opacity", 0.3)
+      .attr("cx", 0).attr("cy", 0)
+      .attr("r", sin15*AU);
+
+    // Each state has its own group
+    this.stateGroup = new Array(4);
+    this.stateGroup[0] = this.svg.append("g").attr("display", "none").call(
+      g =>  {
+        let top = -SurveyOrbits.#height / 2;
+        g.append("text")
+          .attr("pointer-events", "none")
+          .attr("fill", "#960")
+          .attr("font-size", 20)
+          .attr("y", -height/2 + 100)
+          .text("Not ready to survey orbits.")
+          .clone(true)
+          .attr("y", -height/2 + 130)
+          .text("Return to Mars Period tab and collect data.");
+      });
+    this.stateGroup[1] = this.svg.append("g").attr("display", "none").call(
+      g =>  {
+        g.append("g").append("text")  // g allows selectChildren in selectOppo
+          .attr("pointer-events", "none")
+          .attr("fill", "#960")
+          .attr("font-size", 20)
+          .attr("y", -height/2 + 25)
+          .text("Select reference Mars opposition")
+      });
+    this.stateGroup[2] = this.svg.append("g").attr("display", "none");
+    this.stateGroup[3] = this.svg.append("g").attr("display", "none");
+
+    this.state = 0;
+    this.notReady();
+
+    // Sun marker goes on top of everything else
+    this.svg.append("circle")
+      .attr("stroke", "none")
+      .attr("fill", clock.planetColors.sun)
+      .attr("cx", 0).attr("cy", 0)
+      .attr("r", 8);
+
+    this.clock.addSlave((() => this.update()).bind(this));
+  }
+
+  stateGroupActivate(...states) {
+    // <ES6: let states = Array.from(arguments);
+    this.stateGroup.forEach(g => g.attr("display", "none"));
+    states.forEach(i => this.stateGroup[i].attr("display", "block"));
+  }
+
+  notReady() {
+    if (!this.mars.oppositions ||
+        !this.mars.oppositions.found.length) {
+      this.stateGroupActivate(0);
+      this.state = 0;
+      return true;
+    } else if (this.oppositionsFound !== this.mars.oppositions.found) {
+      // Oppositions changed since last activation, reset state.
+      this.oppositionsFound = this.mars.oppositions.found;
+      this.selectOppo();
+      return false;
+    } else {
+      // Oppositions unchanged since last activation.
+      if (this.state == 0) this.selectOppo();
+      return false;
+    }
+  }
+
+  selectOppo() {
+    this.stateGroupActivate(1);
+    this.state = 1;
+    this.iRef = -1;
+
+    let selector = (event, [d, i]) => {
+      if (this.iRef == i) return;
+      let sg1 = this.stateGroup[1];
+      let elements;
+      let change = this.iRef >= 0;
+      if (change) {
+        elements = ["line", "circle"].map(
+          type => d3.select(sg1.selectChildren(type).nodes()[this.iRef]));
+        elements[0]
+          .attr("opacity", 0.25)
+          .attr("x2", ([d, j]) => 2*d[0]*AU)
+          .attr("y2", ([d, j]) => -2*d[1]*AU);
+        elements[1]
+          .style("cursor", "pointer")
+          .attr("fill", "#ffd")
+          .attr("stroke", "#000")
+          .attr("r", 15);
+      }
+      this.iRef = i;
+      elements = ["line", "circle"].map(
+        type => d3.select(sg1.selectChildren(type).nodes()[i]));
+      elements[0]
+        .attr("opacity", null)
+        .attr("x2", ([d, j]) => d[0]*AU)
+        .attr("y2", ([d, j]) => -d[1]*AU);
+      elements[1]
+        .style("cursor", null)
+        .attr("fill", this.clock.planetColors.mars)
+        .attr("stroke", "none")
+        .attr("r", 5);
+      this.clock.animateTo(this.oppositionsFound[i][1], 12);
+      if (!change) this.nextButton(sg1.append("g"), () => this.findEarth());
+    };
+
+    const AU = this.AU;
+    const xyzm = this.oppositionsFound.map((o, i) => [o[2], i]);
+    const dxyz = this.oppositionsFound.map((o, i) => [o.slice(1,3), i]);
+    this.stateGroup[1].selectChildren("line")
+      .data(xyzm)
+      .join("line")
+      .attr("opacity", 0.25)
+      .attr("stroke", this.clock.planetColors.mars)
+      .attr("stroke-width", 4)
+      .attr("x1", 0).attr("y1", 0)
+      .attr("x2", ([d, i]) => 2*d[0]*AU)
+      .attr("y2", ([d, i]) => -2*d[1]*AU);
+    this.stateGroup[1].selectChildren("circle")
+      .data(xyzm)
+      .join("circle")
+      .style("cursor", "pointer")
+      .attr("fill", "#ffd")
+      .attr("stroke", "#000")
+      .attr("stroke-width", 2)
+      .attr("r", 15)
+      .attr("cx", ([d, i]) => d[0]*AU)
+      .attr("cy", ([d, i]) => -d[1]*AU)
+      .on("click", selector);
+    this.stateGroup[1].selectChildren("text")
+      .data(dxyz)
+      .join("text")
+      .attr("pointer-events", "none")
+      .attr("fill", "#ffd")
+      .attr("font-size", 16)
+      .attr("x", ([d, i]) => d[1][0]*AU)
+      .attr("y", ([d, i]) => -d[1][1]*AU+30)
+      .text(([d, i]) => dateOfDay(d[0]).getUTCFullYear());
+  }
+
+  nextButton(g, callback) {
+    let [width, height] = [SurveyOrbits.#width, SurveyOrbits.#height];
+    buttonBox(g.append("rect"), width/2 - 79, -height/2 + 5, 75, 28, callback);
+    buttonText(g.append("text"), width/2 - 42, -height/2 + 26, "Next", 20,
+               callback);
+  }
+
+  findEarth() {
+    this.stateGroupActivate(1);
+    this.state = 2;
+
+  }
+
+  activate(on) {
+    if (on) {
+      if (this.notReady()) {
+        this.clock.disabled = false;
+        return;
+      }
+      this.clock.disabled = true;
+    } else {
+      this.clock.disabled = false;
+    }
+  }
+
+  update() {
+    // if (this.svg.node().parentElement.style.display == "none") return;
   }
 }
 

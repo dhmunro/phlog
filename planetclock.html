@@ -28,6 +28,7 @@
         <option value="#orb-view">Orbit View</option>
         <option value="#earth-year">Earth Period</option>
         <option value="#mars-year">Mars Period</option>
+        <option value="#survey-orbits">Survey Orbits</option>
       </select>
       <div id="intro"
            style="position: absolute; top: 50px; left: 0; display: block;">
@@ -70,18 +71,25 @@
         on a planet dot in the central legend to toggle a line between
         the planet and earth.</p>
       </div>
-      <div style="position: absolute; top: 50px; left: 0;">
+      <!-- without the width:100% style in both following nested divs,
+           chrome will compute the inner svg size to be 0x0 -->
+      <div style="position: absolute; top: 50px; left: 0; width: 100%">
         <div id="orb-view"
              style="position: static; width: 100%; height: 100%; display: none;">
         </div>
       </div>
-      <div style="position: absolute; top: 50px; left: 0;">
+      <div style="position: absolute; top: 50px; left: 0; width: 100%">
         <div id="earth-year"
              style="position: static; width: 100%; height: 100%; display: none;">
         </div>
       </div>
-      <div style="position: absolute; top: 50px; left: 0;">
+      <div style="position: absolute; top: 50px; left: 0; width: 100%">
         <div id="mars-year"
+             style="position: static; width: 100%; height: 100%; display: none;">
+        </div>
+      </div>
+      <div style="position: absolute; top: 50px; left: 0; width: 100%">
+        <div id="survey-orbits"
              style="position: static; width: 100%; height: 100%; display: none;">
         </div>
       </div>
@@ -131,7 +139,9 @@ Libra 210 Scorpio 240 Sagittarius 270 Capricornus 300 Aquarius 330 Pisces
   let orbView = new OrbitView(d3.select("#orb-view"), clock);
   let earthYear = new EarthYear(d3.select("#earth-year"), clock);
   let marsYear = new MarsYear(d3.select("#mars-year"), clock);
-  let slaves = [null, orbView, earthYear, marsYear];
+  let surveyor = new SurveyOrbits(d3.select("#survey-orbits"),
+                                  clock, marsYear, earthYear);
+  let slaves = [null, orbView, earthYear, marsYear, surveyor];
 
   function mainMenuSelect() {
     ["mercury", "venus", "jupiter", "saturn"].forEach(
@@ -139,7 +149,8 @@ Libra 210 Scorpio 240 Sagittarius 270 Capricornus 300 Aquarius 330 Pisces
     let sel = document.getElementById("main-menu");
     sel = sel.options[sel.selectedIndex].value;
     let isel = -1;
-    ["#intro", "#orb-view", "#earth-year", "#mars-year"].forEach(
+    ["#intro", "#orb-view", "#earth-year", "#mars-year",
+     "#survey-orbits"].forEach(
       (id, i) => {
         if (id != sel) {
           d3.select(id).style("display", "none");
@@ -153,7 +164,7 @@ Libra 210 Scorpio 240 Sagittarius 270 Capricornus 300 Aquarius 330 Pisces
     );
     d3.select(sel).style("display", "block");
     clock.setHandVisibility(
-      "mars", ["#orb-view", "#mars-year"].indexOf(sel) > -1);
+      "mars", ["#orb-view", "#mars-year", "#survey-orbits"].indexOf(sel) > -1);
     if (slaves[isel] != null) {
       slaves[isel].activate(true);
     }
