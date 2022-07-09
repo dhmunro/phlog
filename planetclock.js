@@ -382,32 +382,25 @@ class PlanetClock {
       .attr("stroke-width", 2)
       .attr("d", arrowr)
       .attr("transform", "rotate(-35)")
-      .on("mousedown", (event, d) => this.startAnimation(false, 2))
-      .on("touchstart", (event, d) => this.startAnimation(false, 2))
+      .on("mousedown touchstart", (event, d) => this.startAnimation(false, 2))
       .clone(true)
       .attr("transform", "rotate(-45)")
-      .on("mousedown", (event, d) => this.startAnimation(false, 5))
-      .on("touchstart", (event, d) => this.startAnimation(false, 5))
+      .on("mousedown touchstart", (event, d) => this.startAnimation(false, 5))
       .clone(true)
       .attr("transform", "rotate(-55)")
-      .on("mousedown", (event, d) => this.startAnimation(false, 12))
-      .on("touchstart", (event, d) => this.startAnimation(false, 12))
+      .on("mousedown touchstart", (event, d) => this.startAnimation(false, 12))
       .clone(true)
       .attr("d", arrowl)
       .attr("transform", "rotate(35)")
-      .on("mousedown", (event, d) => this.startAnimation(true, 2))
-      .on("touchstart", (event, d) => this.startAnimation(true, 2))
+      .on("mousedown touchstart", (event, d) => this.startAnimation(true, 2))
       .clone(true)
       .attr("transform", "rotate(45)")
-      .on("mousedown", (event, d) => this.startAnimation(true, 5))
-      .on("touchstart", (event, d) => this.startAnimation(true, 5))
+      .on("mousedown touchstart", (event, d) => this.startAnimation(true, 5))
       .clone(true)
       .attr("transform", "rotate(55)")
-      .on("mousedown", (event, d) => this.startAnimation(true, 12))
-      .on("touchstart", (event, d) => this.startAnimation(true, 12));
-    this.svg.on("mouseup", (event, d) => this.stopAnimation())
-      .on("touchend", (event, d) => this.stopAnimation())
-      .on("mouseleave", (event, d) => this.stopAnimation());
+      .on("mousedown touchstart", (event, d) => this.startAnimation(true, 12));
+    this.svg.on("mouseup mouseleave touchend",
+                (event, d) => this.stopAnimation());
   }
 
   turnOnMoon() {
@@ -1055,9 +1048,9 @@ class EarthYear {
 
     // Axis labels
     this.svg.append("text").attr("x", left-10).attr("y", top-12)
-      .text("days");
+      .attr("pointer-events", "none").text("days");
     this.svg.append("text").attr("x", right).attr("y", bottom+50)
-      .text("revs");
+      .attr("pointer-events", "none").text("revs");
 
     let xgen = (d => this.x(d[0])).bind(this);
     this.lineGenerator = d3.line()
@@ -1101,8 +1094,8 @@ class EarthYear {
       .attr("font-size", 20)
       .attr("y", -height/2 + 30)
       .text(`Period estimate: ${this.yearEstimate.toFixed(3)} days`);
-    let yearDragger = ((event, d) => this.yearDrag(event, d)).bind(this);
-    let yearStarter = ((event, d) => this.yearDragStart(event, d)).bind(this);
+    let yearDragger = (event, d) => this.yearDrag(event, d);
+    let yearStarter = (event, d) => this.yearDragStart(event, d);
     let d3p = d3.path();
     let y0 = this.y(10*this.yearEstimate);
     let x0 = width/2 - 25;
@@ -1113,8 +1106,8 @@ class EarthYear {
     d3p.lineTo(x0+17, y0+17);
     d3p.lineTo(x0, y0+17);
     d3p.lineTo(x0, y0+7);
-    d3p.lineTo(x0-10, y0);
-    d3p.lineTo(x0-30, y0);
+    // d3p.lineTo(x0-10, y0);
+    // d3p.lineTo(x0-30, y0);
     d3p.closePath();
     this.sliderNow = this.slider0 = y0;
     // slider itself goes last in svg to be on top
@@ -1461,9 +1454,6 @@ class EarthYear {
   yearDrag(event, d) {
     let [x, y] = [event.x+1.e-20, event.y];
     y += this.yDragOffset;
-    let [xr, yr] = [this.x(0), this.y(this.yearEstimate)];
-    let [dxr, dyr] = [this.x(1) - xr, this.y(0) - yr];
-    yr += dyr;  // (xr, yr) now the point at (revs, days) = (0, 0)
     let factor = (this.zoomLevel > 0)? 1 : 10;
     let days = this.y.invert(y);
     if (this.zoomLevel < 2) {
@@ -1564,9 +1554,9 @@ class MarsYear {
 
     // Axis labels
     this.svg.append("text").attr("x", left-10).attr("y", top-12)
-      .text("days");
+      .attr("pointer-events", "none").text("days");
     this.svg.append("text").attr("x", right).attr("y", bottom+50)
-      .text("revs");
+      .attr("pointer-events", "none").text("revs");
 
     let xgen = (d => this.x(d[0])).bind(this);
     let dgen = (d => d[2]).bind(this);
@@ -1613,8 +1603,8 @@ class MarsYear {
       .attr("font-size", 20)
       .attr("y", -height/2 + 30)
       .text(`Period estimate: ${this.yearEstimate.toFixed(3)} days`);
-    let yearDragger = ((event, d) => this.yearDrag(event, d)).bind(this);
-    let yearStarter = ((event, d) => this.yearDragStart(event, d)).bind(this);
+    let yearDragger = (event, d) => this.yearDrag(event, d);
+    let yearStarter = (event, d) => this.yearDragStart(event, d);
     let d3p = d3.path();
     let y0 = this.y(10*this.yearEstimate);
     let x0 = width/2 - 25;
@@ -1625,8 +1615,8 @@ class MarsYear {
     d3p.lineTo(x0+17, y0+17);
     d3p.lineTo(x0, y0+17);
     d3p.lineTo(x0, y0+7);
-    d3p.lineTo(x0-10, y0);
-    d3p.lineTo(x0-30, y0);
+    // d3p.lineTo(x0-10, y0);
+    // d3p.lineTo(x0-30, y0);
     d3p.closePath();
     this.sliderNow = this.slider0 = y0;
     // slider itself goes last in svg to be on top
@@ -1864,7 +1854,7 @@ class MarsYear {
     if (this.revT && t >= 0 && t <= 7310) {
       let trans = noTransition? 0 : 1000;
       let prev = this.prevUpdate;
-      if (prev == undefined) {
+      if (prev === undefined) {
         prev = this.oppositions.range[(t>3000)? 1 : 0];
       }
       let current = this.oppositions.collectDay(t0+t);
@@ -1889,6 +1879,7 @@ class MarsYear {
     if (reset) {
       // reset the days vs revs graph
       const t0 = this.clock.elapsed0;
+      this.elapsed0 = t0;
       if (this.zoomLevel != 0) {
         this.zoomLevel = 0;
         this.multiYear(true);
@@ -1970,6 +1961,9 @@ class MarsYear {
   activate(on) {
     if (on) {
       this.clock.addElapsed(((r, ir) => this.elapsedUpdate(r, ir)).bind(this));
+      if (this.elapsed0 != undefined && this.elapsed0 != this.clock.elapsed0) {
+        this.clock.goToDay(this.elapsed0);
+      }
     } else {
       this.clock.removeElapsed();
     }
@@ -2062,9 +2056,6 @@ class MarsYear {
   yearDrag(event, d) {
     let [x, y] = [event.x+1.e-20, event.y];
     y += this.yDragOffset;
-    let [xr, yr] = [this.x(0), this.y(this.yearEstimate)];
-    let [dxr, dyr] = [this.x(1) - xr, this.y(0) - yr];
-    yr += dyr;  // (xr, yr) now the point at (revs, days) = (0, 0)
     let factor = (this.zoomLevel > 0)? 1 : 10;
     let days = this.y.invert(y);
     if (this.zoomLevel < 2) {
@@ -2134,7 +2125,7 @@ class SurveyOrbits {
     const sin15 = Math.sin(Math.PI / 12);
     // J2000 periods
     this.earthYear = 365.256355;
-    this.marsYear = 686.967971;
+    this.marsYear = 686.97973;  // but will use this.mars.yearEstimate
 
     // Crosshairs
     this.svg.append("line")
@@ -2173,13 +2164,55 @@ class SurveyOrbits {
           .attr("fill", "#960")
           .attr("font-size", 20)
           .attr("y", -height/2 + 25)
-          .text("Select reference Mars opposition")
+          .text("Select reference Mars opposition");
       });
-    this.stateGroup[2] = this.svg.append("g").attr("display", "none");
+    this.stateGroup[2] = this.svg.append("g").attr("display", "none").call(
+      g =>  {
+        let gg = g.append("g");  // g allows selectChildren in selectOppo
+        this.state2Text1 = gg.append("text")
+          .attr("pointer-events", "none")
+          .attr("fill", "#960")
+          .attr("font-size", 20)
+          .attr("y", -height/2 + 25)
+          .text("Survey points on Earth's orbit...")
+        this.state2Text2 = this.state2Text1.clone(true)
+          .attr("y", height/2 - 25)
+          .text("by stepping Mars periods->")
+        this.yearText = gg.append("text")
+          .attr("text-anchor", "end")
+          .attr("font-size", 20)
+          .attr("fill", "#ffd")
+          .attr("x", width/2 - 5)
+          .attr("y", -height/2 + 76)
+          .text("686.980")
+      });
+    // marsLines is set of lines from Earth to Mars
+    // sunLines is set of lines from Earth to Sun
+    //   only displayed in state=2, or state=3 for newly added Earth points
+    // referenceGroup is line from Sun to Mars and Mars point at iOppo
+    // earthGroup is set of points on Earth orbit
+    // marsGroup is set of points on Mars orbit
+    this.marsLines = this.stateGroup[2].append("g")
+      .attr("pointer-events", "none");
+    this.sunLines = this.marsLines.clone(true);
+    this.referenceGroup = this.sunLines.clone(true);
+    this.earthGroup = this.referenceGroup.clone(true);
+    this.marsGroup = this.earthGroup.clone(true);
+    this.referenceGroup.call(
+      g => {
+        g.append("line")  // x2, y2 filled in in findEarth
+          .attr("stroke", "#000")
+          .attr("stroke-width", 4)
+        g.append("circle")  // cx, cy filled in in findEarth
+          .style("cursor", null)
+          .attr("fill", clock.planetColors.mars)
+          .attr("stroke", "none")
+          .attr("r", 5);
+      });
     this.stateGroup[3] = this.svg.append("g").attr("display", "none");
 
     this.state = 0;
-    this.notReady();
+    this.iOppo = -1;  // index of selected opposition
 
     // Sun marker goes on top of everything else
     this.svg.append("circle")
@@ -2188,7 +2221,96 @@ class SurveyOrbits {
       .attr("cx", 0).attr("cy", 0)
       .attr("r", 8);
 
-    this.clock.addSlave((() => this.update()).bind(this));
+    // Next and Prev buttons
+    this.nextButton = this.svg.append("g").attr("display", "none").call(
+      g => {
+        buttonBox(g.append("rect"), width/2 - 79, -height/2 + 5, 75, 28,
+                  () => this.nextState());
+        buttonText(g.append("text"), width/2 - 42, -height/2 + 26, "Next", 20,
+                   () => this.nextState());
+      });
+    this.prevButton = this.svg.append("g").attr("display", "none").call(
+      g => {
+        buttonBox(g.append("rect"), -width/2 + 5, -height/2 + 5, 75, 28,
+                  () => this.prevState());
+        buttonText(g.append("text"), -width/2 + 42, -height/2 + 26, "Prev", 20,
+                   () => this.prevState());
+      });
+
+    // + and - buttons
+    this.plusMars = this.svg.append("g").attr("display", "none").call(
+      g => {
+        g.append("text")
+          .attr("pointer-events", "none")
+          .attr("text-anchor", "end")
+          .attr("fill", "#960")
+          .attr("font-size", 20)
+          .attr("x", width/2 - 15)
+          .attr("y", height/2 - 10)
+          .text("step Mars period");
+        buttonBox(g.append("rect"), 285, height/2 - 60, 50, 28,
+                  () => this.stepMars(1));
+        buttonText(g.append("text"), 309, height/2 - 38, "+M", 20,
+                  () => this.stepMars(1) );
+        buttonBox(g.append("rect"), 200, height/2 - 60, 50, 28,
+                  () => this.stepMars(-1));
+        buttonText(g.append("text"), 226, height/2 - 38, "-M", 20,
+                   () => this.stepMars(-1));
+      });
+    this.plusEarth = this.svg.append("g").attr("display", "none").call(
+      g => {
+        g.append("text")
+          .attr("pointer-events", "none")
+          .attr("text-anchor", "start")
+          .attr("fill", "#960")
+          .attr("font-size", 20)
+          .attr("x", -width/2 + 15)
+          .attr("y", height/2 - 10)
+          .text("step Earth period");
+        buttonBox(g.append("rect"), -335, height/2 - 60, 50, 28,
+                  () => this.stepEarth(-1));
+        buttonText(g.append("text"), -309, height/2 - 38, "-E", 20,
+                  () => this.stepEarth(-1) );
+        buttonBox(g.append("rect"), -250, height/2 - 60, 50, 28,
+                  () => this.stepEarth(1));
+        buttonText(g.append("text"), -226, height/2 - 38, "+E", 20,
+                   () => this.stepEarth(1));
+        this.stdDevText = g.append("text")
+          .attr("pointer-events", "none")
+          .attr("text-anchor", "end")
+          .attr("fill", "#ffd")
+          .attr("font-size", 20)
+          .attr("x", width/2 - 5)
+          .attr("y", -height/2 + 45);
+      });
+
+    let d3p = d3.path();
+    let y0 = 0;
+    let x0 = width/2 - 22;
+    d3p.moveTo(x0-10, y0);
+    d3p.lineTo(x0, y0-7);
+    d3p.lineTo(x0, y0-17);
+    d3p.lineTo(x0+17, y0-17);
+    d3p.lineTo(x0+17, y0+17);
+    d3p.lineTo(x0, y0+17);
+    d3p.lineTo(x0, y0+7);
+    d3p.closePath();
+    this.sliderNow = this.slider0 = y0;
+    let yearDragger = (event, d) => this.yearDrag(event, d);
+    let yearStarter = (event, d) => this.yearDragStart(event, d);
+    this.slider = this.svg.append("path")
+      .style("pointer-events", "all")
+      .style("cursor", "pointer")
+      .attr("display", "none")
+      .attr("fill", "#ffd")  // buttonBox color
+      .attr("stroke", "#000")
+      .attr("stroke-width", 1)
+      .attr("d", d3p)
+      .call(d3.drag().on("start", yearStarter).on("drag", yearDragger))
+      .on("touchstart", yearStarter).on("touchmove", yearDragger);
+
+    clock.addSlave((() => this.update()).bind(this));
+    this.notReady();
   }
 
   stateGroupActivate(...states) {
@@ -2197,39 +2319,133 @@ class SurveyOrbits {
     states.forEach(i => this.stateGroup[i].attr("display", "block"));
   }
 
+  yearDragStart(event, d) {
+    let [x, y] = [event.x+1.e-20, event.y];
+    this.yDragOffset = this.sliderNow - y;
+  }
+
+  yearDrag(event, d) {
+    let [x, y] = [event.x+1.e-20, event.y];
+    y += this.yDragOffset;
+    this.yearSliderSet(y);
+    let state = this.state;
+    this.findEarth();
+    if (state > 2) this.findMars();
+  }
+
+  yearSliderSet(y) {
+    let [bottom, top]  = this.yearDomain;
+    let clamped = y < top;
+    if (clamped) {
+      y = top;
+    } else {
+      clamped = y > bottom;
+      if (clamped) y = bottom;
+    }
+    let days = this.yearScale(y);
+    this.sliderNow = y;
+    this.marsEstimate = days;
+    this.slider.attr("transform", `translate(0, ${y - this.slider0})`);
+    this.yearText.text(this.marsEstimate.toFixed(3));
+    return clamped;
+  }
+
+  yearDomain = [SurveyOrbits.#height/2 - 100, -SurveyOrbits.#height/2 + 100];
+  yearScale = d3.scaleLinear().domain(this.yearDomain)
+    .range([686.97973 - 0.5, 686.97973 + 0.5]);
+
   notReady() {
     if (!this.mars.oppositions ||
         !this.mars.oppositions.found.length) {
+      this.nextButton.attr("display", "none");
+      this.prevButton.attr("display", "none");
+      this.plusMars.attr("display", "none");
+      this.plusEarth.attr("display", "none");
+      this.slider.attr("display", "none");
       this.stateGroupActivate(0);
       this.state = 0;
       return true;
     } else if (this.oppositionsFound !== this.mars.oppositions.found) {
       // Oppositions changed since last activation, reset state.
       this.oppositionsFound = this.mars.oppositions.found;
+      this.marsEstimate = this.mars.yearEstimate;
+      this.forceClockInRange();
+      this.iOppo = -1;
       this.selectOppo();
+      return false;
+    } else if (this.marsEstimate !== this.mars.yearEstimate) {
+      // Oppositions unchanged but Mars year changed since last activation.
+      this.marsEstimate = this.mars.yearEstimate;
+      this.forceClockInRange();
+      if (this.state >= 2) {
+        this.yearSliderSet(this.yearScale.invert(this.marsEstimate));
+        this.findEarth();  //reset earth positions
+      }
       return false;
     } else {
       // Oppositions unchanged since last activation.
+      this.forceClockInRange();
       if (this.state == 0) this.selectOppo();
       return false;
     }
   }
 
+  forceClockInRange() {
+    if (this.clock.dayNow < this.mars.elapsed0) {
+      this.clock.goToDay(this.mars.elapsed0);
+    } else if (this.clock.dayNow > this.mars.elapsed0 + 7310) {
+      this.clock.goToDay(this.mars.elapsed0 + 7310);
+    }
+  }
+
+  nextState() {
+    if (this.state == 1) {
+      // Initialize slider
+      if (this.yearSliderSet(this.yearScale.invert(this.marsEstimate))) {
+        // mars.yearEstimate was clamped to better value
+      }
+      this.findEarth();
+    } else if (this.state == 2) {
+      this.findMars();
+    }
+  }
+
+  prevState(g, callback) {
+    if (this.state == 2) {
+      this.selectOppo();
+    } else if (this.state == 3) {
+      if (this.ijNow && this.ijNow[0]) this.ijNow[0] = 0;
+      this.findEarth();
+    }
+  }
+
   selectOppo() {
+    this.plusMars.attr("display", "none");
+    this.plusEarth.attr("display", "none");
+    this.slider.attr("display", "none");
+    this.prevButton.attr("display", "none");
+    this.referenceGroup.attr("display", "none");
     this.stateGroupActivate(1);
     this.state = 1;
-    this.iRef = -1;
+
+    if (this.iOppo < 0) {
+      this.nextButton.attr("display", "none");
+    } else {
+      this.nextButton.attr("display", "block");
+      return;
+    }
 
     let selector = (event, [d, i]) => {
-      if (this.iRef == i) return;
+      if (this.iOppo == i) return;
       let sg1 = this.stateGroup[1];
       let elements;
-      let change = this.iRef >= 0;
+      let change = this.iOppo >= 0;
       if (change) {
         elements = ["line", "circle"].map(
-          type => d3.select(sg1.selectChildren(type).nodes()[this.iRef]));
+          type => d3.select(sg1.selectChildren(type).nodes()[this.iOppo]));
         elements[0]
           .attr("opacity", 0.25)
+          .attr("stroke", this.clock.planetColors.mars)
           .attr("x2", ([d, j]) => 2*d[0]*AU)
           .attr("y2", ([d, j]) => -2*d[1]*AU);
         elements[1]
@@ -2238,11 +2454,12 @@ class SurveyOrbits {
           .attr("stroke", "#000")
           .attr("r", 15);
       }
-      this.iRef = i;
+      this.iOppo = i;
       elements = ["line", "circle"].map(
         type => d3.select(sg1.selectChildren(type).nodes()[i]));
       elements[0]
         .attr("opacity", null)
+        .attr("stroke", "#000")
         .attr("x2", ([d, j]) => d[0]*AU)
         .attr("y2", ([d, j]) => -d[1]*AU);
       elements[1]
@@ -2251,7 +2468,7 @@ class SurveyOrbits {
         .attr("stroke", "none")
         .attr("r", 5);
       this.clock.animateTo(this.oppositionsFound[i][1], 12);
-      if (!change) this.nextButton(sg1.append("g"), () => this.findEarth());
+      if (!change) this.nextButton.attr("display", "block");
     };
 
     const AU = this.AU;
@@ -2288,17 +2505,396 @@ class SurveyOrbits {
       .text(([d, i]) => dateOfDay(d[0]).getUTCFullYear());
   }
 
-  nextButton(g, callback) {
-    let [width, height] = [SurveyOrbits.#width, SurveyOrbits.#height];
-    buttonBox(g.append("rect"), width/2 - 79, -height/2 + 5, 75, 28, callback);
-    buttonText(g.append("text"), width/2 - 42, -height/2 + 26, "Next", 20,
-               callback);
-  }
-
   findEarth() {
-    this.stateGroupActivate(1);
+    this.plusMars.attr("display", "block");
+    this.plusEarth.attr("display", "none");
+    this.slider.attr("display", "block");
+    this.prevButton.attr("display", "block");
+    this.nextButton.attr("display", "none");
+    this.stateGroupActivate(2);
+    this.state2Text1.text("Survey points on Earth's orbit...");
+    this.state2Text2.text("by stepping Mars periods->");
     this.state = 2;
 
+    let iOppo = this.iOppo;
+    if (iOppo < 0) return;  // should never return here?
+
+    this.nextButton.attr("display", "block");
+
+    const AU = this.AU;
+    const [xm, ym] = this.oppositionsFound[iOppo][2];
+
+    let imin, imax;  // Earth year index, relative to reference oppo
+    [imin, this.orbitDirections] = this.orbitPoints(iOppo);
+    [imin, imax] = [-imin, this.orbitDirections.length - 1 - imin];
+    let jmax = Math.floor(7310/this.marsEstimate);  // Mars year index
+    let jmin = -jmax;
+    this.jRef = jmax;
+    this.iRef = -imin;
+    // Somewhat confusingly, the number of points on Earth's orbit
+    // is the number of Mars year steps (and vice-versa) because stepping
+    // a Mars year changes the position of Earth (and vice-versa).
+    let xye = new Array(jmax - jmin + 1);  // always 21 Mars year steps
+    let xym = new Array(imax - imin + 1);  // 40 or 41 Earth year steps
+    this.xyEarth = xye;
+    this.xyMars = xym;
+    xym[-imin] = [xm, ym, 0, 0];  // -imin is iOppo
+    this.getEarth(-imin);
+    // Defer calculation of xym other than xym[iRef] until findMars.
+
+    // orbitDirections is indexed by Earth year, provide alternate
+    // orbitTranspose indexed by Mars year.
+    this.orbitTranspose = Array.from(new Array(jmax - jmin + 1), () => []);
+    this.orbitDirections.forEach(
+      list => list.forEach(p => this.orbitTranspose[p[1]-jmin].push(p)));
+
+    // marsLines is set of lines from Earth to Mars
+    // sunLines is set of lines from Earth to Sun
+    //   only displayed in state=2, or state=3 for newly added Earth points
+    // referenceGroup is line from Sun to Mars and Mars point at iOppo
+    // earthGroup is set of points on Earth orbit
+    // marsGroup is set of points on Mars orbit
+    // this.marsLines = this.stateGroup[2].append("g")
+    //   .attr("pointer-events", "none");
+    // this.sunLines = this.marsLines.clone(true);
+    // this.earthGroup = this.referenceGroup.clone(true);
+    // this.marsGroup = this.earthGroup.clone(true);
+
+    this.referenceGroup.select("line")
+      .attr("x2", xm*AU).attr("y2", -ym*AU);
+    this.referenceGroup.select("circle")
+      .attr("cx", xm*AU).attr("cy", -ym*AU);
+    this.referenceGroup.attr("display", "block");
+    this.marsGroup.attr("display", "none");
+
+    if (this.ijNow === undefined || this.ijNow[0]<imin || this.ijNow[0]>imax
+        || this.ijNow[1]<jmin || this.ijNow[1]>jmax) {
+      this.ijNow = [0, 0];
+    }
+    let [i, j] = this.ijNow;
+
+    this.updateDrawing();
+    let t0 = this.oppositionsFound[this.iOppo][1];
+    this.clock.goToDay(t0 + i*this.earthYear + j*this.marsEstimate);
+  }
+
+  getEarth(i) {
+    let [x, y] = this.xyMars[i];
+    this.orbitDirections[i].forEach(
+      ([ii, jj, [mex, mey], [sex, sey], cross, flag]) => {
+        let j = jj + this.jRef;
+        let xye = this.xyEarth;
+        // xyEarth is array of [xe, ye, mvec, svec, flag, idef, jdef]
+        // (xe, ye) point on Earth orbit
+        // mvec, svec unit vectors toward Mars and Sun, respectively
+        // flag -1 within 15 deg of conjuction, 1 within 6 deg of opposition
+        // idef, jdef Earth (i) and Mars (j) year steps where this defined
+        if (flag == 0 && xye[j] === undefined) {
+          let r = (mey*x - mex*y) / cross;
+          xye[j] = [r*sex, r*sey, [mex, mey], [sex, sey], flag, ii, jj];
+        }
+      });
+  }
+
+  stepMars(pm) {
+    const [i, jOld] = this.ijNow;
+    const j = jOld + pm;
+    const od = this.orbitDirections[i + this.iRef];
+    if (j < od[0][1] || j > od[od.length-1][1]) return;
+    this.ijNow = [i, j];
+    this.updateDrawing();
+    let t0 = this.oppositionsFound[this.iOppo][1];
+    this.clock.animateTo(t0 + i*this.earthYear + j*this.marsEstimate, 12);
+  }
+
+  findMars() {
+    this.plusMars.attr("display", "block");
+    this.plusEarth.attr("display", "block");
+    this.slider.attr("display", "block");
+    this.prevButton.attr("display", "block");
+    this.nextButton.attr("display", "none");
+    // state 3 reuses elements from state 2
+    this.state2Text1.text("Survey points on Mars's orbit...");
+    this.state2Text2.text("<-by stepping Earth periods");
+    this.stateGroupActivate(2);
+    this.state = 3;
+
+    // Get points on Mars orbit:
+    // First, step to each point on Mars orbit, starting in direction
+    // where there are most points.
+    // At each step, use all points on Earth orbit known at previous step
+    // to determine new point on Mars orbit, then define any new points
+    // on Earth orbit.
+    // Note that xyEarth records the i at which each point was defined.
+    let xym = this.xyMars;
+    let [imin, imax] = [-this.iRef, this.orbitDirections.length-1 - this.iRef];
+    let step = (-imin > imax)? -1 : 1;
+    // i increasing --> 1 on first pass, imax on last pass, so imax steps
+    // i decreasing --> -1 on first pass, imin on last pass, so -imin steps
+    // n0 must be 1 greater than the actual number of passes
+    let n0 = (step < 0)? 1 - imin : 1 + imax;
+    let i = -imin;
+    while (n0 -= 1) {
+      i += step;
+      xym[i] = this.getMars(i);
+      this.getEarth(i);
+    }
+    // Now step in opposite direction.
+    n0 = (step > 0)? 1 - imin : 1 + imax;
+    i = -imin;
+    while (n0 -= 1) {
+      i -= step;
+      xym[i] = this.getMars(i);
+      this.getEarth(i);
+    }
+    // Compute standard deviation of Mars position fits (in AU).
+    let [chi2, ntot] = xym.reduce(
+      ([c0, n0], [xm, ym, c, n]) => [c0+c, n0+n], [0, 0]);
+    let stdev = Math.sqrt(chi2 / ntot);
+    this.stdDevText.text(stdev.toFixed(5));
+
+    this.updateDrawing();
+  }
+
+  getMars(i) {
+    let lines = [];
+    let odi = this.orbitDirections[i];
+    odi.forEach(
+      ([ii, jj, [mex, mey], s, cross, flag]) => {
+        let j = jj + this.jRef;
+        let xye = this.xyEarth;
+        if (flag >= 0 && xye[j] !== undefined) {
+          let [x, y] = xye[j];
+          lines.push([x, y, mex, mey]);
+        }
+      });
+    let [xm, ym, chi2] = nearestPointTo(lines);
+    // xyMars is [xm, ym, chi2, n, idef]
+    // (xm, ym) point on Mars orbit
+    // chi2, n total square distance from sight lines, number of lines
+    // idef Earth years displaced from reference opposition for (xm, ym)
+    return [xm, ym, chi2, lines.length, i - this.iRef];
+  }
+
+  stepEarth(pm) {
+    const [iOld, j] = this.ijNow;
+    const i = iOld + pm;
+    const od = this.orbitTranspose[j + this.jRef];
+    if (i < od[0][0] || i > od[od.length-1][0]) return;
+    this.ijNow = [i, j];
+    this.updateDrawing();
+    let t0 = this.oppositionsFound[this.iOppo][1];
+    this.clock.animateTo(t0 + i*this.earthYear + j*this.marsEstimate, 12);
+  }
+
+  earthType(xyeDatum) {
+    // 0 --> out of range for this Mars point iNow
+    // 1 --> in range but not usable because Mars near conjunction or opposition
+    // 2 --> Earth point newly defined by this Mars point
+    // 3 --> Earth point used to define this Mars point
+    const [iDef, jDef] = xyeDatum.slice(5);
+    const iNow = this.ijNow[0];
+    const odi = this.orbitDirections[iNow + this.iRef];
+    let [jMin, jMax] = [odi[0][1], odi[odi.length-1][1]];
+    if (jDef < jMin || jDef > jMax) return 0;
+    const flag = odi[jDef-jMin][5];  // flag at ijNow
+    if (flag < 0 || (iNow == 0 && flag > 0)) return 1;
+    if (iNow == iDef) return 2;
+    return 3;
+  }
+
+  updateDrawing() {
+    let AU = this.AU;
+    let [iNow, jNow] = this.ijNow;
+    let [iRef, jRef] = [this.iRef, this.jRef];
+    let xye = this.xyEarth;  // [xe, ye, mvec, svec, flag, idef, jdef]
+    let xym = this.xyMars;  // [xm, ym, chi2, n, idef]
+    let planetColors = this.clock.planetColors;
+    if (this.state == 3) {
+      // Mars point at iNow highlighted, others dim.
+      this.marsGroup.attr("display", "block");
+      this.marsGroup.selectAll("circle")
+        .data(xym.filter((d, i) => i != iRef))  // iRef drawn in referenceGroup
+        .join(enter => enter.append("circle")
+                .attr("opacity", d => (d[4] == iNow)? 1 : 0.16)
+                .attr("stroke", "none")
+                .attr("fill", planetColors.mars)
+                .attr("cx", d => d[0]*AU).attr("cy", d => -d[1]*AU)
+                .attr("r", 4),
+             update => update
+               .attr("opacity", d => (d[4] == iNow)? 1 : 0.16)
+               .attr("cx", d => d[0]*AU).attr("cy", d => -d[1]*AU),
+              exit => exit.remove());
+      // Earth points newly used or defined here are highlighted, others dim.
+      this.earthGroup.selectAll("circle")
+        .data(xye)
+        .join(enter => enter.append("circle")
+              .attr("opacity", d => (this.earthType(d) >= 2)? 1 : 0.16)
+                .attr("stroke", "none")
+                .attr("fill", planetColors.earth)
+                .attr("cx", d => d[0]*AU).attr("cy", d => -d[1]*AU)
+                .attr("r", 4),
+              update => update
+                .attr("opacity", d => (this.earthType(d) >= 2)? 1 : 0.16)
+                .attr("cx", d => d[0]*AU).attr("cy", d => -d[1]*AU),
+              exit => exit.remove());
+      // Only draw Sun lines for Earth points newly defined here.
+      // However, also want to highlight jNow line, so make everything
+      // except the newly defined have zero opacity.
+      let esFactor = (d) => (this.earthType(d) == 1)? 1.8*AU : AU;
+      this.sunLines.selectAll("line")
+        .data(xye.filter(d => this.earthType(d) >= 1))
+        .join(enter => enter.append("line")
+                .attr("opacity", d => (d[5] == iNow)? 0.3 : 0)
+                .attr("fill", "none")
+                .attr("stroke", planetColors.sun)
+                .attr("stroke-width", 2)
+                .attr("x2", d => d[0]*esFactor(d))
+                .attr("y2", d => -d[1]*esFactor(d)),
+              update => update
+                .attr("opacity", d => (d[5] == iNow)? 0.3 : 0)
+                .attr("x2", d => d[0]*esFactor(d))
+                .attr("y2", d => -d[1]*esFactor(d)),
+              exit => exit.remove());
+      // Draw Mars lines truncated at Mars for newly defined Earth points,
+      // extended beyond Mars for Earth points used to compute this Mars point.
+      let marsPt = (d, k) => {
+        const [iDef, jDef] = d.slice(5);
+        const [xm, ym] = xym[iNow + iRef];
+        if (iNow == iDef) {
+          return k? -ym*AU : xm*AU;
+        }
+        const odi = this.orbitDirections[iNow + iRef];
+        let jMin = odi[0][1];
+        let [mex, mey] = odi[jDef - jMin][2];
+        let [xe, ye] = d;
+        let r = Math.sqrt((xm - d[0])**2 + (ym - d[1])**2);
+        if (k) {
+          return -(ye + 1.2*r*mey)*AU;
+        } else {
+          return (xe + 1.2*r*mex)*AU;
+        }
+      }
+      this.marsLines.selectAll("line")
+        .data(xye.filter(d => this.earthType(d) >= 2))
+        .join(enter => enter.append("line")
+                .attr("opacity", 0.3)
+                .attr("fill", "none")
+                .attr("stroke", planetColors.mars)
+                .attr("stroke-width", 2)
+                .attr("x1", d => marsPt(d, 0)).attr("y1", d => marsPt(d, 1))
+                .attr("x2", d => d[0]*AU).attr("y2", d => -d[1]*AU),
+              update => update
+                .attr("opacity", 0.3)
+                .attr("x1", d => marsPt(d, 0)).attr("y1", d => marsPt(d, 1))
+                .attr("x2", d => d[0]*AU).attr("y2", d => -d[1]*AU),
+              exit => exit.remove());
+    } else {
+      // state 2 only works for i = 0??
+      iNow = 0;
+      this.marsGroup.attr("display", "none");
+      // Earth points, Mars and Sun lines defined by reference opposition
+      const [xm, ym] = this.oppositionsFound[this.iOppo][2];
+      let xyeRefOnly = xye.filter(d => d[5]==0);
+      this.earthGroup.selectAll("circle")
+        .data(xyeRefOnly)
+        .join(enter => enter.append("circle")
+                .attr("stroke", "none")
+                .attr("fill", planetColors.earth)
+                .attr("cx", d => d[0]*AU).attr("cy", d => -d[1]*AU)
+                .attr("r", 4),
+              update => update
+                .attr("opacity", null)
+                .attr("cx", d => d[0]*AU).attr("cy", d => -d[1]*AU),
+              exit => exit.remove());
+      // Add back the points near opposition and conjunction.
+      const xye0 = this.orbitDirections[iRef].map(
+        ([ii, jj, m, [sex, sey], cross, flag]) => (flag == 0)? xye[jj+jRef] :
+            [-1.8*sex, -1.8*sey, m, [sex, sey], flag, ii, jj]);
+      this.sunLines.selectAll("line")
+        .data(xye0)
+        .join(enter => enter.append("line")
+              .attr("opacity", d => (d[4] == 0)? 0.3 : 0)
+                .attr("fill", "none")
+                .attr("stroke", planetColors.sun)
+                .attr("stroke-width", 2)
+                .attr("x2", d => d[0]*AU).attr("y2", d => -d[1]*AU),
+              update => update
+                .attr("opacity", d => (d[4] == 0)? 0.3 : 0)
+                .attr("x2", d => d[0]*AU).attr("y2", d => -d[1]*AU),
+              exit => exit.remove());
+      this.marsLines.selectAll("line")
+        .data(xyeRefOnly)
+        .join(enter => enter.append("line")
+                .attr("opacity", 0.3)
+                .attr("fill", "none")
+                .attr("stroke", planetColors.mars)
+                .attr("stroke-width", 2)
+                .attr("x1", d => xm*AU).attr("y1", d => -ym*AU)
+                .attr("x2", d => d[0]*AU).attr("y2", d => -d[1]*AU),
+              update => update
+                .attr("opacity", 0.3)
+                .attr("x1", xm*AU).attr("y1", -ym*AU)
+                .attr("x2", d => d[0]*AU).attr("y2", d => -d[1]*AU),
+              exit => exit.remove());
+    }
+    // highlight ijNow
+    let ijTest = d => {
+      const jDef = d[6];
+      if (jDef != jNow) return false;
+      const odi = this.orbitDirections[iNow + iRef];
+      let jMin = odi[0][1];
+      return odi[jDef - jMin][0] == iNow;
+    }
+    [this.sunLines, this.marsLines].forEach(
+      s => s.selectAll("line").filter(d => ijTest(d))
+        .attr("opacity", 1)
+        .attr("stroke-width", 3));
+  }
+
+  orbitPoints(iOppo) {
+    const [max, min, abs] = [Math.max, Math.min, Math.abs];
+    const [floor, ceil] = [Math.floor, Math.ceil];
+    const tStart = this.mars.elapsed0;
+    const tStop = tStart + 7310;
+    const earthYear = this.earthYear;
+    const marsYear = this.marsEstimate;
+    // Complete range of Earth years is +-7310 days from t0,
+    // which is always +-20 years, for a total of 41 points
+    // with opposition iOppo at index 20 of these steps.
+    // Corresponding number of Mars points is +-marsMax:
+    let t0 = this.oppositionsFound[iOppo][1];
+    const tmid = 0.5*(tStart + tStop);
+    const [imin, imax] = [ceil((tmid - 7310 - t0)/earthYear),
+                          floor((tmid + 7310 - t0)/earthYear)];
+    const marsMax = floor(7310/marsYear);
+    const tan15 = Math.tan(Math.PI / 12);
+    const nearOppo = 0.1;
+    return [-imin, d3.range(imin, imax+1).map(
+      i => {
+        let ti = t0 + i*earthYear;
+        let [jn, jx] = [max(ceil((tStart - ti)/marsYear), -marsMax),
+                        min(floor((tStop - ti)/marsYear), marsMax)];
+        let nfull = (tStart - ti)/marsYear;
+        let ifull = ceil(nfull);
+        let sightLines = new Array(jx - jn + 1);
+        for (let j=jn ; j<=jx ; j+=1) {
+          let tij = ti + j*marsYear;
+          let m = directionOf("mars", tij);
+          let s = directionOf("sun", tij);
+          let [mex, mey] = m;
+          let [sex, sey] = s;
+          let [dot, cross] = [sex*mex + sey*mey, sex*mey - sey*mex];
+          // flag = -1 if within 15 deg of conjunction
+          //      = 1 is within atan(0.1) of opposition
+          //      = 0 otherwise
+          let flag = (abs(cross) < tan15*dot)? -1 :
+              ((abs(cross) < -nearOppo*dot)? 1 : 0);
+          // avoid any issues with i or j equal to -0
+          sightLines[j-jn] = [i? i : 0, j, m, s, cross, flag];
+        }
+        return sightLines;
+      })];
   }
 
   activate(on) {
@@ -2376,6 +2972,56 @@ function zoomButtons(width, objectThis) {
             .on("click", (() => objectThis.zoomer(1)).bind(objectThis));
         });
     });
+}
+
+
+/**
+ * Find the intersection point of two lines
+ *
+ * @param {Array} line1 - [px, py, ex, ey] where (px, py) is a point on the
+ *    line and (ex, ey) is the normalized direction of the line.
+ * @param {Array} line2 - [px, py, ex, ey] for the second line.
+ *    line2 may be only [ex, ey] if px = py = 0
+ *
+ * @return {Array<number>} - [x, y] coordinates of intersection point
+ */
+function intersectionOf(line1, line2) {
+  let [px1, py1, ex1, ey1] = line1;
+  if (line2.length < 4) {
+    let [ex2, ey2] = line2;
+    let r = (py2*ex2 - px2*ey2) / (ex2*ey1 - ey2*ex1);
+    return [r*ex1, r*ey1];
+  } else {
+    let [px2, py2, ex2, ey2] = line2;
+    let det = ex2*ey1 - ey2*ex1;
+    let [c1, c2] = [(px1*ey1 - py1*ex1)/det, (px2*ey2 - py2*ex2)/det];
+    return [c1*ex2 - c2*ex1, c1*ey2 - c2*ey1];
+  }
+}
+
+
+/**
+ * Find the point with least sum of squares of distances to a given
+ * set of lines, that is, the point most nearly at the common intersection
+ * of all the lines.
+ *
+ * @param {Array} lines - [[px, py, ex, ey], ...] where (px, py) is a
+ *    point on the line and (ex, ey) is the normalized direction of the line
+ *
+ * @return {Array<number>} - [x, y, chi2] coordinates of point and residual
+ */
+function nearestPointTo(lines) {
+  let [a, b, c, u, v] = lines.map(
+    ([px, py, ex, ey]) => {
+      let dot = px*ex + py*ey;
+      return [1 - ey*ey, ex*ey, 1 - ex*ex, px - ex*dot, py - ey*dot];
+    }).reduce(([a0, b0, c0, u0, v0], [a, b, c, u, v]) =>
+              [a0+a, b0+b, c0+c, u0+u, v0+v]);
+  let det = a*c - b*b;
+  let [x, y] = [(a*u + b*v)/det, (b*u + c*v)/det];
+  let chi2 = lines.map(([px, py, ex, ey]) => ((x - px)*ey - (y - py)*ex)**2)
+      .reduce((prev, cur) => prev + cur);
+  return [x, y, chi2];
 }
 
 
