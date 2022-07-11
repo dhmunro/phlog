@@ -142,6 +142,7 @@ Libra 210 Scorpio 240 Sagittarius 270 Capricornus 300 Aquarius 330 Pisces
   let surveyor = new SurveyOrbits(d3.select("#survey-orbits"),
                                   clock, marsYear, earthYear);
   let slaves = [null, orbView, earthYear, marsYear, surveyor];
+  let iselPrev = -1;
 
   function mainMenuSelect() {
     ["mercury", "venus", "jupiter", "saturn"].forEach(
@@ -154,9 +155,6 @@ Libra 210 Scorpio 240 Sagittarius 270 Capricornus 300 Aquarius 330 Pisces
       (id, i) => {
         if (id != sel) {
           d3.select(id).style("display", "none");
-          if (slaves[i] != null) {
-            slaves[i].activate(false);
-          }
         } else {
           isel = i;
         }
@@ -165,8 +163,14 @@ Libra 210 Scorpio 240 Sagittarius 270 Capricornus 300 Aquarius 330 Pisces
     d3.select(sel).style("display", "block");
     clock.setHandVisibility(
       "mars", ["#orb-view", "#mars-year", "#survey-orbits"].indexOf(sel) > -1);
+    if (slaves[iselPrev] != null) {
+      slaves[iselPrev].activate(false);
+    }
+    iselPrev = isel;
     if (slaves[isel] != null) {
       slaves[isel].activate(true);
+    } else {
+      clock.removeElapsed();
     }
   }
 

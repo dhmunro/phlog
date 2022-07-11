@@ -159,10 +159,10 @@ class PlanetClock {
       });
 
     // Otherwise callback will not have correct this when triggered.
-    let yearSetter = (() => this.setYear()).bind(this);
-    let sunDragger = ((event, d) => this.dragSun(event, d)).bind(this);
+    let yearSetter = () => this.setYear();
+    let sunDragger = (event, d) => this.dragSun(event, d);
     let handToggler = ["mercury", "venus", "mars", "jupiter", "saturn"].map(
-      p => (() => this.setHandVisibility(p)).bind(this));
+      p => (() => this.setHandVisibility(p)));
 
     // Year indicator
     this.centerGroup = this.svg.append("g").call(
@@ -473,7 +473,7 @@ class PlanetClock {
     this.dayStep = step;
     this.dayStop = day;
     // set timer makes callbacks at 60 frames/sec (use d3.interval for slower)
-    this.dayTimer = d3.timer((() => this.stepDay()).bind(this));
+    this.dayTimer = d3.timer(() => this.stepDay());
   }
 
   startAnimation(backward, step=3) {
@@ -631,8 +631,12 @@ class PlanetClock {
       this.removeElapsed(true);
     }
     let yElapsed = -0.25*PlanetClock.#rInner;
-    let resetElapsed = (() => this.updateElapsed(true)).bind(this);
-    this.elapsed0 = this.dayNow;
+    let resetElapsed = () => this.updateElapsed(true);
+    if (this.elapsed0 === undefined) {
+      this.elapsed0 = this.dayNow;
+    } else if (this.elapsed0 != this.dayNow) {
+      this.goToDay(this.elapsed0);
+    }
     this.elapsed = this.centerGroup.append("g").call(
       g => {
         g.append("text")
@@ -672,9 +676,8 @@ class PlanetClock {
       let day = this.elapsed0;
       this.elapsed.remove();
       delete this.elapsed;
-      delete this.elapsed0;
       delete this.elapsedUpdater;
-      if (!fromAdd) {
+      if (!fromAdd && day !== undefined) {
         this.goToDay(day);
       }
     }
@@ -734,7 +737,7 @@ class OrbitView {
 
     zoomButtons(width, this);
     let gap = 0.01*width;  // matches gap in zoomButtons
-    let originCycler = (() => this.cycleOrigin()).bind(this);
+    let originCycler = () => this.cycleOrigin();
     this.svg.append("rect").call(
       rect => buttonBox(rect, width/2 - 150 - gap, -height/2 + gap, 150, 28,
                         originCycler));
@@ -772,27 +775,31 @@ class OrbitView {
     this.planetGroup = this.svg.append("g")
         .style("pointer-events", "none")
         .attr("transform", `scale(${scale}) translate(0, 0)`);
-    let period = [87.969257, 224.700799, 686.967971, 4332.820129,
-                  10755.698644, 365.256355];  // J2000 sidereal periods (days)
+    this.getOrbit = (p, i, t0) => {
+      const period = [87.969257, 224.700799, 686.967971, 4332.820129,
+                      10755.698644, 365.256355];  // J2000 sidereal years (days)
+      let d3p = d3.path();
+      let dt = period[i] * 0.01;
+      let t = t0;
+      let [x, y] = positionOf(p, t);
+      d3p.moveTo(100*x, -100*y);
+      for (let j = 1 ; j < 100 ; j += 1) {
+        t += dt;
+        [x, y] = positionOf(p, t);
+        d3p.lineTo(100*x, -100*y);
+      }
+      d3p.closePath()
+      if (i == 0) this.orbitalEpoch = t0;
+      return d3p;
+    }
     ["mercury", "venus", "mars", "jupiter", "saturn", "earth"].forEach(
       (p, i) => {
-        let d3p = d3.path();
-        let dt = period[i] * 0.01;
-        let t = 0.0;
-        let [x, y] = positionOf(p, t);
-        d3p.moveTo(100*x, -100*y);
-        for (let j = 1 ; j < 100 ; j += 1) {
-          t += dt;
-          [x, y] = positionOf(p, t);
-          d3p.lineTo(100*x, -100*y);
-        }
-        d3p.closePath()
         this.planetOrbits[i] = this.planetGroup.append("path")
           .style("stroke", clock.planetColors[p])
           .style("stroke-width", 5/scale)
           .style("fill", "none")
           .attr("opacity", 0.2)
-          .attr("d", d3p);
+          .attr("d", this.getOrbit(p, i, this.clock.dayNow));
         if (i < 5) {
           this.planetRadii[i] = this.planetGroup.append("line")
             .attr("opacity", 0.2)
@@ -839,16 +846,21 @@ class OrbitView {
       .attr("cx", 0).attr("cy", 0)
       .attr("r", 8/scale);
 
-    this.clock.addSlave((() => this.update()).bind(this));
+    this.clock.addSlave(() => this.update());
   }
 
   update() {
     if (this.svg.node().parentElement.style.display == "none") return;
     this.updateOrigin();
-    let [xe, ye] = positionOf("earth", this.clock.dayNow);
+    let t0 = this.clock.dayNow;
+    let newEpoch = Math.abs(t0 - this.orbitalEpoch) > 200*365.256355;
+    let [xe, ye] = positionOf("earth", t0);
     ["mercury", "venus", "mars", "jupiter", "saturn"].forEach(
       (p, i) => {
-        let [x, y] = positionOf(p, this.clock.dayNow);
+        let [x, y] = positionOf(p, t0);
+        if (newEpoch) {
+          this.planetOrbits[i].attr("d", this.getOrbit(p, i, t0));
+        }
         this.planetMarkers[i].attr("cx", 100*x).attr("cy", -100*y);
         this.planetHands[i]
           .attr("visibility", this.clock.planetHandVisibility[p])
@@ -909,6 +921,7 @@ class OrbitView {
   }
 
   activate(on) {
+    this.clock.removeElapsed();
   }
 
   zoomer(inout) {
@@ -1012,10 +1025,7 @@ class EarthYear {
     zoomButtons(width, this);
     let gap = 0.01*width;  // matches gap in zoomButtons
 
-    this.clock.addSlave((() => this.update()).bind(this));
-    if (!this.clock.elapsed) {
-      this.activate(true);
-    }
+    this.clock.addSlave(() => this.update());
 
     let [left, right, bottom, top] = [-width/2+80, width/2-30,
                                       height/2-60, -height/2+60];
@@ -1052,7 +1062,7 @@ class EarthYear {
     this.svg.append("text").attr("x", right).attr("y", bottom+50)
       .attr("pointer-events", "none").text("revs");
 
-    let xgen = (d => this.x(d[0])).bind(this);
+    let xgen = d => this.x(d[0]);
     this.lineGenerator = d3.line()
       .x(xgen)
       .y(d => this.y(d[1]))
@@ -1321,6 +1331,7 @@ class EarthYear {
     if (reset) {
       // reset the days vs revs graph
       const t0 = this.clock.elapsed0;
+      this.elapsed0 = t0;
       if (this.zoomLevel != 0) {
         this.zoomLevel = 0;
         this.multiYear(true);
@@ -1361,9 +1372,15 @@ class EarthYear {
 
   activate(on) {
     if (on) {
-      this.clock.addElapsed(((r, ir) => this.elapsedUpdate(r, ir)).bind(this));
-    } else {
-      this.clock.removeElapsed();
+      let oldElapsed0 = this.clock.elapsed0;
+      this.clock.addElapsed((r, ir) => this.elapsedUpdate(r, ir));
+      this.clock.elapsed0 = oldElapsed0;
+      if (this.elapsed0 != this.clock.elapsed0) {
+        this.clock.goToDay(this.clock.elapsed0);
+        this.elapsedUpdate(true);
+      } else if (this.elapsed0 === undefined) {
+        this.elapsedUpdate(true, true);
+      }
     }
   }
 
@@ -1372,7 +1389,7 @@ class EarthYear {
   }
 
   zoomer(inout) {
-    var level = this.zoomLevel;
+    let level = this.zoomLevel;
     if (inout == 0) {  // Decrease magnification.
       level -= 1;
       if (level < 0) return;
@@ -1441,9 +1458,9 @@ class EarthYear {
     this.yAxis.scale(this.y);
     this.gxAxis.maybeTransition(trans).call(this.xAxis);
     this.gyAxis.maybeTransition(trans).call(this.yAxis);
-    this.updateLinePath();
-    this.updateSunMarker();
-    this.updateYearBoxes();
+    this.updateLinePath(noTransition);
+    this.updateSunMarker(noTransition);
+    this.updateYearBoxes(noTransition);
     // Place exact year at midpoint of vertical scale.
     let ymid = 0.5*(this.revTRange[0] + this.revTRange[1]);
     let y = this.y(10*(this.yearEstimate - 365.25636) + ymid);
@@ -1518,10 +1535,7 @@ class MarsYear {
     zoomButtons(width, this);
     let gap = 0.01*width;  // matches gap in zoomButtons
 
-    this.clock.addSlave((() => this.update()).bind(this));
-    if (!this.clock.elapsed) {
-      this.activate(true);
-    }
+    this.clock.addSlave(() => this.update());
 
     let [left, right, bottom, top] = [-width/2+80, width/2-30,
                                       height/2-60, -height/2+60];
@@ -1558,8 +1572,8 @@ class MarsYear {
     this.svg.append("text").attr("x", right).attr("y", bottom+50)
       .attr("pointer-events", "none").text("revs");
 
-    let xgen = (d => this.x(d[0])).bind(this);
-    let dgen = (d => d[2]).bind(this);
+    let xgen = d => this.x(d[0]);
+    let dgen = d => d[2];
     this.lineGenerator = d3.line()
       .x(xgen)
       .y(d => this.y(d[1]))
@@ -1798,7 +1812,7 @@ class MarsYear {
       } else {
         let rt = this.OppoRevT();
         let iwrap = rt.findIndex((v, i, a) => i > 0 && v[0] < a[i-1][0]);
-        // zomLevel 2 is deviation from line t = t0 + (r-r0)*yearEstimate
+        // zoomLevel 2 is deviation from line t = t0 + (r-r0)*yearEstimate
         let dtdrev = (this.zoomLevel < 2)? 0 : this.yearEstimate;
         let dt = (this.zoomLevel < 2)? 0 : rt[0][1]-rt[0][0]*this.yearEstimate;
         let mask = (this.zoomLevel < 2)? 1 : 0;
@@ -1960,12 +1974,13 @@ class MarsYear {
 
   activate(on) {
     if (on) {
-      this.clock.addElapsed(((r, ir) => this.elapsedUpdate(r, ir)).bind(this));
+      let oldElapsed0 = this.clock.elapsed0;
+      this.clock.addElapsed((r, ir) => this.elapsedUpdate(r, ir));
+      this.clock.elapsed0 = oldElapsed0;
       if (this.elapsed0 != undefined && this.elapsed0 != this.clock.elapsed0) {
         this.clock.goToDay(this.elapsed0);
+        this.clock.updateElapsed(true);
       }
-    } else {
-      this.clock.removeElapsed();
     }
   }
 
@@ -1974,7 +1989,8 @@ class MarsYear {
   }
 
   zoomer(inout) {
-    var level = this.zoomLevel;
+    if (!this.oppositions) return;
+    let level = this.zoomLevel;
     if (inout == 0) {  // Decrease magnification.
       level -= 1;
       if (level < 0) return;
@@ -1992,6 +2008,18 @@ class MarsYear {
     }
   }
 
+  changeYearEstimate(newEstimate) {
+    this.yearEstimate = newEstimate;
+    let level = this.zoomLevel;
+    if (level == 0) {
+      this.multiYear(true);
+    } else if (level == 1) {
+      this.singleYear(true);
+    } else {
+      this.hiMag(true);
+    }
+  }
+
   multiYear(noTransition=false) {
     let trans = noTransition? 0 : 1000;
     this.x.domain([-1, 11]);
@@ -2000,13 +2028,8 @@ class MarsYear {
     this.yAxis.scale(this.y);
     this.gxAxis.maybeTransition(trans).call(this.xAxis);
     this.gyAxis.maybeTransition(trans).call(this.yAxis);
-    this.updateLinePath(noTransition);
     this.marsMarker.attr("display", "block");
-    this.updateMarsMarker(noTransition);
-    this.updateYearBoxes(noTransition);
-    let y = this.y(10*this.yearEstimate);
-    this.sliderNow = y;
-    this.slider.attr("transform", `translate(0, ${y - this.slider0})`);
+    this.setSlider(this.y(10*this.yearEstimate), noTransition);
   }
 
   singleYear(noTransition=false) {
@@ -2017,24 +2040,11 @@ class MarsYear {
     this.yAxis.scale(this.y);
     this.gxAxis.maybeTransition(trans).call(this.xAxis);
     this.gyAxis.maybeTransition(trans).call(this.yAxis);
-    this.updateLinePath(noTransition);
     this.marsMarker.attr("display", "block");
-    this.updateMarsMarker(noTransition);
-    this.updateYearBoxes(noTransition);
-    let y = this.y(this.yearEstimate);
-    this.sliderNow = y;
-    this.slider.attr("transform", `translate(0, ${y - this.slider0})`);
+    this.setSlider(this.y(this.yearEstimate), noTransition);
   }
 
   hiMag(noTransition=false) {
-    // Adjust yearEstimate to keep slider on scale if necessary.
-    if (this.yearEstimate < 684) {
-      this.yearEstimate = 684;
-      this.yearText.text(`Period estimate: 686.450 days`);
-    } else if (this.yearEstimate > 690) {
-      this.yearEstimate = 690;
-      this.yearText.text(`Period estimate: 687.550 days`);
-    }
     let trans = noTransition? 0 : 1000;
     this.x.domain([-0.1, 1.1]);
     let dtAvg = 0.5*(this.oppoRange[1] + this.oppoRange[0]);
@@ -2043,21 +2053,21 @@ class MarsYear {
     this.yAxis.scale(this.y);
     this.gxAxis.maybeTransition(trans).call(this.xAxis);
     this.gyAxis.maybeTransition(trans).call(this.yAxis);
-    this.updateLinePath();
     this.marsMarker.attr("display", "none");
-    this.updateYearBoxes();
-    // Place exact year at midpoint of vertical scale.
-    let ymid = 0.5*(this.oppoRange[0] + this.oppoRange[1]);
-    let y = this.y(10*(this.yearEstimate - 686.97973) + ymid);
-    this.sliderNow = y;
-    this.slider.attr("transform", `translate(0, ${y - this.slider0})`);
+    this.setSlider(this.y(10*(this.yearEstimate - 686.97973) + dtAvg),
+                   noTransition);
   }
 
   yearDrag(event, d) {
     let [x, y] = [event.x+1.e-20, event.y];
     y += this.yDragOffset;
-    let factor = (this.zoomLevel > 0)? 1 : 10;
+    this.setSlider(y, true);
+  }
+
+  setSlider(y, noTransition=false) {
     let days = this.y.invert(y);
+    let factor = (this.zoomLevel > 0)? 1 : 10;
+    // Adjust yearEstimate to keep slider on scale if necessary.
     if (this.zoomLevel < 2) {
       if (days < 650*factor) {
         days = 650*factor;
@@ -2067,23 +2077,26 @@ class MarsYear {
         y = this.y(days);
       }
     } else {
-      let ymid = 0.5*(this.oppoRange[0] + this.oppoRange[1]);
-      days = 0.1*(days - ymid) + 686.97973;
+      // Place exact year at midpoint of vertical scale.
+      let dtAvg = 0.5*(this.oppoRange[0] + this.oppoRange[1]);
+      // Factor of 0.1 because full scale of y axis is dtAvg+-30 days,
+      // while full scale of slider is only yearEstimate+-3 days.
+      days = 0.1*(days - dtAvg) + 686.97973;
       if (days < 684) {
         days = 684;
-        y = this.y(10*(this.yearEstimate - 686.97973) + ymid);
+        y = this.y(10*(684 - 686.97973) + dtAvg);
       } else if (days > 690) {
         days = 690;
-        y = this.y(10*(this.yearEstimate - 686.97973) + ymid);
+        y = this.y(10*(690 - 686.97973) + dtAvg);
       }
     }
     this.sliderNow = y;
     this.yearEstimate = days / factor;
     this.slider.attr("transform", `translate(0, ${y - this.slider0})`);
     this.yearText.text(`Period estimate: ${this.yearEstimate.toFixed(3)} days`);
-    this.updateYearBoxes(true);
-    this.updateLinePath(true);
-    this.updateMarsMarker(true);
+    this.updateYearBoxes(noTransition);
+    this.updateLinePath(noTransition);
+    if (this.zoomLevel < 2) this.updateMarsMarker(noTransition);
   }
 
   yearDragStart(event, d) {
@@ -2309,7 +2322,7 @@ class SurveyOrbits {
       .call(d3.drag().on("start", yearStarter).on("drag", yearDragger))
       .on("touchstart", yearStarter).on("touchmove", yearDragger);
 
-    clock.addSlave((() => this.update()).bind(this));
+    clock.addSlave(() => this.update());
     this.notReady();
   }
 
@@ -2467,7 +2480,7 @@ class SurveyOrbits {
         .attr("fill", this.clock.planetColors.mars)
         .attr("stroke", "none")
         .attr("r", 5);
-      this.clock.animateTo(this.oppositionsFound[i][1], 12);
+      this.clock.animateTo(this.oppositionsFound[i][1], 20);
       if (!change) this.nextButton.attr("display", "block");
     };
 
@@ -2604,7 +2617,7 @@ class SurveyOrbits {
     this.ijNow = [i, j];
     this.updateDrawing();
     let t0 = this.oppositionsFound[this.iOppo][1];
-    this.clock.animateTo(t0 + i*this.earthYear + j*this.marsEstimate, 12);
+    this.clock.animateTo(t0 + i*this.earthYear + j*this.marsEstimate, 20);
   }
 
   findMars() {
@@ -2684,7 +2697,7 @@ class SurveyOrbits {
     this.ijNow = [i, j];
     this.updateDrawing();
     let t0 = this.oppositionsFound[this.iOppo][1];
-    this.clock.animateTo(t0 + i*this.earthYear + j*this.marsEstimate, 12);
+    this.clock.animateTo(t0 + i*this.earthYear + j*this.marsEstimate, 20);
   }
 
   earthType(xyeDatum) {
@@ -2768,11 +2781,11 @@ class SurveyOrbits {
         let jMin = odi[0][1];
         let [mex, mey] = odi[jDef - jMin][2];
         let [xe, ye] = d;
-        let r = Math.sqrt((xm - d[0])**2 + (ym - d[1])**2);
+        let r = Math.sqrt((xm - d[0])**2 + (ym - d[1])**2) + 0.3;
         if (k) {
-          return -(ye + 1.2*r*mey)*AU;
+          return -(ye + r*mey)*AU;
         } else {
-          return (xe + 1.2*r*mex)*AU;
+          return (xe + r*mex)*AU;
         }
       }
       this.marsLines.selectAll("line")
@@ -2901,11 +2914,16 @@ class SurveyOrbits {
     if (on) {
       if (this.notReady()) {
         this.clock.disabled = false;
-        return;
+      } else {
+        this.clock.disabled = true;
       }
-      this.clock.disabled = true;
     } else {
-      this.clock.disabled = false;
+      if (this.clock.disabled && this.mars.yearEstimate != this.marsEstimate) {
+        this.clock.disabled = false;
+        this.mars.changeYearEstimate(this.marsEstimate);
+      } else {
+        this.clock.disabled = false;
+      }
     }
   }
 
@@ -2955,7 +2973,7 @@ function zoomButtons(width, objectThis) {
             .style("stroke-width", 2)
             .style("fill", "#ffd")
             .attr("d", d3p)
-            .on("click", (() => objectThis.zoomer(0)).bind(objectThis));
+            .on("click", () => objectThis.zoomer(0));
         });
       g.append("path").call(
         p => {
@@ -2969,7 +2987,7 @@ function zoomButtons(width, objectThis) {
             .style("stroke-width", 2)
             .style("fill", "#ffd")
             .attr("d", d3p)
-            .on("click", (() => objectThis.zoomer(1)).bind(objectThis));
+            .on("click", () => objectThis.zoomer(1));
         });
     });
 }
