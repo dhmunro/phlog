@@ -29,6 +29,7 @@
         <option value="#earth-year">Earth Period</option>
         <option value="#mars-year">Mars Period</option>
         <option value="#survey-orbits">Survey Orbits</option>
+        <option value="#mars-incline">Mars Inclination</option>
       </select>
       <div id="intro"
            style="position: absolute; top: 50px; left: 0; display: block;">
@@ -93,6 +94,11 @@
              style="position: static; width: 100%; height: 100%; display: none;">
         </div>
       </div>
+      <div style="position: absolute; top: 50px; left: 0; width: 100%">
+        <div id="mars-incline"
+             style="position: static; width: 100%; height: 100%; display: none;">
+        </div>
+      </div>
     </div>
   </div>
 
@@ -141,7 +147,9 @@ Libra 210 Scorpio 240 Sagittarius 270 Capricornus 300 Aquarius 330 Pisces
   let marsYear = new MarsYear(d3.select("#mars-year"), clock);
   let surveyor = new SurveyOrbits(d3.select("#survey-orbits"),
                                   clock, marsYear, earthYear);
-  let slaves = [null, orbView, earthYear, marsYear, surveyor];
+  let incline = new Inclination(d3.select("#mars-incline"),
+                                clock, surveyor);
+  let slaves = [null, orbView, earthYear, marsYear, surveyor, incline];
   let iselPrev = -1;
 
   function mainMenuSelect() {
@@ -151,7 +159,7 @@ Libra 210 Scorpio 240 Sagittarius 270 Capricornus 300 Aquarius 330 Pisces
     sel = sel.options[sel.selectedIndex].value;
     let isel = -1;
     ["#intro", "#orb-view", "#earth-year", "#mars-year",
-     "#survey-orbits"].forEach(
+     "#survey-orbits", "#mars-incline"].forEach(
       (id, i) => {
         if (id != sel) {
           d3.select(id).style("display", "none");
@@ -162,7 +170,8 @@ Libra 210 Scorpio 240 Sagittarius 270 Capricornus 300 Aquarius 330 Pisces
     );
     d3.select(sel).style("display", "block");
     clock.setHandVisibility(
-      "mars", ["#orb-view", "#mars-year", "#survey-orbits"].indexOf(sel) > -1);
+      "mars", ["#orb-view", "#mars-year",
+               "#survey-orbits", "#mars-incline"].indexOf(sel) > -1);
     if (slaves[iselPrev] != null) {
       slaves[iselPrev].activate(false);
     }

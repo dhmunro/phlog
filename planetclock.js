@@ -921,7 +921,7 @@ class OrbitView {
   }
 
   activate(on) {
-    this.clock.removeElapsed();
+    if (on) this.clock.removeElapsed();
   }
 
   zoomer(inout) {
@@ -1332,10 +1332,8 @@ class EarthYear {
       // reset the days vs revs graph
       const t0 = this.clock.elapsed0;
       this.elapsed0 = t0;
-      if (this.zoomLevel != 0) {
-        this.zoomLevel = 0;
-        this.multiYear(true);
-      }
+      this.zoomLevel = 0;
+      this.multiYear(true);
       this.linePath.attr("d", null);
       if (inhibitReset) {
         // Presumably from setting year with year button, start over.
@@ -1364,6 +1362,7 @@ class EarthYear {
             return [dtmin, dtmax];  // dtmax - dtmin = 3.8833
           });
         this.linePath.attr("d", this.lineGenerator(this.revT));
+        this.multiYear(true);
       }
     } else if (this.revT) {
       this.updateSunMarker(true);
@@ -1865,7 +1864,14 @@ class MarsYear {
     let collapse = this.zoomLevel > 0;
     let t0 = this.clock.elapsed0;
     let t = this.clock.dayNow - t0;
-    if (this.revT && t >= 0 && t <= 7310) {
+    if (this.revT) {
+      if (t < 0) {
+        this.clock.goToDay(t0);
+        t = 0;
+      } else if (t > 7310) {
+        this.clock.goToDay(t0 + 7310);
+        t = 7310;
+      }
       let trans = noTransition? 0 : 1000;
       let prev = this.prevUpdate;
       if (prev === undefined) {
@@ -1894,10 +1900,8 @@ class MarsYear {
       // reset the days vs revs graph
       const t0 = this.clock.elapsed0;
       this.elapsed0 = t0;
-      if (this.zoomLevel != 0) {
-        this.zoomLevel = 0;
-        this.multiYear(true);
-      }
+      this.zoomLevel = 0;
+      if (this.oppositions) this.multiYear(true);
       this.linePath.attr("d", null);
       if (inhibitReset) {
         // Presumably from setting year with year button, start over.
@@ -1947,7 +1951,6 @@ class MarsYear {
           });
         this.linePath.attr("d", this.lineGenerator(this.revT));
         this.prevUpdate = this.oppositions.range[0];
-        // this.clock.animateTo(t0 + 5.8*this.yearEstimate, 10);
         this.updateYearBoxes(true);
         this.updateMarsMarker(true);
       }
@@ -2159,7 +2162,6 @@ class SurveyOrbits {
     this.stateGroup = new Array(4);
     this.stateGroup[0] = this.svg.append("g").attr("display", "none").call(
       g =>  {
-        let top = -SurveyOrbits.#height / 2;
         g.append("text")
           .attr("pointer-events", "none")
           .attr("fill", "#960")
@@ -2283,7 +2285,7 @@ class SurveyOrbits {
         buttonBox(g.append("rect"), -335, height/2 - 60, 50, 28,
                   () => this.stepEarth(-1));
         buttonText(g.append("text"), -309, height/2 - 38, "-E", 20,
-                  () => this.stepEarth(-1) );
+                  () => this.stepEarth(-1));
         buttonBox(g.append("rect"), -250, height/2 - 60, 50, 28,
                   () => this.stepEarth(1));
         buttonText(g.append("text"), -226, height/2 - 38, "+E", 20,
@@ -2925,6 +2927,163 @@ class SurveyOrbits {
         this.clock.disabled = false;
       }
     }
+  }
+
+  update() {
+    // if (this.svg.node().parentElement.style.display == "none") return;
+  }
+}
+
+
+class Inclination {
+  static #width = 750;
+  static #height = Inclination.#width;
+
+  constructor(d3Parent, clock, survey) {
+    let [width, height] = [Inclination.#width, Inclination.#height];
+
+    this.svg = d3Parent.append("svg")
+      .attr("xmlns", "http://www.w3.org/2000/svg")
+      .attr("xmlns:xlink", "http://www.w3.org/1999/xlink")
+      .attr("class", "Inclination")
+      .attr("viewBox", [-width/2, -height/2, width, height])
+      .style("display", "block")
+      .style("margin", "20px")  // padding does not work for SVG?
+      .style("background-color", "#aaa")
+      .attr("text-anchor", "middle")
+      .attr("font-family", "sans-serif")
+      .attr("font-weight", "bold")
+      .attr("font-size", 12)
+      .attr("stroke-linejoin", "round")
+      .attr("stroke-linecap", "round");
+
+    this.clock = clock;
+    this.survey;
+
+    // Scale is 1 AU = width/3.6, same as zoomLevel=0 in OrbitView.
+    const AU = width / 3.6;
+    this.AU = AU;
+
+    this.instructions = this.svg.append("g").call(
+      g =>  {
+        g.attr("display", "block");
+        g.append("text")
+          .attr("pointer-events", "none")
+          .attr("fill", "#960")
+          .attr("font-size", 20)
+          .attr("y", -height/2 + 100)
+          .text("Not ready to find inclination of Mars orbit.")
+          .clone(true)
+          .attr("y", -height/2 + 130)
+          .text("Return to Survey Orbits tab to determine orbit.");
+      });
+
+    // Points on orbits are in five groups to try to plot them back to front:
+    // backMars - points on Mars orbit behind plane containing Sun
+    // backEarth - points on Earth orbit behind plane containing Sun
+    // sunGroup
+    // frontEarth - points on Earth orbit in front of Sun plane
+    // frontMars - points on Mars orbit in front of Sun plane
+    // Earth-Mars sight lines are grouped with their furthest back endpoint.
+    this.backMars = this.svg.append("g");
+    this.backEarth = this.svg.append("g");
+    this.sunPlane = this.svg.append("g").call(
+      g => {
+        g.append("circle")
+          .attr("stroke", "none")
+          .attr("fill", clock.planetColors.sun)
+          .attr("cx", 0).attr("cy", 0)
+          .attr("r", 8);
+      });
+    this.frontEarth = this.svg.append("g");
+    this.frontMars = this.svg.append("g");
+
+    // Create 3D rotation sliders.
+    // Vertical is tilt angle: top = ecliptic edge-on, bottom = face-on
+    // Horizontal is ecliptic azimuth: 180 degree full scale,
+    //   center makes face-on view the same view as OrbitView and SurveyOrbits.
+    // Horizontal rotation applied first, then vertical.
+    let horizStarter = (event, d) => this.horizStart(event, d);
+    let horizDragger = (event, d) => this.horizDrag(event, d);
+    let vertStarter = (event, d) => this.vertStart(event, d);
+    let vertDragger = (event, d) => this.vertDrag(event, d);
+    this.svg.append("line")
+      .attr("stroke", "#000")
+      .attr("stroke-width", 5)
+      .attr("x1", -width/2 + 130).attr("y1", height/2 - 24)
+      .attr("x2", width/2 - 70).attr("y2", height/2 - 24);
+    this.horizSlider = this.svg.append("circle")
+      .attr("cursor", "pointer")
+      .attr("stroke", "#000")
+      .attr("stroke-width", 2)
+      .attr("fill", "#ffd")
+      .attr("cx", 30).attr("cy", height/2 - 24)
+      .attr("r", 14)
+      .call(d3.drag().on("start", horizStarter).on("drag", horizDragger))
+      .on("touchstart", horizStarter).on("touchmove", horizDragger);
+    this.svg.append("line")
+      .attr("stroke", "#000")
+      .attr("stroke-width", 5)
+      .attr("x1", width/2 - 24).attr("y1", height/2 - 70)
+      .attr("x2", width/2 - 24).attr("y2", -height/2 + 130);
+    this.horizSlider = this.svg.append("circle")
+      .attr("cursor", "pointer")
+      .attr("stroke", "#000")
+      .attr("stroke-width", 2)
+      .attr("fill", "#ffd")
+      .attr("cx", width/2 - 24).attr("cy", 30)
+      .attr("r", 14)
+      .call(d3.drag().on("start", vertStarter).on("drag", vertDragger))
+      .on("touchstart", vertStarter).on("touchmove", vertDragger);
+
+    // Create Reset button, lower left, resets rotation angles.
+    this.resetButton = this.svg.append("g").call(
+      g => {
+        buttonBox(g.append("rect"), -width/2 + 10, height/2 - 38, 80, 28,
+                  () => this.resetRotation());
+        buttonText(g.append("text"), -width/2 + 49, height/2 - 16, "Reset", 20,
+                   () => this.resetRotation());
+      });
+
+    // Create z-magnify 1x, 3x, 10x buttons.
+    this.zmagButtons = this.svg.append("g").call(
+      g => {
+        g.append("text")
+          .attr("pointer-events", "none")
+          .attr("text-anchor", "start")
+          .attr("fill", "#000")
+          .attr("font-size", 20)
+          .attr("x", -width/2 + 10)
+          .attr("y", -height/2 + 25)
+          .text("magnify z:");
+        buttonBox(g.append("rect"), -width/2 + 10, -height/2 + 40, 51, 28,
+                  () => this.zmagSet(1));
+        buttonText(g.append("text"), -width/2 + 36, -height/2 + 62, "1×", 20,
+                  () => this.zmagSet(1));
+        buttonBox(g.append("rect"), -width/2 + 10, -height/2 + 77, 51, 28,
+                  () => this.zmagSet(3));
+        buttonText(g.append("text"), -width/2 + 36, -height/2 + 99, "3×", 20,
+                  () => this.zmagSet(3));
+        buttonBox(g.append("rect"), -width/2 + 10, -height/2 + 114, 51, 28,
+                  () => this.zmagSet(10));
+        buttonText(g.append("text"), -width/2 + 36, -height/2 + 136, "10×", 20,
+                   () => this.zmagSet(10));
+        this.magDot = g.append("circle")
+          .attr("stroke", "none")
+          .attr("fill", "#000")
+          .attr("cx", -width/2 + 72).attr("cy", -height/2 + 54)
+          .attr("r", 5);
+      });
+  }
+
+  activate(on) {
+    if (!on) {
+      this.clock.disabled = false;
+      return;
+    }
+    this.clock.disabled = true;
+
+    let AU = this.AU;
   }
 
   update() {
