@@ -1025,8 +1025,6 @@ class EarthYear {
     zoomButtons(width, this);
     let gap = 0.01*width;  // matches gap in zoomButtons
 
-    this.clock.addSlave(() => this.update());
-
     let [left, right, bottom, top] = [-width/2+80, width/2-30,
                                       height/2-60, -height/2+60];
 
@@ -1383,10 +1381,6 @@ class EarthYear {
     }
   }
 
-  update() {
-    // if (this.svg.node().parentElement.style.display == "none") return;
-  }
-
   zoomer(inout) {
     let level = this.zoomLevel;
     if (inout == 0) {  // Decrease magnification.
@@ -1533,8 +1527,6 @@ class MarsYear {
 
     zoomButtons(width, this);
     let gap = 0.01*width;  // matches gap in zoomButtons
-
-    this.clock.addSlave(() => this.update());
 
     let [left, right, bottom, top] = [-width/2+80, width/2-30,
                                       height/2-60, -height/2+60];
@@ -1987,10 +1979,6 @@ class MarsYear {
     }
   }
 
-  update() {
-    // if (this.svg.node().parentElement.style.display == "none") return;
-  }
-
   zoomer(inout) {
     if (!this.oppositions) return;
     let level = this.zoomLevel;
@@ -2324,7 +2312,6 @@ class SurveyOrbits {
       .call(d3.drag().on("start", yearStarter).on("drag", yearDragger))
       .on("touchstart", yearStarter).on("touchmove", yearDragger);
 
-    clock.addSlave(() => this.update());
     this.notReady();
   }
 
@@ -2958,7 +2945,7 @@ class Inclination {
       .attr("stroke-linecap", "round");
 
     this.clock = clock;
-    this.survey;
+    this.survey = survey;
 
     // Scale is 1 AU = width/3.6, same as zoomLevel=0 in OrbitView.
     const AU = width / 3.6;
@@ -2985,56 +2972,38 @@ class Inclination {
     // frontEarth - points on Earth orbit in front of Sun plane
     // frontMars - points on Mars orbit in front of Sun plane
     // Earth-Mars sight lines are grouped with their furthest back endpoint.
+    this.backMarsp = this.svg.append("g");
     this.backMars = this.svg.append("g");
     this.backEarth = this.svg.append("g");
     this.sunPlane = this.svg.append("g").call(
       g => {
-        g.append("circle")
+        g.append("line")  // line of nodes
+          .attr("opacity", 0)
+          .attr("stroke", clock.planetColors.earth)
+          .attr("stroke-width", 3);
+        g.append("circle")  // Sun marker
           .attr("stroke", "none")
           .attr("fill", clock.planetColors.sun)
           .attr("cx", 0).attr("cy", 0)
           .attr("r", 8);
       });
     this.frontEarth = this.svg.append("g");
+    this.frontMarsp = this.svg.append("g");
     this.frontMars = this.svg.append("g");
+    this.iNow = -1;  // Earth-Mars lines
 
     // Create 3D rotation sliders.
     // Vertical is tilt angle: top = ecliptic edge-on, bottom = face-on
     // Horizontal is ecliptic azimuth: 180 degree full scale,
     //   center makes face-on view the same view as OrbitView and SurveyOrbits.
     // Horizontal rotation applied first, then vertical.
-    let horizStarter = (event, d) => this.horizStart(event, d);
-    let horizDragger = (event, d) => this.horizDrag(event, d);
-    let vertStarter = (event, d) => this.vertStart(event, d);
-    let vertDragger = (event, d) => this.vertDrag(event, d);
-    this.svg.append("line")
-      .attr("stroke", "#000")
-      .attr("stroke-width", 5)
-      .attr("x1", -width/2 + 130).attr("y1", height/2 - 24)
-      .attr("x2", width/2 - 70).attr("y2", height/2 - 24);
-    this.horizSlider = this.svg.append("circle")
-      .attr("cursor", "pointer")
-      .attr("stroke", "#000")
-      .attr("stroke-width", 2)
-      .attr("fill", "#ffd")
-      .attr("cx", 30).attr("cy", height/2 - 24)
-      .attr("r", 14)
-      .call(d3.drag().on("start", horizStarter).on("drag", horizDragger))
-      .on("touchstart", horizStarter).on("touchmove", horizDragger);
-    this.svg.append("line")
-      .attr("stroke", "#000")
-      .attr("stroke-width", 5)
-      .attr("x1", width/2 - 24).attr("y1", height/2 - 70)
-      .attr("x2", width/2 - 24).attr("y2", -height/2 + 130);
-    this.horizSlider = this.svg.append("circle")
-      .attr("cursor", "pointer")
-      .attr("stroke", "#000")
-      .attr("stroke-width", 2)
-      .attr("fill", "#ffd")
-      .attr("cx", width/2 - 24).attr("cy", 30)
-      .attr("r", 14)
-      .call(d3.drag().on("start", vertStarter).on("drag", vertDragger))
-      .on("touchstart", vertStarter).on("touchmove", vertDragger);
+    this.rotHoriz = new Slider(this.svg, [-width/2 + 130, width/2 - 70],
+                               height/2 - 24, -0.5*Math.PI, 0.5*Math.PI,
+                               () => this.replot());
+    this.rotVert = new Slider(this.svg, width/2 - 24,
+                              [height/2 - 70, -height/2 + 130], 0, 0.5*Math.PI,
+                              () => this.replot());
+    this.rotVert.sSet(0);
 
     // Create Reset button, lower left, resets rotation angles.
     this.resetButton = this.svg.append("g").call(
@@ -3046,6 +3015,7 @@ class Inclination {
       });
 
     // Create z-magnify 1x, 3x, 10x buttons.
+    this.zmag = 1;
     this.zmagButtons = this.svg.append("g").call(
       g => {
         g.append("text")
@@ -3083,11 +3053,251 @@ class Inclination {
     }
     this.clock.disabled = true;
 
-    let AU = this.AU;
+    const survey = this.survey;
+    if (!survey.xyMars ||
+        survey.xyMars.length != survey.xyMars.filter(x => x).length) {
+      this.ready = false;
+      this.backMarsp.selectAll("*").remove();
+      this.backMars.selectAll("*").remove();
+      this.backEarth.selectAll("*").remove();
+      this.sunPlane.select("line").attr("opacity", 0);
+      this.frontEarth.selectAll("*").remove();
+      this.frontMarsp.selectAll("*").remove();
+      this.frontMars.selectAll("*").remove();
+      this.instructions.attr("display", "block");
+      this.resetRotation();
+      this.zmagSet(1);
+      return;
+    }
+    this.ready = true;
+
+    const xym = this.survey.xyMars;
+    const xye = this.survey.xyEarth;
+    const od = this.survey.orbitDirections;
+    const iRef = this.survey.iRef;
+    const jRef = this.survey.jRef;
+    const earthYear = this.survey.earthYear;
+    const marsYear = this.survey.marsEstimate;
+    const tStart = this.survey.mars.elapsed0;
+    const t0 = this.survey.oppositionsFound[this.survey.iOppo][1];
+    const [tan, sqrt] = [Math.tan, Math.sqrt];
+    // Flags for highlighting Earth-Mars sight lines.
+    this.emFlags = new Array(xye.length);
+    for (let j=0 ; j<xye.length ; j+=1) {
+      this.emFlags[j] = new Array(xym.length).fill(false);
+    }
+    // Endpoints of Earth-Mars sight lines for each point on Mars orbit.
+    this.emLines = xym.map(
+      ([xm, ym], i) => od[i].filter(d => d[5]>=0).map(
+        ([ii, jj, [mex, mey, atz]]) => {
+          let [i0, j0] = [ii + iRef, jj + jRef];
+          let [xe, ye] = xye[j0];
+          let [xm, ym] = xym[i0];
+          this.emFlags[j0][i0] = true;
+          let tanLat = tan(atz);
+          let r = sqrt((xm - xe)**2 + (ym - ye)**2);
+          let zm = r * tanLat;
+          r = (sqrt(r**2 + zm**2) + 0.3) / sqrt(1 + tanLat**2);
+          let [x, y, z] = [xe + r*mex, ye + r*mey, r*tanLat];
+          return [[xe, ye, 0], [x, y, z], zm, [ii, jj]];
+        }));
+    this.t0 = t0;  // save time of reference opposition for later
+    this.tStart = tStart;  // save start of 7310 day data interval for later
+    // 3D points on Earth orbit.
+    this.xyze = xye.map(([xe, ye]) => [xe, ye, 0]);
+    // 3D points on Mars orbit (mean of z coordinate, plus variance of z)
+    this.xyzm = this.emLines.map(
+      (elist, i) => {
+        let [xm, ym] = xym[i];
+        let zz2n = elist.reduce(([zp, z2p], [e0, em1, zm]) =>
+                                [zp+zm, z2p+zm**2], [0, 0]);
+        let zm = zz2n[0] / elist.length;
+        return [xm, ym, zm, zz2n[1] / elist.length - zm**2];  // zmBar, zmVar
+      });
+    // Get least squares best fit to orbital plane.
+    let [x2, xy, y2, xz, yz] = this.xyzm.reduce(
+      ([x2, xy, y2, xz, yz], [x, y, z, zvar]) =>
+        [x2+x**2, xy+x*y, y2+y**2, xz+x*z, yz+y*z], [0, 0, 0, 0, 0]);
+    let det = x2*y2 - xy**2;
+    // Gradient (nx, ny) of z(x, y) is normal to line of nodes:
+    let [nx, ny] = [(y2*xz - xy*yz) / det, (x2*yz - xy*xz) / det];
+    this.tani = Math.sqrt(nx**2 + ny**2);  // tangent of inclination
+    this.anode = [ny/this.tani, -nx/this.tani, 0];  // ascending node direction
+    this.zerr = this.xyzm.reduce(
+      (dz2, [x, y, z, zvar]) => dz2 + (nx*x + ny*y - z)**2, 0);
+    this.zerr = Math.sqrt(this.zerr / this.xyzm.length);
+
+    this.instructions.attr("display", "none");
+    this.replot();
+    this.sunPlane.select("line").attr("opacity", 0.25);
   }
 
-  update() {
-    // if (this.svg.node().parentElement.style.display == "none") return;
+  replot() {
+    if (!this.ready) return;
+    // Points on Mars orbit
+    // Points on Mars orbit projected into ecliptic (transparent)
+    // Points on Earth orbit (normally transparent)
+    // Line of nodes
+    // Lines to Mars point from all defining Earth points (opaque)
+    this.getProjection();
+    let xyze = this.xyze.map(xyz => this.project(xyz));
+    let xyzm = this.xyzm.map(xyz => this.project(xyz));
+    let xyzmp = this.xyzm.map(xyz => this.project(xyz, true));
+    let [xnode, ynode] = this.project(this.anode, true);
+    xyzm = xyzm.map(([x, y, z], i) => [x, y, z, i]);
+
+    const AU = this.AU;
+    const [mcolor, ecolor] = [this.clock.planetColors.mars,
+                              this.clock.planetColors.earth];
+    this.backMarsp.selectAll("circle")
+      .data(xyzmp.filter(xyz => xyz[2]<0))
+      .join(enter => enter.append("circle")
+              .attr("opacity", 0.15)
+              .attr("stroke", "none")
+              .attr("fill", mcolor)
+              .attr("cx", xyz => xyz[0]*AU).attr("cy", xyz => -xyz[1]*AU)
+              .attr("r", 4),
+            update => update
+              .attr("cx", xyz => xyz[0]*AU).attr("cy", xyz => -xyz[1]*AU),
+            exit => exit.remove());
+    this.backMars.selectAll("circle")
+      .data(xyzm.filter(xyz => xyz[2]<0))
+      .join(enter => enter.append("circle")
+              .attr("cursor", "pointer")
+              .attr("stroke", "none")
+              .attr("fill", mcolor)
+              .attr("cx", xyz => xyz[0]*AU).attr("cy", xyz => -xyz[1]*AU)
+              .attr("r", 4)
+              .on("click", (event, xyz) => this.emShow(xyz[3])),
+            update => update
+              .attr("cx", xyz => xyz[0]*AU).attr("cy", xyz => -xyz[1]*AU)
+              .on("click", (event, xyz) => this.emShow(xyz[3])),
+            exit => exit.remove());
+    this.backEarth.selectAll("circle")
+      .data(xyze.filter(xyz => xyz[2]<0))
+      .join(enter => enter.append("circle")
+              .attr("opacity", 0.15)
+              .attr("stroke", "none")
+              .attr("fill", ecolor)
+              .attr("cx", xyz => xyz[0]*AU).attr("cy", xyz => -xyz[1]*AU)
+              .attr("r", 4),
+            update => update
+              .attr("cx", xyz => xyz[0]*AU).attr("cy", xyz => -xyz[1]*AU),
+            exit => exit.remove());
+    this.sunPlane.select("line")
+      .attr("x1", 1.8*xnode*AU).attr("y1", -1.8*ynode*AU)
+      .attr("x2", -1.8*xnode*AU).attr("y2", 1.8*ynode*AU)
+    this.frontEarth.selectAll("circle")
+      .data(xyze.filter(xyz => xyz[2]>=0))
+      .join(enter => enter.append("circle")
+              .attr("opacity", 0.15)
+              .attr("stroke", "none")
+              .attr("fill", ecolor)
+              .attr("cx", xyz => xyz[0]*AU).attr("cy", xyz => -xyz[1]*AU)
+              .attr("r", 4),
+            update => update
+              .attr("cx", xyz => xyz[0]*AU).attr("cy", xyz => -xyz[1]*AU),
+            exit => exit.remove());
+    this.frontMarsp.selectAll("circle")
+      .data(xyzmp.filter(xyz => xyz[2]>=0))
+      .join(enter => enter.append("circle")
+              .attr("opacity", 0.15)
+              .attr("stroke", "none")
+              .attr("fill", mcolor)
+              .attr("cx", xyz => xyz[0]*AU).attr("cy", xyz => -xyz[1]*AU)
+              .attr("r", 4),
+            update => update
+              .attr("cx", xyz => xyz[0]*AU).attr("cy", xyz => -xyz[1]*AU),
+            exit => exit.remove());
+    this.frontMars.selectAll("circle")
+      .data(xyzm.filter(xyz => xyz[2]>=0))
+      .join(enter => enter.append("circle")
+              .attr("cursor", "pointer")
+              .attr("stroke", "none")
+              .attr("fill", mcolor)
+              .attr("cx", xyz => xyz[0]*AU).attr("cy", xyz => -xyz[1]*AU)
+              .attr("r", 4)
+              .on("click", (event, xyz) => this.emShow(xyz[3])),
+            update => update
+              .attr("cx", xyz => xyz[0]*AU).attr("cy", xyz => -xyz[1]*AU)
+              .on("click", (event, xyz) => this.emShow(xyz[3])),
+            exit => exit.remove());
+
+    if (this.iNow >= 0) {
+      this.emShow();
+    }
+  }
+
+  emShow(i) {
+    if (i === undefined) {
+      i = this.iNow;
+    } else {
+      this.backMars.selectAll("line").remove();
+      this.frontMars.selectAll("line").remove();
+      if (i == this.iNow || i < 0) {  // just toggle off
+        this.iNow = -1;
+        return;
+      }
+    }
+    const lines = this.emLines[i];
+    let xyz12 = lines.map(d => [this.project(d[0]), this.project(d[1])]);
+    // Append flag that is true if line should be plotted in back
+    xyz12 = xyz12.map(([[x1, y1, z1], [x2, y2, z2]]) =>
+                      [[x1, y1, z1], [x2, y2, z2],
+                       (z1<0 && z2<-z1) || (z2<0 && z1<-z2)]);
+    const mcolor = this.clock.planetColors.mars;
+    const AU = this.AU;
+    this.backMars.selectAll("line")
+      .data(xyz12.filter(d => d[2]))
+      .join("line")
+      .attr("stroke", mcolor)
+      .attr("stroke-width", 2)
+      .attr("x1", d => d[0][0]*AU).attr("y1", d => -d[0][1]*AU)
+      .attr("x2", d => d[1][0]*AU).attr("y2", d => -d[1][1]*AU);
+    this.frontMars.selectAll("line")
+      .data(xyz12.filter(d => !d[2]))
+      .join("line")
+      .attr("stroke", mcolor)
+      .attr("stroke-width", 2)
+      .attr("x1", d => d[0][0]*AU).attr("y1", d => -d[0][1]*AU)
+      .attr("x2", d => d[1][0]*AU).attr("y2", d => -d[1][1]*AU);
+    this.iNow = i;
+  }
+
+  project([x, y, z], ecliptic=false) {
+    if (ecliptic) z = 0;
+    const [mxx, mxy, myx, myy, myz, mzx, mzy, mzz] = this.rotMatrix;
+    return [mxx*x + mxy*y, myx*x + myy*y + myz*z, mzx*x + mzy*y + mzz*z];
+  }
+
+  getProjection() {
+    const [hang, vang] = [this.rotHoriz.s, this.rotVert.s];
+    const [ch, sh] = [Math.cos(hang), Math.sin(hang)];
+    const [cv, sv] = [Math.cos(vang), Math.sin(vang)];
+    // Apply z-axis rotation first (z1 = z0):
+    // x1 = ch*x0 - sh*y0
+    // y1 = sh*x0 + ch*y0
+    // Then x-axis rotation (x2=x1):
+    // x2 =  x1            =  ch   *x0 - sh   *y0
+    // y2 =  cv*y1 + sv*z1 =  cv*sh*x0 + cv*ch*y0 + sv*z0
+    // z2 = -sv*y1 + cv*z1 = -sv*sh*x0 - sv*ch*y0 + cv*z0
+    // Apply zmag factor to z0 here as well:
+    const zmag = this.zmag;
+    this.rotMatrix = [ch, -sh, cv*sh, cv*ch, sv*zmag, -sv*sh, -sv*ch, cv*zmag];
+  }
+
+  zmagSet(factor) {
+    if (this.zmag == factor) return;
+    this.zmag = factor;
+    const dcy = (factor==1)? 54 : (factor == 3)? 91 : 128;
+    this.magDot.attr("cy", -Inclination.#height/2 + dcy);
+    this.replot();
+  }
+
+  resetRotation() {
+    this.rotHoriz.sSet(0, true);
+    this.rotVert.sSet(0, true);
+    this.replot();
   }
 }
 
@@ -3149,6 +3359,86 @@ function zoomButtons(width, objectThis) {
             .on("click", () => objectThis.zoomer(1));
         });
     });
+}
+
+
+class Slider {
+  // Assume smin < smax, smin corresponds to x1(or y1), smax to x2 (or y2).
+  constructor(parent, x12, y12, smin, smax, callback) {
+    [this.x1, this.x2] = Array.isArray(x12)? x12 : [x12, x12];
+    [this.y1, this.y2] = Array.isArray(y12)? y12 : [y12, y12];
+    [this.smin, this.smax] = [smin, smax];
+    this.callback = callback;
+    this.s = 0.5*(smin + smax);
+    this.horiz = this.x1 != this.x2;
+    if (this.horiz) this.y2 = this.y1;  // enforce either vertical or horizontal
+    this.slope = (smax - smin) /
+      (this.horiz? (this.x2 - this.x1) : (this.y2 - this.y1));
+    this.xy1 = this.horiz? this.x1 : this.y1;
+    this.xy = this.xyOf(this.s);
+    parent.append("line")
+      .attr("stroke", "#000")
+      .attr("stroke-width", 5)
+      .attr("x1", this.x1).attr("y1", this.y1)
+      .attr("x2", this.x2).attr("y2", this.y2);
+    const starter = (event, d) => this.dragStart(event, d);
+    const dragger = (event, d) => this.dragMove(event, d);
+    this.marker = parent.append("circle")
+      .attr("cursor", "pointer")
+      .attr("stroke", "#000")
+      .attr("stroke-width", 2)
+      .attr("fill", "#ffd")
+      .attr("cx", 0.5*(this.x1 + this.x2)).attr("cy", 0.5*(this.y1 + this.y2))
+      .attr("r", 14)
+      .call(d3.drag().on("start", starter).on("drag", dragger))
+      .on("touchstart", starter).on("touchmove", dragger);
+  }
+
+  dragStart(event, d) {
+    const [x, y] = [event.x, event.y];
+    this.dragOffset = this.xy - (this.horiz? x : y);
+  }
+
+  dragMove(event, d) {
+    const [x, y] = [event.x, event.y];
+    let xy;
+    if (this.horiz) {
+      xy = x + this.dragOffset;
+    } else {
+      xy = y + this.dragOffset
+    }
+    let s = this.sOf(xy);
+    if (s < this.smin) {
+      s = this.smin;
+      xy = this.xyOf(s);
+    } else if (s > this.smax) {
+      s = this.smax;
+      xy = this.xyOf(s);
+    }
+    this.s = s;
+    this.xy = xy;
+    this.marker.attr(this.horiz? "cx" : "cy", xy);
+    this.callback(s);
+  }
+
+  xyOf(s) {
+    return this.xy1 + (s - this.smin)/this.slope;
+  }
+
+  sOf(xy) {
+    return this.smin + (xy - this.xy1)*this.slope;
+  }
+
+  sSet(s, inhibitCallback=false) {
+    if (s < this.smin) s = smin;
+    else if (s > this.smax) s = smax;
+    let xy = this.xyOf(s);
+    this.s = s;
+    this.xy = xy;
+    this.marker.attr(this.horiz? "cx" : "cy", xy);
+    if (!inhibitCallback) this.callback(s);
+    return s;
+  }
 }
 
 
