@@ -2965,6 +2965,13 @@ class Inclination {
           .text("Return to Survey Orbits tab to determine orbit.");
       });
 
+    // Crosshair tick at top useful for aligning node line.
+    this.svg.append("line")
+      .style("pointer-events", "none")
+      .attr("stroke", "#444").attr("stroke-width", 1)
+      .attr("x1", 0).attr("y1", -height/2)
+      .attr("x2", 0).attr("y2", -height/2 + 20)
+
     // Points on orbits are in five groups to try to plot them back to front:
     // backMars - points on Mars orbit behind plane containing Sun
     // backEarth - points on Earth orbit behind plane containing Sun
@@ -2990,6 +2997,16 @@ class Inclination {
     this.frontEarth = this.svg.append("g");
     this.frontMarsp = this.svg.append("g");
     this.frontMars = this.svg.append("g");
+    // Bigger target to toggle off lines:
+    this.linesOff = this.svg.append("circle")
+      .attr("display", "none")
+      .attr("cursor", "pointer")
+      .attr("opacity", 0)
+      .attr("stroke", "none")
+      .attr("fill", clock.planetColors.mars)
+      .attr("cx", 0).attr("cy", 0)
+      .attr("r", 15)
+      .on("click", () => this.emShow(-1));
     this.iNow = -1;  // Earth-Mars lines
 
     // Create 3D rotation sliders.
@@ -3067,25 +3084,25 @@ class Inclination {
       this.instructions.attr("display", "block");
       this.resetRotation();
       this.zmagSet(1);
+      this.iNow = -1;
+      this.linesOff.attr("display", "none");
       return;
     }
     this.ready = true;
+    const iRef = survey.iRef;
+    const jRef = survey.jRef;
+    this.iNow = survey.ijNow[0] + iRef;
 
-    const xym = this.survey.xyMars;
-    const xye = this.survey.xyEarth;
-    const od = this.survey.orbitDirections;
-    const iRef = this.survey.iRef;
-    const jRef = this.survey.jRef;
-    const earthYear = this.survey.earthYear;
-    const marsYear = this.survey.marsEstimate;
-    const tStart = this.survey.mars.elapsed0;
-    const t0 = this.survey.oppositionsFound[this.survey.iOppo][1];
+    const xym = survey.xyMars;
+    const xye = survey.xyEarth;
+    const od = survey.orbitDirections;
+    const earthYear = survey.earthYear;
+    const marsYear = survey.marsEstimate;
+    const tStart = survey.mars.elapsed0;
+    const t0 = survey.oppositionsFound[survey.iOppo][1];
     const [tan, sqrt] = [Math.tan, Math.sqrt];
     // Flags for highlighting Earth-Mars sight lines.
-    this.emFlags = new Array(xye.length);
-    for (let j=0 ; j<xye.length ; j+=1) {
-      this.emFlags[j] = new Array(xym.length).fill(false);
-    }
+    this.emFlags = xym.map(() => new Array(xye.length).fill(false));
     // Endpoints of Earth-Mars sight lines for each point on Mars orbit.
     this.emLines = xym.map(
       ([xm, ym], i) => od[i].filter(d => d[5]>=0).map(
@@ -3093,7 +3110,7 @@ class Inclination {
           let [i0, j0] = [ii + iRef, jj + jRef];
           let [xe, ye] = xye[j0];
           let [xm, ym] = xym[i0];
-          this.emFlags[j0][i0] = true;
+          this.emFlags[i0][j0] = true;
           let tanLat = tan(atz);
           let r = sqrt((xm - xe)**2 + (ym - ye)**2);
           let zm = r * tanLat;
@@ -3145,6 +3162,11 @@ class Inclination {
     let xyzmp = this.xyzm.map(xyz => this.project(xyz, true));
     let [xnode, ynode] = this.project(this.anode, true);
     xyzm = xyzm.map(([x, y, z], i) => [x, y, z, i]);
+    xyze = xyze.map(([x, y, z], j) => [x, y, z, j]);
+    let iNow = this.iNow;
+    let emFlag = (iNow < 0)? new Array(xyze.length).fill(false) :
+        this.emFlags[iNow];
+    let eIsLit = xyz => emFlag[xyz[3]]? 1 : 0.15;
 
     const AU = this.AU;
     const [mcolor, ecolor] = [this.clock.planetColors.mars,
@@ -3152,6 +3174,7 @@ class Inclination {
     this.backMarsp.selectAll("circle")
       .data(xyzmp.filter(xyz => xyz[2]<0))
       .join(enter => enter.append("circle")
+              .attr("pointer-events", "none")
               .attr("opacity", 0.15)
               .attr("stroke", "none")
               .attr("fill", mcolor)
@@ -3176,7 +3199,8 @@ class Inclination {
     this.backEarth.selectAll("circle")
       .data(xyze.filter(xyz => xyz[2]<0))
       .join(enter => enter.append("circle")
-              .attr("opacity", 0.15)
+              .attr("pointer-events", "none")
+              .attr("opacity", eIsLit)
               .attr("stroke", "none")
               .attr("fill", ecolor)
               .attr("cx", xyz => xyz[0]*AU).attr("cy", xyz => -xyz[1]*AU)
@@ -3185,12 +3209,13 @@ class Inclination {
               .attr("cx", xyz => xyz[0]*AU).attr("cy", xyz => -xyz[1]*AU),
             exit => exit.remove());
     this.sunPlane.select("line")
-      .attr("x1", 1.8*xnode*AU).attr("y1", -1.8*ynode*AU)
-      .attr("x2", -1.8*xnode*AU).attr("y2", 1.8*ynode*AU)
+      .attr("x1", 1.75*xnode*AU).attr("y1", -1.75*ynode*AU)
+      .attr("x2", -1.75*xnode*AU).attr("y2", 1.75*ynode*AU)
     this.frontEarth.selectAll("circle")
       .data(xyze.filter(xyz => xyz[2]>=0))
       .join(enter => enter.append("circle")
-              .attr("opacity", 0.15)
+              .attr("pointer-events", "none")
+              .attr("opacity", eIsLit)
               .attr("stroke", "none")
               .attr("fill", ecolor)
               .attr("cx", xyz => xyz[0]*AU).attr("cy", xyz => -xyz[1]*AU)
@@ -3201,6 +3226,7 @@ class Inclination {
     this.frontMarsp.selectAll("circle")
       .data(xyzmp.filter(xyz => xyz[2]>=0))
       .join(enter => enter.append("circle")
+              .attr("pointer-events", "none")
               .attr("opacity", 0.15)
               .attr("stroke", "none")
               .attr("fill", mcolor)
@@ -3223,7 +3249,7 @@ class Inclination {
               .on("click", (event, xyz) => this.emShow(xyz[3])),
             exit => exit.remove());
 
-    if (this.iNow >= 0) {
+    if (iNow >= 0) {
       this.emShow();
     }
   }
@@ -3234,8 +3260,11 @@ class Inclination {
     } else {
       this.backMars.selectAll("line").remove();
       this.frontMars.selectAll("line").remove();
+      this.backEarth.selectAll("circle").attr("opacity", 0.15);
+      this.frontEarth.selectAll("circle").attr("opacity", 0.15);
       if (i == this.iNow || i < 0) {  // just toggle off
         this.iNow = -1;
+        this.linesOff.attr("display", "block");
         return;
       }
     }
@@ -3250,6 +3279,7 @@ class Inclination {
     this.backMars.selectAll("line")
       .data(xyz12.filter(d => d[2]))
       .join("line")
+      .attr("pointer-events", "none")
       .attr("stroke", mcolor)
       .attr("stroke-width", 2)
       .attr("x1", d => d[0][0]*AU).attr("y1", d => -d[0][1]*AU)
@@ -3257,11 +3287,21 @@ class Inclination {
     this.frontMars.selectAll("line")
       .data(xyz12.filter(d => !d[2]))
       .join("line")
+      .attr("pointer-events", "none")
       .attr("stroke", mcolor)
       .attr("stroke-width", 2)
       .attr("x1", d => d[0][0]*AU).attr("y1", d => -d[0][1]*AU)
       .attr("x2", d => d[1][0]*AU).attr("y2", d => -d[1][1]*AU);
     this.iNow = i;
+    let xyzm = this.project(this.xyzm[i]);
+    this.linesOff
+      .attr("display", "block")
+      .attr("cx", xyzm[0]*AU).attr("cy", -xyzm[1]*AU);
+    let emFlag = (i < 0)? new Array(this.xyze.length).fill(false) :
+        this.emFlags[i];
+    let eIsLit = xyz => emFlag[xyz[3]]? 1 : 0.15;
+    this.backEarth.selectAll("circle").attr("opacity", eIsLit);
+    this.frontEarth.selectAll("circle").attr("opacity", eIsLit);
   }
 
   project([x, y, z], ecliptic=false) {
