@@ -2437,42 +2437,6 @@ class SurveyOrbits {
       return;
     }
 
-    let selector = (event, [d, i]) => {
-      if (this.iOppo == i) return;
-      let sg1 = this.stateGroup[1];
-      let elements;
-      let change = this.iOppo >= 0;
-      if (change) {
-        elements = ["line", "circle"].map(
-          type => d3.select(sg1.selectChildren(type).nodes()[this.iOppo]));
-        elements[0]
-          .attr("opacity", 0.25)
-          .attr("stroke", this.clock.planetColors.mars)
-          .attr("x2", ([d, j]) => 2*d[0]*AU)
-          .attr("y2", ([d, j]) => -2*d[1]*AU);
-        elements[1]
-          .style("cursor", "pointer")
-          .attr("fill", "#ffd")
-          .attr("stroke", "#000")
-          .attr("r", 15);
-      }
-      this.iOppo = i;
-      elements = ["line", "circle"].map(
-        type => d3.select(sg1.selectChildren(type).nodes()[i]));
-      elements[0]
-        .attr("opacity", null)
-        .attr("stroke", "#000")
-        .attr("x2", ([d, j]) => d[0]*AU)
-        .attr("y2", ([d, j]) => -d[1]*AU);
-      elements[1]
-        .style("cursor", null)
-        .attr("fill", this.clock.planetColors.mars)
-        .attr("stroke", "none")
-        .attr("r", 5);
-      this.clock.animateTo(this.oppositionsFound[i][1], 20);
-      if (!change) this.nextButton.attr("display", "block");
-    };
-
     const AU = this.AU;
     const xyzm = this.oppositionsFound.map((o, i) => [o[2], i]);
     const dxyz = this.oppositionsFound.map((o, i) => [o.slice(1,3), i]);
@@ -2495,7 +2459,7 @@ class SurveyOrbits {
       .attr("r", 15)
       .attr("cx", ([d, i]) => d[0]*AU)
       .attr("cy", ([d, i]) => -d[1]*AU)
-      .on("click", selector);
+      .on("click", this.selector.bind(this));
     this.stateGroup[1].selectChildren("text")
       .data(dxyz)
       .join("text")
@@ -2505,6 +2469,43 @@ class SurveyOrbits {
       .attr("x", ([d, i]) => d[1][0]*AU)
       .attr("y", ([d, i]) => -d[1][1]*AU+30)
       .text(([d, i]) => dateOfDay(d[0]).getUTCFullYear());
+  }
+
+  selector(event, [d, i]) {
+    if (this.iOppo == i) return;
+    const AU = this.AU;
+    let sg1 = this.stateGroup[1];
+    let elements;
+    let change = this.iOppo >= 0;
+    if (change) {
+      elements = ["line", "circle"].map(
+        type => d3.select(sg1.selectChildren(type).nodes()[this.iOppo]));
+      elements[0]
+        .attr("opacity", 0.25)
+        .attr("stroke", this.clock.planetColors.mars)
+        .attr("x2", ([d, j]) => 2*d[0]*AU)
+        .attr("y2", ([d, j]) => -2*d[1]*AU);
+      elements[1]
+        .style("cursor", "pointer")
+        .attr("fill", "#ffd")
+        .attr("stroke", "#000")
+        .attr("r", 15);
+    }
+    this.iOppo = i;
+    elements = ["line", "circle"].map(
+      type => d3.select(sg1.selectChildren(type).nodes()[i]));
+    elements[0]
+      .attr("opacity", null)
+      .attr("stroke", "#000")
+      .attr("x2", ([d, j]) => d[0]*AU)
+      .attr("y2", ([d, j]) => -d[1]*AU);
+    elements[1]
+      .style("cursor", null)
+      .attr("fill", this.clock.planetColors.mars)
+      .attr("stroke", "none")
+      .attr("r", 5);
+    if (d) this.clock.animateTo(this.oppositionsFound[i][1], 20);
+    if (!change) this.nextButton.attr("display", "block");
   }
 
   findEarth() {
@@ -3338,6 +3339,136 @@ class Inclination {
     this.rotHoriz.sSet(0, true);
     this.rotVert.sSet(0, true);
     this.replot();
+  }
+}
+
+
+class TwoLaws {
+  static #width = 750;
+  static #height = TwoLaws.#width;
+
+  constructor(d3ParentL, d3ParentR, incline) {
+    let [width, height] = [TwoLaws.#width, TwoLaws.#height];
+
+    this.svgl = d3ParentL.append("svg")
+      .attr("xmlns", "http://www.w3.org/2000/svg")
+      .attr("xmlns:xlink", "http://www.w3.org/1999/xlink")
+      .attr("class", "LeftTwoLaws")
+      .attr("viewBox", [-width/2, -height/2, width, height])
+      .style("display", "block")
+      .style("margin", "20px")  // padding does not work for SVG?
+      .style("background-color", "#aaa")
+      .attr("text-anchor", "middle")
+      .attr("font-family", "sans-serif")
+      .attr("font-weight", "bold")
+      .attr("font-size", 12)
+      .attr("stroke-linejoin", "round")
+      .attr("stroke-linecap", "round");
+
+    this.svgr = d3ParentR.append("svg")
+      .attr("xmlns", "http://www.w3.org/2000/svg")
+      .attr("xmlns:xlink", "http://www.w3.org/1999/xlink")
+      .attr("class", "LeftTwoLaws")
+      .attr("viewBox", [-width/2, -height/2, width, height])
+      .style("display", "block")
+      .style("margin", "20px")  // padding does not work for SVG?
+      .style("background-color", "#aaa")
+      .attr("text-anchor", "middle")
+      .attr("font-family", "sans-serif")
+      .attr("font-weight", "bold")
+      .attr("font-size", 12)
+      .attr("stroke-linejoin", "round")
+      .attr("stroke-linecap", "round");
+
+    this.clock = clock;
+    this.incline = incline;
+
+    this.svgl.append("text")
+      .attr("fill", "#000")
+      .attr("font-size", 24)
+      .text("Hello from the left");
+
+    this.svgr.append("text")
+      .attr("fill", "#000")
+      .attr("font-size", 24)
+      .text("Hello from the right");
+
+    // Scale is 1 AU = width/3.6, same as zoomLevel=0 in OrbitView.
+    const AU = width / 3.6;
+    this.AU = AU;
+  }
+
+  activate(on) {
+    if (on) {
+    }
+  }
+
+  setPlanet(planet) {
+  }
+}
+
+
+class ThirdLaw {
+  static #width = 750;
+  static #height = ThirdLaw.#width;
+
+  constructor(d3ParentL, d3ParentR, incline) {
+    let [width, height] = [ThirdLaw.#width, ThirdLaw.#height];
+
+    this.svgl = d3ParentL.append("svg")
+      .attr("xmlns", "http://www.w3.org/2000/svg")
+      .attr("xmlns:xlink", "http://www.w3.org/1999/xlink")
+      .attr("class", "LeftThirdLaw")
+      .attr("viewBox", [-width/2, -height/2, width, height])
+      .style("display", "block")
+      .style("margin", "20px")  // padding does not work for SVG?
+      .style("background-color", "#aaa")
+      .attr("text-anchor", "middle")
+      .attr("font-family", "sans-serif")
+      .attr("font-weight", "bold")
+      .attr("font-size", 12)
+      .attr("stroke-linejoin", "round")
+      .attr("stroke-linecap", "round");
+
+    this.svgr = d3ParentR.append("svg")
+      .attr("xmlns", "http://www.w3.org/2000/svg")
+      .attr("xmlns:xlink", "http://www.w3.org/1999/xlink")
+      .attr("class", "LeftThirdLaw")
+      .attr("viewBox", [-width/2, -height/2, width, height])
+      .style("display", "block")
+      .style("margin", "20px")  // padding does not work for SVG?
+      .style("background-color", "#aaa")
+      .attr("text-anchor", "middle")
+      .attr("font-family", "sans-serif")
+      .attr("font-weight", "bold")
+      .attr("font-size", 12)
+      .attr("stroke-linejoin", "round")
+      .attr("stroke-linecap", "round");
+
+    this.clock = clock;
+    this.incline = incline;
+
+    this.svgl.append("text")
+      .attr("fill", "#000")
+      .attr("font-size", 24)
+      .text("Hello from the left");
+
+    this.svgr.append("text")
+      .attr("fill", "#000")
+      .attr("font-size", 24)
+      .text("Hello from the right");
+
+    // Scale is 1 AU = width/3.6, same as zoomLevel=0 in OrbitView.
+    const AU = width / 3.6;
+    this.AU = AU;
+  }
+
+  activate(on) {
+    if (on) {
+    }
+  }
+
+  setPlanet(planet) {
   }
 }
 

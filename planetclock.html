@@ -15,22 +15,54 @@
 
 <body>
 
-  <div id="top-div" class="clock-container-left"
+  <div id="top-div" class="clock-container"
        style="position: relative; display: flex; flex-flow: row wrap;">
     <div id="top-clock"
          style="min-width: 450px; max-width: 750px; flex: 1"></div>
+    <div id="top-non-clock"
+         style="display: none; min-width: 450px; max-width: 750px; flex: 1">
+      <!-- <span style="font-size: 20pt">Fit orbital ellipse for</span> -->
+      <div id="two-laws-title" style="text-align: center;">
+      <span style="font-size: 20pt; font-weight: bold;">
+        Orbital ellipse for</span>&nbsp;
+      <select id="planet-menu" name="planet-menu" onchange="planetSelect()"
+              style="font-family: serif; font-size: 20pt; font-weight: bold;">
+        <option value="mars" selected>Mars</option>
+        <option value="earth">Earth</option>
+      </select></div>
+      <div id="third-law-title" style="text-align: center; display: none;">
+      <span style="font-size: 20pt; font-weight: bold;">
+        Parameters for</span>&nbsp;
+      <select id="all-planet-menu" name="all-planet-menu"
+              onchange="allPlanetSelect()"
+              style="font-family: serif; font-size: 20pt; font-weight: bold;">
+        <option value="mercury">Mercury</option>
+        <option value="venus">Venus</option>
+        <option value="jupiter" selected>Jupiter</option>
+        <option value="saturn">Saturn</option>
+      </select></div>
+      <div id="left-side"
+           style="position: static; width: 100%; height: 100%;">
+      </div>
+      <div id="left-side2"
+           style="display: none; position: static; width: 100%; height: 100%;">
+      </div>
+    </div>
     <div id="right-side"
          style="position: relative; min-width: 400px; max-width: 650px; flex: 1">
       <!-- <h1>Planet Clock</h1> -->
+      <div style="text-align: center;">
       <select id="main-menu" name="main-menu" onchange="mainMenuSelect()"
-              style="font-family: serif; font-size: 24pt;">
+              style="font-family: serif; font-size: 24pt; font-weight: bold;">
         <option value="#intro" selected>Planet Clock</option>
         <option value="#orb-view">Orbit View</option>
         <option value="#earth-year">Earth Period</option>
         <option value="#mars-year">Mars Period</option>
         <option value="#survey-orbits">Survey Orbits</option>
         <option value="#mars-incline">Mars Inclination</option>
-      </select>
+        <option value="#two-laws">First Two Laws</option>
+        <option value="#third-law">Third Law</option>
+      </select></div>
       <div id="intro"
            style="position: absolute; top: 50px; left: 0; display: block;">
       <p>Here is a visualization of a solar system model from the JPL page
@@ -55,22 +87,22 @@
         over the centuries due to
         <a href="https://en.wikipedia.org/wiki/Axial_precession">
           precession of the equinoxes</a>.  The blue sector represents
-        the part of the sky that is too near the Sun - when the sky is
-        not fully dark after sunset in the evening or before sunrise
-        in the morning - to be able to see any stars (at or below
-        mid-latitudes).</p>
-      <p>The colored dots represent the five planets visible by naked
-        eye.  As you move the Sun around, the planets generally move
-        in the same direction, but periodically reverse direction -
-        called <em>retrograde</em> motion.  Mercury and Venus are
+        the part of the sky that is too near the Sun to be able to see
+        any stars (at or below mid-latitudes), because the sky is not
+        dark enough after sunset in the evening or before sunrise in
+        the morning.</p>
+      <p>The colored dots represent the five planets visible to the
+        naked eye.  As you move the Sun around, the planets generally
+        move in the same direction, but periodically reverse direction
+        - called <em>retrograde</em> motion.  Mercury and Venus are
         always near the Sun, slowly overtaking the Sun as they move
-        from morning to evening side, then rapidly retrograde from
-        evening to morning side.  Mars, Jupiter, and Saturn move
-        around slower than the Sun, going retrograde as they approach
-        opposition (180 degrees from the Sun, the dim gold line).
-        Unlike the Sun, the planets drift in ecliptic latitude.  Click
-        on a planet dot in the central legend to toggle a line between
-        the planet and earth.</p>
+        from morning to evening side, then rapidly crossing back
+        retrograde from evening to morning side.  Mars, Jupiter, and
+        Saturn move around slower than the Sun, going retrograde as
+        they approach opposition (180 degrees from the Sun, the dim
+        gold line).  Unlike the Sun, the planets drift in ecliptic
+        latitude.  Click on a planet dot in the central legend to
+        toggle a line between the planet and earth.</p>
       </div>
       <!-- without the width:100% style in both following nested divs,
            chrome will compute the inner svg size to be 0x0 -->
@@ -99,6 +131,16 @@
              style="position: static; width: 100%; height: 100%; display: none;">
         </div>
       </div>
+      <div style="position: absolute; top: 50px; left: 0; width: 100%">
+        <div id="two-laws"
+             style="position: static; width: 100%; height: 100%; display: none;">
+        </div>
+      </div>
+      <div style="position: absolute; top: 50px; left: 0; width: 100%">
+        <div id="third-law"
+             style="position: static; width: 100%; height: 100%; display: none;">
+        </div>
+      </div>
     </div>
   </div>
 
@@ -122,7 +164,7 @@ Libra 210 Scorpio 240 Sagittarius 270 Capricornus 300 Aquarius 330 Pisces
 
   let clock = new PlanetClock(d3.select("#top-clock"));
 
-  let button = d3.select("#top-div").append("div")
+  let moonButton = d3.select("#top-div").append("div")
       .style("position", "absolute")
       .style("top", "1%").style("left", "1%")
       .append("button")
@@ -133,14 +175,14 @@ Libra 210 Scorpio 240 Sagittarius 270 Capricornus 300 Aquarius 330 Pisces
     if (moon.state) {
       clock.turnOffMoon();
       moon.state = false;
-      button.text("Show Moon");
+      moonButton.text("Show Moon");
     } else {
       clock.turnOnMoon();
       moon.state = true;
-      button.text("Hide Moon");
+      moonButton.text("Hide Moon");
     }
   }
-  button.on("click", toggler);
+  moonButton.on("click", toggler);
 
   let orbView = new OrbitView(d3.select("#orb-view"), clock);
   let earthYear = new EarthYear(d3.select("#earth-year"), clock);
@@ -149,8 +191,25 @@ Libra 210 Scorpio 240 Sagittarius 270 Capricornus 300 Aquarius 330 Pisces
                                   clock, marsYear, earthYear);
   let incline = new Inclination(d3.select("#mars-incline"),
                                 clock, surveyor);
-  let slaves = [null, orbView, earthYear, marsYear, surveyor, incline];
+  let twoLaws = new TwoLaws(d3.select("#left-side"), d3.select("#two-laws"),
+                            incline);
+  let thirdLaw = new ThirdLaw(d3.select("#left-side2"), d3.select("#third-law"),
+                             incline);
+  let slaves = [null, orbView, earthYear, marsYear, surveyor, incline,
+                twoLaws, thirdLaw];
+  let bothSides = [false, false, false, false, false, false,
+                   true, true];
   let iselPrev = -1;
+
+  function planetSelect() {
+    let sel = document.getElementById("planet-menu");
+    twoLaws.setPlanet(sel.options[sel.selectedIndex].value);
+  }
+
+  function allPlanetSelect() {
+    let sel = document.getElementById("all-planet-menu");
+    thirdLaw.setPlanet(sel.options[sel.selectedIndex].value);
+  }
 
   function mainMenuSelect() {
     ["mercury", "venus", "jupiter", "saturn"].forEach(
@@ -159,7 +218,7 @@ Libra 210 Scorpio 240 Sagittarius 270 Capricornus 300 Aquarius 330 Pisces
     sel = sel.options[sel.selectedIndex].value;
     let isel = -1;
     ["#intro", "#orb-view", "#earth-year", "#mars-year",
-     "#survey-orbits", "#mars-incline"].forEach(
+     "#survey-orbits", "#mars-incline", "#two-laws", "#third-law"].forEach(
       (id, i) => {
         if (id != sel) {
           d3.select(id).style("display", "none");
@@ -169,17 +228,92 @@ Libra 210 Scorpio 240 Sagittarius 270 Capricornus 300 Aquarius 330 Pisces
       }
     );
     d3.select(sel).style("display", "block");
+    if (bothSides[isel]) {
+      d3.select("#top-clock").style("display", "none");
+      d3.select("#top-non-clock").style("display", null);
+      if (sel === "#two-laws") {
+        d3.select("#third-law-title").style("display", "none");
+        d3.select("#two-laws-title").style("display", null);
+        d3.select("#left-side2").style("display", "none");
+        d3.select("#left-side").style("display", null);
+      } else {
+        d3.select("#two-laws-title").style("display", "none");
+        d3.select("#third-law-title").style("display", null);
+        d3.select("#left-side").style("display", "none");
+        d3.select("#left-side2").style("display", null);
+      }
+    } else {
+      d3.select("#top-non-clock").style("display", "none");
+      d3.select("#top-clock").style("display", null);
+    }
     clock.setHandVisibility(
       "mars", ["#orb-view", "#mars-year",
                "#survey-orbits", "#mars-incline"].indexOf(sel) > -1);
     if (slaves[iselPrev] != null) {
       slaves[iselPrev].activate(false);
+    } else {
+      moonButton.style("display", "none");
+      if (moon.state) clock.turnOffMoon();
     }
     iselPrev = isel;
     if (slaves[isel] != null) {
       slaves[isel].activate(true);
     } else {
       clock.removeElapsed();
+      moonButton.style("display", "inline-block");
+      if (moon.state) clock.turnOnMoon();
+    }
+  }
+
+  // Interpret URL query parameters
+  // tab=orb-view  (intro, orb-view, earth-year, ... main select id)
+  // day=8114      (clock.elapsed0 JD minus J2000 day number)
+  // eyear=365.25636  (earthYear period value, otherwise unused)
+  // myear=686.979  (marsYear.yearEstimate value)
+  // oppo=0        (surveyor.iOppo opposition index)
+  let urlQueries = location.search.replace("\?", "");
+  if (urlQueries) {
+    urlQueries = Object.fromEntries(urlQueries.split("&")
+                                    .map(q => q.split("=")));
+  } else {
+    urlQueries = {}
+  }
+  if (urlQueries.tab &&
+      ["intro", "orb-view", "earth-year", "mars-year", "survey-orbits",
+       "mars-incline", "two-laws", "third-law"].indexOf(urlQueries.tab)) {
+    let sel = document.getElementById("main-menu");
+    sel.value = "#" + urlQueries.tab;
+    // mainMenuSelect() will be called below to emulate onchange callback
+  }
+  if (urlQueries.eyear && !isNaN(urlQueries.eyear)) {
+    let year = parseFloat(urlQueries.eyear);
+    if (year < 350) year = 350;
+    else if (year > 380) year = 380;
+    earthYear.yearEstimate = year;
+  }
+  if (urlQueries.day && !isNaN(urlQueries.day)) {
+    let day = parseFloat(urlQueries.day);
+    clock.goToDay(day);
+    clock.elapsed0 = day;
+    earthYear.elapsedUpdate(true);
+    marsYear.elapsedUpdate(true);
+    if (urlQueries.myear && !isNaN(urlQueries.myear)) {
+      let year = parseFloat(urlQueries.myear);
+      if (year < 650) year = 650;
+      else if (year > 730) year = 730;
+      marsYear.changeYearEstimate(year);
+    } else {
+      marsYear.changeYearEstimate(686.97973);
+    }
+    surveyor.notReady();
+    if (urlQueries.oppo && !isNaN(urlQueries.oppo)
+        && surveyor.oppositionsFound) {
+      let iOppo = parseInt(urlQueries.oppo);
+      if (iOppo >= 0 && iOppo < surveyor.oppositionsFound.length) {
+        surveyor.selector(undefined, [undefined, iOppo]);
+      }
+    } else {
+      surveyor.selector(undefined, [undefined, 0]);
     }
   }
 
