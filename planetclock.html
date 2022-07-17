@@ -289,7 +289,7 @@ Libra 210 Scorpio 240 Sagittarius 270 Capricornus 300 Aquarius 330 Pisces
     let year = parseFloat(urlQueries.eyear);
     if (year < 350) year = 350;
     else if (year > 380) year = 380;
-    earthYear.yearEstimate = year;
+    earthYear.changeYearEstimate(year);
   }
   if (urlQueries.day && !isNaN(urlQueries.day)) {
     let day = parseFloat(urlQueries.day);
@@ -304,6 +304,9 @@ Libra 210 Scorpio 240 Sagittarius 270 Capricornus 300 Aquarius 330 Pisces
       marsYear.changeYearEstimate(year);
     } else {
       marsYear.changeYearEstimate(686.97973);
+    }
+    if (!urlQueries.eyear) {
+      earthYear.changeYearEstimate(365.25636);
     }
     surveyor.notReady();
     if (urlQueries.oppo && !isNaN(urlQueries.oppo)

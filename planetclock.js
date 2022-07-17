@@ -8,6 +8,13 @@
  * The required externals are:
  *     d3   from d3
  *     dayOfDate, dateOfDay, directionOf, timeSunAt   from ephemeris.js
+ *
+ * Currently assumes that the Sun remains in the J2000 ecliptic plane.
+ * As you push many centuries away from the present, you can see the
+ * angular errors increase.  Could correct for this by adjusting coordinates
+ * plotted to an epoch nearer true epoch, but unclear what to do with
+ * longitude.  Also woud violate claim that coordinates are fixed with
+ * respect to the stars.
  */
 
 
@@ -1497,6 +1504,17 @@ class EarthYear {
   yearDragStart(event, d) {
     let [x, y] = [event.x+1.e-20, event.y];
     this.yDragOffset = this.sliderNow - y;
+  }
+
+  changeYearEstimate(days) {
+    this.yearEstimate = days;
+    let factor = (this.zoomLevel > 0)? 1 : 10;
+    let y = this.y(days * factor);
+    this.slider.attr("transform", `translate(0, ${y - this.slider0})`);
+    this.yearText.text(`Period estimate: ${this.yearEstimate.toFixed(3)} days`);
+    this.updateYearBoxes(true);
+    this.updateLinePath(true);
+    this.updateSunMarker(true);
   }
 }
 
