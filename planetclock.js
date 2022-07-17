@@ -2284,7 +2284,9 @@ class SurveyOrbits {
           .attr("fill", "#ffd")
           .attr("font-size", 20)
           .attr("x", width/2 - 5)
-          .attr("y", -height/2 + 45);
+          .attr("y", -height/2 + 50);
+        this.maxDevText = this.stdDevText.clone(true)
+          .attr("y", -height/2 + 25);
       });
 
     let d3p = d3.path();
@@ -2643,8 +2645,9 @@ class SurveyOrbits {
     // to determine new point on Mars orbit, then define any new points
     // on Earth orbit.
     // Note that xyEarth records the i at which each point was defined.
+    let iRef = this.iRef;
     let xym = this.xyMars;
-    let [imin, imax] = [-this.iRef, this.orbitDirections.length-1 - this.iRef];
+    let [imin, imax] = [-iRef, this.orbitDirections.length-1 - iRef];
     let step = (-imin > imax)? -1 : 1;
     // i increasing --> 1 on first pass, imax on last pass, so imax steps
     // i decreasing --> -1 on first pass, imin on last pass, so -imin steps
@@ -2669,6 +2672,23 @@ class SurveyOrbits {
       ([c0, n0], [xm, ym, c, n]) => [c0+c, n0+n], [0, 0]);
     let stdev = Math.sqrt(chi2 / ntot) * 180/Math.PI;
     this.stdDevText.text(`${stdev.toFixed(3)}°`);
+    // Largest angular deviation of Mars also interesting:
+    let jRef = this.jRef;
+    let xye = this.xyEarth;
+    let maxDev = Math.sqrt(
+      this.orbitDirections.map(
+        odi => odi.map(
+          ([ii, jj, [mx, my, [ex, ey, ez]], s, cross, flag]) => {
+            let [xe, ye] = xye[jj + jRef];
+            let [x, y, chi2, n, idef, z] = xym[ii + iRef];
+            x -= xe;
+            y -= ye;
+            let r2 = x**2 + y**2 + z**2;
+            [x, y, z] = [y*ez - z*ey, z*ex - x*ez, x*ey - y*ex];
+            return (x**2 + y**2 + z**2)/r2;
+          }).reduce((prev, cur) => (cur > prev)? cur : prev))
+        .reduce((prev, cur) => (cur > prev)? cur : prev)) * 180/Math.PI;
+    this.maxDevText.text(`${maxDev.toFixed(3)}°`);
 
     this.updateDrawing();
   }
