@@ -118,7 +118,7 @@ class PlanetClock {
                 .attr("x", d => rText*d[0])
                 .attr("y", d => rText*d[1])
                 .attr("dy", "0.35em")
-                .text(d => `${d[2]}${"°"}`));
+                .text(d => `${d[2]}°`));
       });
     this.svg.append("g").call(
       g => {
@@ -142,7 +142,7 @@ class PlanetClock {
                 .style("stroke", "#000")
                 .style("stroke-width", 6)
                 .style("pointer-events", "none")
-                .text(d => `${d[0]}${"°"}`)
+                .text(d => `${d[0]}°`)
                 .clone(true)
                 .attr("y", d => d[1]))
           .call(g => g.append("text")
@@ -153,7 +153,7 @@ class PlanetClock {
                 .style("fill", "#fff")
                 .style("stroke", "none")
                 .style("pointer-events", "none")
-                .text(d => `${d[0]}${"°"}`)
+                .text(d => `${d[0]}°`)
                 .clone(true)
                 .attr("y", d => d[1]));
       });
@@ -2525,7 +2525,7 @@ class SurveyOrbits {
     this.nextButton.attr("display", "block");
 
     const AU = this.AU;
-    const [xm, ym] = this.oppositionsFound[iOppo][2];
+    const [xm, ym, zm] = this.oppositionsFound[iOppo][2];
 
     let imin, imax;  // Earth year index, relative to reference oppo
     [imin, this.orbitDirections] = this.orbitPoints(iOppo);
@@ -2541,8 +2541,22 @@ class SurveyOrbits {
     let xym = new Array(imax - imin + 1);  // 40 or 41 Earth year steps
     this.xyEarth = xye;
     this.xyMars = xym;
-    xym[-imin] = [xm, ym, 0, 0];  // -imin is iOppo
+    // This zm is true Mars coordinate from ephemris, but that is not fair
+    // In fact, only (xm, ym) can be assumed here and we need to compute zm
+    // from the observed ecliptic latitudes.
+    xym[-imin] = [xm, ym, 0, 0, 0, zm];  // -imin is iOppo
     this.getEarth(-imin);
+    // Above zm is true Mars coordinate from ephemris, but that is not fair.
+    // In fact, only (xm, ym) can be assumed here and we need to compute zm
+    // from the observed ecliptic latitudes.  Now that we have a set of
+    // Earth points, we can recompute Mars zm coordinate fairly:
+    xym[-imin] = this.getMars(-imin);
+    // This can move (xm, ym) slightly - should use slightly different
+    // algorithm for finding this first zm than the others.  Here we
+    // simply replace original (xm, ym) to guarantee first Earth points
+    // are perfectly consistent:
+    xym[-imin][0] = xm;
+    xym[-imin][1] = ym;
     // Defer calculation of xym other than xym[iRef] until findMars.
 
     // orbitDirections is indexed by Earth year, provide alternate
@@ -2650,11 +2664,11 @@ class SurveyOrbits {
       xym[i] = this.getMars(i);
       this.getEarth(i);
     }
-    // Compute standard deviation of Mars position fits (in AU).
+    // Compute standard deviation of Mars position fits (in deg).
     let [chi2, ntot] = xym.reduce(
       ([c0, n0], [xm, ym, c, n]) => [c0+c, n0+n], [0, 0]);
-    let stdev = Math.sqrt(chi2 / ntot);
-    this.stdDevText.text(stdev.toFixed(5));
+    let stdev = Math.sqrt(chi2 / ntot) * 180/Math.PI;
+    this.stdDevText.text(`${stdev.toFixed(3)}°`);
 
     this.updateDrawing();
   }
@@ -2663,20 +2677,21 @@ class SurveyOrbits {
     let lines = [];
     let odi = this.orbitDirections[i];
     odi.forEach(
-      ([ii, jj, [mex, mey], s, cross, flag]) => {
+      ([ii, jj, [mx, my, [mex, mey, mez]], s, cross, flag]) => {
         let j = jj + this.jRef;
         let xye = this.xyEarth;
         if (flag >= 0 && xye[j] !== undefined) {
           let [x, y] = xye[j];
-          lines.push([x, y, mex, mey]);
+          lines.push([x, y, 0, mex, mey, mez]);
         }
       });
-    let [xm, ym, chi2] = nearestPointTo(lines);
-    // xyMars is [xm, ym, chi2, n, idef]
+    let [xm, ym, zm, chi2] = nearestPointTo(lines, true);
+    // xyMars is [xm, ym, chi2, n, idef, zm]
     // (xm, ym) point on Mars orbit
     // chi2, n total square distance from sight lines, number of lines
     // idef Earth years displaced from reference opposition for (xm, ym)
-    return [xm, ym, chi2, lines.length, i - this.iRef];
+    // zm ecliptic z coordinate of Mars
+    return [xm, ym, chi2, lines.length, i - this.iRef, zm];
   }
 
   stepEarth(pm) {
@@ -2856,7 +2871,7 @@ class SurveyOrbits {
   }
 
   orbitPoints(iOppo) {
-    const [max, min, abs] = [Math.max, Math.min, Math.abs];
+    const [max, min, abs, sqrt] = [Math.max, Math.min, Math.abs, Math.sqrt];
     const [floor, ceil] = [Math.floor, Math.ceil];
     const tStart = this.mars.elapsed0;
     const tStop = tStart + 7310;
@@ -2883,9 +2898,12 @@ class SurveyOrbits {
         let sightLines = new Array(jx - jn + 1);
         for (let j=jn ; j<=jx ; j+=1) {
           let tij = ti + j*marsYear;
-          let m = directionOf("mars", tij);
+          let m = directionOf("mars", tij, true);
           let s = directionOf("sun", tij);
-          let [mex, mey] = m;
+          let [mex, mey, mez] = m;
+          let r = sqrt(mex**2 + mey**2);
+          [mex, mey] = [mex/r, mey/r];
+          m = [mex, mey, m];  // hybrid 2D unit vector, 3D unit vector
           let [sex, sey] = s;
           let [dot, cross] = [sex*mex + sey*mey, sex*mey - sey*mex];
           // flag = -1 if within 15 deg of conjunction
@@ -3101,22 +3119,19 @@ class Inclination {
     const marsYear = survey.marsEstimate;
     const tStart = survey.mars.elapsed0;
     const t0 = survey.oppositionsFound[survey.iOppo][1];
-    const [tan, sqrt] = [Math.tan, Math.sqrt];
+    const sqrt = Math.sqrt;
     // Flags for highlighting Earth-Mars sight lines.
     this.emFlags = xym.map(() => new Array(xye.length).fill(false));
     // Endpoints of Earth-Mars sight lines for each point on Mars orbit.
     this.emLines = xym.map(
       ([xm, ym], i) => od[i].filter(d => d[5]>=0).map(
-        ([ii, jj, [mex, mey, atz]]) => {
+        ([ii, jj, [mx, my, [mex, mey, mez]]]) => {
           let [i0, j0] = [ii + iRef, jj + jRef];
           let [xe, ye] = xye[j0];
-          let [xm, ym] = xym[i0];
+          let [xm, ym, chi2, n, idef, zm] = xym[i0];
           this.emFlags[i0][j0] = true;
-          let tanLat = tan(atz);
-          let r = sqrt((xm - xe)**2 + (ym - ye)**2);
-          let zm = r * tanLat;
-          r = (sqrt(r**2 + zm**2) + 0.3) / sqrt(1 + tanLat**2);
-          let [x, y, z] = [xe + r*mex, ye + r*mey, r*tanLat];
+          let r = sqrt((xm - xe)**2 + (ym - ye)**2 + zm**2) + 0.3
+          let [x, y, z] = [xe + r*mex, ye + r*mey, r*mez];
           return [[xe, ye, 0], [x, y, z], zm, [ii, jj]];
         }));
     this.t0 = t0;  // save time of reference opposition for later
@@ -3124,14 +3139,7 @@ class Inclination {
     // 3D points on Earth orbit.
     this.xyze = xye.map(([xe, ye]) => [xe, ye, 0]);
     // 3D points on Mars orbit (mean of z coordinate, plus variance of z)
-    this.xyzm = this.emLines.map(
-      (elist, i) => {
-        let [xm, ym] = xym[i];
-        let zz2n = elist.reduce(([zp, z2p], [e0, em1, zm]) =>
-                                [zp+zm, z2p+zm**2], [0, 0]);
-        let zm = zz2n[0] / elist.length;
-        return [xm, ym, zm, zz2n[1] / elist.length - zm**2];  // zmBar, zmVar
-      });
+    this.xyzm = xym.map(([xm, ym, chi2, n, idef, zm]) => [xm, ym, zm, chi2/n]);
     // Get least squares best fit to orbital plane.
     let [x2, xy, y2, xz, yz] = this.xyzm.reduce(
       ([x2, xy, y2, xz, yz], [x, y, z, zvar]) =>
@@ -3188,7 +3196,8 @@ class Inclination {
       .data(xyzm.filter(xyz => xyz[2]<0))
       .join(enter => enter.append("circle")
               .attr("cursor", "pointer")
-              .attr("stroke", "none")
+              .attr("stroke", "#0000")
+              .attr("stroke-width", 20)
               .attr("fill", mcolor)
               .attr("cx", xyz => xyz[0]*AU).attr("cy", xyz => -xyz[1]*AU)
               .attr("r", 4)
@@ -3240,7 +3249,8 @@ class Inclination {
       .data(xyzm.filter(xyz => xyz[2]>=0))
       .join(enter => enter.append("circle")
               .attr("cursor", "pointer")
-              .attr("stroke", "none")
+              .attr("stroke", "#0000")
+              .attr("stroke-width", 20)
               .attr("fill", mcolor)
               .attr("cx", xyz => xyz[0]*AU).attr("cy", xyz => -xyz[1]*AU)
               .attr("r", 4)
@@ -3639,27 +3649,97 @@ function intersectionOf(line1, line2) {
 
 
 /**
- * Find the point with least sum of squares of distances to a given
- * set of lines, that is, the point most nearly at the common intersection
- * of all the lines.
+ * Find the point with least RMS distance to a given set of lines, that is,
+ * the point most nearly at the common intersection of all the lines.
+ * Optionally, find approximate point with smallest RMS angular difference
+ * from the given lines relative to the points on the lines.  (More
+ * precisely, the mean square distances are weighted inversely by the
+ * square of the distance from the points to the least RMS distance point.)
  *
- * @param {Array} lines - [[px, py, ex, ey], ...] where (px, py) is a
- *    point on the line and (ex, ey) is the normalized direction of the line
+ * @param {Array} lines - [[px, py, pz, ex, ey, ez], ...] where (px, py) is a
+ *    point on the line and (ex, ey, ez) is normalized direction of the line
+ * @param {bool} [angular] - true (default false) to minimize RMS angle
  *
- * @return {Array<number>} - [x, y, chi2] coordinates of point and residual
+ * @return {Array<number>} - [x, y, z, chi2] coordinates of point and residual
  */
-function nearestPointTo(lines) {
-  let [a, b, c, u, v] = lines.map(
-    ([px, py, ex, ey]) => {
-      let dot = px*ex + py*ey;
-      return [1 - ey*ey, ex*ey, 1 - ex*ex, px - ex*dot, py - ey*dot];
-    }).reduce(([a0, b0, c0, u0, v0], [a, b, c, u, v]) =>
-              [a0+a, b0+b, c0+c, u0+u, v0+v]);
-  let det = a*c - b*b;
-  let [x, y] = [(a*u + b*v)/det, (b*u + c*v)/det];
-  let chi2 = lines.map(([px, py, ex, ey]) => ((x - px)*ey - (y - py)*ex)**2)
-      .reduce((prev, cur) => prev + cur);
-  return [x, y, chi2];
+function nearestPointTo(lines, angular=false) {
+  // let lines2 = lines.map(([px, py, pz, ex, ey, ez]) => [px, py, ex, ey]);
+  // let [xx, yy, cc] = nearestPointTo2(lines2);
+  // return [xx, yy, 0, cc];
+  let mxyz = lines.map(
+    ([px, py, pz, ex, ey, ez]) => {
+      // ez=Math.sqrt(ex**2+ey**2); [ex,ey]=[ex/ez,ey/ez]; ez=0;
+      let dot = px*ex + py*ey + pz*ez;
+      return [1 - ex*ex, 1 - ey*ey, 1 - ez*ez, -ex*ey, -ey*ez, -ez*ex,
+              px - ex*dot, py - ey*dot, pz - ez*dot];
+    }).reduce((prev, cur) => prev.map((v, i) => v+cur[i]));
+  let [x, y, z] = symSolve3(mxyz, mxyz.slice(6));
+  if (!angular) {
+    // return least RMS distance point
+    let chi2 = lines.map(
+      ([px, py, pz, ex, ey, ez]) => {
+        let [u, v, w] = [x - px, y - py, z - pz];
+        // w = ez = 0;
+        return (u*ey - v*ex)**2 + (v*ez - w*ey)**2 + (w*ex - u*ez)**2;
+      }).reduce((prev, cur) => prev + cur);
+    return [x, y, z, chi2];
+  }
+  // compute approximate least RMS angle point using least RMS distance point
+  mxyz = lines.map(
+    ([px, py, pz, ex, ey, ez]) => {
+      let w = 1. / ((x - px)**2 + (y - py)**2 + (z - pz)**2);
+      // ez=Math.sqrt(ex**2+ey**2); [ex,ey]=[ex/ez,ey/ez]; ez=0;
+      let dot = px*ex + py*ey + pz*ez;
+      return [w*(1 - ex*ex), w*(1 - ey*ey), w*(1 - ez*ez),
+              -w*ex*ey, -w*ey*ez, -w*ez*ex,
+              w*(px - ex*dot), w*(py - ey*dot), w*(pz - ez*dot)];
+    }).reduce((prev, cur) => prev.map((v, i) => v+cur[i]));
+  [x, y, z] = symSolve3(mxyz, mxyz.slice(6));
+  // compute actual chi2 of angles, not using approximate weights
+  let chi2 = lines.map(
+    ([px, py, pz, ex, ey, ez]) => {
+      let [u, v, w] = [x - px, y - py, z - pz];
+      let r2 = u**2 + v**2 + w**2;
+      return ((u*ey - v*ex)**2 + (v*ez - w*ey)**2 + (w*ex - u*ez)**2) / r2;
+    }).reduce((prev, cur) => prev + cur);
+  return [x, y, z, chi2];
+}
+
+
+/**
+ * Solve symmetric 3x3 matrix m*x = b by Gaussian elimination.
+ * Assumes mzz is largest (or nearly so) diagonal element to avoid pivoting.
+ *
+ * @param {Array<number>} matrix - [mxx, myy, mzz, mxy, myz, mzx]
+ * @param {Array<number>} rhs - [bx, by, bz]
+ *
+ * @return {Array<number>} 
+ */
+function symSolve3(matrix, rhs) {
+  let [mxx, myy, mzz, mxy, myz, mxz] = matrix;
+  let [bx, by, bz] = rhs;
+  let myx = mxy;  // also mzy = myz, mzx = mxz
+  //  mxx mxy mxz   bx
+  //  myx myy myz   by
+  //  mzx mzy mzz   bz
+  [mxx, mxy] = [mzz*mxx - mxz*mxz, mzz*mxy - mxz*myz];  // mxz -> 0
+  bx = mzz*bx - mxz*bz;
+  [myx, myy] = [mzz*myx - myz*mxz, mzz*myy - myz*myz];  // myz -> 0
+  by = mzz*by - myz*bz;
+  //  mxx mxy  0    bx
+  //  myx myy  0    by
+  //  mzx mzy mzz   bz
+  [bx, by] = [myy*bx - mxy*by, mxx*by - myx*bx];
+  mxx = myy*mxx - mxy*myx;
+  [bx, by] = [bx/mxx, by/mxx];
+  return [bx, by, (bz - myz*by - mxz*bx)/mzz];
+}
+
+
+function matmult(matrix, a) {
+  let [mxx, myy, mzz, mxy, myz, mxz] = matrix;
+  let [ax, ay, az] = a;
+  return [mxx*ax+mxy*ay+mxz*az, mxy*ax+myy*ay+myz*az, mxz*ax+myz*ay+mzz*az];
 }
 
 

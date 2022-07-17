@@ -69,17 +69,19 @@ function dateOfDay(day) {
  *     is undefined.
  * @param {number} day - Time in Julian days relative to J2000 (that is
  *     Julian day - 2451545.0).  Use dayOfDate() to convert from Date.
+ * @param {bool} [norm3] - true to return result as 3D unit vector,
+ *     default false returns 2D unit vector plus latitude in radians
  *
  * @return {Array<number>} [cos(longitude), sin(longitude), latitude].
  */
-function directionOf(planet, day) {
+function directionOf(planet, day, norm3) {
   day = parseFloat(day);
   if (isNaN(day)) {
     return undefined;
   }
   // Use ssModel1 from 1800 to 2050, otherwise ssModel2
   const ssModel = (day<-73048.0 || day>18263.0)? ssModel2 : ssModel1;
-  return ssModel.direction(planet, day);
+  return ssModel.direction(planet, day, norm3);
 }
 
 /**
@@ -282,13 +284,15 @@ class SolarSystem {
    * @param {string} planet - name (mercury, venus, earth, mars, jupiter,
    *     saturn, uranus, or neptune).  Here "earth" returns direction to sun.
    * @param {number} day - Julian day relative to J2000 (offset 2451545.0).
+   * @param {bool} [norm3] - true to return result as 3D unit vector,
+   *     default false returns 2D unit vector plus latitude in radians
    *
    * @return {Array<number>} (cos(longitude), sin(longitude), latitude)
    */
-  direction(planet, day) {
+  direction(planet, day, norm3=false) {
     let [x, y, z] = this.xyzRel(planet, day);
-    let recl = Math.sqrt(x**2 + y**2);
-    return [x/recl, y/recl, Math.atan2(z, recl)];
+    let recl = Math.sqrt(norm3? x**2 + y**2 + z**2 : x**2 + y**2);
+    return [x/recl, y/recl, norm3? z/recl : Math.atan2(z, recl)];
   }
 
   /**
