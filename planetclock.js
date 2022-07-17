@@ -9,12 +9,6 @@
  *     d3   from d3
  *     dayOfDate, dateOfDay, directionOf, timeSunAt   from ephemeris.js
  *
- * Currently assumes that the Sun remains in the J2000 ecliptic plane.
- * As you push many centuries away from the present, you can see the
- * angular errors increase.  Could correct for this by adjusting coordinates
- * plotted to an epoch nearer true epoch, but unclear what to do with
- * longitude.  Also woud violate claim that coordinates are fixed with
- * respect to the stars.
  */
 
 
@@ -1911,6 +1905,7 @@ class MarsYear {
       const t0 = this.clock.elapsed0;
       this.elapsed0 = t0;
       this.zoomLevel = 0;
+      this.ecliptic = eclipticOrientation(t0);
       if (this.oppositions) this.multiYear(true);
       this.linePath.attr("d", null);
       if (inhibitReset) {
@@ -2391,6 +2386,7 @@ class SurveyOrbits {
       // Oppositions changed since last activation, reset state.
       this.oppositionsFound = this.mars.oppositions.found;
       this.marsEstimate = this.mars.yearEstimate;
+      this.ecliptic = this.mars.ecliptic;
       this.forceClockInRange();
       this.iOppo = -1;
       this.selectOppo();
@@ -2617,6 +2613,7 @@ class SurveyOrbits {
 
   getEarth(i) {
     let [x, y] = this.xyMars[i];
+    let [cnti, msnti] = this.ecliptic;
     this.orbitDirections[i].forEach(
       ([ii, jj, [mex, mey], [sex, sey], cross, flag]) => {
         let j = jj + this.jRef;
@@ -2628,7 +2625,17 @@ class SurveyOrbits {
         // idef, jdef Earth (i) and Mars (j) year steps where this defined
         if (flag == 0 && xye[j] === undefined) {
           let r = (mey*x - mex*y) / cross;
-          xye[j] = [r*sex, r*sey, [mex, mey], [sex, sey], flag, ii, jj];
+          let [xe, ye] = [r*sex, r*sey];
+          // Make small correction for slow change in ecliptic orientation.
+          // This is fair, because in any epoch the true ecliptic for that
+          // epoch would be measured.  The (x, y) coordinates in plane change
+          // by only a negligible second order amount, so we can use them
+          // to estimate the z-coordinate of Earth in this epoch.
+          // Without this correction, the angular errors in the postions of
+          // Mars and Earth become quite noticeable a few centuries from
+          // J2000.
+          let ze = msnti*xe + cnti*ye;
+          xye[j] = [xe, ye, [mex, mey], [sex, sey], flag, ii, jj, ze];
         }
       });
   }
@@ -2697,10 +2704,11 @@ class SurveyOrbits {
       this.orbitDirections.map(
         odi => odi.map(
           ([ii, jj, [mx, my, [ex, ey, ez]], s, cross, flag]) => {
-            let [xe, ye] = xye[jj + jRef];
+            let [xe, ye, a, b, c, d, e, ze] = xye[jj + jRef];
             let [x, y, chi2, n, idef, z] = xym[ii + iRef];
             x -= xe;
             y -= ye;
+            z -= ze;
             let r2 = x**2 + y**2 + z**2;
             [x, y, z] = [y*ez - z*ey, z*ex - x*ez, x*ey - y*ex];
             return (x**2 + y**2 + z**2)/r2;
@@ -2720,7 +2728,7 @@ class SurveyOrbits {
         let xye = this.xyEarth;
         if (flag >= 0 && xye[j] !== undefined) {
           let [x, y] = xye[j];
-          lines.push([x, y, 0, mex, mey, mez]);
+          lines.push([x, y, xye[j][7], mex, mey, mez]);
         }
       });
     let [xm, ym, zm, chi2] = nearestPointTo(lines, true);
@@ -3166,16 +3174,17 @@ class Inclination {
         ([ii, jj, [mx, my, [mex, mey, mez]]]) => {
           let [i0, j0] = [ii + iRef, jj + jRef];
           let [xe, ye] = xye[j0];
+          let ze = xye[j0][7];
           let [xm, ym, chi2, n, idef, zm] = xym[i0];
           this.emFlags[i0][j0] = true;
           let r = sqrt((xm - xe)**2 + (ym - ye)**2 + zm**2) + 0.3
           let [x, y, z] = [xe + r*mex, ye + r*mey, r*mez];
-          return [[xe, ye, 0], [x, y, z], zm, [ii, jj]];
+          return [[xe, ye, ze], [x, y, z], zm, [ii, jj]];
         }));
     this.t0 = t0;  // save time of reference opposition for later
     this.tStart = tStart;  // save start of 7310 day data interval for later
     // 3D points on Earth orbit.
-    this.xyze = xye.map(([xe, ye]) => [xe, ye, 0]);
+    this.xyze = xye.map(([xe, ye, a, b, c, d, e, ze]) => [xe, ye, ze]);
     // 3D points on Mars orbit (mean of z coordinate, plus variance of z)
     this.xyzm = xym.map(([xm, ym, chi2, n, idef, zm]) => [xm, ym, zm, chi2/n]);
     // Get least squares best fit to orbital plane.

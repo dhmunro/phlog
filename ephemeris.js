@@ -126,6 +126,23 @@ function timeSunAt(x, y, nearDay) {
 }
 
 /**
+ * Return orientation of ecliptic on a given day.
+ *
+ * @param {number} day - as Julian day relative to J2000.
+ *
+ * @return {Array<number>} [cnti, -snti], z = -snti*x + cnti*y
+ */
+function eclipticOrientation(day) {
+  day = parseFloat(day);
+  if (isNaN(day)) {
+    return undefined;
+  }
+  // Use ssModel1 from 1800 to 2050, otherwise ssModel2
+  const ssModel = (day<-73048.0 || day>18263.0)? ssModel2 : ssModel1;
+  return ssModel.earthInclination(day);
+}
+
+/**
  * Find x such that f(x) = 0, given bracketing initial x values.
  * The initial values x0 and x1 must satisfy f(x0)*f(x1) <= 0.
  * You can optionally pass [x0, f(x0)] and [x1, f(x1)] to avoid
@@ -391,6 +408,15 @@ class SolarSystem {
                  (cw*sn + sw*cicn)*x - (sw*sn - cw*cicn)*y,
                  (sw*x + cw*y)*si];
     return [x, y, z, e, ee, see, ma, aper, nlon];
+  }
+
+  earthInclination(day) {
+    const t = day / 36525.;  // Julian centuries past J2000.0.
+    const [values, rates] = this.params["earth"];
+    let [incl, mlon, plon, nlon] = values.slice(2).map((v, i) =>
+                                                       v + rates[i+2]*t);
+    let ti = Math.tan(incl);
+    return [Math.cos(nlon)*ti, -Math.sin(nlon)*ti];
   }
 
   /**
