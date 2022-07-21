@@ -1378,6 +1378,7 @@ class EarthYear {
         this.elapsedUpdate(true);
       } else if (this.elapsed0 === undefined) {
         this.elapsedUpdate(true, true);
+        this.clock.elapsed0 = this.clock.dayNow;
       }
     }
   }
@@ -1988,6 +1989,8 @@ class MarsYear {
       if (this.elapsed0 != undefined && this.elapsed0 != this.clock.elapsed0) {
         this.clock.goToDay(this.elapsed0);
         this.clock.updateElapsed(true);
+      } else if (oldElapsed0 === undefined) {
+        this.clock.elapsed0 = this.clock.dayNow;
       }
     }
   }
