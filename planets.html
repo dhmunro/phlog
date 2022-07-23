@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Surveying the Solar System</title>
+  <meta name="description"
+    content="How Kepler surveyed the solar system.">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script>MathJax = {tex: { inlineMath: [["$", "$"], ["\\(", "\\)"]] }};
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"
+          id="MathJax-script">
+  </script>
+  <style>
+    div {
+      -moz-box-sizing: border-box;
+      box-sizing: border-box;
+    }
+    .sidenav {
+        width: 11em;
+        position: fixed;
+        z-index: 1;
+        top: 0;
+        left: 0;
+        background-color: #ffd;
+        overflow-x: hidden;
+        padding-top: 1em;
+        padding-bottom: 1em;
+    }
+    .sidenav a {
+        padding: 6px 8px 6px 16px;
+        font-size: large;
+        color: #000;
+        display: block;
+    }
+    .sidenav a:hover {
+        color: #00f;
+    }
+    .textcolumn {
+        margin-left: 11em;
+        padding-left: 1em;
+        padding-right: 1em;
+        min-width: 400px;
+        max-width: 840px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="sidenav">
+    <a href="#topdiv">Top</a>
+    <a href="#planet-clock">Planet Clock</a>
+    <a href="#orbit-view">Orbit View</a>
+    <a href="#earth-period">Earth Period</a>
+    <a href="#mars-period">Mars Period</a>
+    <a href="#survey-orbits">Survey Orbits</a>
+    <a href="#mars-inclination">Mars Inclination</a>
+    <a href="#first-two-laws">First Two Laws</a>
+    <a href="#third-law">Third Law</a>
+  </div>
+<div id="topdiv" class="textcolumn">
+  <h1 style="text-align: center;">
+    <a href="index.html">Surveying the Solar System</a></h1>
+
+<section id="intro">
+  <h2>Introduction</h2>
+
+  <p>We remember Johannes Kepler for his three laws of planetary
+    motion, but those were just his encore.  The really dazzling show
+    was how Kepler applied surveying methods to astronomical data, for
+    the first time calculating the relative distances to the planets.
+    Astronomers had been studying essentially the same data for at
+    least two millennia without figuring out how to compute the orbits
+    of the planets in three dimensions.  Little more than a half
+    century after Kepler, his laws of planetary motion became the
+    cornerstone for Newton's theory of universal gravitation, which
+    launched modern physics.  The Copernican revolution in astronomy,
+    as completed by Kepler's laws, thereby became the seed for the
+    subsequent industrial and scientific revolutions that have
+    completely rebuilt human society.</p>
+  <p>Specifically, Kepler analyzed the naked-eye observations that
+    Tycho Brahe made a few decades before the invention of the
+    telescope.  Tycho's data consist of measurements of the positions
+    of the Sun and planets relative to the fixed stars.  His
+    measurements cover about twenty years with an accuracy of about
+    two minutes of arc - that is about a fifteenth the diameter of the
+    Sun or moon, or a half millimeter at a distance of a meter.  You
+    cannot do any better without a telescope.</p>
+  <p>In order to walk through what Kepler did step by step, you
+    need to open a second browser tab containing an ephemeris
+    of planetary data and a series of graphical calculation tools.
+    That tab has very little explanation of how to use the tools there,
+    so you will want to switch back and forth between the two tabs,
+    reading the explanations here, and actually performing the
+    calculations there.  Open the second tab now by
+    <a href="planetclock.html" target="_blank">clicking this link</a>,
+    then return to this tab for more instructions.</p>
+  <p>The sections in this tab (see the left sidebar) correspond to the
+    main menu items (under the drop down button on the right side) of
+    the second tab.  Each section represents a step that Kepler took
+    to understand the motions of the planets.</p>
+</section>
+
+<section id="planet-clock">
+  <h2>Planet Clock</h2>
+
+<section id="coords">
+  <h3>Ecliptic Coordinates</h3>
+
+  <p>Before you can start, you need to understand one of the
+    coordinate systems astronomers use to locate the Sun and planets
+    in space.  J2000 ecliptic coordinates consist of a latitude and
+    longitude like the coordinates used for points on the surface of
+    the Earth.  The difference is that ecliptic latitude is the angle
+    from the plane of the Earth's orbit around the Sun instead of the
+    Earth's equator.  Ecliptic longitude is the angle around the
+    perpendicular to Earth's orbital plane instead of Earth's spin
+    axis.  The ecliptic longitude of the Sun tells which constellation
+    of the Zodiac it is in - each sign represents 30 degrees of
+    ecliptic longitude; people have been using ecliptic coordinates
+    since ancient times.  (Conventionally, Aries is 0 to 30 degrees
+    ecliptic longitude, Taurus 30 to 60, and so on.)</p>
+  <p>The axis of the Earth precesses slowly relative to the fixed
+    constellations of the stars, about one degree every 72 years, and
+    the plane of the Earth's orbit is also changing, though even more
+    slowly.  The "J2000" designation means to use ecliptic coordinates
+    as the Earth's spin and orbital planes were at noon universal time
+    on January 1, 2000.  Thus, J2000 ecliptic coordinates represent a
+    direction in space that is fixed relative to the stars (actually
+    relative to a few hundred even more distant quasars).  The J2000
+    coordinates of the Sun or a planet describe exactly where it
+    appears in the constellations of fixed stars as seen from
+    Earth.</p>
+
+  <div style="position: relative; display: flex; flex-flow: row wrap;">
+    <div style="min-width: 300px; max-width: 750px; flex: 1; padding: 10px;">
+<svg viewBox="0 0 215.47144 264.44898" version="1.1" id="svg10866"
+   xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs32" />
+  <path
+     style="display:inline;fill:none;stroke:#9bd6ff;stroke-width:0.999997;stroke-linecap:butt;stroke-linejoin:round;stroke-opacity:0.295945"
+     id="circle10334"
+     d="m 138.11793,213.74666 c 4.77546,12.65313 -8.65925,24.5717 -30.79453,25.5404 -22.55869,0.98723 -42.38791,-9.85585 -43.77193,-23.05212 -1.26364,-12.04849 13.61635,-21.46176 32.85457,-21.93455 18.93082,-0.46524 37.33943,7.86096 41.71189,19.44627 z" />
+  <path
+     style="display:inline;fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1"
+     id="path11133"
+     d="m 214.97144,136.19074 c 0,59.34265 -47.92354,107.44937 -107.04021,107.44937 -59.11668,0 -107.04021602,-48.10672 -107.04021602,-107.44937 0,-59.342658 47.92353602,-107.449377 107.04021602,-107.449377 59.11667,0 107.04021,48.106719 107.04021,107.449377 z" />
+  <path
+     id="path12852"
+     style="display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.999997;stroke-linecap:butt;stroke-linejoin:round;stroke-opacity:1"
+     d="M 62.80753,61.207122 C 55.5498,61.187652 48.68588,61.945235 42.42276,63.558196 20.817796,69.122202 9.171733,83.861672 9.961825,103.03573 15.501147,96.281678 23.458557,91.025682 33.579501,87.824802 c 32.831909,-10.38354 81.546689,3.65034 115.586429,31.226068 30.46223,24.67757 46.68086,58.1256 37.7959,82.75049 3.97637,-2.18891 7.5223,-4.83221 10.49414,-7.99951 21.82606,-23.26169 3.35835,-64.78105 -35.08301,-94.894052 C 133.09224,75.970782 94.25767,61.291499 62.80753,61.207122 Z" />
+  <path
+     style="display:inline;fill:none;stroke:#9bd6ff;stroke-width:0.999997;stroke-linecap:butt;stroke-linejoin:round;stroke-opacity:0.295793"
+     id="path10356"
+     d="m 191.87245,170.72822 c 18.37908,27.04031 -9.70478,55.92364 -69.74829,58.30524 C 58.83814,231.54368 8.016034,203.30041 11.005171,173.48498 13.387889,149.71832 50.69576,133.75561 93.33125,133.79642 c 41.15634,0.0394 83.64207,15.01138 98.5412,36.9318 z" />
+  <path
+     style="display:inline;fill:none;stroke:#9bd6ff;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:0.300901"
+     id="path10344"
+     d="m 204.92044,98.532928 c 21.7637,20.348982 -6.99755,41.181812 -73.17431,41.288242 C 61.59145,139.93399 5.295606,117.18283 8.888829,95.278662 11.694598,78.174782 51.8708,67.917547 97.51789,69.206182 c 43.95286,1.24081 90.06653,13.11764 107.40255,29.326746 z" />
+  <path
+     style="display:inline;fill:none;fill-opacity:1;stroke:#98d5ff;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:0.304991"
+     id="path10338"
+     d="m 159.58052,42.299129 c 7.02559,5.791497 -8.15315,10.211181 -35.21217,9.234309 C 96.66915,50.533454 71.8689,44.465789 69.804,38.649123 c -1.84867,-5.207582 15.6457,-8.208538 38.50226,-7.194345 22.42181,0.994902 44.95816,5.637727 51.27426,10.844351 z" />
+  <path
+     style="display:inline;fill:none;stroke:#999999;stroke-width:0.999997;stroke-linecap:butt;stroke-linejoin:round"
+     id="ellipse11135"
+     d="M 156.43242,109.12191 C 135.51606,143.15394 100.5155,181.48234 71.8804,201.23209 37.364172,225.03807 16.980734,218.73601 36.261357,175.86111 59.73591,123.66006 120.28672,60.375336 156.04913,49.068419 c 27.85482,-8.80679 24.27403,21.182013 0.38329,60.053491 z" />
+  <path
+     style="display:inline;fill:none;stroke:#999999;stroke-width:0.999997;stroke-linecap:butt;stroke-linejoin:round"
+     id="ellipse11145"
+     d="M 199.24423,174.83659 C 172.36066,208.97072 117.43225,219.18045 71.8804,201.23208 24.690944,182.63847 -4.68455,136.97765 9.688799,94.336512 26.636222,44.058923 94.71455,20.428035 156.04913,49.06842 c 58.51004,27.321462 74.52549,85.98791 43.1951,125.76817 z" />
+  <path
+     style="display:inline;fill:none;stroke:#999999;stroke-width:0.999997;stroke-linecap:butt;stroke-linejoin:round"
+     id="ellipse11153"
+     d="M 189.4574,205.84467 C 160.52894,241.11859 108.56009,235.94612 71.8804,201.23209 37.570187,168.76055 22.013578,115.3232 36.943768,75.292402 54.26237,28.857784 107.15447,12.681215 156.04913,49.068418 209.50344,88.848892 223.76451,164.0123 189.4574,205.84467 Z" />
+  <path
+     style="display:inline;fill:none;stroke:#999999;stroke-width:0.999997;stroke-linecap:butt;stroke-linejoin:round"
+     id="ellipse11157"
+     d="M 151.54434,221.77614 C 123.13715,259.01373 88.16367,244.3397 71.8804,201.23209 57.88245,164.17452 59.71789,110.82743 76.10486,73.505702 94.90119,30.696588 130.09196,14.66688 156.04913,49.068419 187.82146,91.176912 185.83524,176.82588 151.54434,221.77614 Z" />
+  <path
+     style="display:inline;fill:none;stroke:#ffbb33;stroke-width:0.999997;stroke-linecap:butt;stroke-linejoin:round;stroke-opacity:0"
+     id="path11167"
+     d="M 179.19766,214.66664 C 151.27029,245.48537 79.99553,235.29868 31.503736,188.21015 -12.784733,145.20331 -6.448931,100.48473 33.579602,87.825172 c 32.831938,-10.38355 81.547068,3.65001 115.586838,31.225768 36.20263,29.32789 52.29597,71.04586 30.03122,95.6157 z" />
+  <path
+     style="display:inline;fill:none;stroke:#999999;stroke-width:0.999997;stroke-linecap:butt;stroke-linejoin:round"
+     id="path11173"
+     d="m 152.79366,114.87817 c 37.25582,29.94933 54.05868,72.17847 31.44847,96.64346 C 155.90508,242.18324 83.04723,230.94888 33.30652,182.98645 -12.028495,139.27221 -5.911041,94.483732 34.691578,82.214602 68.03994,72.137522 117.81758,86.761482 152.79366,114.87817 Z" />
+  <path
+     style="display:inline;fill:none;stroke:#999999;stroke-width:0.999997;stroke-linecap:butt;stroke-linejoin:round"
+     id="path11179"
+     d="m 159.83534,103.4175 c 38.30594,30.2233 56.44095,72.20712 34.3038,96.01764 C 166.22255,229.46199 91.71232,216.93035 39.99475,168.13108 -7.004688,123.78372 -1.343894,79.721262 39.76068,68.644252 73.36342,59.58886 123.92152,75.081572 159.83534,103.4175 Z" />
+  <path
+     style="display:inline;fill:none;fill-opacity:1;stroke:#ffbc33;stroke-width:0.999997;stroke-linecap:butt;stroke-linejoin:round;stroke-opacity:0"
+     id="path11185"
+     d="m 162.37317,98.908118 c 38.4414,30.113032 56.90841,71.631572 35.08232,94.893282 C 169.92053,223.14747 95.53105,210.12988 43.53204,161.56325 -3.714515,117.43537 1.550231,74.084232 42.42273,63.558194 c 33.40331,-8.602468 83.9126,7.119718 119.95044,35.349924 z" />
+  <path
+     style="display:inline;fill:none;stroke:#0000ff;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1"
+     d="M 107.8035,136.12887 36.261355,175.86111"
+     id="path16339" />
+  <path
+     style="display:inline;fill:none;stroke:#0000ff;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1"
+     d="M 156.43242,109.12191 107.92806,136.0597"
+     id="path16345" />
+  <path
+     style="display:inline;fill:none;stroke:#999999;stroke-width:0.999997;stroke-linecap:butt;stroke-linejoin:round"
+     id="path11191"
+     d="m 156.43242,109.12191 c 37.90406,30.18351 55.45652,72.45457 33.02498,96.72276 C 161.23151,236.38163 87.20703,224.49044 36.261357,175.86111 -10.084557,131.6224 -4.099903,87.004412 36.943772,75.292402 70.55232,65.702049 120.87861,80.809942 156.43242,109.12191 Z" />
+  <path
+     style="display:inline;fill:none;stroke:#9bd6ff;stroke-width:1.1;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1"
+     d="M 98.103896,255.43559 C 118.86777,0.0445692 118.86777,0.0445692 118.86777,0.0445692"
+     id="path10330" />
+  <path
+     style="display:inline;fill:none;stroke:#999999;stroke-width:0.999997;stroke-linecap:butt;stroke-linejoin:round"
+     id="ellipse11139"
+     d="M 185.68325,140.17082 C 161.81293,173.86974 114.02089,199.42851 71.8804,201.23209 23.980774,203.28215 -9.112442,174.60791 6.44494,130.68958 25.1272,77.949742 98.47612,37.665754 156.04913,49.06842 c 48.51603,9.608876 57.09347,52.33668 29.63412,91.1024 z" />
+  <path
+     style="display:inline;fill:none;stroke:#0000ff;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1"
+     d="m 108.05996,136.53798 81.08059,69.64566"
+     id="path16343" />
+  <path
+     style="display:inline;fill:none;stroke:#9bd6ff;stroke-width:0.999997;stroke-linecap:butt;stroke-linejoin:round;stroke-opacity:1"
+     id="path10350"
+     d="m 205.92309,136.06742 c 22.95836,26.36719 -7.08558,54.85629 -77.05317,56.54928 C 54.44608,194.41751 -4.188466,165.18171 0.79496198,136.06742 4.64093,113.59842 47.02116,99.432428 94.43647,100.15055 c 45.59219,0.69051 93.37848,15.12006 111.48662,35.91687 z" />
+  <path
+     style="display:inline;fill:none;stroke:#0000ff;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1"
+     d="M 36.89893,75.412902 107.67,136.20301"
+     id="path14885" />
+  <path
+     style="display:inline;fill:none;stroke:#999999;stroke-width:0.999997;stroke-linecap:butt;stroke-linejoin:round"
+     id="ellipse11161"
+     d="M 92.70853,211.58491 C 68.14386,251.6629 61.48838,240.5318 71.8804,201.23208 80.42877,168.90455 99.64685,121.10377 118.04763,85.865632 139.04473,45.655462 157.45188,24.660481 156.04913,49.068413 154.22746,80.765622 122.6813,162.68344 92.70853,211.58491 Z" />
+  <path
+     style="display:inline;fill:none;stroke:#0000ff;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1"
+     d="M 51.13119,238.64725 176.79835,11.653269"
+     id="path11197" />
+  <path
+     id="path12896"
+     style="display:inline;fill:#00004f;fill-opacity:1;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1"
+     d="M 11.741611,88.038662 C 7.751995,96.074908 2.90701,110.14242 1.402743,122.30282 c -2.975997,18.91347 6.15799,42.6575 30.101075,65.90772 38.261902,36.38199 101.936602,60.55458 145.076952,30.37997 9.96442,-7.95065 19.22698,-19.67062 24.15352,-28.88144 -0.97479,1.41546 -2.05326,2.78711 -3.27832,4.09278 -2.97176,3.1672 -6.51789,5.81066 -10.49414,7.99951 -2.2e-4,6e-4 -0.001,8.6e-4 -0.001,0.001 -32.86636,18.09045 -97.04288,3.0847 -143.42871,-40.23925 C 21.259912,140.76105 10.666907,120.13484 9.962295,103.03527 9.937365,100.28137 9.668763,96.102918 11.74208,88.038192 Z M 186.94718,201.83798 c -0.18471,0.50827 -0.41994,1.06688 -0.68848,1.65527 0.2292,-0.5519 0.48534,-1.09404 0.68848,-1.65527 z" />
+  <path
+     style="display:inline;fill:none;stroke:#99d6ff;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1"
+     d="M 31.279788,109.41287 C 206.05151,170.17239 206.05151,170.17239 206.05151,170.17239"
+     id="path16341" />
+  <ellipse
+     style="display:inline;fill:#0000ff;fill-opacity:1;stroke:none;stroke-width:0.999996;stroke-linecap:butt;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:0"
+     id="path12967"
+     cx="107.93121"
+     cy="136.19075"
+     rx="2.5655332"
+     ry="2.6922994" />
+</svg>
+</div>
+
+    <div style="min-width: 300px; max-width: 750px; flex: 1; padding: 50px 10px 10px 10px">
+<svg viewBox="0 0 113.15136 113.15136"
+   version="1.1" id="svg5" xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <circle
+     style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.705556;stroke-linecap:butt;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1"
+     id="circle6583"
+     cx="56.663876"
+     cy="56.752068"
+     r="56.399021" /><circle
+     style="fill:#f1f1f1;fill-opacity:1;stroke:none;stroke-width:0.705556;stroke-linecap:butt;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1"
+     id="path6419"
+     cx="56.663876"
+     cy="56.752068"
+     r="41.214592" /><g
+     id="g6699"
+     style="stroke-linecap:butt;stroke-linejoin:round"
+     transform="translate(-75.127843,-51.197928)"><circle
+       style="fill:none;stroke:#999999;stroke-width:0.352778;stroke-linecap:butt;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1"
+       id="circle6577"
+       cx="131.79172"
+       cy="107.95"
+       r="44.451717" /><circle
+       style="fill:none;stroke:#999999;stroke-width:0.352778;stroke-linecap:butt;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1"
+       id="circle6579"
+       cx="131.79172"
+       cy="107.95"
+       r="48.718613" /><circle
+       style="fill:none;stroke:#999999;stroke-width:0.352778;stroke-linecap:butt;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1"
+       id="circle6581"
+       cx="131.79172"
+       cy="107.95"
+       r="52.985504" /><path
+       style="fill:none;stroke:#999999;stroke-width:0.352778;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1"
+       d="M 131.79172,164.34902 131.61533,51.198203"
+       id="path6673" /><path
+       style="fill:none;stroke:#999999;stroke-width:0.352778;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1"
+       d="M 103.4922,156.81345 159.91485,58.733773"
+       id="path6675" /><path
+       style="fill:none;stroke:#999999;stroke-width:0.352778;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1"
+       d="M 82.751882,136.13769 180.65517,79.409528"
+       id="path6677" /><path
+       style="fill:none;stroke:#999999;stroke-width:0.352778;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1"
+       d="M 75.128118,107.8618 188.27893,107.68542"
+       id="path6679" /><path
+       style="fill:none;stroke:#999999;stroke-width:0.352778;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1"
+       d="m 82.66369,79.562282 98.07967,56.422658"
+       id="path6681" /><path
+       style="fill:none;stroke:#999999;stroke-width:0.352778;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;stroke-opacity:1"
+       d="M 103.33945,58.821966 160.0676,156.72526"
+       id="path6683" /></g>
+</svg></div>
+  </div>
+
+  <p>The figures above illustrate the relationship between the "planet
+    clock" diagram used in the second tab and the actual geometry of
+    the sky.  The globe on the left shows the ecliptic coordinate
+    system lines of latutude and longitude in gray.  The Earth is the
+    blue dot at the center.  The gray ring at the center of the black
+    ribbon is the ecliptic equator; the Sun will always be found on
+    this ring.  The parallel gray rings above and below the ecliptic
+    equator are ±5° ecliptic longitude (the black ribbon itself
+    extends to ±9°).  The "planet clock" diagram twists and flattens
+    this black ribbon into the equatorial plane as shown in the planar
+    diagram on the right.  Since the planets are always found within
+    the black ribbon, their positions can always be plotted in the
+    planar diagram.</p>
+  <p>The globe on the left also indicates the relationship between the
+    ecliptic coordinate system and the equatorial latitude and
+    longitude used in terrestrial navigation (as well as in astronomy,
+    where they are called declination and right ascension,
+    respectively).  The three dark blue lines show the perpendicular
+    to the ecliptic plane and the lines through the positions of the
+    Sun at the equinoxes and the solstices; the three lines are
+    mutually perpendicular.  The light blue circle is the ordinary
+    equator (that is, the intersection of Earth's equatorial plane
+    with this very large celestial globe).  The gray ecliptic equator
+    is tilted about 23.5° from the ordinary equator.  The nearly
+    vertical light blue line is the Earth's axis, perpendicular to the
+    ordinary equator.  The third light blue line and the dark blue
+    line of equinoxes both lie in the plane of the ordinary equator
+    and are perpendicular to Earth's axis.  Finally, the tropic and
+    arctic circle lines are shown in very faint light blue.  Note that
+    the tropic circles are just tangent to the ecliptic equator at the
+    solstices, while the ecliptic pole lies on the arctic circle.</p>
+  </section>
+  <section id="radec">
+  <h3>Playing with the planet clock</h3>
+  <p>The planet clock reproduces the motion of the Sun and planets
+    through the constellations quite accurately for any date from 5000
+    years in the past to 1000 years in the future (3000 BCE to 3000
+    CE).  Thus, you have at your fingertips a distillation of every
+    planetary observation in recorded history up to Tycho, the last
+    naked-eye astronomer.  (If you want to see the data Kepler worked
+    from, run the clock from about 1575 to 1595.)  This starting point
+    completely skips over the enormous amount of labor required to
+    reduce raw observations of the sky to a few pairs of ecliptic
+    coordinates and a time, but you should spend at least a few
+    moments appreciating the skill, effort, and persistence of those
+    observers.  Unlike them, you can simply dial in a time and see
+    where the all the planets appeared.  To a certain extent, this was
+    Kepler's situation as well, since he began with Tycho's data.  The
+    challenge you face here is to make sense of what you see.</p>
+  <p>The planet clock does remind you of the fundamental problem of
+    astronomy: You cannot see the stars or planets in daylight.  In
+    fact, it is hard to get good observations within an hour of
+    sunrise or sunset, which is very roughly indicated by the sky blue
+    sector of the planet clock - any time a planet appears within that
+    sector, you will have no accurate data about its position.  The
+    Sun itself is the exception to this basic rule, but since the
+    stars are never visible at the same time, it is quite difficult to
+    accurately measure where the Sun is with respect to the
+    constellations.  (The solution requires an accurate clock, another
+    facet of the long story of how all the data represented by the
+    planet clock were collected.)  Since the Sun moves acrosss the sky
+    east to west daily, planets to its east - that is counterclockwise
+    on the planet clock - will be visible for only a short time after
+    sunset before they set themselves.  Similarly, when a planet is
+    just west - clockwise - of the Sun, it will be visible for only a
+    short time after it rises before sunrise.</p>
+  <p>Let's quickly mention the controls on the planet clock to be sure
+    you have discovered them all:
+    <ul>
+      <li>Drag the Sun to change the time (date).</li>
+      <li>Press and hold one of the yellow triangles below the clock
+        to move time forward or backward, slowly or quickly depending
+        on which triangle.</li>
+      <li>Click the year button to jump to an arbitrary year.</li>
+      <li>Click a planet or its name in the legend to toggle a radial
+        line from the Earth at the center of the clock to that planet.
+        This lets you see the angle between the Sun and planet, which
+        will be important.</li>
+      <li>Click the button at the upper left to show or hide the Moon.
+        The motion of the Moon is more complicated than the planets;
+        its position shown on the clock is accurate for only a few
+        centuries around the present.  Mostly you should leave it
+        off.</li>
+    </ul>
+  </p>
+  <p>The first thing you notice is that Venus and Mercury always appear
+    near the Sun, alternating between the morning side and the evening
+    side.  Mars, Jupiter, and Saturn, on the other hand loop all the
+    way around the sky.  When a planet is in exactly the same
+    direction as the Sun we say it is at conjunction.  Notice that we
+    can never measure conjunctions accurately.  When a planet is
+    exactly opposite the Sun in the sky - when it crosses the faint
+    yellow line on the planet clock - we say it is at opposition.
+    Venus or Mercury is never at opposition.  Opposition observations
+    will be indispensible for working out planetary orbits; since
+    ancient times astronomers have taken special care to accurately
+    measure the time of opposition.</p>
+  <p>Notice the strong asymmetry in the motion of Venus and Mercury:
+    it takes far longer for them to move from the morning to the
+    evening side of the Sun than to move back from evening to morning.
+    When you see their motion on the planet clock, with months of
+    actual observations reduced to seconds, this asymmetry is even
+    more striking.  You very strongly get the impression that Venus
+    and Mercury are moving around the Sun, and that we are viewing
+    that circular motion nearly edge on.  The morning-to-evening leg
+    of their orbit is when they are chasing the Sun, while the
+    evening-to-morning leg is when - from our vantage point - they are
+    moving opposite to the Sun.  If their orbits around the Sun are in
+    the same direction as the motion of the Sun through the
+    constellations (counterclockwise viewed from the north), they must
+    be passing behind the Sun going from morning to evening, then in
+    front of the Sun going from evening to morning.  The slow
+    morning-to-evening crossing is called superior conjunction, while
+    the rapid evening-to-morning crossing is called inferior
+    conjunction.</p>
+  <p>Mars, Jupiter, and Saturn generally move through the
+    constellations in the same direction as the Sun - west-to-east -
+    but more slowly.  However, as they approach opposition, they
+    reverse direction, moving east-to-west for a time near opposition.
+    This is called retrograde motion.  Notice that Venus and Mercury
+    also move retrograde near inferior conjunction, so all the planets
+    have a retrograde portion to their motion.  Perhaps the easiest
+    way to visualize why the outer planets go retrograde near
+    opposition is to imagine the path Earth would move through the
+    stars as viewed from Venus: Since the direction of Earth from
+    Venus is exactly the opposite to the direction of Venus from
+    Earth, Earth appears to move in exactly the same pattern viewed
+    from Venus as we see Venus move from Earth - namely it spends most
+    of its time in prograde motion, with a quicker retrograde part.
+    But what we see as an inferior conjunction of Venus in the middle
+    of the retrograde section would appear as an opposition of Earth
+    as seen from Venus.  The retrograde motion of Mars, Jupiter, and
+    Saturn near opposition has exactly the same cause.</p>
+  <p>If you are studying the motion of one planet, it helps to toggle
+    on its radial line (and toggle off all the others).  You can then
+    press and hold the "play" triangle to watch the motion.
+    Personally, I find the impression that Venus and Mercury are
+    moving roughly in a circle about the Sun to be quite strong.  I
+    find it much harder to directly see that Mars, Jupiter, and Saturn
+    are also moving around the Sun, just in a circle larger instead of
+    smaller than our distance to the Sun.  For me, seeing those larger
+    circles requires some reasoning, like imagining how Earth would
+    appear to move from Venus.</p>
+  </section>
+</section>
+
+<section id="orbit-view">
+  <h2>Orbit View</h2>
+
+  <p>After you become familiar with the planetary motions shown on the
+    planet clock, advance to the "Orbit View" using the main menu
+    button on the right side of the page.  This shows you the final
+    result you will be pursuing - this is the answer sheet.  The
+    radial line for Mars will automatically turn on initially, but you
+    can toggle any of the radial lines using the legend in the middle
+    of the planet clock as before.  The orbit view on the right shows
+    you a theoretical view from a point beyond the solar system in the
+    direction of the north ecliptic pole.  The Orbit View panel has
+    some yellow buttons along its top edge: The triangles in the left
+    corner zoom in so you can see the orbits of Mercury, Venus, and
+    Mars, or out so you can see the orbits of Jupiter and Saturn.</p>
+  <p>You can see that the direction from Earth to any planet and from
+    Earth to the Sun in the Orbit View always exactly match the
+    directions in the Planet Clock.  Of course, every viable theory of
+    planetary motion must satisfy this condition first and foremost.
+    You can switch among three models using the button at the upper
+    right, labeled "heliocentric", "geocentric", and "epicycles".
+    They could have been labeled "Copernican" (or simply "modern"),
+    "Tychonic", and "Ptolemaic" after their best known proponents.</p>
+  <p>The relative positions of the Earth, Sun, and all the planets are
+    identical in all three cases; the only differences are which
+    object you imagine to be at the center, and what geometrical lines
+    and shapes you imagine describing their positions.  No
+    observations of the planets can possibly distinguish among the
+    three models, since again, they all produce identical relative
+    positions of the planets.  Our modern bias in favor of the
+    heliocentric model stems from Newton's theory of universal gravity
+    rather than from any astronomical observations.</p>
+  <p>The shape of the blue Earth orbit around the Sun in the
+    heliocentric model is identical to the shape of the gold orbit of
+    the Sun around the Earth in the geocentric and epicycles models,
+    except it is rotated 180 degrees (since the direction of the Earth
+    from the Sun is 180 degrees from the direction of the Sun from the
+    Earth).  The only difference between the geocentric and epicycles
+    models is that the large, slow orbits of Mars, Jupiter, and Saturn
+    are centered near the Earth instead of the Sun, while a copy of
+    the gold Sun orbit is displaced so it becomes an epicycle whose
+    center lies near the planetary orbit with the planet on that
+    epicycle.  (Mathematically, the order in which you add the two
+    roughly circular motions does not matter.  I have to admit that I
+    can more easily visualize an epicyclic motion when the radius of
+    the epicycle is smaller than the radius of the main cycle,
+    although the extra copies of the Sun's orbit seem very
+    strange.)</p>
+  <p>The important part of the heliocentric hypothesis has nothing to
+    do with whether the Sun is at the center.  You must have noticed
+    that the motion of the Sun through the constellations is far, far
+    simpler than the motion of any planet.  The important part of the
+    hypothesis is that, relative to the Sun, the motion of all the
+    planets is just as simple.  Relative to the Sun, there is never
+    any retrograde motion.  Most importantly, relative to the Sun, the
+    motion of all the planets is periodic, repeating exactly the same
+    path every orbit around the Sun.</p>
+</section>
+
+<section id="earth-period">
+  <h2>Earth Period</h2>
+  <p>The point of the Earth Period section is to explore the
+    extraordinary accuracy with which the Sun repeats its motion each
+    year.  You can use this display to calculate the length of the
+    sidereal year to within about one thousandth of a day - a little
+    more than a minute - using ten years of measurements of the
+    position of the Sun.  A sidereal year is the length of time
+    required for the Earth to complete one orbit around the Sun (or
+    vice versa).  Despite what everyone is taught in school, this is
+    slightly different than the tropical year we use for our calendar
+    (because unlike the sidereal year it tracks the seasons), owing to
+    the precession of the equinoxes, as Hipparchus discovered more
+    than 2100 years ago.</p>
+  <p>When you switch to the Earth Period section, a new day counter
+    display appears in the middle of the Planet Clock, plus a Reset
+    button.  Clicking the Reset button rests the day count to zero at
+    the current date on the clock.  As you move the Sun to change the
+    date, the day counter increments and decrements accordingly
+    (except jumping using the year button starts over).  When you
+    click Reset, the Earth period plot automatically plots the number
+    of days elapsed versus the change in ecliptic longitude of the Sun
+    measured in revolutions for ten years beginning at the date you
+    clicked Reset.  Clicking the yellow zoom buttons in the upper left
+    corner zooms in or out on this data.  Dragging the Sun around
+    after you have clicked Reset will move the Sun marker on the plot
+    to show which point corresponds to which date.</p>
+  <p>Each yellow box along the diagonal shows one year or Earth
+    period.  One year always represents exactly one revolution, so the
+    horizontal dimension of the boxes is fixed.  The vertical
+    dimension of the yellow boxes is equal to the number of days per
+    sidereal year, which you can adjust using the yellow slider at the
+    right.  Your current estimate is displayed above the plot.  The
+    yellow line is the diagonal of the boxes.  You find the length of
+    the year year by adjusting the number of days until the blue data
+    line matches the yellow diagonal as best you can.</p>
+  <p>When you zoom in the first time, the ten revolutions are stacked
+    on top of one another by sliding the yellow boxes and their
+    contents together.  Any error in your estimated period (year)
+    shows up as the blue data lines not coninciding from one year to
+    the next.  At this magnification, you can adjust the year to
+    within a couple of tenths of a day.  But the Sun moves around the
+    ecliptic about a degree per day, which means you have only found
+    the year to within about a tenth of a degree.  Recall that Tycho's
+    naked-eye measurements of the Sun and planets are good to within a
+    thirtieth of a degree, which over a ten year period ought to allow
+    you to determine the sidereal year to a few thousandths of a
+    day.</p>
+  <p>To improve your Earth period estimate, click the zoom in button a
+    second time.  This does not zoom the horizontal axis any further,
+    but instead of plotting the measured number of elapsed days
+    vertically, it plots the small difference between the blue data
+    and the yellow diagonal line, that is the difference between the
+    time it actually requires for the Sun to reach a given ecliptic
+    longitude and the time it would reach that longitude if it moved
+    at a constant rate.  You can now see that the Sun does not move
+    around the ecliptic at a perfectly constant rate: Its true
+    position deviates by about four days or 1% of a year from a
+    perfectly constant speed - so that the blue data line seems to be
+    a straight line at the other two zoom levels.  This view has
+    effectively zoomed in by a factor of about 100 from the previous
+    vertical scale.  You can see that even these small
+    non-uniformities in speed repeat from one year to the next with
+    extraordinary precision.  And at this zoom level, you can
+    determine the length of the year with an accuracy approaching one
+    thousandth of a day.  <em>(This accuracy may be higher than
+    the JPL approximate position model supports - actual variations in
+      year lengths can be as much as 20 minutes or 0.01 day?)</em></p>
+  <p>Incidentally, the variation in the speed of the Sun around the
+    ecliptic is large enough to have been noticed since ancient times.
+    For example, the time from the spring equinox to the fall equinox
+    is about 5 days longer than the time from the fall equinox back to
+    the spring equinox - northern hemisphere summer is a few days
+    longer than northern hemisphere summer.</p>
+  <p>The most important lesson here is qualitative: The position of
+    the Sun among the constellations repeats each year with incredible
+    precision.  By naked eye observations it is impossible to detect
+    any year-to-year variations at all.  What is this exact
+    periodicity telling you?  Although you cannot directly measure the
+    distance to the Sun (at least by naked eye observations), it is
+    hard to imagine that distance is not also varying periodically
+    with comparable precision.  If both distance and direction vary
+    periodically, the Sun must be moving around the Earth (or
+    vice-versa) on a closed path in three dimensions.  That is, after
+    exactly one year, the Earth and Sun will return to exactly the
+    same relative positions in three dimensions as they have now.</p>
+  <p>The motion of the other planets is clearly not periodic with
+    respect to the Earth.  The hypothesis you will test is
+    that <em>the motion of every planet is periodic with respect to
+    the Sun</em>, repeating the same closed path around the Sun over
+    and over.  If true, their motion with resepct to the Earth will be
+    a compound of two periodic motions; when the two periods are
+    incommensurate this compound motion can result in the aperiodic
+    wanderings of the planets you observe.  Historically, this special
+    feature of the Sun was conflated with the idea that the Sun was at
+    the center while the Earth moves. Logically, whether the Earth or
+    Sun or neither is "stationary" is independent of whether the
+    planets move in perioidic closed orbits around the Sun - and the
+    latter is the only hypothesis Kepler actually used to work out all
+    the relative positions.</p>
+  <p>In this section, you have determined the period of Earth's orbit
+    around the Sun.  To test whether the other planets follow simple
+    periodic orbits around the Sun, you must somehow determine
+    accurate periods for planets other than Earth.  Mars is the
+    easiest choice, and on Tycho's advice, Kepler chose to focus on
+    Mars.</p>
+</section>
+
+<section id="mars-period">
+  <h2>Mars Period</h2>
+  <p>Although you can measure the direction of the Earth-planet line
+    (the radial line on the Planet Clock), there is no way to measure
+    the direction of the Sun-planet line.  This makes it much harder
+    to figure out the period of a planet than it was to figure out the
+    period of Earth.  However, there is one situation when
+    you <em>do</em> know the direction of the Sun-planet line: when
+    the Earth-Sun and Earth-planet lines are co-linear.  Except for
+    the non-zero ecliptic latitude of the planet, the Sun, Earth, and
+    planet are lined up at conjunctions or oppositions, and since you
+    cannot accurately measure exactly when a conjunction occurs, you
+    are left with oppositions.</p>
+  <p>The fact that the planet does not have zero ecliptic latitude at
+    opposition means that the three co-linear points at oppostion are
+    the Sun, the Earth, and the point on the planet's orbit projected
+    into the plane of the ecliptic.  However, this projected point
+    clearly moves around the Sun with the same period as the planet
+    itself.  Furthermore, if you can find the position of the
+    projected point at any time (relative to the position of Earth),
+    you can use its measured ecliptic latitude to find its coordinate
+    perpendicular to the ecliptic.  So you can ignore the ecliptic
+    latitude and consider only the plane geometry problem of figuring
+    out the motion of the projection of the planet into the
+    ecliptic.</p>
+  <p>When you switch to the Mars Period section, you see a display and
+    controls very similar to the Earth Period section.  Clicking the
+    Reset button now collects and plots twenty years of data for the
+    time it takes Mars to reach a given ecliptic longitude.  (Recall
+    that Kepler worked with twenty years of Tycho's data.)  These data
+    appear as a series of light red S-shaped sections near the
+    diagonal of the plot.  The gaps are when Mars is near conjunction
+    - too close to the Sun to be seen.  The dark red dots are the
+    points at oppostion, which lie near the center of each retrograde
+    section - the kink in the S-shape when ecliptic longitude is
+    decreasing with increasing time.  There is also a light red dot
+    which moves as you drag the Sun around the clock to show which
+    point on the data curve corresponds to a particular date on the
+    clock.</p>
+  <p>Once again, you see the yellow boxes and the yellow line along
+    their diagonals.  The boxes are exactly one revolution longitude
+    in width again, and again you can adjust their height using the
+    yellow slider along the right side of the plot.  This time, of
+    course, you are adjusting your estimate of the number of days it
+    takes Mars to go once around the Sun.  The data is drawn in faint
+    red because almost all of it is useless - it tells you only about
+    the direction of Mars as seen from Earth, while you want to know
+    how long it takes Mars to move around one revolution as seen from
+    the Sun.  The ten or eleven dark red dots at the oppositions are
+    the only useful data here, because only at those times do you know
+    the exact direction of Mars (really its projection) as seen from
+    the Sun.  You want to adjust the yellow line to pass through all
+    the dark red dots as best you can.</p>
+  <p>The second zoom level once again stacks the yellow boxes on top
+    of one another, so you can see one hypothesized period of the
+    motion of Mars around the Sun.  As expected, the light red data
+    lines of ecliptic longitude as viewed from Earth do not come close
+    to lining up - the motion of Mars is certainly not periodic when
+    viewed from Earth.  The dark red opposition dots have a chance of
+    being periodic, but in twenty years you only get to see a single
+    hypothesized period, so you cannot really be sure.  However, you
+    can get a pretty accurate estimate of what the period of Mars must
+    be <em>if</em> its motion around the Sun is indeed periodic.  To
+    aid you, a dark red line connecting the oppositions has been added
+    to the plot.  This is just an arbitrary smooth curve - in fact a
+    cubic spline, although Kepler might have used a French curve if he
+    ever plotted his oppositions by hand.  This dark red curve
+    represents the ecliptic longitude of Mars as seen from the Sun,
+    but again only the only points on the curve you have actually
+    measured are the dark red dots.  By lining up the ends of this
+    curve (the curve terminates at the first and last oppositions in
+    the twenty year data set) you can estimate Mars's period to within
+    about one day.</p>
+  <p>For the Earth, the deviation of its longitude as a function of
+    time from a straight line was very subtle.  For Mars, the
+    opposition points very obviously do not lie on a straight line.
+    The third zoom level again shows the deviation of from the
+    straight yellow line.  (That line has been adjusted to pass
+    through the first opposition point so it no longer lies exactly
+    along the yellow box diagonals.  It is now only parallel to the
+    box diagonal.)  At the third zoom level you can see that Mars must
+    speed up and slow down much more than Earth as it orbits - the
+    deviation from the uniform rate of the yellow line is over 40
+    days.  You can also see that the arbitrary dark red line
+    connecting the dots does not line up exactly where it overlaps.
+    This is because only the opposition points themselves are real
+    data.  The result is that you cannot estimate Mars period nearly
+    as accurately as Earth's period from just these opposition data -
+    you can only be sure to within about 0.1 day.  This is easily good
+    enough for a first cut at Kepler's surveying technique.</p>
+</section>
+
+<section id="survey-orbits">
+  <h2>Survey Orbits</h2>
+  <p>You are now set to experience one of the greatest Aha! moments in
+    the history of science: Kepler's ingenious technique for surveying
+    the solar system.  Ordinary terrestrial surveying relies on fixed
+    landmarks, perhaps mountaintops or trees or steeples.  By
+    measuring the apparent directions of these landmarks from
+    different vantage points, the surveyor can use triangulation to
+    locate both these vantage points and the relative positions of the
+    landmarks on a map.  Because the Sun and planets are constantly
+    moving around, there are no fixed landmarks in the sky, and
+    applying surveying techniques to the sky seemed hopeless to all
+    the great astronomers and geometers from ancient times until the
+    year 1600.</p>
+  <p>Kepler's great insight is that the hypothesis planetary motion is
+    periodic relative to the Sun provides you with the missing fixed
+    landmarks: If the planet - Mars in this case - returns to exactly
+    the same place relative to the Sun after one period, you can use
+    that point as a fixed landmark.  When you make an observation of
+    Mars exactly one or two or any number of periods before or after
+    an initial observation, it will have returned to exactly where it
+    was for your first observation.  Used in this way, Mars can play
+    exactly the same role as the reliable fixed mountaintop or tree or
+    steeple for the terrestrial surveyor.  A surveyor needs at least
+    two landmarks, but for the astronomer the Sun can play the role of
+    that second landmark: The Sun and Mars are your two landmarks, and
+    the Earth is your vantage point.</p>
+  <p>Notice that you are testing a hypothesis: You merely suspect that
+    planets move in periodic orbits with respect to the Sun, and you
+    have realized that <em>if</em> this is correct, <em>then</em> you
+    would be able to use a planet as a landmark and survey the sky.
+    All of the work you are about to do is speculative - it may turn
+    out that your observations of the directions of Mars viewed from
+    Earth are inconsistent with this hypothesis.  You risk only a few
+    minutes to find out because the compute engine behind your browser
+    is so powerful; Kepler risked decades of his life to work through
+    the surveying calculations required to check the periodic orbit
+    hypothesis.</p>
+
+  <section id="select-opposition">
+    <h2>Select an opposition</h2>
+    <p>You cannot choose an arbitrary point on Mars orbit for your
+      landmark.  Only an opposition point can serve as your first
+      landmark (or second landmark if the Sun is the first).  So your
+      first task is to choose which opposition you will use as your
+      reference landmark.  Click on the corresponding yellow circle to
+      make your choice.  When you make your selection, the Planet
+      Clock on the left side will advance to the opposition you have
+      selected.  You can come back later and choose a different one if
+      you wish - each opposition will produce a different set of
+      points around the orbit your are surveying.</p>
+    <p>The right side plot shows the same "overhead" view of the
+      ecliptic plane as in the Orbit View section.  Here it has become
+      the surveyor's map view.  Once you have selected an opposition,
+      a black line appears between the Sun and the position of Mars at
+      that opposition.  You know the direction of this line segment,
+      but not its length in kilometers.  However, because you
+      hypothesize that Mars returns to exactly that point every
+      period, you are free to use its length as the unit by which you
+      will measure all distances in your map of the ecliptic.</p>
+    <p>This map is drawn from a heliocentric perspective with the Sun
+      always at the center.  This is the easiest analogy with
+      surveying, with the Sun and reference Mars point serving as
+      fixed landmarks.  From a geocentric perspective, you have to
+      think of the reference Sun-Mars line as a rigid object which is
+      moving to different positions while not changing its length or
+      orientation, which is not quite the mindset of a surveyor, even
+      though the geometry is identical.  Kepler of course worked from
+      the heliocentric perspective adopted here.</p>
+    <p>Click the yellow next button at the upper right to proceed to
+      the next step.</p>
+  </section>
+
+  <section id="earth-orbit">
+    <h2>Survey Earth's orbit</h2>
+    <p>When you step forward or back one Mars period, Mars returns to
+      the reference point, but Earth moves to a new point.  From each
+      of these new vantage points, you can use the measured longitudes
+      of the Sun and Mars to triangulate and map the location of your
+      vantage point - the Earth.  When you click the yellow -M or +M
+      buttons at the lower right, the Planet clock will move to the
+      corresponding date one Mars period earlier or later.  Also, the
+      Earth-Sun and Earth-Mars lines for that date will be
+      highlighted.  The directions of these lines in the right map
+      panel exactly match the directions of the Earth-Sun and
+      Earth-Mars radial lines in the left clock panel by construction:
+      The blue Earth point in the ecliptic map is placed at the unique
+      point from which those measured directions pass through the Sun
+      and Mars reference points.  The first fruit of your survey is to
+      be able to mark these eight or nine points on Earth's orbit -
+      you now know exactly where the Earth must have been relative to
+      the Sun on those dates, not just its direction.  Notice that you
+      know the Earth-Sun distance on those dates measured not in
+      kilometers, but in units of the length of the black Sun-Mars
+      reference line.</p>
+    <p>The ±M buttons will not step beyond the twenty year span you
+      specified back in the Mars Period section, restricting you to
+      about the same amount of data Kepler worked with.</p>
+    <p>As you step around Earth's orbit in Mars period steps, notice
+      that one (or rarely two) points are missing roughly opposite to
+      your selected reference opposition.  These missing points are so
+      close to conjunction that Mars could not be seen from Earth.
+      The light blue shaded circle around the sun in the right panel
+      roughly subtends the same 15 degrees from Earth's orbit as the
+      sky blue sector of the Planet Clock.  If the Earth-Mars line
+      intersects this light blue circle you will have no data, so you
+      cannot determine where the Earth is on that date.  Note also
+      that you cannot determine the position of Earth on the date of
+      the reference opposition itself, because triangulation does not
+      work when the three points are co-linear or nearly so.</p>
+    <p>Finally, notice that the positions of these points on Earth's
+      orbit depend on your estimate of the period of Mars.  If your
+      Mars period is wrong, Mars will have moved slightly from its
+      reference position, in addition to the Earth-Sun and Earth-Mars
+      directions changing slightly relative to where they were after a
+      true period.  The yellow slider used to adjust your estimated
+      Mars period has reappeared on the right side, along with the
+      display of your current estimate.  By dragging the slider, you
+      see the effect of an error in Mars period on the positions of
+      the points on Earth's orbit that you calculate.  An error of
+      half a day distorts the orbital points into an obvious
+      non-closed spiral.  You need to know the period of Mars quite
+      accurately before you can apply Kepler's surveying
+      technique.</p>
+    <p>You still have not surveyed any new points on Mars orbit.
+      Furthermore, all practical surveying requires multiple redundant
+      measurements, known as closures, which you use to check and
+      reduce the inevitable errors in your angle measurements.  Click
+      the yellow next button at the upper right to proceed to that
+      final phase of Kepler's surveying program.</p>
+  </section>
+
+  <section id="mars-orbit">
+    <h2>Survey Mars's orbit</h2>
+    <p>You know the period of Earth's orbit as well as the period of
+      Mars's orbit.  From every one of the eight or nine points you
+      found on Earth's orbit, you can step forward or back one Earth
+      period by clicking on the yellow +E or -E buttons at the lower
+      left.  The Earth - always your vantage point - returns to
+      exactly its previous position, but now Mars advances to a new
+      position.  In fact, no matter which date Mars was at its
+      reference position, one Earth period after that date it will
+      reach exactly the same point in its orbit.  Therefore, by
+      stepping an Earth period from all of the points you found where
+      Mars was at its reference position, you find over half a dozen
+      dates on which Mars was at this new position and Earth was at a
+      known point on its orbit.  Again, you can step forward and back
+      by Mars years to step through these new dates.  Stepping either
+      Earth or Mars periods moves the Planet Clock and highlights the
+      Earth-Sun and Earth-Mars lines for that particular date, so you
+      can see that the two directions are exactly the same on the
+      right map panel as on the left clock panel.</p>
+    <p>The intersection of any two of the red Earth-Mars lines
+      determines the new position of Mars, but you have many such line
+      pairs to choose from.  Stunningly, all the red lines very nearly
+      intersect at a single common point!  This is the moment that you
+      realize you really are on the right track.  If you move the
+      slider at the right to change the estimated Mars period, you can
+      see that the lines all intersect at a single common point for
+      only one value of Mars's period - if you get the period wrong,
+      the lines do not intersect.  If you could zoom in around the
+      intersection point, you could more accurately judge the best
+      value for the Mars period - the one for which all the red lines
+      converge to a single point.  Instead of a zoom capability, this
+      map panel provides a statistical summary of how nearly the red
+      lines intersect at a single point, which is described below.</p>
+    <p>When you step to a new point on Mars's orbit you have not
+      visited before, the map panel highlights all the blue points
+      on Earth's orbit from which you could observe Mars at that
+      position within your twenty year span of data.  Most of these
+      match the Earth points at the previous step (since the Earth
+      always comes back to the same place after a step of an Earth
+      period).  However, if you look closely, you will see that one
+      Earth point may disappear - which happens when the step would
+      take you out of the twenty year window.  More interestingly, one
+      or two Earth points may be added.  New Earth points may appear
+      either because at the previous step that point falls outside
+      the twenty year data window, or because at the previous step
+      that point was too near conjunction for any observation to be
+      made.</p>
+    <p>When a new point on Earth's orbit has never had its position
+      fixed before, it cannot be used to determine the position of the
+      new point on Mars's orbit.  Instead, after you use all the other
+      Earth points to find the new point on Mars's orbit, you can use
+      the observation at the new Earth point to determine its position
+      on the map.  Such new points have not only the red Earth-Mars
+      line drawn, but also a faint gold Earth-Sun line showing the
+      angle used to fix that new Earth point.  This is the same
+      procedure you used in the previous step to fix the original set
+      of points on Earth's orbit, but using a different point on
+      Mars's orbit for your second landmark.</p>
+    <p>You can keep adding points indefinitely to the orbits of both
+      Mars and Earth by stepping forward and back by Earth and Mars
+      periods, respectively, while keeping within the twenty year data
+      span.  Here the maximum number of Mars period steps away from
+      your selected opposition has been limited to ten, and the number
+      of Earth period steps has been limited so that there are always
+      at least four points on Earth's orbit for each point on Mars's
+      orbit.  The total number of points on Earth's orbit constructed
+      here is thus always 21 (the original opposition plus 10 Mars
+      period steps in either direction), shown as faint blue dots.
+      The total number of points on Mars's orbit is about 40, shown as
+      faint red dots.  The total number of observation dates is about
+      350, all within the twenty year period you chose back in the
+      Mars Period section.</p>
+    <p>In lieu of that zoomed view, the map panel displays the angular
+      errors among the intersection points in yellow above the current
+      Mars period estimate in the upper right corner.  You first need
+      to know exactly how the red points on the map were computed.</p>
+    <p>Each blue point on Earth's orbit has been computed from a
+      single observation date from the direction to the Sun and the
+      direction to a previously computed point on Mars's orbit.  This
+      procedure is not unique; it is just one choice among many since
+      you have observations from that same point on Earth's orbit on
+      several other dates separated by Earth period steps.  In the
+      case of a new point on Mars's orbit, a more complicated
+      procedure is chosen here that treats all of the observations you
+      made when Mars was at the new point equally: Each observation is
+      the direction of a line from Earth to Mars, and we assume that
+      the position of Earth at the time of each observation has been
+      previously established.  In general these Earth-Mars lines
+      do not all intersect at a single point (as you can see by
+      adjusting the estaimted Mars period away from its true value).
+    <p>If you pick any arbitrary point P, the Earth-P line will lie at
+      some angle from your observed Earth-Mars line.  You would like
+      to find a single point P for which this angle is zero for every
+      one of your observations, but if the Earth-Mars lines do not
+      exactly converge to a single point there will be no such P.
+      However, you can find a point P which is the best compromise.
+      The figure of merit statisticians prefer is that you find the
+      point P which minimizes the root mean square angle (that is, the
+      square root of the average of the squares) between P and all of
+      your observations of Mars at that point in its orbit.  This
+      turns out to be easy to compute for any set of two or more lines
+      even in three dimensions.  Thus, except for the original
+      reference opposition point, all the red points on Mars's orbit
+      plotted on this map minimize the sum of squares of the errors in
+      angle among all of the observations made of Mars when it was at
+      that point (all the different Mars period steps).  This
+      calculation has been carried out in three dimensions using both
+      the measured ecliptic longitude and latitude of Mars, producing
+      not only Mars's position in the ecliptic plane shown in this map
+      panel, but also its coordinate out of the plane.</p>
+    <p>Since each individual point on Mars's orbit (except the
+      reference oppostion point) has been computed by minimizing the
+      RMS angular error between the computed points and our
+      observations, a good way to measure the consistency of the
+      entire data set is by computing the residual angular errors of
+      all roughly 350 observations that contributed to these 40 points
+      on Mars's orbit.  That total RMS error is the yellow number just
+      above the current estimated Mars period in the upper right
+      corner of the map panel.  The number above that is the largest
+      angular error betwen an observed position of Mars and the
+      postion it would have had if the red and blue plotted dots were
+      exactly correct.  You can now adjust the slider to minimize
+      these errors as best you can.  You will find that you can get
+      the RMS error down below 0.01° and the maximum error down to
+      about 0.02°.  Recall that Tycho's ecliptic longitude data is
+      accurate to about 0.03°, so this is roughly the level of
+      accuracy Kepler achieved with his original survey of Mars's
+      orbit.</p>
+    <p>Although this Survey Orbits section began with your estimate of
+      Mars's period from the Mars Period section, your estimate of
+      Earth's period from the Earth Period section has been ignored.
+      Instead, an Earth period of 365.25636 days has been assumed
+      throughout this section.  The rationale is that estimating the
+      exact period of Mars from ten or eleven opposition points is far
+      less accurate than estimating the period of Earth from ten years
+      worth of potentially very finely spaced mesurements.  In
+      practice, twenty years of Mars observations really does allow
+      you to nail down the period of Mars a lot more accurately than
+      just the few oppositoins it provides.</p>
+  </section>
+
+</section>
+
+<section id="mars-inclination">
+  <h2>Mars Inclination</h2>
+  <p>The procedure for computing points on Mars's orbit in the Survey
+    Orbits section was to compute the point most consistent with all
+    of the sight lines measured from different points on Earth's
+    orbit.  This produced not only projected positions in the ecliptic
+    plane, but also the best fit positions of Mars in three
+    dimensions.  In this section you will look at Mars's orbit out of
+    the ecliptic plane.</p>
+  <p>We begin with the same "overhead" view of the ecliptic plane of
+    the points on Earth's and Mars's orbit you mapped in the Survey
+    Orbits section.  Initially, the same Earth-Mars lines are shown as
+    you were viewing in the Survey Orbits section.  In this section,
+    you can click on any of the red dots on Mars's orbit to show
+    the Earth-Mars lines for all the observations that contributed
+    to you knowledge of that point on Mars's orbit.  Clicking on the
+    same point a second time toggles all the Earth-Mars lines off
+    so you can more easily see just the orbit points themselves.</p>
+  <p>The yellow dot slider on the bottom edge rotates the ecliptic
+    plane.  The yellow dot slider on the right edge tilts your
+    viewpoint out of the ecliptic plane; with the yellow dot all the
+    way at the bottom, you get the "overhead" view you've seen before,
+    while all the way at the top you get an edge-on view of the
+    ecliptic plane.  The yellow Reset button at the lower left returns
+    you to the intial "overhead" view.  The blue line is the line of
+    nodes - the intersection between the ecliptic plane and the plane
+    of Mars's orbit.  Toggle off all the Earth-Mars lines and move the
+    bottom slider until the blue line is nearly vertical.  Then move
+    the right slider all the way to the top and you will see that the
+    orbit of Mars is tilted very slightly out of the ecliptic.  You
+    can see that all the red points lie in a tilted plane more clearly
+    if you use the buttons in the upper left corner to magnify just
+    the z-coordinate; the 10x magnification makes the tilt easy to
+    see.  Notice that for each point on Mars's orbit, the projected
+    point in the ecliptic plane is shown as a light red dot.  The 21
+    points on Earth's orbit are shown in light blue; they always lie
+    in the ecliptic plane, of course.</p>
+  <p>If you turn some Earth-Mars lines back on, you can see that the
+    observation lines all converge at the point on Mars's orbit in all
+    three dimensions.  That is, these 21 points on Earth's orbit and
+    about 40 points on Mars's orbit very accurately explain over 350
+    individual observations of Mars and the Sun.  The hypothesis that
+    both Mars and Earh move in periodic orbits relative to the Sun is
+    spectacularly confirmed.  Given the large amount of redundancy
+    among all these measurements, it becomes nearly impossible to
+    doubt the truth of this three dimensional map of the positions of
+    Mars and Earth.  Kepler's version of this map is the first
+    accurate chart of the positions of Earth and Mars.</p>
+</section>
+
+<section id="first-two-laws">
+  <h2>First Two Laws</h2>
+</section>
+
+<section id="third-law">
+  <h2>Third Law</h2>
+</section>
+
+ <!--
+
+Idea for deriving Kepler's laws from inverse square law:
+
+1. Angular momentum argument shows omega*r**2 = const
+   ==> Equal area law follows from central force.
+2. Use radial, angular components of vectors.  Since the force is central,
+   acceleration is purely radial.
+3. The radial acceleration is normal to the angular component of velocity.
+   Compute a velocity in the angular direction w = a/omega with a the
+   radial acceleration.  The actual velocity is this plus some other vector.
+4. By construction, the w vector remains perpendicular to the radius for
+   a short step in time.  At the new position, if both the acceleration a
+   and omega are proportional to 1/r**2, then the length of the w vector
+   a/omega remains unchanged when you repeat this construction.  Hence,
+   the orbit must trace a circle in velocity space.
+5. The constant velocity displacement vector is perpendicular to the
+   Lenz vector.
+
+-->
+
+</body>
+</html>

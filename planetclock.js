@@ -3446,12 +3446,12 @@ class TwoLaws {
     this.svgl.append("text")
       .attr("fill", "#000")
       .attr("font-size", 24)
-      .text("Hello from the left");
+      .text("Two Laws left panel");
 
     this.svgr.append("text")
       .attr("fill", "#000")
       .attr("font-size", 24)
-      .text("Hello from the right");
+      .text("Two Laws right panel");
 
     // Scale is 1 AU = width/3.6, same as zoomLevel=0 in OrbitView.
     const AU = width / 3.6;
@@ -3511,12 +3511,12 @@ class ThirdLaw {
     this.svgl.append("text")
       .attr("fill", "#000")
       .attr("font-size", 24)
-      .text("Hello from the left");
+      .text("Third Law left panel");
 
     this.svgr.append("text")
       .attr("fill", "#000")
       .attr("font-size", 24)
-      .text("Hello from the right");
+      .text("Third Law right panel");
 
     // Scale is 1 AU = width/3.6, same as zoomLevel=0 in OrbitView.
     const AU = width / 3.6;
