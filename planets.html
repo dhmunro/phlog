@@ -336,7 +336,9 @@
     and are perpendicular to Earth's axis.  Finally, the tropic and
     arctic circle lines are shown in very faint light blue.  Note that
     the tropic circles are just tangent to the ecliptic equator at the
-    solstices, while the ecliptic pole lies on the arctic circle.</p>
+    solstices, while the ecliptic pole lies on the arctic circle.  The
+    north ecliptic pole is about halfway between Polaris and Vega if
+    you want to find it in the northern sky.</p>
   </section>
   <section id="radec">
   <h3>Playing with the planet clock</h3>
@@ -527,7 +529,7 @@
     than 2100 years ago.</p>
   <p>When you switch to the Earth Period section, a new day counter
     display appears in the middle of the Planet Clock, plus a Reset
-    button.  Clicking the Reset button rests the day count to zero at
+    button.  Clicking the Reset button resets the day count to zero at
     the current date on the clock.  As you move the Sun to change the
     date, the day counter increments and decrements accordingly
     (except jumping using the year button starts over).  When you
@@ -576,15 +578,17 @@
     non-uniformities in speed repeat from one year to the next with
     extraordinary precision.  And at this zoom level, you can
     determine the length of the year with an accuracy approaching one
-    thousandth of a day.  <em>(This accuracy may be higher than
-    the JPL approximate position model supports - actual variations in
-      year lengths can be as much as 20 minutes or 0.01 day?)</em></p>
+    thousandth of a day.  <em>(This accuracy may be higher than the
+    JPL approximate position model supports - actual variations in
+    year lengths can be as much as 20 minutes or 0.01 day?  Is this a
+    problem with the difference between EM barycenter and Earth
+    center?)</em></p>
   <p>Incidentally, the variation in the speed of the Sun around the
     ecliptic is large enough to have been noticed since ancient times.
     For example, the time from the spring equinox to the fall equinox
     is about 5 days longer than the time from the fall equinox back to
     the spring equinox - northern hemisphere summer is a few days
-    longer than northern hemisphere summer.</p>
+    longer than northern hemisphere winter.</p>
   <p>The most important lesson here is qualitative: The position of
     the Sun among the constellations repeats each year with incredible
     precision.  By naked eye observations it is impossible to detect
@@ -608,7 +612,7 @@
     feature of the Sun was conflated with the idea that the Sun was at
     the center while the Earth moves. Logically, whether the Earth or
     Sun or neither is "stationary" is independent of whether the
-    planets move in perioidic closed orbits around the Sun - and the
+    planets move in periodic closed orbits around the Sun - and the
     latter is the only hypothesis Kepler actually used to work out all
     the relative positions.</p>
   <p>In this section, you have determined the period of Earth's orbit
@@ -633,7 +637,7 @@
     cannot accurately measure exactly when a conjunction occurs, you
     are left with oppositions.</p>
   <p>The fact that the planet does not have zero ecliptic latitude at
-    opposition means that the three co-linear points at oppostion are
+    opposition means that the three co-linear points at opposition are
     the Sun, the Earth, and the point on the planet's orbit projected
     into the plane of the ecliptic.  However, this projected point
     clearly moves around the Sun with the same period as the planet
@@ -652,7 +656,7 @@
     appear as a series of light red S-shaped sections near the
     diagonal of the plot.  The gaps are when Mars is near conjunction
     - too close to the Sun to be seen.  The dark red dots are the
-    points at oppostion, which lie near the center of each retrograde
+    points at opposition, which lie near the center of each retrograde
     section - the kink in the S-shape when ecliptic longitude is
     decreasing with increasing time.  There is also a light red dot
     which moves as you drag the Sun around the clock to show which
@@ -751,7 +755,7 @@
     hypothesis.</p>
 
   <section id="select-opposition">
-    <h2>Select an opposition</h2>
+    <h3>Select an opposition</h3>
     <p>You cannot choose an arbitrary point on Mars orbit for your
       landmark.  Only an opposition point can serve as your first
       landmark (or second landmark if the Sun is the first).  So your
@@ -761,7 +765,7 @@
       Clock on the left side will advance to the opposition you have
       selected.  You can come back later and choose a different one if
       you wish - each opposition will produce a different set of
-      points around the orbit your are surveying.</p>
+      points around the orbit you are surveying.</p>
     <p>The right side plot shows the same "overhead" view of the
       ecliptic plane as in the Orbit View section.  Here it has become
       the surveyor's map view.  Once you have selected an opposition,
@@ -780,12 +784,12 @@
       orientation, which is not quite the mindset of a surveyor, even
       though the geometry is identical.  Kepler of course worked from
       the heliocentric perspective adopted here.</p>
-    <p>Click the yellow next button at the upper right to proceed to
+    <p>Click the yellow Next button at the upper right to proceed to
       the next step.</p>
   </section>
 
   <section id="earth-orbit">
-    <h2>Survey Earth's orbit</h2>
+    <h3>Survey Earth's orbit</h3>
     <p>When you step forward or back one Mars period, Mars returns to
       the reference point, but Earth moves to a new point.  From each
       of these new vantage points, you can use the measured longitudes
@@ -844,7 +848,7 @@
   </section>
 
   <section id="mars-orbit">
-    <h2>Survey Mars's orbit</h2>
+    <h3>Survey Mars's orbit</h3>
     <p>You know the period of Earth's orbit as well as the period of
       Mars's orbit.  From every one of the eight or nine points you
       found on Earth's orbit, you can step forward or back one Earth
@@ -933,7 +937,7 @@
       the position of Earth at the time of each observation has been
       previously established.  In general these Earth-Mars lines
       do not all intersect at a single point (as you can see by
-      adjusting the estaimted Mars period away from its true value).
+      adjusting the estimated Mars period away from its true value).
     <p>If you pick any arbitrary point P, the Earth-P line will lie at
       some angle from your observed Earth-Mars line.  You would like
       to find a single point P for which this angle is zero for every
@@ -955,7 +959,7 @@
       not only Mars's position in the ecliptic plane shown in this map
       panel, but also its coordinate out of the plane.</p>
     <p>Since each individual point on Mars's orbit (except the
-      reference oppostion point) has been computed by minimizing the
+      reference opposition point) has been computed by minimizing the
       RMS angular error between the computed points and our
       observations, a good way to measure the consistency of the
       entire data set is by computing the residual angular errors of
@@ -964,14 +968,13 @@
       above the current estimated Mars period in the upper right
       corner of the map panel.  The number above that is the largest
       angular error betwen an observed position of Mars and the
-      postion it would have had if the red and blue plotted dots were
-      exactly correct.  You can now adjust the slider to minimize
-      these errors as best you can.  You will find that you can get
-      the RMS error down below 0.01° and the maximum error down to
-      about 0.02°.  Recall that Tycho's ecliptic longitude data is
-      accurate to about 0.03°, so this is roughly the level of
-      accuracy Kepler achieved with his original survey of Mars's
-      orbit.</p>
+      position of the best fit point as plotted.  You can now adjust
+      the slider to minimize these errors as best you can.  You will
+      find that you can get the RMS error down below 0.01° and the
+      maximum error down to about 0.02°.  Recall that Tycho's ecliptic
+      longitude data is accurate to about 0.03°, so this is roughly
+      the level of accuracy Kepler achieved with his original survey
+      of Mars's orbit.</p>
     <p>Although this Survey Orbits section began with your estimate of
       Mars's period from the Mars Period section, your estimate of
       Earth's period from the Earth Period section has been ignored.
@@ -982,7 +985,7 @@
       worth of potentially very finely spaced mesurements.  In
       practice, twenty years of Mars observations really does allow
       you to nail down the period of Mars a lot more accurately than
-      just the few oppositoins it provides.</p>
+      just the ten oppositions it provides.</p>
   </section>
 
 </section>

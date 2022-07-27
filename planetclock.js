@@ -7,8 +7,19 @@
  * This script depends on ephemeris.js and d3.
  * The required externals are:
  *     d3   from d3
- *     dayOfDate, dateOfDay, directionOf, timeSunAt   from ephemeris.js
- *
+ *     dayOfDate, dateOfDay, directionOf, timeSunAt, eclipticOrientation
+ *          from ephemeris.js
+ */
+/* see https://www.cantab.net/users/davidasher/orrery/zodiac.html
+ * for coordinates of constellations of the Zodiac:
+ * pisces 28.687 aries 53.417 taurus 90.140 gemini 117.988 cancer 138.038
+ * leo 173.851 virgo 217.810 libra 241.047 scorpio+ophiuchus 266.238
+ * sagittarius 299.656 capricorn 327.488 aquarius 351.650 pisces
+ * Astrological dates (match positions in about year 0):
+ *   Aries 20/Mar-19/Apr  Taurus 20/Apr-20/May  Gemini 21/May-20/Jun
+ *   Cancer 21/Jun-21/Jul  Leo 22/Jul-22/Aug  Virgo 23/Aug-22/Sep
+ *   Libra 23/Sep-22/Oct  Scorpio 23/Oct-21/Nov  Sagittarius 22/Nov-20/Dec
+ *   Capricorn 21/Dec-19/Jan  Aquarius 20/Jan-17/Feb  Pisces 18/Feb-19/March
  */
 
 
@@ -19,12 +30,12 @@ class PlanetClock {
   static #rInner = PlanetClock.#rOuter * 0.71;
 
   constructor(d3Parent, initYear=2022) {
+    let [width, height] = [PlanetClock.#width, PlanetClock.#height];
     this.svg = d3Parent.append("svg")
       .attr("xmlns", "http://www.w3.org/2000/svg")
       .attr("xmlns:xlink", "http://www.w3.org/1999/xlink")
       .attr("class", "PlanetClock")
-      .attr("viewBox", [-PlanetClock.#width/2, -PlanetClock.#height/2,
-                        PlanetClock.#width, PlanetClock.#height])
+      .attr("viewBox", [-width/2, -height/2, width, height])
       .attr("text-anchor", "middle")
       .attr("font-family", "sans-serif")
       .attr("font-weight", "bold")
@@ -60,6 +71,48 @@ class PlanetClock {
           .style("stroke-width", rOuter - rInner)
           .attr("r", 0.5*(rOuter + rInner))
       });
+
+    // Zodiac constellations
+    let zodiac = [28.687, 53.417, 90.140, 117.988, 138.038, 173.851,
+                  217.810, 241.047, 266.238, 299.656, 327.488, 351.650];
+    let zodiacNames = ["Ari", "Tau", "Gem", "Can", "Leo", "Vir", "Lib",
+                       "Sco", "Sag", "Cap", "Aqu", "Pis"];
+    zodiac = zodiac.map(
+      (a, i) => [Math.cos(a*Math.PI/180), Math.sin(a*Math.PI/180), i]);
+    zodiacNames = zodiac.map(
+      ([x, y], i) => {
+        let [u, v] = zodiac[(i + 1) % 12];
+        u += x;
+        v += y;
+        let r = Math.sqrt(u**2 + v**2);
+        u /= r;
+        v /= r;
+        return [u, v, zodiacNames[i]];
+      });
+    this.zodiac = this.svg.append("g").call(
+      g => {
+        let rBar = 0.5*(rInner + rOuter);
+        g.selectAll("g")
+          .data(zodiac)
+          .join("g")
+          .call(g => g.append("line")
+                .attr("stroke", "#464")
+                .attr("stroke-width", 2)
+                .attr("stroke-dasharray", "5, 5")
+                .attr("x1", d => rInner*d[0])
+                .attr("y1", d => -rInner*d[1])
+                .attr("x2", d => 1.03*rOuter*d[0])
+                .attr("y2", d => -1.03*rOuter*d[1]))
+        .call(g => g.append("text")
+              .style("pointer-events", "none")
+              .attr("x", d => rBar*zodiacNames[d[2]][0])
+              .attr("y", d => -rBar*zodiacNames[d[2]][1])
+              .attr("dy", "0.35em")
+              .attr("fill", "#464")
+              .text(d => zodiacNames[d[2]][2]));
+      });
+
+
     // day sky wedge is dynamic element needing updates to transform property
     this.daySky = nightSky.append("g").call(
       g => {
@@ -183,6 +236,18 @@ class PlanetClock {
       });
     this.prevDayYear = [this.dayNow, dateOfDay(this.dayNow).getUTCFullYear()];
 
+    // Moon Button
+    this.moonButton = this.svg.append("g").attr("display", "none").call(
+      g => {
+        let moonToggler = () => this.toggleMoon();
+        // let xy0 = -0.5 * width;
+        let [x0, y0] = [0, -50];  // [xy0 + 78, xy0 + 60];
+        g.append("rect").call(
+          r => buttonBox(r, x0 - 68, y0 - 20, 136, 26, moonToggler));
+        this.moonText = g.append("text").call(
+          t => buttonText(t, x0, y0, "Show Moon", 20, moonToggler));
+      });
+
     // Planet legend
     this.planetHandVisibility = {
       mercury: "hidden", venus: "hidden", mars: "hidden",
@@ -219,7 +284,8 @@ class PlanetClock {
           (p, i) => {
             let planet = p[0].toUpperCase() + p.substring(1);
             g.append("circle")
-              .attr("stroke", "none")
+              .attr("stroke", "#0000")
+              .attr("stroke-width", 12)
               .attr("fill", this.planetColors[p])
               .attr("cx", xdots)
               .attr("cy", ytop + 15 + 20*i)
@@ -366,6 +432,8 @@ class PlanetClock {
       .attr("r", 4);
 
     // Animation controls
+    this.speeds = [1, 2.5, 5];
+    let [lo, med, hi] = this.speeds;
     let arrowr = d3.path();
     arrowr.moveTo(-10, rOuter + 20);
     arrowr.lineTo(-10, rOuter + 80);
@@ -383,25 +451,26 @@ class PlanetClock {
       .attr("stroke-width", 2)
       .attr("d", arrowr)
       .attr("transform", "rotate(-35)")
-      .on("mousedown touchstart", (event, d) => this.startAnimation(false, 2))
+      .on("mousedown touchstart", (event, d) => this.startAnimation(false, lo))
       .clone(true)
       .attr("transform", "rotate(-45)")
-      .on("mousedown touchstart", (event, d) => this.startAnimation(false, 5))
+      .on("mousedown touchstart", (event, d) => this.startAnimation(false, med))
       .clone(true)
       .attr("transform", "rotate(-55)")
-      .on("mousedown touchstart", (event, d) => this.startAnimation(false, 12))
+      .on("mousedown touchstart", (event, d) => this.startAnimation(false, hi))
       .clone(true)
       .attr("d", arrowl)
       .attr("transform", "rotate(35)")
-      .on("mousedown touchstart", (event, d) => this.startAnimation(true, 2))
+      .on("mousedown touchstart", (event, d) => this.startAnimation(true, lo))
       .clone(true)
       .attr("transform", "rotate(45)")
-      .on("mousedown touchstart", (event, d) => this.startAnimation(true, 5))
+      .on("mousedown touchstart", (event, d) => this.startAnimation(true, med))
       .clone(true)
       .attr("transform", "rotate(55)")
-      .on("mousedown touchstart", (event, d) => this.startAnimation(true, 12));
+      .on("mousedown touchstart", (event, d) => this.startAnimation(true, hi));
     this.svg.on("mouseup mouseleave touchend",
                 (event, d) => this.stopAnimation());
+
   }
 
   turnOnMoon() {
@@ -420,6 +489,34 @@ class PlanetClock {
       this.moonMarker.remove();
       this.moonMarker = null;
     }
+  }
+
+  toggleMoon() {
+    if (this.disabled || this.elapsed) return;
+    if (this.moonMarker == null) {
+      this.turnOnMoon();
+      this.moonText.text("Hide Moon");
+    } else {
+      this.turnOffMoon();
+      this.moonText.text("Show Moon");
+    }
+  }
+
+  hasZodiac(yes) {
+    if (yes) {
+      this.zodiac.attr("display", null);
+    } else {
+      this.zodiac.attr("display", "none");
+    }
+  }
+
+  hasMoonButton(yes) {
+    if (yes) {
+      this.moonButton.attr("display", null);
+    } else {
+      this.moonButton.attr("display", "none");
+    }
+    this.turnOffMoon();
   }
 
   updateMoon() {
@@ -631,6 +728,7 @@ class PlanetClock {
     if (this.elapsed) {
       this.removeElapsed(true);
     }
+    this.hasMoonButton(false);
     let yElapsed = -0.25*PlanetClock.#rInner;
     let resetElapsed = () => this.updateElapsed(true);
     if (this.elapsed0 === undefined) {
@@ -651,7 +749,8 @@ class PlanetClock {
             let date = dateOfDay(this.elapsed0);
             let ymd = `${date.getUTCFullYear()} `;
             ymd += `${this.getDateText(this.elapsed0)} `;
-            ymd += `${date.getUTCHours()}:${date.getUTCMinutes()}`;
+            ymd += `${("0"+date.getUTCHours()).slice(-2)}`;
+            ymd += `:${("0"+date.getUTCMinutes()).slice(-2)}`;
             gg.append("text")
               .style("pointer-events", "none")
               .attr("text-anchor", "start")
@@ -687,6 +786,7 @@ class PlanetClock {
   updateElapsed(reset, fromSetYear=false) {
     if (this.elapsed) {
       if (reset) {
+        if (this.disabled) return;
         this.elapsed0 = this.dayNow;
         let date = dateOfDay(this.elapsed0);
         let ymd = `${date.getUTCFullYear()} `;
@@ -2560,12 +2660,9 @@ class SurveyOrbits {
     let xym = new Array(imax - imin + 1);  // 40 or 41 Earth year steps
     this.xyEarth = xye;
     this.xyMars = xym;
-    // This zm is true Mars coordinate from ephemris, but that is not fair
-    // In fact, only (xm, ym) can be assumed here and we need to compute zm
-    // from the observed ecliptic latitudes.
     xym[-imin] = [xm, ym, 0, 0, 0, zm];  // -imin is iOppo
     this.getEarth(-imin);
-    // Above zm is true Mars coordinate from ephemris, but that is not fair.
+    // Above zm is true Mars coordinate from ephemeris, but that is not fair.
     // In fact, only (xm, ym) can be assumed here and we need to compute zm
     // from the observed ecliptic latitudes.  Now that we have a set of
     // Earth points, we can recompute Mars zm coordinate fairly:
@@ -2577,12 +2674,6 @@ class SurveyOrbits {
     xym[-imin][0] = xm;
     xym[-imin][1] = ym;
     // Defer calculation of xym other than xym[iRef] until findMars.
-
-    // orbitDirections is indexed by Earth year, provide alternate
-    // orbitTranspose indexed by Mars year.
-    this.orbitTranspose = Array.from(new Array(jmax - jmin + 1), () => []);
-    this.orbitDirections.forEach(
-      list => list.forEach(p => this.orbitTranspose[p[1]-jmin].push(p)));
 
     // marsLines is set of lines from Earth to Mars
     // sunLines is set of lines from Earth to Sun
@@ -2775,7 +2866,7 @@ class SurveyOrbits {
     let [iNow, jNow] = this.ijNow;
     let [iRef, jRef] = [this.iRef, this.jRef];
     let xye = this.xyEarth;  // [xe, ye, mvec, svec, flag, idef, jdef]
-    let xym = this.xyMars;  // [xm, ym, chi2, n, idef]
+    let xym = this.xyMars;  // [xm, ym, chi2, n, idef, zm]
     let planetColors = this.clock.planetColors;
     if (this.state == 3) {
       // Mars point at iNow highlighted, others dim.
@@ -3180,8 +3271,8 @@ class Inclination {
           let ze = xye[j0][7];
           let [xm, ym, chi2, n, idef, zm] = xym[i0];
           this.emFlags[i0][j0] = true;
-          let r = sqrt((xm - xe)**2 + (ym - ye)**2 + zm**2) + 0.3
-          let [x, y, z] = [xe + r*mex, ye + r*mey, r*mez];
+          let r = sqrt((xm - xe)**2 + (ym - ye)**2 + (zm - ze)**2) + 0.3;
+          let [x, y, z] = [xe + r*mex, ye + r*mey, ze + r*mez];
           return [[xe, ye, ze], [x, y, z], zm, [ii, jj]];
         }));
     this.t0 = t0;  // save time of reference opposition for later

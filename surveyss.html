@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <title>Planet Clock Test</title>
+  <title>Surveying the Solar System</title>
   <meta name="description"
-    content="Test of planetclock.js and ephemeris.js.">
+    content="How to survey the solar system using only naked-eye observations.">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script>MathJax = {tex: { inlineMath: [["$", "$"], ["\\(", "\\)"]] }};
@@ -11,99 +11,81 @@
   <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"
           id="MathJax-script">
   </script>
+  <style>
+    .down-arrow {
+        width: 2rem; height: 2rem; margin: auto;      
+        border-bottom: solid gray 0.5rem;             
+        border-left: solid gray 0.5rem;               
+        border-radius: 0.5rem;                        
+        transform: translateY(-1rem) rotate(-45deg);
+        cursor: pointer;
+    }
+    .up-arrow {
+        width: 2rem; height: 2rem; margin: auto;      
+        border-bottom: solid gray 0.5rem;             
+        border-left: solid gray 0.5rem;               
+        border-radius: 0.5rem;                        
+        transform: translateY(0.6rem) rotate(135deg);
+        cursor: pointer;
+    }
+    .unselectable {
+        -webkit-user-select: none; /* Safari */
+        -ms-user-select: none; /* IE 10 and IE 11 */
+        user-select: none; /* Standard syntax */
+    }
+    .xl-gekko {
+        font-size: 18pt;
+    }
+    .xl-webkit {
+        font-size: 20pt;
+    }
+  </style>
 </head>
 
 <body>
 
-  <div id="top-div" class="clock-container"
-       style="position: relative; display: flex; flex-flow: row wrap;">
+  <div id="top-div" class="unselectable">
+    <div style="position: relative">
+      <div style="display: none;">
+        <!-- These two divs will be moved into the clock svg below. -->
+        <div id="intro"
+             style="width: 75%; padding: 1em 2.5em;
+                    transform: translate(0, 0);
+                    background: #eeec; transition: transform 250ms;">
+          <!-- 20pt font optimal for chrome, 18pt for firefox -->
+          <ul class="xl-gekko" style="list-style-type: none;
+                     font-family: serif; font-weight: normal;
+                     padding: 0ex 1ex; border: 4px solid gray;
+                     border-radius: 1em; background: #fffc;">
+            <li style="padding: 1ex 0ex;">This "planet clock" shows
+              the positions of the Sun and planets as they move through the
+              constellations of the Zodiac
+              <a href="https://ssd.jpl.nasa.gov/planets/approx_pos.html">for
+                any date</a> between 5000 years ago and 1000 years
+                from now.</li>
+            <li style="padding: 1ex 0ex;">You can watch the Sun and
+              planets move through the stars, just as you can by
+              looking at the sky with your own eyes.
+            </li>
+            <li style="padding: 1ex 0ex;">Do you see evidence that the
+              planets orbit the Sun and not the Earth?  That Earth is
+              the third planet?  Can you figure out the order of the
+              planets from the Sun?  How would you test these
+              ideas?</li>
+            <li><div class="down-arrow" onclick="removeIntro()"></div></li>
+          </ul>
+        </div>
+        <div id="intro-restore" style="display: none;">
+          <div class="up-arrow" onclick="restoreIntro()"></div>
+        </div>
+      </div>
     <div id="top-clock"
-         style="min-width: 450px; max-width: 750px; flex: 1"></div>
-    <div id="top-non-clock"
-         style="display: none; min-width: 450px; max-width: 750px; flex: 1">
-      <!-- <span style="font-size: 20pt">Fit orbital ellipse for</span> -->
-      <div id="two-laws-title" style="text-align: center;">
-      <span style="font-size: 20pt; font-weight: bold;">
-        Orbital ellipse for</span>&nbsp;
-      <select id="planet-menu" name="planet-menu" onchange="planetSelect()"
-              style="font-family: serif; font-size: 20pt; font-weight: bold;">
-        <option value="mars" selected>Mars</option>
-        <option value="earth">Earth</option>
-      </select></div>
-      <div id="third-law-title" style="text-align: center; display: none;">
-      <span style="font-size: 20pt; font-weight: bold;">
-        Parameters for</span>&nbsp;
-      <select id="all-planet-menu" name="all-planet-menu"
-              onchange="allPlanetSelect()"
-              style="font-family: serif; font-size: 20pt; font-weight: bold;">
-        <option value="mercury">Mercury</option>
-        <option value="venus">Venus</option>
-        <option value="jupiter" selected>Jupiter</option>
-        <option value="saturn">Saturn</option>
-      </select></div>
-      <div id="left-side"
-           style="position: static; width: 100%; height: 100%;">
-      </div>
-      <div id="left-side2"
-           style="display: none; position: static; width: 100%; height: 100%;">
-      </div>
+         style="min-width: 450px; max-width: 750px; position: relative;
+                margin: auto;">
+    </div>
     </div>
     <div id="right-side"
          style="position: relative; min-width: 400px; max-width: 650px; flex: 1">
-      <!-- <h1>Planet Clock</h1> -->
-      <div style="text-align: center;">
-      <select id="main-menu" name="main-menu" onchange="mainMenuSelect()"
-              style="font-family: serif; font-size: 24pt; font-weight: bold;">
-        <option value="#intro" selected>Planet Clock</option>
-        <option value="#orb-view">Orbit View</option>
-        <option value="#earth-year">Earth Period</option>
-        <option value="#mars-year">Mars Period</option>
-        <option value="#survey-orbits">Survey Orbits</option>
-        <option value="#mars-incline">Mars Inclination</option>
-        <option value="#two-laws">First Two Laws</option>
-        <option value="#third-law">Third Law</option>
-      </select></div>
-      <div id="intro"
-           style="position: absolute; top: 50px; left: 0; display: block;">
-      <p>Here is a visualization of a solar system model from the JPL page
-        <a href="https://ssd.jpl.nasa.gov/planets/approx_pos.html">
-          <em>Approximate Positions of the Planets</em></a>.</p>
-      <p>The black ring represents a ribbon of sky around the ecliptic
-        plane, that is, the great circle through the fixed stars the Sun
-        traverses each year.  The coordinates are
-        <a href="https://en.wikipedia.org/wiki/Ecliptic_coordinate_system">
-          J2000.0 ecliptic coordinates</a>, with longitude increasing
-        around the ring, and latitude increasing outward.  (Ecliptic
-        longitude is sign of the Zodiac.)  The ring is really a thin
-        ribbon standing on edge out of the plane of this page - it has
-        been flattened into the page to be able to draw it in 2D.</p>
-      <p>The gold circle and line show the position of the Sun
-        relative to the fixed stars.  The month ring shows the date at
-        which the Sun reaches each longitude.  Drag the Sun point to
-        change its position, and notice that each time you move it
-        from Dec to Jan (or Jan to Dec), the yellow year button
-        increments (or decrements).  Click on the year button to jump
-        many years.  Notice that the month ring very slowly rotates
-        over the centuries due to
-        <a href="https://en.wikipedia.org/wiki/Axial_precession">
-          precession of the equinoxes</a>.  The blue sector represents
-        the part of the sky that is too near the Sun to be able to see
-        any stars (at or below mid-latitudes), because the sky is not
-        dark enough after sunset in the evening or before sunrise in
-        the morning.</p>
-      <p>The colored dots represent the five planets visible to the
-        naked eye.  As you move the Sun around, the planets generally
-        move in the same direction, but periodically reverse direction
-        - called <em>retrograde</em> motion.  Mercury and Venus are
-        always near the Sun, slowly overtaking the Sun as they move
-        from morning to evening side, then rapidly crossing back
-        retrograde from evening to morning side.  Mars, Jupiter, and
-        Saturn move around slower than the Sun, going retrograde as
-        they approach opposition (180 degrees from the Sun, the dim
-        gold line).  Unlike the Sun, the planets drift in ecliptic
-        latitude.  Click on a planet dot in the central legend to
-        toggle a line between the planet and earth.</p>
-      </div>
       <!-- without the width:100% style in both following nested divs,
            chrome will compute the inner svg size to be 0x0 -->
       <div style="position: absolute; top: 50px; left: 0; width: 100%">
@@ -162,9 +144,54 @@ Libra 210 Scorpio 240 Sagittarius 270 Capricornus 300 Aquarius 330 Pisces
 <script src="./planetclock.js"></script>
 <script>
 
-  let clock = new PlanetClock(d3.select("#top-clock"));
-  clock.hasZodiac(false);
+  // Probably should not do this...
+  if (navigator.userAgent.indexOf("AppleWebKit/") >= 0) {
+    document.querySelectorAll(".xl-gekko").forEach(
+      e => {
+        e.classList.toggle("xl-gekko");
+        e.classList.toggle("xl-webkit");
+      });
+  }
 
+  let clock = new PlanetClock(d3.select("#top-clock"));
+  clock.goToDay(dayOfDate(new Date()));
+  clock.hasMoonButton(true);
+  clock.disabled = true;
+  let introCover = clock.svg.append("foreignObject")
+      .attr("xmlns", "http://www.w3.org/1999/xhtml")
+      .attr("width", "100%").attr("height", "100%")
+      .attr("x", 63-375).attr("y", 91-375);
+  introCover.append(() => d3.select("#intro").node());
+  clock.svg.append("foreignObject")
+    .attr("xmlns", "http://www.w3.org/1999/xhtml")
+    .attr("width", "10%").attr("height", "7%")
+    .attr("x", 300).attr("y", 330)
+    .append(() => d3.select("#intro-restore").node());
+
+  function removeIntro() {
+    const intro = d3.select("#intro");
+    let node = intro.node();
+    intro.style("transform", "translate(675px, 675px) scale(0.1)");
+    d3.timeout(
+      () => {
+        introCover.style("display", "none");
+        d3.select("#intro-restore").style("display", null);
+        clock.disabled = false;
+      }, 260);
+  }
+
+  function restoreIntro() {
+    const intro = d3.select("#intro");
+    introCover.style("display", null);
+    d3.timeout(() => intro.style("transform", "translate(0, 0)"), 10);
+    d3.timeout(
+      () => {
+        d3.select("#intro-restore").style("display", "none");
+        clock.disabled = true;
+      }, 260);
+  }
+
+  /*
   let moonButton = d3.select("#top-div").append("div")
       .style("position", "absolute")
       .style("top", "1%").style("left", "1%")
@@ -184,6 +211,7 @@ Libra 210 Scorpio 240 Sagittarius 270 Capricornus 300 Aquarius 330 Pisces
     }
   }
   moonButton.on("click", toggler);
+  */
 
   let orbView = new OrbitView(d3.select("#orb-view"), clock);
   let earthYear = new EarthYear(d3.select("#earth-year"), clock);
@@ -324,7 +352,7 @@ Libra 210 Scorpio 240 Sagittarius 270 Capricornus 300 Aquarius 330 Pisces
   }
 
   // On page reload, select element remembers previous setting, so
-  mainMenuSelect();
+  // mainMenuSelect();
 
 </script>
 
