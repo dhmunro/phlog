@@ -37,7 +37,7 @@ class PlanetClock {
       .attr("class", "PlanetClock")
       .attr("viewBox", [-width/2, -height/2, width, height])
       .attr("text-anchor", "middle")
-      .attr("font-family", "sans-serif")
+      .attr("font-family", "'Merriweather Sans', sans-serif")
       .attr("font-weight", "bold")
       .attr("font-size", 12)
       .attr("stroke-linejoin", "round")
@@ -96,7 +96,7 @@ class PlanetClock {
           .data(zodiac)
           .join("g")
           .call(g => g.append("line")
-                .attr("stroke", "#464")
+                .attr("stroke", "#575")
                 .attr("stroke-width", 2)
                 .attr("stroke-dasharray", "5, 5")
                 .attr("x1", d => rInner*d[0])
@@ -108,7 +108,7 @@ class PlanetClock {
               .attr("x", d => rBar*zodiacNames[d[2]][0])
               .attr("y", d => -rBar*zodiacNames[d[2]][1])
               .attr("dy", "0.35em")
-              .attr("fill", "#464")
+              .attr("fill", "#575")
               .text(d => zodiacNames[d[2]][2]));
       });
 
@@ -224,7 +224,7 @@ class PlanetClock {
         g.append("rect").call(
           r => buttonBox(r, -40, -0.50*rInner - 25.5, 80, 32, yearSetter));
         this.yearText = g.append("text").call(
-          t => buttonText(t, 0, -0.50*rInner,
+          t => buttonText(t, 0, -0.50*rInner - 1,
                           dateOfDay(this.dayNow).getUTCFullYear(), 24,
                           yearSetter));
         this.dateText = g.append("text")
@@ -446,7 +446,7 @@ class PlanetClock {
     arrowl.closePath();
     this.svg.append("path")
       .style("cursor", "pointer")
-      .attr("fill", "#ffd")
+      .attr("fill", "#fdf8e0")
       .attr("stroke", "#000")
       .attr("stroke-width", 2)
       .attr("d", arrowr)
@@ -821,7 +821,7 @@ class OrbitView {
       .style("margin", "20px")  // padding does not work for SVG?
       .style("background-color", "#aaa")
       .attr("text-anchor", "middle")
-      .attr("font-family", "sans-serif")
+      .attr("font-family", "'Merriweather Sans', sans-serif")
       .attr("font-weight", "bold")
       .attr("font-size", 12)
       .attr("stroke-linejoin", "round")
@@ -1115,7 +1115,7 @@ class EarthYear {
       .style("margin", "20px")  // padding does not work for SVG?
       .style("background-color", "#ddd")
       .attr("text-anchor", "middle")
-      .attr("font-family", "sans-serif")
+      .attr("font-family", "'Merriweather Sans', sans-serif")
       .attr("font-weight", "bold")
       .attr("font-size", 16)
       .attr("stroke-linejoin", "round")
@@ -1230,7 +1230,7 @@ class EarthYear {
       .attr("display", "none").call(
         g => g.append("line")
           .style("pointer-events", "none")
-          .attr("stroke", "#ffd")  // buttonBox color
+          .attr("stroke", "#fdf8e0")  // buttonBox color
           .attr("stroke-width", 2));
     this.updateYearBoxes(true);
     this.lineGroup = this.plot.append("g");
@@ -1252,7 +1252,7 @@ class EarthYear {
     this.slider = this.svg.append("path")
       .style("pointer-events", "all")
       .style("cursor", "pointer")
-      .attr("fill", "#ffd")  // buttonBox color
+      .attr("fill", "#fdf8e0")  // buttonBox color
       .attr("stroke", "#000")
       .attr("stroke-width", 1)
       .attr("d", d3p)
@@ -1316,7 +1316,7 @@ class EarthYear {
           enter => enter.append("rect")
             .datum(d => d)
             .attr("fill", "#ddd0")  // background-color, transparent
-            .attr("stroke", "#ffd")  // buttonBox color
+            .attr("stroke", "#fdf8e0")  // buttonBox color
             .attr("stroke-width", 2)
             .attr("x", xr).attr("width", nboxes*dxr)
             .attr("y", yr-(nboxes-1)*dyr).attr("height", nboxes*dyr)
@@ -1343,7 +1343,7 @@ class EarthYear {
         .data([0])
         .join("rect")
         .attr("fill", "none")
-        .attr("stroke", "#ffd")  // buttonBox color
+        .attr("stroke", "#fdf8e0")  // buttonBox color
         .attr("stroke-width", 2)
         .attr("x", xr).attr("width", dxr)
         .attr("y", y1-dyr).attr("height", 2*dyr)
@@ -1630,7 +1630,7 @@ class MarsYear {
       .style("margin", "20px")  // padding does not work for SVG?
       .style("background-color", "#ddd")
       .attr("text-anchor", "middle")
-      .attr("font-family", "sans-serif")
+      .attr("font-family", "'Merriweather Sans', sans-serif")
       .attr("font-weight", "bold")
       .attr("font-size", 16)
       .attr("stroke-linejoin", "round")
@@ -1748,7 +1748,7 @@ class MarsYear {
       .attr("display", "none").call(
         g => g.append("line")
           .style("pointer-events", "none")
-          .attr("stroke", "#ffd")  // buttonBox color
+          .attr("stroke", "#fdf8e0")  // buttonBox color
           .attr("stroke-width", 2));
     this.lineGroup = this.plot.append("g");
     this.linePath = this.lineGroup.append("path")
@@ -1771,7 +1771,7 @@ class MarsYear {
     this.slider = this.svg.append("path")
       .style("pointer-events", "all")
       .style("cursor", "pointer")
-      .attr("fill", "#ffd")  // buttonBox color
+      .attr("fill", "#fdf8e0")  // buttonBox color
       .attr("stroke", "#000")
       .attr("stroke-width", 1)
       .attr("d", d3p)
@@ -1832,7 +1832,7 @@ class MarsYear {
           enter => enter.append("rect")
             .datum(d => d)
             .attr("fill", "#ddd0")  // background-color, transparent
-            .attr("stroke", "#ffd")  // buttonBox color
+            .attr("stroke", "#fdf8e0")  // buttonBox color
             .attr("stroke-width", 2)
             .attr("x", xr).attr("width", nboxes*dxr)
             .attr("y", yr-(nboxes-1)*dyr).attr("height", nboxes*dyr)
@@ -1859,7 +1859,7 @@ class MarsYear {
         .data([0])
         .join("rect")
         .attr("fill", "none")
-        .attr("stroke", "#ffd")  // buttonBox color
+        .attr("stroke", "#fdf8e0")  // buttonBox color
         .attr("stroke-width", 2)
         .attr("x", xr).attr("width", dxr)
         .attr("y", y1-dyr).attr("height", 2*dyr)
@@ -2229,7 +2229,7 @@ class SurveyOrbits {
       .style("margin", "20px")  // padding does not work for SVG?
       .style("background-color", "#aaa")
       .attr("text-anchor", "middle")
-      .attr("font-family", "sans-serif")
+      .attr("font-family", "'Merriweather Sans', sans-serif")
       .attr("font-weight", "bold")
       .attr("font-size", 12)
       .attr("stroke-linejoin", "round")
@@ -2300,7 +2300,7 @@ class SurveyOrbits {
         this.yearText = gg.append("text")
           .attr("text-anchor", "end")
           .attr("font-size", 20)
-          .attr("fill", "#ffd")
+          .attr("fill", "#fdf8e0")
           .attr("x", width/2 - 5)
           .attr("y", -height/2 + 76)
           .text("686.980")
@@ -2397,7 +2397,7 @@ class SurveyOrbits {
         this.stdDevText = g.append("text")
           .attr("pointer-events", "none")
           .attr("text-anchor", "end")
-          .attr("fill", "#ffd")
+          .attr("fill", "#fdf8e0")
           .attr("font-size", 20)
           .attr("x", width/2 - 5)
           .attr("y", -height/2 + 50);
@@ -2423,7 +2423,7 @@ class SurveyOrbits {
       .style("pointer-events", "all")
       .style("cursor", "pointer")
       .attr("display", "none")
-      .attr("fill", "#ffd")  // buttonBox color
+      .attr("fill", "#fdf8e0")  // buttonBox color
       .attr("stroke", "#000")
       .attr("stroke-width", 1)
       .attr("d", d3p)
@@ -2572,7 +2572,7 @@ class SurveyOrbits {
       .data(xyzm)
       .join("circle")
       .style("cursor", "pointer")
-      .attr("fill", "#ffd")
+      .attr("fill", "#fdf8e0")
       .attr("stroke", "#000")
       .attr("stroke-width", 2)
       .attr("r", 15)
@@ -2583,7 +2583,7 @@ class SurveyOrbits {
       .data(dxyz)
       .join("text")
       .attr("pointer-events", "none")
-      .attr("fill", "#ffd")
+      .attr("fill", "#fdf8e0")
       .attr("font-size", 16)
       .attr("x", ([d, i]) => d[1][0]*AU)
       .attr("y", ([d, i]) => -d[1][1]*AU+30)
@@ -2606,7 +2606,7 @@ class SurveyOrbits {
         .attr("y2", ([d, j]) => -2*d[1]*AU);
       elements[1]
         .style("cursor", "pointer")
-        .attr("fill", "#ffd")
+        .attr("fill", "#fdf8e0")
         .attr("stroke", "#000")
         .attr("r", 15);
     }
@@ -3064,6 +3064,15 @@ class SurveyOrbits {
         this.clock.disabled = false;
       } else {
         this.clock.disabled = true;
+        let oldElapsed0 = this.clock.elapsed0;
+        this.clock.addElapsed((r, ir) => this.elapsedUpdate(r, ir));
+        this.clock.elapsed0 = oldElapsed0;
+        if (this.elapsed0 != undefined && this.elapsed0 != this.clock.elapsed0) {
+          this.clock.goToDay(this.elapsed0);
+          this.clock.updateElapsed(true);
+        } else if (oldElapsed0 === undefined) {
+          this.clock.elapsed0 = this.clock.dayNow;
+        }
       }
     } else {
       if (this.clock.disabled && this.mars.yearEstimate != this.marsEstimate) {
@@ -3097,7 +3106,7 @@ class Inclination {
       .style("margin", "20px")  // padding does not work for SVG?
       .style("background-color", "#aaa")
       .attr("text-anchor", "middle")
-      .attr("font-family", "sans-serif")
+      .attr("font-family", "'Merriweather Sans', sans-serif")
       .attr("font-weight", "bold")
       .attr("font-size", 12)
       .attr("stroke-linejoin", "round")
@@ -3228,6 +3237,15 @@ class Inclination {
       return;
     }
     this.clock.disabled = true;
+    let oldElapsed0 = this.clock.elapsed0;
+    this.clock.addElapsed((r, ir) => this.elapsedUpdate(r, ir));
+    this.clock.elapsed0 = oldElapsed0;
+    if (this.elapsed0 != undefined && this.elapsed0 != this.clock.elapsed0) {
+      this.clock.goToDay(this.elapsed0);
+      this.clock.updateElapsed(true);
+    } else if (oldElapsed0 === undefined) {
+      this.clock.elapsed0 = this.clock.dayNow;
+    }
 
     const survey = this.survey;
     if (!survey.xyMars ||
@@ -3510,7 +3528,7 @@ class TwoLaws {
       .style("margin", "20px")  // padding does not work for SVG?
       .style("background-color", "#aaa")
       .attr("text-anchor", "middle")
-      .attr("font-family", "sans-serif")
+      .attr("font-family", "'Merriweather Sans', sans-serif")
       .attr("font-weight", "bold")
       .attr("font-size", 12)
       .attr("stroke-linejoin", "round")
@@ -3525,7 +3543,7 @@ class TwoLaws {
       .style("margin", "20px")  // padding does not work for SVG?
       .style("background-color", "#aaa")
       .attr("text-anchor", "middle")
-      .attr("font-family", "sans-serif")
+      .attr("font-family", "'Merriweather Sans', sans-serif")
       .attr("font-weight", "bold")
       .attr("font-size", 12)
       .attr("stroke-linejoin", "round")
@@ -3575,7 +3593,7 @@ class ThirdLaw {
       .style("margin", "20px")  // padding does not work for SVG?
       .style("background-color", "#aaa")
       .attr("text-anchor", "middle")
-      .attr("font-family", "sans-serif")
+      .attr("font-family", "'Merriweather Sans', sans-serif")
       .attr("font-weight", "bold")
       .attr("font-size", 12)
       .attr("stroke-linejoin", "round")
@@ -3590,7 +3608,7 @@ class ThirdLaw {
       .style("margin", "20px")  // padding does not work for SVG?
       .style("background-color", "#aaa")
       .attr("text-anchor", "middle")
-      .attr("font-family", "sans-serif")
+      .attr("font-family", "'Merriweather Sans', sans-serif")
       .attr("font-weight", "bold")
       .attr("font-size", 12)
       .attr("stroke-linejoin", "round")
@@ -3628,7 +3646,7 @@ function buttonBox(rectSel, x, y, width, height, callback) {
   rectSel.attr("x", x).attr("y", y)
     .attr("width", width).attr("height", height)
     .attr("rx", 5)
-    .style("fill", "#ffd")
+    .style("fill", "#fdf8e0")
     .style("stroke", "#000")
     .style("stroke-width", 2)
     .style("cursor", "pointer")
@@ -3662,7 +3680,7 @@ function zoomButtons(width, objectThis) {
           p.style("cursor", "pointer")
             .style("stroke", "#000")
             .style("stroke-width", 2)
-            .style("fill", "#ffd")
+            .style("fill", "#fdf8e0")
             .attr("d", d3p)
             .on("click", () => objectThis.zoomer(0));
         });
@@ -3676,7 +3694,7 @@ function zoomButtons(width, objectThis) {
           p.style("cursor", "pointer")
             .style("stroke", "#000")
             .style("stroke-width", 2)
-            .style("fill", "#ffd")
+            .style("fill", "#fdf8e0")
             .attr("d", d3p)
             .on("click", () => objectThis.zoomer(1));
         });
@@ -3709,7 +3727,7 @@ class Slider {
       .attr("cursor", "pointer")
       .attr("stroke", "#000")
       .attr("stroke-width", 2)
-      .attr("fill", "#ffd")
+      .attr("fill", "#fdf8e0")
       .attr("cx", 0.5*(this.x1 + this.x2)).attr("cy", 0.5*(this.y1 + this.y2))
       .attr("r", 14)
       .call(d3.drag().on("start", starter).on("drag", dragger))

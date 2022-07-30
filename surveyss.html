@@ -12,54 +12,289 @@
           id="MathJax-script">
   </script>
   <style>
-    .down-arrow {
-        width: 2rem; height: 2rem; margin: auto;      
-        border-bottom: solid gray 0.5rem;             
-        border-left: solid gray 0.5rem;               
-        border-radius: 0.5rem;                        
-        transform: translateY(-1rem) rotate(-45deg);
-        cursor: pointer;
+    /* @import url('https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap'); */
+    @import url('https://fonts.googleapis.com/css2?family=Merriweather+Sans:ital,wght@0,400;0,700;1,400;1,700&family=Merriweather:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Merriweather', serif;
+        /* font-family: 'Merriweather Sans', sans-serif; */
     }
-    .up-arrow {
-        width: 2rem; height: 2rem; margin: auto;      
-        border-bottom: solid gray 0.5rem;             
-        border-left: solid gray 0.5rem;               
-        border-radius: 0.5rem;                        
-        transform: translateY(0.6rem) rotate(135deg);
-        cursor: pointer;
-    }
+
     .unselectable {
         -webkit-user-select: none; /* Safari */
         -ms-user-select: none; /* IE 10 and IE 11 */
         user-select: none; /* Standard syntax */
     }
-    .xl-gekko {
-        font-size: 18pt;
+
+    #intro {
+        width: 100%;
+        height: 100%;
+        padding: 7%;
+        margin: 0;
+        transform: translate(0, 0);
+        box-sizing: border-box;
+        background: #eeec;
+        transition: transform 0.3s;
     }
-    .xl-webkit {
-        font-size: 20pt;
+    #intro ul {
+        list-style-type: none;
+        font-family: 'Merriweather', serif;
+        font-weight: normal;
+        font-size: 23px;
+        height: 95%;
+        padding: 10px;
+        margin: 0;
+        border: 4px solid darkslategray;
+        border-radius: 1em;
+        background: #fffb;
     }
+    #intro ul li {
+        padding: 1ex 0ex;
+    }
+
+    #intro .close-x {
+        position: absolute;
+        top: 10px;
+        right: 6px;
+    }
+    .close-x {
+        position: relative;
+        width: 40px;
+        height: 30px;
+        cursor: pointer;
+    }
+    .close-x::before, .close-x::after {
+        content: " ";
+        display: block;
+        position: absolute;
+        left: 0;
+        top: 12px;
+        height: 6px;
+        width: 100%;
+        border-radius: 6px;
+        background-color: darkslategray;
+    }
+    .close-x::before {
+        transform: rotate(45deg);
+    }
+    .close-x::after {
+        transform: rotate(-45deg);
+    }
+
+    .hidden {
+        display: none;
+    }
+    #main-hamburger {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        z-index: 99;
+        background: white;
+    }
+    #main-hamburger:not(.holding).open {
+        background: navajowhite;
+    }
+    .hamburger-x {
+        width: 40px;
+        height: 30px;
+        position: relative;
+        transform: rotate(0deg);
+        transition: transform .5s ease-in-out, background .5s ease-in-out;
+        cursor: pointer;
+    }
+    .hamburger-x span {
+        display: block;
+        position: absolute;
+        height: 6px;
+        width: 100%;
+        background: darkslategray;
+        border-radius: 6px;
+        left: 0;
+        transform: rotate(0deg);
+        transition: .25s ease-in-out;
+    }
+    .hamburger-x span:nth-child(1) {
+        top: 0px;
+    }
+    .hamburger-x span:nth-child(2), .hamburger-x span:nth-child(3) {
+        top: 12px;
+    }
+    .hamburger-x span:nth-child(4) {
+        top: 24px;
+    }
+    .hamburger-x.open span:nth-child(1) {
+        top: 12px;
+        width: 0%;
+        left: 50%;
+    }
+    .hamburger-x.open span:nth-child(2) {
+        transform: rotate(45deg);
+    }
+    .hamburger-x.open span:nth-child(3) {
+        transform: rotate(-45deg);
+    }
+    .hamburger-x.open span:nth-child(4) {
+        top: 12px;
+        width: 0%;
+        left: 50%;
+    }
+
+    #top-div {
+        width: 100%;
+        display: flex;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    .left-wrapper {
+        box-sizing: border-box;
+        margin: auto;
+        flex: 1 1 100%;
+        display: flex;
+        overflow: auto;
+    }
+
+    .left-panel {
+        box-sizing: border-box;
+        min-width: 450px;
+        max-width: 750px;
+        margin: auto;
+        position: relative;
+        flex: 1 1 0;
+        opacity: 1;
+        transition: opacity 0.3s;
+    }
+    .left-panel.faded {
+        opacity: 0;
+    }
+
+    .right-panel {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        transform: scale(1);
+        transition: all 0.3s;
+        min-width: 450px;
+        max-width: 750px;
+        margin: auto;
+        position: relative;
+        flex: 1 1 0;
+    }
+    .right-panel.shrunken {
+        transform: scale(0);
+        min-width: 0px;
+        max-width: 0px;
+        margin: 0;
+    }
+
+    .panel-title {
+        box-sizing: border-box;
+        text-align: center;
+        display: block;
+        margin: 0;
+        padding: 10px 0 0 0;
+        height: 30px;
+        font-family: 'Merriweather Sans', sans-serif;
+        font-size: 28px;
+    }
+
+    .sidebar {
+        flex: 1 0 auto;
+        box-sizing: border-box;
+        background: navajowhite;  /* wheat, moccasin, beige, seashell */
+        color: slategray;
+        margin: 0 auto;
+        padding: 30px 0 0 0;
+        font-family: 'Merriweather Sans', sans-serif;
+        font-size: 135%;
+        white-space: nowrap;
+        overflow: hidden;
+        width: 0;
+        transition: width 0.3s;
+    }
+    .sidebar.open {
+        width: 10em;
+        transition: width 0.3s;
+    }
+    .sidebar ul {
+        list-style-type: none;
+        padding: 0.25ex 0 0 0;
+        margin: 1em;
+        border-top: 6px solid darkslategray;
+    }
+    .sidebar ul li:not(.separator) {
+        padding: 0.25ex 0 0.25ex 0;
+    }
+    .sidebar ul li:not(.current, .separator):hover {
+        padding: 0.25ex 0 0.25ex 0;
+        background: #fdf8e0;  /* #fdf5e6 */
+        color: black;
+        cursor: pointer;
+    }
+    .sidebar ul li.current {
+        font-style: italic;
+        background: #fb0;
+        color: black;
+    }
+    .sidebar ul li.separator {
+        width: 100%;
+        height: 0.2ex;
+        background: darkslategray;
+    }
+    .sidebar ul li.usage {
+        text-align: center;
+        font-style: italic;
+        background: #fb0;
+        color: black;
+    }
+
+    #main-overlay {
+        box-sizing: border-box;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: white;
+        opacity: 0.95;
+        transition: opacity 0.5s;
+    }
+    #main-overlay.faded {
+        opacity: 0;
+        z-index: 20;
+    }
+    .helper {
+        position: relative;
+        min-width: 450px;
+        max-width: 750px;
+        margin: 0 auto;
+    }
+
   </style>
 </head>
 
 <body>
 
-  <div id="top-div" class="unselectable">
-    <div style="position: relative">
-      <div style="display: none;">
-        <!-- These two divs will be moved into the clock svg below. -->
-        <div id="intro"
-             style="width: 75%; padding: 1em 2.5em;
-                    transform: translate(0, 0);
-                    background: #eeec; transition: transform 250ms;">
+  <div id="top-div">
+    <div id="main-hamburger" class="hamburger-x hidden"
+         onclick="openSidebar()">
+      <span></span><span></span><span></span><span></span>
+    </div>
+    <div class="left-wrapper">
+      <div id="top-clock" class="left-panel unselectable">
+        <!-- The intro will be moved into the clock svg in javascript below.
+             Because this is the landing page for the whole site, we want
+             the text to scale with the changing size of the clock svg.
+          -->
+        <div id="intro">
           <!-- 20pt font optimal for chrome, 18pt for firefox -->
-          <ul class="xl-gekko" style="list-style-type: none;
-                     font-family: serif; font-weight: normal;
-                     padding: 0ex 1ex; border: 4px solid gray;
-                     border-radius: 1em; background: #fffc;">
-            <li style="padding: 1ex 0ex;">This "planet clock" shows
-              the positions of the Sun and planets as they move through the
-              constellations of the Zodiac
+          <ul>
+            <li style="padding: 1ex 0ex;">This &ldquo;planet
+              clock&rdquo; shows the positions of the Sun and planets
+              as they move through the constellations of the Zodiac
               <a href="https://ssd.jpl.nasa.gov/planets/approx_pos.html">for
                 any date</a> between 5000 years ago and 1000 years
                 from now.</li>
@@ -72,69 +307,82 @@
               the third planet?  Can you figure out the order of the
               planets from the Sun?  How would you test these
               ideas?</li>
-            <li><div class="down-arrow" onclick="removeIntro()"></div></li>
           </ul>
-        </div>
-        <div id="intro-restore" style="display: none;">
-          <div class="up-arrow" onclick="restoreIntro()"></div>
+          <div class="close-x" onclick="removeIntro()">
+          </div>
         </div>
       </div>
-    <div id="top-clock"
-         style="min-width: 450px; max-width: 750px; position: relative;
-                margin: auto;">
+      <div id="first-two-l" class="left-panel unselectable faded hidden">
+        <div class="panel-title">Fit Ellipse to Orbit</div>
+      </div>
+      <div id="third-law-l" class="left-panel unselectable faded hidden">
+        <div class="panel-title">Fit Other Orbits</div>
+      </div>
+      <div id="orbit-view" class="right-panel unselectable shrunken hidden">
+        <div class="panel-title">View Planetary Orbits</div>
+      </div>
+      <div id="earth-year" class="right-panel unselectable shrunken hidden">
+        <div class="panel-title">Find Earth Period</div>
+      </div>
+      <div id="mars-year" class="right-panel unselectable shrunken hidden">
+        <div class="panel-title">Find Mars Period</div>
+      </div>
+      <div id="surveyor" class="right-panel unselectable shrunken hidden">
+        <div class="panel-title">Survey Earth &amp; Mars Orbits</div>
+      </div>
+      <div id="incline" class="right-panel unselectable shrunken hidden">
+        <div class="panel-title">Find Mars Inclination</div>
+      </div>
+      <div id="first-two-r" class="right-panel unselectable shrunken hidden">
+        <div class="panel-title">Area-Time Relation</div>
+      </div>
+      <div id="third-law-r" class="right-panel unselectable shrunken hidden">
+        <div class="panel-title">Period-Distance Relation</div>
+      </div>
     </div>
-    </div>
-    <div id="right-side"
-         style="position: relative; min-width: 400px; max-width: 650px; flex: 1">
-      <!-- without the width:100% style in both following nested divs,
-           chrome will compute the inner svg size to be 0x0 -->
-      <div style="position: absolute; top: 50px; left: 0; width: 100%">
-        <div id="orb-view"
-             style="position: static; width: 100%; height: 100%; display: none;">
-        </div>
-      </div>
-      <div style="position: absolute; top: 50px; left: 0; width: 100%">
-        <div id="earth-year"
-             style="position: static; width: 100%; height: 100%; display: none;">
-        </div>
-      </div>
-      <div style="position: absolute; top: 50px; left: 0; width: 100%">
-        <div id="mars-year"
-             style="position: static; width: 100%; height: 100%; display: none;">
-        </div>
-      </div>
-      <div style="position: absolute; top: 50px; left: 0; width: 100%">
-        <div id="survey-orbits"
-             style="position: static; width: 100%; height: 100%; display: none;">
-        </div>
-      </div>
-      <div style="position: absolute; top: 50px; left: 0; width: 100%">
-        <div id="mars-incline"
-             style="position: static; width: 100%; height: 100%; display: none;">
-        </div>
-      </div>
-      <div style="position: absolute; top: 50px; left: 0; width: 100%">
-        <div id="two-laws"
-             style="position: static; width: 100%; height: 100%; display: none;">
-        </div>
-      </div>
-      <div style="position: absolute; top: 50px; left: 0; width: 100%">
-        <div id="third-law"
-             style="position: static; width: 100%; height: 100%; display: none;">
-        </div>
-      </div>
+    <div id="main-sidebar" class="sidebar unselectable">
+      <ul>
+        <!-- https://datacadamia.com/web/dom/event/on_content_attribute
+             has information on what can go in the onclick string.
+             The "this" argument means the element for onclick,
+             the "event" argument is the event.  However, it's a little
+             unclear how universal this is, and there is very little
+             information about exactly what can go in the onclick string.
+          -->
+        <li onclick="usageClick(this)" class="usage">Notes &amp; Hints</li>
+        <li class="separator"></li>
+        <li onclick="clockClick(this)" class="current"
+            data-id="top-clock">Planet Clock</li>
+        <li onclick="orbitClick(this)" data-id="orbit-view">Orbit View</li>
+        <li onclick="earthClick(this)" data-id="earth-year">Earth Period</li>
+        <li onclick="marsClick(this)" data-id="mars-year">Mars Period</li>
+        <li onclick="surveyClick(this)" data-id="surveyor">Survey Orbits</li>
+        <li onclick="inclineClick(this)" data-id="incline">Mars Inclination</li>
+        <li onclick="twoClick(this)" data-id="first-two-r">First Two Laws</li>
+        <li onclick="thirdClick(this)" data-id="third-law-r">Third Law</li>
+      </ul>
     </div>
   </div>
-
-<!-- J2000 Zodiac boundaries:
-Pisces 28.687 Aries 53.417 Taurus 90.140 Gemini 117.988 Cancer 138.038
-Leo 173.851 Virgo 217.810 Libra 241.047 Scorpius 247.638 Ophiuchus 266.238
-Sagittarius 299.656 Capricornus 327.488 Aquarius 351.650 Pisces
-
-~400 BC?  beginning of Cancer at beta-Geminorum, of Aquarius at delta-Capricorn
-Pisces 0 Aries 30 Taurus 60 Gemini 90 Cancer 120 Leo 150 Virgo 180
-Libra 210 Scorpio 240 Sagittarius 270 Capricornus 300 Aquarius 330 Pisces
--->
+  <div id="main-overlay" class="faded hidden">
+    <div id="top-clock-help" class="helper">
+      Top clock help.
+    </div>
+    <div id="orbit-view-help" class="helper hidden">
+      Orbit view help.
+    </div>
+    <div id="earth-year-help" class="helper hidden">
+    </div>
+    <div id="mars-year-help" class="helper hidden">
+    </div>
+    <div id="surveyor-help" class="helper hidden">
+    </div>
+    <div id="incline-help" class="helper hidden">
+    </div>
+    <div id="first-two-r-help" class="helper hidden">
+    </div>
+    <div id="third-law-r-help" class="helper hidden">
+    </div>
+  </div>
 
 <!-- Load d3 library.  Later should grab only pieces used.
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.4.4/d3.min.js"></script>
@@ -144,215 +392,165 @@ Libra 210 Scorpio 240 Sagittarius 270 Capricornus 300 Aquarius 330 Pisces
 <script src="./planetclock.js"></script>
 <script>
 
-  // Probably should not do this...
-  if (navigator.userAgent.indexOf("AppleWebKit/") >= 0) {
-    document.querySelectorAll(".xl-gekko").forEach(
-      e => {
-        e.classList.toggle("xl-gekko");
-        e.classList.toggle("xl-webkit");
-      });
-  }
-
-  let clock = new PlanetClock(d3.select("#top-clock"));
+  const clock = new PlanetClock(d3.select("#top-clock"));
   clock.goToDay(dayOfDate(new Date()));
   clock.hasMoonButton(true);
   clock.disabled = true;
   let introCover = clock.svg.append("foreignObject")
       .attr("xmlns", "http://www.w3.org/1999/xhtml")
-      .attr("width", "100%").attr("height", "100%")
-      .attr("x", 63-375).attr("y", 91-375);
+      .attr("width", 620).attr("height", 580)
+      .attr("x", -310).attr("y", -290);
   introCover.append(() => d3.select("#intro").node());
-  clock.svg.append("foreignObject")
-    .attr("xmlns", "http://www.w3.org/1999/xhtml")
-    .attr("width", "10%").attr("height", "7%")
-    .attr("x", 300).attr("y", 330)
-    .append(() => d3.select("#intro-restore").node());
+  const orbits = new OrbitView(d3.select("#orbit-view"), clock);
+  const eyear = new EarthYear(d3.select("#earth-year"), clock);
+  const myear = new MarsYear(d3.select("#mars-year"), clock);
+  const surveyor = new SurveyOrbits(d3.select("#surveyor"), clock, myear, eyear);
+  const incline = new Inclination(d3.select("#incline"), clock, surveyor);
+  const laws2 = new TwoLaws(d3.select("#first-two-l"),
+                            d3.select("#first-two-r"), incline);
+  const law3 = new ThirdLaw(d3.select("#third-law-l"),
+                            d3.select("#third-law-r"), incline);
+  const slaves = {"top-clock": null, "orbit-view": orbits, "earth-year": eyear,
+                  "mars-year": myear, "surveyor": surveyor, "incline": incline,
+                  "first-two-r": laws2, "third-law-r": law3};
+
+  const hamburger = document.querySelector("#main-hamburger");
+  const sidebar = document.querySelector("#main-sidebar");
+  const overlay = document.querySelector("#main-overlay");
+  function openSidebar() {
+    const hamList = hamburger.classList;
+    const barList = sidebar.classList;
+    if (hamList.contains("holding")) {
+      // Usage Overlay active - take overlay down but keep sidebar collapsed.
+      hamList.remove("holding", "open");
+      const overList = overlay.classList;
+      overList.add("faded");
+      d3.timeout(() => overList.add("hidden"), 500);
+    } else {
+      hamList.toggle("open");
+      barList.toggle("open");
+    }
+  }
 
   function removeIntro() {
     const intro = d3.select("#intro");
-    let node = intro.node();
-    intro.style("transform", "translate(675px, 675px) scale(0.1)");
+    intro.style("transform", "translate(750px, -375px) scale(0.1)");
+    hamburger.classList.remove("hidden");
     d3.timeout(
       () => {
         introCover.style("display", "none");
-        d3.select("#intro-restore").style("display", null);
         clock.disabled = false;
-      }, 260);
+      }, 310);
   }
 
   function restoreIntro() {
+    hamburger.classList.remove("hidden");
     const intro = d3.select("#intro");
     introCover.style("display", null);
     d3.timeout(() => intro.style("transform", "translate(0, 0)"), 10);
     d3.timeout(
       () => {
-        d3.select("#intro-restore").style("display", "none");
         clock.disabled = true;
-      }, 260);
+      }, 310);
   }
 
-  /*
-  let moonButton = d3.select("#top-div").append("div")
-      .style("position", "absolute")
-      .style("top", "1%").style("left", "1%")
-      .append("button")
-      .style("cursor", "pointer")
-      .text("Show Moon");
-  let moon = {state: false};
-  function toggler() {
-    if (moon.state) {
-      clock.turnOffMoon();
-      moon.state = false;
-      moonButton.text("Show Moon");
-    } else {
-      clock.turnOnMoon();
-      moon.state = true;
-      moonButton.text("Hide Moon");
-    }
-  }
-  moonButton.on("click", toggler);
-  */
+  let currentElem = document.querySelector(".sidebar ul li.current");
+  const clockElem = currentElem;
+  let currentSlave = null;
 
-  let orbView = new OrbitView(d3.select("#orb-view"), clock);
-  let earthYear = new EarthYear(d3.select("#earth-year"), clock);
-  let marsYear = new MarsYear(d3.select("#mars-year"), clock);
-  let surveyor = new SurveyOrbits(d3.select("#survey-orbits"),
-                                  clock, marsYear, earthYear);
-  let incline = new Inclination(d3.select("#mars-incline"),
-                                clock, surveyor);
-  let twoLaws = new TwoLaws(d3.select("#left-side"), d3.select("#two-laws"),
-                            incline);
-  let thirdLaw = new ThirdLaw(d3.select("#left-side2"), d3.select("#third-law"),
-                             incline);
-  let slaves = [null, orbView, earthYear, marsYear, surveyor, incline,
-                twoLaws, thirdLaw];
-  let bothSides = [false, false, false, false, false, false,
-                   true, true];
-  let iselPrev = -1;
-
-  function planetSelect() {
-    let sel = document.getElementById("planet-menu");
-    twoLaws.setPlanet(sel.options[sel.selectedIndex].value);
-  }
-
-  function allPlanetSelect() {
-    let sel = document.getElementById("all-planet-menu");
-    thirdLaw.setPlanet(sel.options[sel.selectedIndex].value);
-  }
-
-  function mainMenuSelect() {
+  function makeCurrent(elem) {
+    if (elem == currentElem) return true;
+    hamburger.classList.remove("open");
+    sidebar.classList.remove("open");
+    if (currentElem) currentElem.classList.remove("current");
+    elem.classList.add("current");
     ["mercury", "venus", "jupiter", "saturn"].forEach(
       p => clock.setHandVisibility(p, false));
-    let sel = document.getElementById("main-menu");
-    sel = sel.options[sel.selectedIndex].value;
-    let isel = -1;
-    ["#intro", "#orb-view", "#earth-year", "#mars-year",
-     "#survey-orbits", "#mars-incline", "#two-laws", "#third-law"].forEach(
-      (id, i) => {
-        if (id != sel) {
-          d3.select(id).style("display", "none");
-        } else {
-          isel = i;
-        }
-      }
-    );
-    d3.select(sel).style("display", "block");
-    if (bothSides[isel]) {
-      d3.select("#top-clock").style("display", "none");
-      d3.select("#top-non-clock").style("display", null);
-      if (sel === "#two-laws") {
-        d3.select("#third-law-title").style("display", "none");
-        d3.select("#two-laws-title").style("display", null);
-        d3.select("#left-side2").style("display", "none");
-        d3.select("#left-side").style("display", null);
-      } else {
-        d3.select("#two-laws-title").style("display", "none");
-        d3.select("#third-law-title").style("display", null);
-        d3.select("#left-side").style("display", "none");
-        d3.select("#left-side2").style("display", null);
-      }
-    } else {
-      d3.select("#top-non-clock").style("display", "none");
-      d3.select("#top-clock").style("display", null);
+    const oldDiv = currentElem.dataset.id;
+    const newDiv = elem.dataset.id;
+    document.querySelector("#"+oldDiv+"-help").classList.add("hidden");
+    document.querySelector("#"+newDiv+"-help").classList.remove("hidden");
+    const oldDivL = oldDiv.endsWith("-r")? oldDiv.replace("-r", "-l")
+          : "top-clock";
+    if (oldDiv != "top-clock") {
+      const classes = document.querySelector("#"+oldDiv).classList;
+      classes.add("shrunken");
+      d3.timeout(() => classes.add("hidden"), 300);
+      clock.setHandVisibility("mars", true);
     }
-    clock.setHandVisibility(
-      "mars", ["#orb-view", "#mars-year",
-               "#survey-orbits", "#mars-incline"].indexOf(sel) > -1);
-    if (slaves[iselPrev] != null) {
-      slaves[iselPrev].activate(false);
-    } else {
-      moonButton.style("display", "none");
-      if (moon.state) clock.turnOffMoon();
+    if (currentSlave != null) {
+      currentSlave.activate(false);
     }
-    iselPrev = isel;
-    if (slaves[isel] != null) {
-      slaves[isel].activate(true);
+    currentSlave = slaves[newDiv];
+    const newDivL = newDiv.endsWith("-r")? newDiv.replace("-r", "-l")
+          : "top-clock";
+    if (newDiv != "top-clock") {
+      clock.hasMoonButton(false);
+      clock.setHandVisibility("mars", true);
+      currentSlave.activate(true);
+      const classes = document.querySelector("#"+newDiv).classList;
+      classes.remove("hidden");
+      d3.timeout(() => classes.remove("shrunken"), 10);
     } else {
       clock.removeElapsed();
-      moonButton.style("display", "inline-block");
-      if (moon.state) clock.turnOnMoon();
+      clock.hasMoonButton(true);
+    }
+    if (newDivL != oldDivL) {
+      const oldList = document.querySelector("#"+oldDivL).classList;
+      const newList = document.querySelector("#"+newDivL).classList;
+      oldList.add("faded");  // triggers 0.3s transition
+      d3.timeout(() => {  // wait for fade, then fade new div in
+        oldList.add("hidden");
+        newList.remove("hidden", "faded");
+      }, 300);
+    }
+    currentElem = elem;
+    return false;
+  }
+
+  function usageClick(elem) {
+    hamburger.classList.add("holding");
+    sidebar.classList.remove("open");
+    overlay.classList.remove("hidden");
+    d3.timeout(() => overlay.classList.remove("faded"), 10);
+  }
+
+  function clockClick(elem) {
+    if (makeCurrent(elem)) {
+      hamburger.classList.remove("open");
+      sidebar.classList.remove("open");
+      restoreIntro();
+      return;
     }
   }
 
-  // Interpret URL query parameters
-  // tab=orb-view  (intro, orb-view, earth-year, ... main select id)
-  // day=8114      (clock.elapsed0 JD minus J2000 day number)
-  // eyear=365.25636  (earthYear period value, otherwise unused)
-  // myear=686.979  (marsYear.yearEstimate value)
-  // oppo=0        (surveyor.iOppo opposition index)
-  let urlQueries = location.search.replace("\?", "");
-  if (urlQueries) {
-    urlQueries = Object.fromEntries(urlQueries.split("&")
-                                    .map(q => q.split("=")));
-  } else {
-    urlQueries = {}
-  }
-  if (urlQueries.tab &&
-      ["intro", "orb-view", "earth-year", "mars-year", "survey-orbits",
-       "mars-incline", "two-laws", "third-law"].indexOf(urlQueries.tab)) {
-    let sel = document.getElementById("main-menu");
-    sel.value = "#" + urlQueries.tab;
-    // mainMenuSelect() will be called below to emulate onchange callback
-  }
-  if (urlQueries.eyear && !isNaN(urlQueries.eyear)) {
-    let year = parseFloat(urlQueries.eyear);
-    if (year < 350) year = 350;
-    else if (year > 380) year = 380;
-    earthYear.changeYearEstimate(year);
-  }
-  if (urlQueries.day && !isNaN(urlQueries.day)) {
-    let day = parseFloat(urlQueries.day);
-    clock.goToDay(day);
-    clock.elapsed0 = day;
-    earthYear.elapsedUpdate(true);
-    marsYear.elapsedUpdate(true);
-    if (urlQueries.myear && !isNaN(urlQueries.myear)) {
-      let year = parseFloat(urlQueries.myear);
-      if (year < 650) year = 650;
-      else if (year > 730) year = 730;
-      marsYear.changeYearEstimate(year);
-    } else {
-      marsYear.changeYearEstimate(686.97973);
-    }
-    if (!urlQueries.eyear) {
-      earthYear.changeYearEstimate(365.25636);
-    }
-    surveyor.notReady();
-    if (urlQueries.oppo && !isNaN(urlQueries.oppo)
-        && surveyor.oppositionsFound) {
-      let iOppo = parseInt(urlQueries.oppo);
-      if (iOppo >= 0 && iOppo < surveyor.oppositionsFound.length) {
-        surveyor.selector(undefined, [undefined, iOppo]);
-      }
-    } else {
-      surveyor.selector(undefined, [undefined, 0]);
-    }
-    surveyor.findEarth();
-    surveyor.findMars();
+  function orbitClick(elem) {
+    if (makeCurrent(elem)) return;
   }
 
-  // On page reload, select element remembers previous setting, so
-  // mainMenuSelect();
+  function earthClick(elem) {
+    if (makeCurrent(elem)) return;
+  }
+
+  function marsClick(elem) {
+    if (makeCurrent(elem)) return;
+  }
+
+  function surveyClick(elem) {
+    if (makeCurrent(elem)) return;
+  }
+
+  function inclineClick(elem) {
+    if (makeCurrent(elem)) return;
+  }
+
+  function twoClick(elem) {
+    if (makeCurrent(elem)) return;
+  }
+
+  function thirdClick(elem) {
+    if (makeCurrent(elem)) return;
+  }
 
 </script>
 
