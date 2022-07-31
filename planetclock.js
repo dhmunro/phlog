@@ -2675,6 +2675,12 @@ class SurveyOrbits {
     xym[-imin][1] = ym;
     // Defer calculation of xym other than xym[iRef] until findMars.
 
+    // orbitDirections is indexed by Earth year, provide alternate
+    // orbitTranspose indexed by Mars year.
+    this.orbitTranspose = Array.from(new Array(jmax - jmin + 1), () => []);
+    this.orbitDirections.forEach(
+      list => list.forEach(p => this.orbitTranspose[p[1]-jmin].push(p)));
+
     // marsLines is set of lines from Earth to Mars
     // sunLines is set of lines from Earth to Sun
     //   only displayed in state=2, or state=3 for newly added Earth points
@@ -3060,19 +3066,16 @@ class SurveyOrbits {
 
   activate(on) {
     if (on) {
+      let oldElapsed0 = this.clock.elapsed0;
+      this.clock.addElapsed((r, ir) => this.mars.elapsedUpdate(r, ir));
+      this.clock.elapsed0 = oldElapsed0;
+      if (oldElapsed0 === undefined) {
+        this.clock.elapsed0 = this.clock.dayNow;
+      }
       if (this.notReady()) {
         this.clock.disabled = false;
       } else {
         this.clock.disabled = true;
-        let oldElapsed0 = this.clock.elapsed0;
-        this.clock.addElapsed((r, ir) => this.elapsedUpdate(r, ir));
-        this.clock.elapsed0 = oldElapsed0;
-        if (this.elapsed0 != undefined && this.elapsed0 != this.clock.elapsed0) {
-          this.clock.goToDay(this.elapsed0);
-          this.clock.updateElapsed(true);
-        } else if (oldElapsed0 === undefined) {
-          this.clock.elapsed0 = this.clock.dayNow;
-        }
       }
     } else {
       if (this.clock.disabled && this.mars.yearEstimate != this.marsEstimate) {
@@ -3237,17 +3240,14 @@ class Inclination {
       return;
     }
     this.clock.disabled = true;
-    let oldElapsed0 = this.clock.elapsed0;
-    this.clock.addElapsed((r, ir) => this.elapsedUpdate(r, ir));
-    this.clock.elapsed0 = oldElapsed0;
-    if (this.elapsed0 != undefined && this.elapsed0 != this.clock.elapsed0) {
-      this.clock.goToDay(this.elapsed0);
-      this.clock.updateElapsed(true);
-    } else if (oldElapsed0 === undefined) {
-      this.clock.elapsed0 = this.clock.dayNow;
-    }
 
     const survey = this.survey;
+    let oldElapsed0 = this.clock.elapsed0;
+    this.clock.addElapsed((r, ir) => survey.mars.elapsedUpdate(r, ir));
+    this.clock.elapsed0 = oldElapsed0;
+    if (oldElapsed0 === undefined) {
+      this.clock.elapsed0 = this.clock.dayNow;
+    }
     if (!survey.xyMars ||
         survey.xyMars.length != survey.xyMars.filter(x => x).length) {
       this.ready = false;
