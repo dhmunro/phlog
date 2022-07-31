@@ -230,8 +230,10 @@
     }
     .sidebar ul li:not(.current, .separator):hover {
         padding: 0.25ex 0 0.25ex 0;
-        background: #fdf8e0;  /* #fdf5e6 */
+        background: #fdf8e0;  /* oldlace #fdf5e6 */
         color: black;
+        font-style: italic;
+        font-weight: bold;
         cursor: pointer;
     }
     .sidebar ul li.current {
@@ -257,7 +259,6 @@
         top: 0;
         left: 0;
         width: 100%;
-        height: 100%;
         background: white;
         opacity: 0.95;
         transition: opacity 0.5s;
@@ -267,10 +268,48 @@
         z-index: 20;
     }
     .helper {
-        position: relative;
-        min-width: 450px;
+        min-width: 400px;
         max-width: 750px;
         margin: 0 auto;
+        padding: 0 10px 20px;
+        font-size: large;
+    }
+    .helper h1 {
+        font-family: 'Merriweather Sans', sans-serif;
+        font-size: 24pt;
+        color: darkslategray;
+        text-align: center;
+    }
+    .helper hr {
+        margin: 4px 0;
+        height: 3px;
+        background: darkslategray;
+    }
+    .question {
+        box-sizing: border-box;
+        border: 2px solid black;
+        border-radius: 8px;
+        margin: 4px 0;
+        padding: 2px 5px;
+        color: black;
+        background: #fdf8e0;
+        font-family: 'Merriweather Sans', sans-serif;
+        cursor: pointer;
+    }
+    .question:hover {
+        background: navajowhite;
+        font-style: italic;
+        font-weight: bold;
+    }
+    .answer {
+        box-sizing: border-box;
+        padding: 0 5px;
+        font-family: 'Merriweather', serif;
+        overflow: hidden;
+        max-height: 0;
+    }
+    .answer.active {
+        max-height: 100%;  /* this does not work quite right */
     }
 
   </style>
@@ -319,7 +358,7 @@
         <div class="panel-title">Fit Other Orbits</div>
       </div>
       <div id="orbit-view" class="right-panel unselectable shrunken hidden">
-        <div class="panel-title">View Planetary Orbits</div>
+        <div class="panel-title">Picture Planetary Orbits</div>
       </div>
       <div id="earth-year" class="right-panel unselectable shrunken hidden">
         <div class="panel-title">Find Earth Period</div>
@@ -349,12 +388,12 @@
              unclear how universal this is, and there is very little
              information about exactly what can go in the onclick string.
           -->
-        <li onclick="usageClick(this)" class="usage">Notes &amp; Hints</li>
+        <li onclick="usageClick(this)" class="usage">Tips &amp; Notes</li>
         <li class="separator"></li>
         <li onclick="clockClick(this)" class="current"
             data-id="top-clock">Planet Clock</li>
-        <li onclick="orbitClick(this)" data-id="orbit-view">Orbit View</li>
         <li onclick="earthClick(this)" data-id="earth-year">Earth Period</li>
+        <li onclick="orbitClick(this)" data-id="orbit-view">Orbit View</li>
         <li onclick="marsClick(this)" data-id="mars-year">Mars Period</li>
         <li onclick="surveyClick(this)" data-id="surveyor">Survey Orbits</li>
         <li onclick="inclineClick(this)" data-id="incline">Mars Inclination</li>
@@ -365,22 +404,203 @@
   </div>
   <div id="main-overlay" class="faded hidden">
     <div id="top-clock-help" class="helper">
-      Top clock help.
+      <h1>Tips &amp; Notes: Planet Clock</h1>
+      <div class="question unselectable">How does the &ldquo;planet clock&rdquo;
+        chart the sky?</div>
+      <div class="answer">
+        <p>The Sun follows a great circle around
+          the <a href="https://en.wikipedia.org/wiki/Celestial_sphere">
+          celestial sphere</a> during the course of a year.  The
+          constellations of the zodiac lie around this circle, serving
+          as convenient markers that you can learn to recognize when
+          you look at the night sky.  The plane of this great circle
+          (or sometimes the circle itself) is called the ecliptic.</p>
+        <p>The black outer ring of the &ldquo;planet clock&rdquo;
+          represents a ribbon of sky arond the ecliptic: The gray
+          circle at the center of the ring is the ecliptic itself;
+          points outside this circle are north of the ecliptic in the
+          sky, while points inside the circle are south of the
+          ecliptic.  The ribbon extends 9 degrees north and south, and
+          gray circles are drawn 5 degrees north and south of the
+          ecliptic.</p>
+
+        <div style="min-width: 300px; max-width: 700px; padding: 10px;">
+          <img src="planetclock.svg" style="width: 100%"
+               alt="picture of ecliptic coordinate system" />
+        </div>
+
+        <p>The dashed radial lines show the astronomical boundaries of
+          the constellations of the zodiac standardized by the IAU in
+          1928.  The constellation names appear between these dashed
+          lines, tying the black ring to what you see in the sky.
+          (The boundaries drawn here for Scorpio include the
+          constellation Ophiuchus, whose 1928 boundary intersects the
+          ecliptic even though it is not one of the ancient twelve.)</p>
+        <p>The solid radial lines marked every 30 degrees around the
+          ecliptic show
+          <a href="https://en.wikipedia.org/wiki/Ecliptic_coordinate_system">
+            J2000 ecliptic longitude</a>.  The gray circles mentioned
+          above are J2000 ecliptic latitude lines (including the
+          ecliptic, which is ecliptic latitude 0.).  The J2000
+          coordinates are fixed relative to the stars, so the planet
+          clock shows how the Sun and planets move relative to the
+          fixed stars.  The clock shows how the positions of the Sun
+          and planets move through the fixed constellations through the
+          years.  The gold clock hand shows the longitude of the Sun,
+          that is its position in the zodiac.  A fainter gold hand
+          shows the longitude exactly opposite the Sun.  You can toggle
+          on additional hands for the planets.</p>
+        <p>You can also toggle on the Moon.  However, the motion of
+          the Moon only relates very subtly to the motions of the
+          Sun and planets, and has nothing to do with the topics
+          discussed here.</p>
+        <p>You can see everything depicted on the planet clock with
+          your own eyes by looking at the night sky.  The partial
+          exception is the Sun - you also need a good timepiece to
+          work out where the Sun is in the sky because you can never
+          see the Sun and stars together in the sky!  The sky blue
+          sector interrupting the black ring very roughly indicates
+          the part of the sky which is too close to the Sun to see any
+          stars or planets located there.  (The exact extent of the
+          part of the sky obscured by daylight depends on your
+          latitude and the time of year.)  The side of the blue sector
+          labeled "evening" are stars setting too soon after sunset to
+          be seen; the side labeled "morning" are stars which do not
+          rise early enough before sunrise to be seen.</p>
+        <p>One final point of interest: If you set the clock forward
+          or backward by many centuries (try the year -3000, 5
+          millenia ago) you will notice that the gray ring labelling
+          the months has rotated.  The months (in our Gregorian
+          calendar) are tied to the seasons - for example the spring
+          equinox is always close to March 20.  The rotation of the
+          month dial is caused by the very slow precession of the
+          Earth's spin axis relative to the constellations, the
+          precession of the equinoxes.</p>
+      </div>
+      <div class="question unselectable">How do the controls work?</div>
+      <div class="answer">
+        <ol>
+          <li>Drag Sun around sky ring to set date.</li>
+          <li>Click year button to set year (accurate from -3000 to 3000).</li>
+          <li>Press and hold triangles below sky ring to animate.</li>
+          <li>Click legend symbol or planet name to toggle radial line.</li>
+          <li>Click Show/Hide Moon button to toggle Moon.</li>
+        </ol>
+      </div>
+      <hr/>  <!-- following dummy answer fixes spacing after this hr -->
+      <div class="answer"></div>
+      <div class="question unselectable">Do you see evidence that the
+        planets orbit the Sun and not the Earth?</div>
+      <div class="answer">
+        <p>You can quickly see that the motion of the planets is
+          <em>connected to</em> the motion of the Sun: Toggle on a
+          planet line by clicking on its name in the legend, then
+          press and hold one of the triangle animation buttons on the
+          lower right.  Mercury and Venus wag back and forth about the
+          Sun, never straying far from it.  Mars, Jupiter, and Saturn
+          move around the zodiac in the same direction as the Sun but
+          more slowly, so at first you may not see their relationship
+          to the Sun.</p>
+        <p>If you watch more carefully, however, you notice that Mars,
+          Jupiter, and Saturn reverse direction whenever they are near
+          opposition to the Sun - the light gold line opposite the Sun
+          hand of the planet clock.  Mercury and Venus also reverse
+          direction as they pass from the evening to the morning side
+          (they are moving the same direction as the Sun as they move
+          from the morning side to the evening side).  In all cases,
+          the retrograde motion of a planet around the zodiac is
+          tied to the position of the Sun.</p>
+      </div>
+      <div class="question unselectable">Do you see evidence that
+        Earth is the third planet?</div>
+      <div class="answer">
+        <p>For Mercury and Venus, you get a strong impression that you
+          have an edge-on view of roughly circular orbits around the
+          Sun, and the size of those orbits is less than your distance
+          from the Sun.  Note that they spend far less time going from
+          evening to morning than from morning to evening, as they
+          would if they were moving around the Sun in the same
+          direction as the Sun is moving around the zodiac.  The
+          evening to morning transit is in front of the Sun, while the
+          morning to evening transit is behind the Sun.</p>
+        <p>For Mars, Jupiter, and Saturn, you might try thinking about
+          how Earth would look if you were on Venus.  The direction to
+          Earth from Venus is exactly 180 degrees from the direction
+          you see Venus from Earth, so the path Earth follows through
+          Venus's sky is exactly the reverse of the path we see Venus
+          follow.  However, when Venus passes between Earth and Sun,
+          Earth appears at opposition from Venus.  That is why Mars,
+          Jupiter, and Saturn move retrograde near oppositon - their
+          large orbits take them behind you.</p>
+        <p>Since you can see that the orbits of Mercury and Venus are
+          smaller than your distance to the Sun, while the orbits of
+          Mars, Jupiter, and Saturn are larger, Earth must be third in
+          order from the Sun.</p>
+      </div>
+      <div class="question unselectable">Can you figure out the order
+        of the planets from the Sun?</div>
+      <div class="answer">
+        <p>The farthest Mercury or Venus gets from the Sun is called
+          its <em>maximum elongation</em>.  You can see that Mercury
+          has a smaller maximum elongation than Venus, so its orbit
+          must be smaller.  Earth must come third because when the
+          others are at opposition, you are between them and the
+          Sun.</p>
+        <p>Mercury also moves faster than Venus and Venus moves faster
+          than the Sun (that is, Earth).  Mars moves around the sky
+          slower than the Sun (Earth), Jupiter slower still, and
+          Saturn slowest of all, so if the rule that closer orbits are
+          faster holds, then that is their order in distance from the
+          Sun.</p>
+        <p>Without the faster-is-closer rule, ordering the planets
+          beyond Earth by distance is much harder.  You need to the
+          quantitative surveying techniques you will learn later to
+          make much progress in measuring the geometry of the orbits
+          of Mars, Jupiter, and Saturn.</p>
+        <p>However, laws like faster-is-closer will always play a
+          central role in understanding the positions of planets.
+          When you try to chart the solar system, spatial geometry is
+          important, but unless your chart shows how the positions of
+          the planets change it will be useless.</p>
+      </div>
+      <div class="question unselectable">How would you test these ideas?</div>
+      <div class="answer">
+        <p>You can work through the sections in the sidebar menu on
+          the left from top to bottom to learn how Johannes Kepler
+          tested the hypothesis that the planets orbit the Sun.</p>
+        <p>Kepler's brilliant insight was that if the planets move
+          around the Sun in <em>periodic</em> orbits - that is,
+          tracing the exact same loop at the exact same rate every
+          revolution - then you can use them as a surveyor uses
+          landmarks to work out their relative distances (which you
+          cannot see directly).  He is best remembered for fitting his
+          surveyed orbits to formulate his three laws of planetary
+          motion, but astronomers had been fitting orbits to
+          observations for millenia.  Using surveying techniques to
+          map the planets is the crucial original leap Kepler
+          made.</p>
+      </div>
     </div>
     <div id="orbit-view-help" class="helper hidden">
-      Orbit view help.
+      [under construction]
     </div>
     <div id="earth-year-help" class="helper hidden">
+      [under construction]
     </div>
     <div id="mars-year-help" class="helper hidden">
+      [under construction]
     </div>
     <div id="surveyor-help" class="helper hidden">
+      [under construction]
     </div>
     <div id="incline-help" class="helper hidden">
+      [under construction]
     </div>
     <div id="first-two-r-help" class="helper hidden">
+      [under construction]
     </div>
     <div id="third-law-r-help" class="helper hidden">
+      [under construction]
     </div>
   </div>
 
@@ -431,6 +651,21 @@
       barList.toggle("open");
     }
   }
+
+  let activeAnswer;
+  function toggleAnswer() {
+    const answer = this.nextElementSibling;
+    console.log(this, answer);
+    if (activeAnswer) activeAnswer.classList.remove("active");
+    if (answer == activeAnswer) {
+      activeAnswer = undefined;
+    } else {
+      answer.classList.add("active");
+      activeAnswer = answer;
+    }
+  }
+  document.querySelectorAll(".question").forEach(
+    e => { e.onclick = toggleAnswer; });
 
   function removeIntro() {
     const intro = d3.select("#intro");

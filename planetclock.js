@@ -75,8 +75,8 @@ class PlanetClock {
     // Zodiac constellations
     let zodiac = [28.687, 53.417, 90.140, 117.988, 138.038, 173.851,
                   217.810, 241.047, 266.238, 299.656, 327.488, 351.650];
-    let zodiacNames = ["Ari", "Tau", "Gem", "Can", "Leo", "Vir", "Lib",
-                       "Sco", "Sag", "Cap", "Aqu", "Pis"];
+    let zodiacNames = ["Ari", "Tau", "Gem", "Cnc", "Leo", "Vir", "Lib",
+                       "Sco", "Sgr", "Cap", "Aqr", "Psc"];
     zodiac = zodiac.map(
       (a, i) => [Math.cos(a*Math.PI/180), Math.sin(a*Math.PI/180), i]);
     zodiacNames = zodiac.map(
@@ -2227,7 +2227,7 @@ class SurveyOrbits {
       .attr("viewBox", [-width/2, -height/2, width, height])
       .style("display", "block")
       .style("margin", "20px")  // padding does not work for SVG?
-      .style("background-color", "#aaa")
+      .style("background-color", "#bbb")
       .attr("text-anchor", "middle")
       .attr("font-family", "'Merriweather Sans', sans-serif")
       .attr("font-weight", "bold")
@@ -3107,7 +3107,7 @@ class Inclination {
       .attr("viewBox", [-width/2, -height/2, width, height])
       .style("display", "block")
       .style("margin", "20px")  // padding does not work for SVG?
-      .style("background-color", "#aaa")
+      .style("background-color", "#bbb")
       .attr("text-anchor", "middle")
       .attr("font-family", "'Merriweather Sans', sans-serif")
       .attr("font-weight", "bold")
