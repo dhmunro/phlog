@@ -405,6 +405,42 @@
   <div id="main-overlay" class="faded hidden">
     <div id="top-clock-help" class="helper">
       <h1>Tips &amp; Notes: Planet Clock</h1>
+      <div class="question unselectable">Why should we study how the
+        planets move?</div>
+      <div class="answer">
+        <p>Because working out the answer to this question triggered
+          the scientific revolution that built our modern world.</p>
+        <p>Everyone who looks up at night must wonder what they are
+          looking at, and what this view we have tells us about where
+          we are standing.  Aside from the occasional comet or nova,
+          the view never changes - as if a cartographer had painted a
+          gigantic map on the sky...</p>
+        <p>With exactly seven exceptions: The Sun, the Moon, and five
+          wandering stars - the planets.  (The planets Uranus and
+          Neptune are too faint for the unaided human eye to see, as
+          are the dwarf planets and asteroids.)  Most people will only
+          notice the motion of the Sun, because that gives rise to the
+          seasons.  If you live near the sea, you might also notice
+          the motion of the Moon, because it affects the tides.  The
+          motions of the planets have no effect whatsoever on our
+          world.</p>
+        <p>This &ldquo;planet clock&rdquo; is a very accurate
+          ephemeris, which shows you exactly where the Sun and planets
+          are relative to the fixed constellations of stars on any
+          given date.  Since those motions are the only changes in the
+          sky you can see with your own eyes, you have before you a
+          tolerably complete summary of every observation of the sky
+          in recorded history prior to 1609, when Galileo invented the
+          telescope.  You can go outside on any clear night and check
+          what this clock says with your own eyes.</p>
+        <p>By an odd coincidence, in 1609 Kepler published his first
+          two laws of planetary motion - which were therefore entirely
+          based on naked-eye data you can recreate for yourself here.
+          In other words, the puzzle of planetary motion and the basic
+          structure of our solar system was solved using only the
+          information here before you.  Can you do what Kepler
+          did?</p>
+      </div>
       <div class="question unselectable">How does the &ldquo;planet clock&rdquo;
         chart the sky?</div>
       <div class="answer">
@@ -553,7 +589,7 @@
           faster holds, then that is their order in distance from the
           Sun.</p>
         <p>Without the faster-is-closer rule, ordering the planets
-          beyond Earth by distance is much harder.  You need to the
+          beyond Earth by distance is much harder.  You need the
           quantitative surveying techniques you will learn later to
           make much progress in measuring the geometry of the orbits
           of Mars, Jupiter, and Saturn.</p>
@@ -581,26 +617,716 @@
           made.</p>
       </div>
     </div>
-    <div id="orbit-view-help" class="helper hidden">
-      [under construction]
-    </div>
     <div id="earth-year-help" class="helper hidden">
-      [under construction]
+      <h1>Tips &amp; Notes: Earth Period</h1>
+      <div class="question unselectable">
+        What does the plot in the right panel show?</div>
+      <div class="answer">
+        <p>To see the plot, you first need to set a start date using
+          the planet clock, then click the Reset button in the planet
+          clock dial.  This generates an idealized set of 736 virtual
+          "observations" of the position of the Sun over a span of 10
+          years, that is, one observation every 5 days.  Apart from
+          the equal spacing, this is not an unreasonable amount of
+          data for a dedicated observer or team of observers.  Each
+          "observation" consists of an exact time and ecliptic
+          longitude of the Sun at that time.  The accuracy achieved by
+          Tycho Brahe for this kind of naked-eye measurement was about
+          10 seconds in time and 1/30 degree in angle, and Kepler
+          required this level of accuracy to do his surveying.</p>
+        <p>The plot shows a blue line through these data.  The x-axis
+          is the ecliptic longitude in revolutions (1 rev = 360
+          degrees), with 0 placed at the longitude of the first
+          observation.  The y-axis is time elapsed since the first
+          observation in days.  A gold circle is drawn at the location
+          of the date currently shown on the planet clock, so by running
+          the planet clock forward or back you can see which point on
+          the blue line corresponds to which observation date.</p>
+        <p>Each yellow box shows the data collected in one year.  The
+          width of the boxes is always exactly one revolution.  Your
+          goal is to measure as accurately as possible the number of
+          days required for the Sun to complete one revolution.  The
+          height of the boxes is your current estimate of that period.
+          You can adjust your estimate by dragging the slider on the
+          right edge of the panel up or down.  The yellow line is the
+          diagonal of all the boxes (which are stacked corner to
+          corner), so you want to adjust your period estimate to make
+          the straight yellow line coincide with the blue data line as
+          best you can.</p>
+        <p>To be able to make a more accurate estimate, click the
+          lower triangle button to zoom in.  This will make ten copies
+          of the data, and shift each of the ten copies so a different
+          one of the boxes overlays the box in the lower left corner.
+          The x-axis now shows only one revolution and the y-axis
+          shows only one year.  Drag the slider up or down to an
+          incorrect year estimate to see how the blue lines fail to
+          repeat if your period estiamte is incorrect.  Run the planet
+          clock to see how the Sun marker follows the blue lines from
+          one year to the next.  After you are satisfied you
+          understand this stacked plot of your ten years of data, you
+          can again adjust your year estimate as accurately as
+          possible.</p>
+        <p>Although this plot faithfully depicts all your data, it
+          does not yet make the really interesting details visible.
+          Ancient astronomers realized that a better way to present
+          this kind of data was to think about the difference between
+          the blue data line and the straight yellow diagonal line.
+          They called the yellow line the motion of the "mean Sun" - a
+          theoretical point in the sky which moves around the sky on
+          the same path as the Sun but at a constant rate.  Notice
+          that the motion of the mean Sun depends on your best
+          estimate of the period - you can change it by dragging the
+          slider.  By subtracting the time the mean Sun reached any
+          position from the time the Sun actually arrived there, you
+          can get a far more accurate picture of what your data is
+          telling you.  Click the zoom in button a second time to see
+          that picture.</p>
+        <p>You see that the blue data line is not quite straight - it
+          deviates from the straight yellow mean Sun line by about 4
+          days over the course of the year.  That is, the Sun does not
+          move at a constant rate around the ecliptic, but speeds up
+          and slows down in a regular, repeatable way.  At this
+          highest zoom level, you can refine your period estimate to
+          within about 0.001 day (with ten years of data) - about a
+          minute and a half.</p>
+      </div>
+      <div class="question unselectable">How do the controls work?</div>
+      <div class="answer">
+        <ol>
+          <li>Use planet clock controls to set starting date.</li>
+          <li>Click Reset button (in planet clock dial) to collect ten
+             years of Sun position data.</li>
+          <li>Click lower triangle (in upper left corner) to zoom in plot.</li>
+          <li>Click upper triangle (in upper left corner) to zoom out plot.</li>
+          <li>Drag slider (along right edge) up or down to change your
+            estimate of Earth's orbital period.</li>
+        </ol>
+      </div>
+      <hr/>
+      <div class="answer"></div>  <!-- do not remove dummy answer -->
+      <div class="question unselectable">
+        What feature strikes you most about the motion of the Sun?</div>
+      <div class="answer">
+        <p>The most striking thing about the motion of the Sun is how
+          precisely it repeats every year.  Here you can check that
+          the Sun returns to exactly the same place in the zodiac
+          every 365.256 days - to within 0.001 day (a minute and a
+          half)!  That's 3 parts per million (or better, as far as you
+          can tell with naked eye measurements)!  No natural
+          phenomenon on Earth recurs nearly that precisely - in fact,
+          until the last century or two, no human contrivances had
+          that kind of precision.</p>
+        <p>What is perhaps even more impressive - and important - is
+          that this motion is not quite uniform.  The Sun is speeding
+          up and slowing down as it moves through the constellations
+          in exactly the same pattern over and over again.  Ancient
+          astronomers understood this marvelous fact very well.  The
+          combination of exact periodicity and non-uniformity hints at
+          some great underlying regularity.  Newton finally explained
+          this ancient mystery by recognizing the law of universal
+          gravity, but that is a story for another place.  Here you
+          will focus on simply describing this periodic motion in as
+          simple, accurate, and general a way as possible.</p>
+        <p>Since the apparent diameter of the Sun in the sky remains
+          constant, at least as far as you can tell using naked-eye
+          observations, you know that the distance from the Earth to
+          the Sun must change very little, if at all, during the
+          course of the year.  However, remember how nearly straight
+          the blue data line appeared on the two lower magnification
+          levels in the right panel.  Is it possible that the distance
+          to the Sun is changing by a similar tiny amount as it moves
+          around the sky?</p>
+        <p>If the distance to the Sun is changing slightly during the
+          year, the precise periodicity of its motion around the sky
+          strongly suggests that any distance changes are also
+          periodic, repeating exactly every year.  In other words,
+          periodicty in the motion around the sky strongly suggests
+          that the Sun is moving around the Earth (or vice versa)
+          along a closed path in space, like a train around a fixed
+          track on an unvarying schedule.</p>
+      </div>
+      <div class="question unselectable">
+        What does the periodicity of the Sun suggest about planetary
+        motion?</div>
+      <div class="answer">
+        <p>What do you mean when you say that the planets all move
+          around the Sun and that the Earth is the third planet?
+          Besides giving a vague description of the geometry of the
+          solar system, you must be saying that if you could view the
+          solar system from the Sun, the planets would all move around
+          the zodiac in a similar manner.  You mean that the planets
+          are somehow alike in their motion around the Sun.  And if
+          the Earth is just another planet (in this respect), you are
+          saying you know one example of whatever this general kind of
+          motion may be: You know exactly how the Earth appears to
+          move around the zodiac as viewed from the Sun, because it is
+          the same as the motion of the Sun you have measured from
+          Earth, only rotated 180 degrees.</p>
+        <p>Thus, from the striking periodicity of the Sun's motion,
+          the Earth pretty certainly moves in a closed path around the
+          Sun at a not-quite-uniform but precisely repeating rate.
+          And if the motion of the other planets is somehow similar to
+          Earth's, surely this must be the general rule: The planets
+          all move in periodic closed orbits around the Sun.  Another
+          way to think about it is that, when viewed from any planet,
+          the Sun will exhibit the same perfectly periodic motion
+          around the zodiac that you see from Earth.</p>
+        <p>But this periodic closed orbit hypothesis is an idea you
+          can test by carefully studying your planetary position data!
+          If it is true, then any planet returns to exactly the same
+          point on its orbit after exactly one of its periods.  That
+          implies a certain relationship between observations made on
+          dates spaced by one period in time, and you can check
+          whether your observations are, in fact, so related.  Like
+          any hypothesis, checking this is not mathematical proof that
+          the hypothesis is true, but it is an extremely strong
+          argument in favor.</p>
+      </div>
+    </div>
+    <div id="orbit-view-help" class="helper hidden">
+      <h1>Tips &amp; Notes: Orbit View</h1>
+      <div class="question unselectable">
+        What does the diagram in the right panel show?</div>
+      <div class="answer">
+        <p>The diagram shows three different pictures or paradigms for
+          the solar system.  In all cases, you are viewing the
+          ecliptic plane from a position far from the solar system in
+          the direction of the north ecliptic pole.</p>
+        <p>The heliocentric picture is the modern accepted model of
+          the solar system, as put forward by Copernicus and surveyed
+          by Kepler.  The Sun is at the center, and the planets move
+          around it in closed orbits.</p>
+        <p>The geocentric picture was proposed by Tycho.  It is
+          identical to the heliocentric picture, except the Earth is
+          translated to remain stationary at the center, forcing the
+          Sun to move around it.  All of the closed planetary orbits
+          remain centered on the now moving Sun.  The gold orbit of
+          the Sun around the Earth is identical to the blue orbit of
+          the Earth around the Sun in the heliocentric picture, except
+          it is rotated 180 degrees.</p>
+        <p>The epicycle picture is a modifed version of the ancient
+          Greek solar system described in Ptolemy's Almagest but
+          dating from much earlier.  The modification here is to set
+          the arbitary scale factors and change the epicycle shapes
+          slightly (from circles to ellipses), so that this epicycle
+          picture is geometrically identical to the geocentric
+          picture.  However, the model retains all of the key
+          geometrical features of Greek epicycle models.  For Mercury,
+          Venus, and the Sun, the epicyle picture is identical to the
+          geocentric picture.  For Mars, Jupiter, and Saturn, the
+          planetary orbit path has been moved from the Sun to the
+          Earth.  A new radial line is drawn from the Earth to a pont
+          on the planet orbit, and a copy of the gold Sun orbit is
+          centered at the end of this radial line.  Each planet now
+          moves around a small circle - its epicycle - centered on a
+          larger circle centered on the Earth.</p>
+        <p>The three pictures are indistinguishable, in the sense that
+          the relative positions of the Sun and planets are exactly
+          the same in all three pictures.  The only differences are
+          the imaginary orbit tracks and radial lines, and which point
+          is made stationary at the center of the picture.  There is
+          no observational way to distinguish among them.</p>
+        <p>Turn on at least one radial line on the planet clock, then
+          run the clock forward to watch the observed positions of the
+          planets.  Notice that the directions of the Earth-planet and
+          Earth-Sun lines that you observe on the sky in the left
+          panel are always identical to their directions in the right
+          panel, no matter which model you select.  In other words,
+          all three provide successful descriptions of how the planets
+          move.  You cannot decide which picture is best on the basis
+          of how well it matches your data.</p>
+        <p>Notice that in the epicycles picture, a faint point and
+          line appear on the planet clock for Mars, Jupiter, or
+          Saturn.  This is the direction from the Earth to the
+          imaginary point at the center of the epicycle (the gold copy
+          of the Sun's orbit).  If you run the clock forward, you will
+          see that the outer planets wag back and forth around this
+          epicycle center point in exactly the same way that Mercury
+          and Venus wag back and forth around the Sun: The epicycle
+          center moves around the zodiac smoothly; the planet slowly
+          overtakes it prograde, then quickly crosses back over it
+          retrograde.</p>
+        <p>You still haven't figured out how to construct any of the
+          orbital shapes needed to make them work perfectly like you
+          see here!  These are the dreams; when you've understood
+          where you would like to go, you need to wake up and get to
+          work!</p>
+      </div>
+      <div class="question unselectable">How do the controls work?</div>
+      <div class="answer">
+        <ol>
+          <li>Click upper triangle (in upper left corner) to zoom out view.</li>
+          <li>Click lower triangle (in upper left corner) to zoom in view.</li>
+          <li>Click heliocentric/geocentric/epicycles button to change
+            pictures.</li>
+        </ol>
+        <p>Zoom in all the way to watch the inner planets in the
+          heliocentric picture.  Zoom out one step to watch the inner
+          planets in the geocentric or epicycles picture.  Zoom out a
+          second step to watch Jupiter (in any picture).  Zoom out all
+          the way to watch Saturn.</p>
+      </div>
+      <hr/>
+      <div class="answer"></div>  <!-- do not remove dummy answer -->
+      <div class="question unselectable">
+        What do you like about the heliocentric picture?</div>
+      <div class="answer">
+        <p>When you adopt the heliocentric picture, you are likely to
+          guess that the motion of the planets as viewed from the Sun
+          has the same crucial property as the motion of the Sun as
+          viewed from Earth: that every planet, like Earth, travels
+          periodically along a closed path around the Sun.  If this
+          hypothesis is true, then you can survey the solar system to
+          find the shapes of all the orbits and how each planet speeds
+          up and slows down as it moves around its orbit.  The
+          heliocentric picture strongly suggests a surveying model you
+          can test.</p>
+        <p>Of course, whatever test you devise will also confirm the
+          other two pictures, since they are geometrically equivalent.
+          However, by demoting the Earth from its central position and
+          supposing it to behave like just another planet, you've
+          already suggested that the orbits of the other planets should
+          be periodic closed loops around the Sun.  When the Earth was
+          different from the other planets, the assumption that their
+          orbits around the Sun resemble the Sun's orbit around the
+          Earth in this way feels like a separate hypothesis.</p>
+        <p>A second reason to believe that the Sun should be at the
+          center is that you know it is far, far larger than the Earth
+          or any other planet.  The planets always appear as starlike
+          points, while you can see the disk of the Sun in the
+          sky.</p>
+      </div>
+      <div class="question unselectable">
+        What do you like about the geocentric picture?</div>
+      <div class="answer">
+        <p>You might be attracted to the geocentric picture because it
+          makes the relationship between the radial lines you actually
+          observe on the planet clock and the radial lines in the map
+          of the ecliptic plane really obvious.  Wherever you are, you
+          are always at the point from which all your sight lines
+          emanate.  Putting the Earth at the center plays into that
+          perceptual truth.</p>
+        <p>Tycho had an interesting technical reason for believing
+          that the Earth is stationary, while the Sun and planets
+          orbit it: If the Earth moves around the Sun, then by
+          observing the positions of the stars very carefully, you
+          should be able to detect slight changes in the shapes of the
+          constellations as we view them from different perspectives.
+          Despite his best efforts, however, he could not detect any
+          such stellar parallaxes.  He calculated that the stars must
+          therefore be at least several thousand times farther away
+          than the Sun.  He reasoned that this vast difference in
+          scale between the distance to the planets and the distance
+          to the stars was even less likely than the Earth being
+          stationary.  But the universe holds many surprises.</p>
+      </div>
+      <div class="question unselectable">
+        What do you like about the epicycles picture?</div>
+      <div class="answer">
+        <p>The epicycles picture was the backbone of astronomy for
+          over two millenia, accepted by nearly all the most brilliant
+          ancient Greek and medieval Islamic astronomers.  You see
+          here that their model can be adjusted to be equivalent to
+          our modern heliocentric picture, so they certainly were not
+          completely on the wrong track.  It was a very successful
+          descriptive model even in its imperfect forms, and it's hard
+          to argue with success.</p>
+        <p>The original geometric attraction to the epicycle picture
+          is that Mercury and Venus are pretty clearly moving around
+          the Sun as the Sun moves around the zodiac.  That is, they
+          are moving around a circle whose center is in turn moving
+          around us.  This kind of motion is much easier to visualize
+          when the radius of the epicyle is less than the radius of
+          its center.  The geocentric picture features epicycle
+          descriptions of Mars, Jupiter, and Saturn, but the epicycle
+          radius is larger than the radius its center moves around
+          (the Sun, as for Mercury and Venus).</p>
+        <p>Probably, the ancient Greek geometers realized that you can
+          get exactly the same motion by swapping the big circle and
+          the small circle, so that the small one - in this case the
+          orbit of the Sun - becomes the epicycle, while the large one
+          becomes the path for its center.  And since it is easier to
+          visualize the motion when the epicyle is smaller than the
+          orbit of its center, they preferred that arrangement.  We
+          object that the center of this swapped epicycle has become a
+          point in empty space (as opposed to the Sun), but of course
+          all the (nearly) circular orbit paths we draw are imaginary
+          as well.</p>
+        <p>Watching the outer planets wag back and forth around their
+          ghostly epicycle centers on the planet clock may help you to
+          understand what the ancients saw in epicycles.</p>
+      </div>
     </div>
     <div id="mars-year-help" class="helper hidden">
-      [under construction]
+      <h1>Tips &amp; Notes: Mars Period</h1>
+      <div class="question unselectable">
+        What does the plot in the right panel show?</div>
+      <div class="answer">
+        <p>Before you can begin surveying, you must determine the
+          orbital period of the planet you will use as a landmark.
+          Mars is by far the best landmark choice, so here you will
+          explore how to adapt the technique you used to determine the
+          orbital period of Earth to the case of Mars.  The plot in
+          the right panel here behaves analogously to the right panel
+          in the Earth Period section, with all the same controls.
+          Here, when you click the Reset button on the clock, you
+          collect twenty years of virtual position data for Mars, with
+          observations spaced 10 days apart.  Kepler used twenty
+          years of Mars data from Tycho for his survey.</p>
+        <p>The Mars data of time (in days) versus longitude (in revs)
+          appears as a series of light red S-curves along the diagonal
+          of the plot.  The kinks in the S-curves are the retrograde
+          parts of Mars's orbit, and gaps between them are the times
+          when Mars is too close to the Sun to be able to make any
+          observations.  When you move the planet clock in the left
+          panel, a faint red dot traces the time-longitude data along
+          the plot in the right panel, so you can see which date
+          corresponds to each data point.</p>
+        <p>Unfortunately, these data record the position of Mars on
+          the zodiac from our point of view on Earth.  In order to
+          determine the period of Mars in its orbit around the Sun, you
+          need to know where Mars appears as viewed from the Sun, so
+          you can judge how long it takes to go around exactly once.
+          Fortunately, on each S-curve there is exactly one point
+          where you <em>do</em> know where Mars appears when viewed
+          from the Sun: When Mars is at opposition, we on Earth are
+          seeing it at exactly the same ecliptic longitude as it would
+          have as viewed from the Sun.  These opposition points are
+          marked in dark red on the plot.  Of all the data you
+          collected over that twenty year span, only these nine or ten
+          opposition points are of any use for making an accurate
+          estimate of the period of Mars.</p>
+        <p>The yellow boxes along the diagonal again have a width of
+          exactly one revolution, and a height of one estimated Mars
+          period, which you can adjust using the slider on the right
+          edge.  The yellow line again has the slope of the diagonal,
+          but instead of actually being the diagonal, it is shifted to
+          pass through the first opposition point.  You want to adjust
+          the slope of this yeloow line - the period of Mars - to pass
+          through all the oppostion points as nearly as possible.</p>
+        <p>When you zoom in, the first step once again copies and
+          shifts all the year boxes to stack them on top of the first
+          box at the lower left.  Since only the opposition points are
+          of interest, they are connected by an arbitrary smooth curve
+          (a natural cubic spline here, but other choices work just as
+          well).  Although in reality each of these points is
+          separated by over a full period from the previous one, we
+          are assuming that there really is a continuous orbital path
+          of time versus ecliptic longitude <em> as view from the
+          Sun</em> - something like the dark red curve - which passes
+          though each of the oppostion points.  You now see why twenty
+          years of data was not an arbitrary choice: In twenty years
+          oppositions progress around the zodiac just slightly more
+          than once.  This gives you a small overlap section in the
+          red curve connecting them.  By adjusting the estimated Mars
+          period until the overlapping sections match as well as
+          possible, you can get a pretty accurate estimate of Mars's
+          period, within perhaps half a day or a bit better.</p>
+        <p>Notice that, unlike the case for Earth's orbit, the red
+          curve that constitutes you best guess at how Mars moves
+          around the Sun differs quite markedly from the straight
+          yellow line.  Mars speeds up and slows down as it moves
+          around the Sun far more than Earth.  This exaggerated
+          variation from uniform motion is another reason why Mars is
+          the best landmark choice.  When you zoom in a second time,
+          the plot again switches to show you the difference between
+          the red curve and yellow line on the vertical axis.  You can
+          make your final adjustment here to find the period of Mars
+          to within a few hundredths of a day.</p>
+        <p>Unlike for the Earth, the overlap sections at this zoom
+          level usually will not match very well.  This is not because
+          the orbit of Mars is less periodic than Earth.  It is
+          because your data is much sparser - you have only nine or
+          ten points on Mars's orbit, while you had 75 on Earth's.
+          Remember that the red curve has an arbitrary shape - it
+          could be any smooth curve passing through the red opposition
+          points.  The actual time-longitude curve would match
+          perfectly.</p>
+        <p>Because of this, your estimate of Mars's period will be
+          less accurate than your estimate of Earth's period.  Once
+          you begin surveying, you will be able to tighten up this
+          estimate.  For now it is easily good enough to begin
+          surveying.</p>
+      </div>
+      <div class="question unselectable">How do the controls work?</div>
+      <div class="answer">
+        <ol>
+          <li>Use planet clock controls to set starting date.</li>
+          <li>Click Reset button (in planet clock dial) to collect twenty
+             years of Sun position data.</li>
+          <li>Click lower triangle (in upper left corner) to zoom in plot.</li>
+          <li>Click upper triangle (in upper left corner) to zoom out plot.</li>
+          <li>Drag slider (along right edge) up or down to change your
+            estimate of Mars's orbital period.</li>
+        </ol>
+      </div>
+      <hr/>
+      <div class="answer"></div>  <!-- do not remove dummy answer -->
+      <div class="question unselectable">How could you find the periods
+         of the other planets?</div>
+      <div class="answer">
+        <p>Each planet has its own set of challenges.  With twenty
+          years of data, you can use this same opposition technique to
+          make a pretty accurate estimate of the period of Jupiter.
+          To use it for Saturn, you would need over thirty years of
+          data.</p>
+        <p>Since they are never at opposition, you can never be sure
+          of the direction of Mercury or Venus when viewed from the
+          Sun.  Your best alternative is probably to estimate the time
+          of inferior conjunction - the retrograde conjunction - as
+          best you can.  The planet is not visible for the shortest
+          period of time near that conjunction, so your interpolated
+          time of conjunction will be more accurate than for superior
+          conjunction.  To partly compensate for the inaccuracy of the
+          time of inferior conjunction compared to opposition, twenty
+          (Earth) years of data gives you many more revolutions of
+          Mercury or Venus than you had of Mars.</p>
+        <p>In practice, however, the best approach is to use the
+          orbits of Mars and Earth you will generate in your upcoming
+          survey to derive Kepler's first two laws.  These laws reduce
+          all orbits to just a few parameters.  You can then use the
+          position data you actually have (as opposed to interpolated
+          inferior conjunctions) to find the parameter values which
+          best fit your observations.</p>
+      </div>
     </div>
     <div id="surveyor-help" class="helper hidden">
-      [under construction]
+      <h1>Tips &amp; Notes: Survey Orbits</h1>
+      <div class="question unselectable">
+        What does the diagram in the right panel show?</div>
+      <div class="answer">
+        <p>The diagram is the same map of points in the ecliptic plane
+          as in the Orbit View section.  There, the points on the
+          orbits were provided for you by magic.  Here, you will
+          actually do the work to survey a large set of points on the
+          orbits of the Earth and Mars.  This work is divided into
+          three steps:</p>
+        <ol>
+          <li>Select one of the nine or ten oppositions you found in
+            the Mars Period section to serve as a reference point on
+            Mars's orbit.</li>
+          <li>Starting from this reference observation, you will step
+            forward or backward by multiples of your estimated Mars
+            period.  This allows you to survey the positions of
+            several points on Earth's orbit.</li>
+          <li>Starting from each of these different points on
+            Earth's orbit, you will step forward or backward by
+            multiples of Earth's period.  This allows you to survey
+            several points on Mars's orbit.</li>
+        </ol>
+        <p>Move forward through these steps by clicking the Next
+          button, back by clicking the Prev button.  Unlike the period
+          determination, this procedure eventually makes full use of
+          all of your twenty years of Mars observations, not just nine
+          or ten opposition points.</p>
+        <p>When you select an oppostion in step 1, the radial line
+          from the Sun to Mars at that opposition is highlighted in
+          black.  (It is really from the Sun to the projection of Mars
+          into the ecliptic plane.)  You know the direction - that is,
+          ecliptic longitude - of this line segment, but you do not
+          know its length.  However, you do not know <em>any</em>
+          distances in the ecliptic plane.  Therefore, you are free to
+          use this black segment as a reference ruler you will use to
+          measure distances in the solar system.  The actual
+          dimensions of the solar system in kilometers were unknown
+          until long after Kepler.</p>
+        <p>In step 2, you use this reference segment to survey eight
+          or nine points on Earth's orbit.  These are drawn with
+          yellow Earth-Sun lines and red Earth-Mars lines.  As you
+          click the ±M buttons to step your observation time forward
+          or back one Mars year at a time, the planet clock will
+          automatically move to the time of that observation, and the
+          yellow and red lines will be highlighted on the right panel.
+          The point on Earth's orbit has been placed where it must be
+          to make the highlighted yellow and blue lines on the right
+          panel exactly match the directions of the yellow and red
+          lines on the planet clock.  This is precisely how surveyors
+          triangulate two known landmarks - the Sun and your reference
+          opposition point on Mars's orbit in this case - to chart
+          their position.</p>
+        <p>Notice that one or two points are missing on this ring of
+          points on Earth's orbit.  These points are too close to
+          conjunction to be able to see Mars.  You will find their
+          positions later when you have other points on Mars's
+          orbit.</p>
+        <p>When you advance to step 3, you will be able to step not
+          only by Mars periods, but also by Earth periods.  The
+          diagram simultaneously steps all of the observations you
+          made of Mars at the reference point forward or backward by
+          one Earth year.  Since Mars always moves to the same place
+          after any fixed time step, you will be looking at Mars when
+          it is at a single new place from eight or nine different
+          viewpoints.  If your hypothesis that Mars is moving
+          periodically relative to the Sun is correct, all eight or
+          nine of the sight lines on these dates should converge at a
+          single point - that new point on Mars's orbit.  Click the ±E
+          button and see what happens.</p>
+        <p>Aha!  Look at that!  Step back and forth with the ±M
+          buttons to move the planet clock to over a half dozen
+          different observation dates and check that all those red
+          Mars sight lines really do converge at a single point.  It
+          almost feels like magic.  If you drag the slider on the
+          right edge away from the true Mars period, you can see that
+          the lines no longer converge properly - you need to be able
+          to step exactly one Mars period to get fixed surveying
+          landmarks and make the scheme work.</p>
+        <p>As you step forward and back Earth years, notice that you
+          slowly lose points on Earth's orbit because they will fall
+          outside your twenty year data window.  You also occasionally
+          gain a new point as it moves into your twenty year window.
+          Compleetly new pionts on Earth's orbit are marked by a faint
+          yellow Earth-Sun line in addition to the red Earth-Mars
+          line.  These new points are located by triangulation using
+          the point where all the sight lines from existing points on
+          Earth's orbit converge.  Hence as you add new points on
+          Mars's orbit you also pick up new points on Earth's
+          orbit.</p>
+        <p>Since the periods of Earth and Mars are incommensurate, you
+          could continue this process indefinitely.  Of course, the
+          more periods you step away from your reference opposition
+          date, the more the error due to any inaccuracy in your Mars
+          or Earth period grows.  Since the uncertainty in your Mars
+          period is greater, this calculator limits you to ten Mars
+          period steps away from your reference opposition in either
+          direction.  This arbitrary limit always produces 21 points
+          around Earth's orbit and about 40 points around Mars's
+          orbit.  Because you have collected observations of several
+          different points on Mars's orbit from each point on Earth's
+          orbit, and you have viewed each point on Mars's orbit from
+          several different points on Earth's orbit, you have used
+          observations at a total of about 350 dates in order to
+          survey these 60 odd orbital points.  The diagram plots all
+          the surveyed points on both orbits as faint dots.</p>
+      </div>
+      <div class="question unselectable">What do the numbers in the upper
+        right corner in the third step mean?</div>
+      <div class="answer">
+        <p>When you observe a new point on Mars's orbit from several
+          different points on Earth's orbit (spaced in time by
+          multiples of Mars's period), you add in to your chart of
+          points by noting the common intersection of the direction of
+          Mars you observed at each of those times, starting from the
+          position of the Earth points you previously got by
+          triangulating a previous point on Mars's orbit.  However,
+          those lines will never exactly intersect at a common point;
+          in fact, if you use the actual direction in 3D - latitude as
+          well as longitude - none of the lines will exactly intersect
+          another at all.  The lines will always be skew.  But if the
+          common point of intersection is only approximate, how do you
+          compute exactly where to plot it on your chart of MArs's
+          orbit?</p>
+        <p>The modern approach to this kind of problem is called least
+          squares fitting.  A least squares fit is a computationally
+          convenient way to define the best compromise point: The
+          lines may not all intersect at any point, but there will
+          always be a point which has the minimum RMS (root mean
+          square) distance from all the lines.  However, in this case,
+          you are measuring a direction - angles of longitude and
+          latitude - so you really ought to find the point that
+          minimizes the RMS angle by which the line from Earth to this
+          point deviates from your measured direction.  The calculator
+          that generates this diagram does just that: Each new point
+          on Mars's orbit is placed at the position that minimizes the
+          RMS angular deviation from all of your measurements of Mars
+          at that point (from previously charted points on Earth's
+          orbit).</p>
+        <p>Notice that since both latitude and longitude measurements
+          are used, this gives a position of Mars in 3D, even though
+          this diagram only shows the projection of that point into
+          the plane of the ecliptic.  The full 3D position will be
+          shown in the Mars Inclination section.</p>
+        <p>The numbers above your current estimated Mars period are
+          two measures of the total angular deviations of all 40 of
+          these fitted points on Mars's orbit, using all 350 direction
+          measurements: The bottom number is the RMS angular deviation
+          of all of your measured directions from the direction of the
+          charted Mars point from the charted Earth point.  The top
+          number is the largest angular deviation of any of the 350
+          observations.  Using these numbers, you can make a final
+          adjustment to your estimated period of Mars: Move the slider
+          until you minimize one or the other of these two numbers -
+          they will both minimize for nearly the same period.</p>
+      </div>
+      <div class="question unselectable">How do the controls work?</div>
+      <div class="answer">
+        <ol>
+          <li>Click on opposition to select reference opposition.</li>
+          <li>Click Next button at upper right to move to the next step.</li>
+          <li>Click ±M buttons at lower right to step Mars periods.</li>
+          <li>Click ±E buttons at lower left to step Earth periods.</li>
+          <li>Click Prev button at upper left to return to the
+            previous step.</li>
+          <li>Drag slider (along right edge) up or down to change your
+            estimate of Mars's orbital period.</li>
+        </ol>
+      </div>
+      <hr/>
+      <div class="answer"></div>  <!-- do not remove dummy answer -->
+      <div class="question unselectable">Can you explain why you can
+        ignore the latitude of Mars in this survey?</div>
+      <div class="answer">
+        <p>Ignoring the observed latitude of Mars for the purposes of
+          this survey means the black reference segment is really the
+          radius vector to the projection of Mars into the ecliptic
+          plane, not to Mars itself.  Since the points on Earth's
+          orbit really do lie in the ecliptic plane, you have
+          completely surveyed them relative to that black projected
+          reference segment.</p>
+      </div>
     </div>
     <div id="incline-help" class="helper hidden">
-      [under construction]
+      <h1>Tips &amp; Notes: Mars Inclination</h1>
+      <div class="question unselectable">
+        What does the diagram in the right panel show?</div>
+      <div class="answer">
+      </div>
+      <div class="question unselectable">How do the controls work?</div>
+      <div class="answer">
+        <ol>
+          <li>Click on opposition to select reference opposition.</li>
+          <li>Click Next button at upper right to move to the next step.</li>
+          <li>Click ±M buttons at lower right to step Mars periods.</li>
+          <li>Click ±E buttons at lower left to step Earth periods.</li>
+          <li>Click Prev button at upper left to return to the
+            previous step.</li>
+          <li>Drag slider (along right edge) up or down to change your
+            estimate of Mars's orbital period.</li>
+        </ol>
+      </div>
+      <hr/>
+      <div class="answer"></div>  <!-- do not remove dummy answer -->
     </div>
     <div id="first-two-r-help" class="helper hidden">
-      [under construction]
+      <h1>Tips &amp; Notes: First Two Laws</h1>
+      <div class="question unselectable">
+        What does the diagram in the left panel show?</div>
+      <div class="answer">
+      </div>
+      <div class="question unselectable">
+        What does the plot in the right panel show?</div>
+      <div class="answer">
+      </div>
+      <div class="question unselectable">How do the controls work?</div>
+      <div class="answer">
+      </div>
+      <hr/>
+      <div class="answer"></div>  <!-- do not remove dummy answer -->
     </div>
     <div id="third-law-r-help" class="helper hidden">
-      [under construction]
+      <h1>Tips &amp; Notes: Third Law</h1>
+      <div class="question unselectable">
+        What does the diagram in the left panel show?</div>
+      <div class="answer">
+      </div>
+      <div class="question unselectable">
+        What does the plot in the right panel show?</div>
+      <div class="answer">
+      </div>
+      <div class="question unselectable">How do the controls work?</div>
+      <div class="answer">
+      </div>
+      <hr/>
+      <div class="answer"></div>  <!-- do not remove dummy answer -->
     </div>
   </div>
 
@@ -679,7 +1405,7 @@
   }
 
   function restoreIntro() {
-    hamburger.classList.remove("hidden");
+    hamburger.classList.add("hidden");
     const intro = d3.select("#intro");
     introCover.style("display", null);
     d3.timeout(() => intro.style("transform", "translate(0, 0)"), 10);

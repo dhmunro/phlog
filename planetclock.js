@@ -229,9 +229,9 @@ class PlanetClock {
                           yearSetter));
         this.dateText = g.append("text")
           .style("pointer-events", "none")
-          .attr("font-size", 16)
+          .attr("font-size", 20)
           .attr("x", 0)
-          .attr("y", -0.5*rInner + 25)
+          .attr("y", -0.5*rInner + 29)
           .text(this.getDateText(this.dayNow));
       });
     this.prevDayYear = [this.dayNow, dateOfDay(this.dayNow).getUTCFullYear()];
@@ -397,6 +397,8 @@ class PlanetClock {
     // Planet positions
     this.planetMarkers = new Array(5);
     this.planetHands = new Array(5);
+    this.epiMarkers = new Array(3);
+    this.epiHands = new Array(3);
     let planetGroup = this.svg.append("g");
     let rcen = 0.5*(rInner + rOuter);
     let dr = 0.5*(rOuter - rInner);
@@ -420,6 +422,14 @@ class PlanetClock {
           .attr("y1", 0.)
           .attr("x2", r*xp)
           .attr("y2", -r*yp);
+        if (i > 1) {
+          this.epiMarkers[i-2] = this.planetMarkers[i].clone(true)
+            .attr("visibility", "hidden")
+            .attr("opacity", 0.4);
+          this.epiHands[i-2] = this.planetHands[i].clone(true)
+            .attr("visibility", "hidden")
+            .attr("opacity", 0.4);
+        }
       });
 
     // Put month dial on top of planets hands, below sun hand.
@@ -611,7 +621,7 @@ class PlanetClock {
     let date = dateOfDay(day - 0.5);  // month ring set to UTC noon Jan 1
     let month = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep",
                  "Oct", "Nov", "Dec"][date.getUTCMonth()];
-    return `${month} ${date.getUTCDate()}`;
+    return `${month} ${("  "+date.getUTCDate()).slice(2)}`;
   }
 
   setYear() {
@@ -689,8 +699,20 @@ class PlanetClock {
         let [xp, yp, lat] = directionOf(p, this.dayNow);
         let r = rcen + dr * lat * 20./Math.PI;
         this.planetMarkers[i].attr("cx", r*xp).attr("cy", -r*yp)
-        this.planetHands[i].attr("x2", r*xp).attr("y2", -r*yp)
-          .attr("visibility", this.planetHandVisibility[p]);
+        this.planetHands[i].attr("x2", r*xp).attr("y2", -r*yp);
+        if (this.showEpiMarkers) {
+          ["mars", "jupiter", "saturn"].forEach(
+            (p, i) => {
+              if (this.planetHandVisibility[p] == "hidden") return;
+              let [xp, yp, zp] = positionOf(p, this.dayNow);
+              let rp = Math.sqrt(xp**2 + yp**2);
+              let lat = Math.atan(zp / rp);
+              let r = rcen + dr * lat * 20./Math.PI;
+              [xp, yp] = [xp/rp, yp/rp];
+              this.epiMarkers[i].attr("cx", r*xp).attr("cy", -r*yp)
+              this.epiHands[i].attr("x2", r*xp).attr("y2", -r*yp);
+            });
+        }
       });
     this.slaves.forEach(s => s(this));
   }
@@ -707,6 +729,15 @@ class PlanetClock {
     let visibility = on? "visible" : "hidden";
     this.planetHandVisibility[planet] = visibility;
     this.planetHands[i].attr("visibility", visibility);
+    if (this.showEpiMarkers) {
+      this.updatePlanets();
+      ["mars", "jupiter", "saturn"].forEach(
+        (p, i) => {
+          const v = this.planetHandVisibility[p];
+          this.epiMarkers[i].attr("visibility", v);
+          this.epiHands[i].attr("visibility", v);
+        });
+    }
     this.slaves.forEach(s => s(this));
   }
 
@@ -753,16 +784,16 @@ class PlanetClock {
             ymd += `:${("0"+date.getUTCMinutes()).slice(-2)}`;
             gg.append("text")
               .style("pointer-events", "none")
-              .attr("text-anchor", "start")
-              .attr("font-size", 16)
-              .attr("x", -155)
+              .attr("text-anchor", "end")
+              .attr("font-size", 20)
+              .attr("x", 115-40)
               .attr("y", yElapsed + 29)
               .text("from " + ymd)
             gg.append("rect").call(
-              rect => buttonBox(rect, 110-40, yElapsed + 8, 80, 28,
+              rect => buttonBox(rect, 115-35, yElapsed + 8, 70, 28,
                                 resetElapsed));
             gg.append("text").call(
-              t => buttonText(t, 110, yElapsed + 29, "Reset", 20,
+              t => buttonText(t, 115, yElapsed + 29, "Reset", 20,
                               resetElapsed));
           });
       });
@@ -800,6 +831,26 @@ class PlanetClock {
       if (this.elapsedUpdater) {
         this.elapsedUpdater(reset, fromSetYear);
       }
+    }
+  }
+
+  epicycleMarkers(on) {
+    if (!on) {
+      this.showEpiMarkers = false;
+      ["mars", "jupiter", "saturn"].forEach(
+        (p, i) => {
+          this.epiMarkers[i].attr("visibility", "hidden");
+          this.epiHands[i].attr("visibility", "hidden");
+        });
+    } else {
+      this.showEpiMarkers = true;
+      this.updatePlanets();
+      ["mars", "jupiter", "saturn"].forEach(
+        (p, i) => {
+          const v = this.planetHandVisibility[p];
+          this.epiMarkers[i].attr("visibility", v);
+          this.epiHands[i].attr("visibility", v);
+        });
     }
   }
 }
@@ -975,6 +1026,7 @@ class OrbitView {
 
   setOrigin(sys) {
     if (sys == "heliocentric") {
+      this.clock.epicycleMarkers(false);
       this.updateOrigin = () => this.heliocentric();
       let scale = this.zoomFactor[this.zoomLevel];
       this.planetGroup.attr("transform", `scale(${scale})`);
@@ -986,9 +1038,11 @@ class OrbitView {
       });
       this.epicycleCircles.selectAll("*").remove();
     } else if (sys == "geocentric") {
+      this.clock.epicycleMarkers(false);
       this.updateOrigin = () => this.geocentric();
       this.planetOrbits[5].style("stroke", this.clock.planetColors.sun);
     } else if (sys == "epicycles") {
+      this.clock.epicycleMarkers(true);
       this.updateOrigin = () => this.epicycles();
       this.planetOrbits[5].style("stroke", this.clock.planetColors.sun);
       ["mars", "jupiter", "saturn"].forEach(
