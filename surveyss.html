@@ -388,7 +388,7 @@
              unclear how universal this is, and there is very little
              information about exactly what can go in the onclick string.
           -->
-        <li onclick="usageClick(this)" class="usage">Tips &amp; Notes</li>
+        <li onclick="usageClick(this)" class="usage">Tips &amp; Queries</li>
         <li class="separator"></li>
         <li onclick="clockClick(this)" class="current"
             data-id="top-clock">Planet Clock</li>
@@ -404,7 +404,7 @@
   </div>
   <div id="main-overlay" class="faded hidden">
     <div id="top-clock-help" class="helper">
-      <h1>Tips &amp; Notes: Planet Clock</h1>
+      <h1>Tips &amp; Queries: Planet Clock</h1>
       <div class="question unselectable">Why should we study how the
         planets move?</div>
       <div class="answer">
@@ -618,7 +618,7 @@
       </div>
     </div>
     <div id="earth-year-help" class="helper hidden">
-      <h1>Tips &amp; Notes: Earth Period</h1>
+      <h1>Tips &amp; Queries: Earth Period</h1>
       <div class="question unselectable">
         What does the plot in the right panel show?</div>
       <div class="answer">
@@ -784,7 +784,7 @@
       </div>
     </div>
     <div id="orbit-view-help" class="helper hidden">
-      <h1>Tips &amp; Notes: Orbit View</h1>
+      <h1>Tips &amp; Queries: Orbit View</h1>
       <div class="question unselectable">
         What does the diagram in the right panel show?</div>
       <div class="answer">
@@ -958,7 +958,7 @@
       </div>
     </div>
     <div id="mars-year-help" class="helper hidden">
-      <h1>Tips &amp; Notes: Mars Period</h1>
+      <h1>Tips &amp; Queries: Mars Period</h1>
       <div class="question unselectable">
         What does the plot in the right panel show?</div>
       <div class="answer">
@@ -1091,7 +1091,7 @@
       </div>
     </div>
     <div id="surveyor-help" class="helper hidden">
-      <h1>Tips &amp; Notes: Survey Orbits</h1>
+      <h1>Tips &amp; Queries: Survey Orbits</h1>
       <div class="question unselectable">
         What does the diagram in the right panel show?</div>
       <div class="answer">
@@ -1204,16 +1204,16 @@
         <p>When you observe a new point on Mars's orbit from several
           different points on Earth's orbit (spaced in time by
           multiples of Mars's period), you add in to your chart of
-          points by noting the common intersection of the direction of
-          Mars you observed at each of those times, starting from the
-          position of the Earth points you previously got by
+          points by plotting the common intersection of the direction
+          of Mars you observed at each of those times, starting from
+          the position of the Earth points you previously got by
           triangulating a previous point on Mars's orbit.  However,
           those lines will never exactly intersect at a common point;
           in fact, if you use the actual direction in 3D - latitude as
           well as longitude - none of the lines will exactly intersect
           another at all.  The lines will always be skew.  But if the
           common point of intersection is only approximate, how do you
-          compute exactly where to plot it on your chart of MArs's
+          compute exactly where to plot it on your chart of Mars's
           orbit?</p>
         <p>The modern approach to this kind of problem is called least
           squares fitting.  A least squares fit is a computationally
@@ -1246,6 +1246,23 @@
           adjustment to your estimated period of Mars: Move the slider
           until you minimize one or the other of these two numbers -
           they will both minimize for nearly the same period.</p>
+        <p>After this final period adjustment, you can usually drive
+          the maximum angular error down to about 0.02° and the RMS
+          angular error to about 0.01°.  Tycho, the last and greatest
+          naked-eye astronomer in history, measured the positions of
+          planets with an accuracy of about 0.03° - about 1/15 the
+          disk of the Sun or Moon.  (Someone with acute vision cannot
+          distinguish two marks separated by less than about half
+          that, or half a millimeter viewed at a distance of a
+          meter.)  Notice that this means that the groups of lines
+          converging on every point around Mars orbit converge most
+          accurately for a single value of the period of Mars.</p>
+        <p>(Any error in the period of Earth would lead to a similar
+          failure of your survey lines to converge.  For simplicity,
+          this calculator uses the exact value of 365.25636 days
+          rather than the value you found in the Earth Period section.
+          As noted, it is much easier to determine the period of Earth
+          than the period of any other planet.)</p>
       </div>
       <div class="question unselectable">How do the controls work?</div>
       <div class="answer">
@@ -1262,20 +1279,91 @@
       </div>
       <hr/>
       <div class="answer"></div>  <!-- do not remove dummy answer -->
-      <div class="question unselectable">Can you explain why you can
-        ignore the latitude of Mars in this survey?</div>
+      <div class="question unselectable">How confident are you in the
+        orbital points you just surveyed?</div>
       <div class="answer">
-        <p>Ignoring the observed latitude of Mars for the purposes of
-          this survey means the black reference segment is really the
-          radius vector to the projection of Mars into the ecliptic
-          plane, not to Mars itself.  Since the points on Earth's
-          orbit really do lie in the ecliptic plane, you have
-          completely surveyed them relative to that black projected
-          reference segment.</p>
+        <p>You have discovered a very well hidden regularity in twenty
+          years of painstakingly measured postions of the Sun and
+          Mars.  The greatest geniuses of astronomy pored over data
+          very similar to this for two millenia without finding these
+          relationships among the positions.  The striking geometrical
+          relationships are buried two levels deep - you first need to
+          find a set of points on Earth's orbit by stepping by Mars
+          years from an opposition, and then find a new point on
+          Mars's orbit by stepping by an Earth year, then finally you
+          get to see the incredible accuracy with which these several
+          sight lines converge at a single point.</p>
+        <p>On the other hand, these steps are routine for terrestrial
+          surveyors.  But the trick that you need to wait a certain
+          fixed period of time for your landmarks or viewpoints to
+          return to their positions has no real analog in ordinary
+          surveying.  Kepler is the one who first figured out how to
+          put the two ideas together.</p>
+        <p>You cannot doubt that your survey points represent an
+          accurate map of the positions of the Sun, Mars, and Earth,
+          any more than you can doubt a terrestrial map made by
+          surveyors.  Of course, in order to make this map, you had to
+          assume that the planets periodically return to the same
+          positions, each after its own fixed period.  You then
+          adjusted those periods precisely in order to make your
+          surveying techiniques self-consistent.  Is this not circular
+          reasoning?  Yes, but by adjusting only one number (two if
+          you count the period of Earth), you were able to exactly fit
+          over 350 independent observations of the directions of the
+          Sun and Mars.  It is very hard to doubt that the hypothesis
+          of periodic orbits is correct, in addition to the geometry
+          of your survey points.</p>
+        <p>Furthermore, you can repeat this survey for any twenty year
+          data set you please throughout the ages, or more easily
+          using a different opposition in the same twenty year window
+          for the starting reference point.  The specific points you
+          get around the orbits will be different, but the convergence
+          of the sight lines on all the different days will be just as
+          accurate.</p>
+      </div>
+      <div class="question unselectable">Have you proven Earth and
+        Mars repeat closed orbits around the Sun?</div>
+      <div class="answer">
+        <p>You have proven that Earth and Mars move <em>as if</em>
+          they followed repeating closed orbits around the Sun.  Of
+          course, we now routinely measure the tiny discrepancies in
+          the orbits of the planets from this rule.  Though the rule
+          may not be exact, nevertheless it is very, very
+          accurate.</p>
+
+        <div style="min-width: 300px; max-width: 500px;
+                    padding: 10px; margin: 0 auto;">
+          <img src="epicycle.svg" style="width: 100%"
+               alt="picture of orbit scaling" />
+        </div>
+
+        <p>The ancient Greeks noticed that you can rescale the center
+          point and orbit of any planet, keeping the Earth fixed at
+          the center of this scaling operation, without changing any
+          directions as observed from Earth.  It is impossible to
+          disprove such a model by observations of the directions to
+          the planets, since by construction those directions remain
+          fixed.  But how likely does it seem that a planet orbits a
+          point in empty space which moves around Earth to stay
+          exactly on the Earth-Sun line?  Apparently, to ancient Greek
+          philosopy, this seemed more likely than that it simply
+          orbits the Sun.  The question was not definitively settled
+          until Galileo observed the phases of Venus through his
+          telescope, proving that its prograde conjunctions are behind
+          the Sun and its retrograde conjunctions in front of the Sun.
+          By naked eye, there is no way to tell.</p>
+      </div>
+      <div class="question unselectable">Do you think the other
+        planets repeat closed orbits around the Sun?</div>
+      <div class="answer">
+        <p>Your first order of business is to check that the other
+          planets do indeed repeat closed orbits.  Are you the kind of
+          person who hopes that the answer is yes?  Or no?  Is your
+          work done if the answer is yes?</p>
       </div>
     </div>
     <div id="incline-help" class="helper hidden">
-      <h1>Tips &amp; Notes: Mars Inclination</h1>
+      <h1>Tips &amp; Queries: Mars Inclination</h1>
       <div class="question unselectable">
         What does the diagram in the right panel show?</div>
       <div class="answer">
@@ -1297,7 +1385,7 @@
       <div class="answer"></div>  <!-- do not remove dummy answer -->
     </div>
     <div id="first-two-r-help" class="helper hidden">
-      <h1>Tips &amp; Notes: First Two Laws</h1>
+      <h1>Tips &amp; Queries: First Two Laws</h1>
       <div class="question unselectable">
         What does the diagram in the left panel show?</div>
       <div class="answer">
@@ -1313,7 +1401,7 @@
       <div class="answer"></div>  <!-- do not remove dummy answer -->
     </div>
     <div id="third-law-r-help" class="helper hidden">
-      <h1>Tips &amp; Notes: Third Law</h1>
+      <h1>Tips &amp; Queries: Third Law</h1>
       <div class="question unselectable">
         What does the diagram in the left panel show?</div>
       <div class="answer">
