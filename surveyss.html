@@ -275,6 +275,9 @@
         font-size: large;
     }
     .helper h1 {
+        -webkit-user-select: none; /* Safari */
+        -ms-user-select: none; /* IE 10 and IE 11 */
+        user-select: none; /* Standard syntax */
         font-family: 'Merriweather Sans', sans-serif;
         font-size: 24pt;
         color: darkslategray;
@@ -285,7 +288,10 @@
         height: 3px;
         background: darkslategray;
     }
-    .question {
+    .question, .helper h1 span {
+        -webkit-user-select: none; /* Safari */
+        -ms-user-select: none; /* IE 10 and IE 11 */
+        user-select: none; /* Standard syntax */
         box-sizing: border-box;
         border: 2px solid black;
         border-radius: 8px;
@@ -295,6 +301,10 @@
         background: #fdf8e0;
         font-family: 'Merriweather Sans', sans-serif;
         cursor: pointer;
+    }
+    .helper h1 span {
+        margin: 0 8px;
+        padding: 0 5px;
     }
     .question:hover {
         background: navajowhite;
@@ -404,9 +414,8 @@
   </div>
   <div id="main-overlay" class="faded hidden">
     <div id="top-clock-help" class="helper">
-      <h1>Tips &amp; Queries: Planet Clock</h1>
-      <div class="question unselectable">Why should we study how the
-        planets move?</div>
+      <h1>Tips &amp; Queries: Planet Clock<span>&gt;</span></h1>
+      <div class="question">Why should we study how the planets move?</div>
       <div class="answer">
         <p>Because working out the answer to this question triggered
           the scientific revolution that built our modern world.</p>
@@ -441,7 +450,7 @@
           information here before you.  Can you do what Kepler
           did?</p>
       </div>
-      <div class="question unselectable">How does the &ldquo;planet clock&rdquo;
+      <div class="question">How does the &ldquo;planet clock&rdquo;
         chart the sky?</div>
       <div class="answer">
         <p>The Sun follows a great circle around
@@ -513,7 +522,7 @@
           Earth's spin axis relative to the constellations, the
           precession of the equinoxes.</p>
       </div>
-      <div class="question unselectable">How do the controls work?</div>
+      <div class="question">How do the controls work?</div>
       <div class="answer">
         <ol>
           <li>Drag Sun around sky ring to set date.</li>
@@ -525,7 +534,7 @@
       </div>
       <hr/>  <!-- following dummy answer fixes spacing after this hr -->
       <div class="answer"></div>
-      <div class="question unselectable">Do you see evidence that the
+      <div class="question">Do you see evidence that the
         planets orbit the Sun and not the Earth?</div>
       <div class="answer">
         <p>You can quickly see that the motion of the planets is
@@ -547,7 +556,7 @@
           the retrograde motion of a planet around the zodiac is
           tied to the position of the Sun.</p>
       </div>
-      <div class="question unselectable">Do you see evidence that
+      <div class="question">Do you see evidence that
         Earth is the third planet?</div>
       <div class="answer">
         <p>For Mercury and Venus, you get a strong impression that you
@@ -573,7 +582,7 @@
           Mars, Jupiter, and Saturn are larger, Earth must be third in
           order from the Sun.</p>
       </div>
-      <div class="question unselectable">Can you figure out the order
+      <div class="question">Can you figure out the order
         of the planets from the Sun?</div>
       <div class="answer">
         <p>The farthest Mercury or Venus gets from the Sun is called
@@ -599,7 +608,7 @@
           important, but unless your chart shows how the positions of
           the planets change it will be useless.</p>
       </div>
-      <div class="question unselectable">How would you test these ideas?</div>
+      <div class="question">How would you test these ideas?</div>
       <div class="answer">
         <p>You can work through the sections in the sidebar menu on
           the left from top to bottom to learn how Johannes Kepler
@@ -618,8 +627,9 @@
       </div>
     </div>
     <div id="earth-year-help" class="helper hidden">
-      <h1>Tips &amp; Queries: Earth Period</h1>
-      <div class="question unselectable">
+      <h1>Tips &amp; Queries:
+        <span>&lt;</span>Earth Period<span>&gt;</span></h1>
+      <div class="question">
         What does the plot in the right panel show?</div>
       <div class="answer">
         <p>To see the plot, you first need to set a start date using
@@ -690,7 +700,7 @@
           within about 0.001 day (with ten years of data) - about a
           minute and a half.</p>
       </div>
-      <div class="question unselectable">How do the controls work?</div>
+      <div class="question">How do the controls work?</div>
       <div class="answer">
         <ol>
           <li>Use planet clock controls to set starting date.</li>
@@ -704,7 +714,7 @@
       </div>
       <hr/>
       <div class="answer"></div>  <!-- do not remove dummy answer -->
-      <div class="question unselectable">
+      <div class="question">
         What feature strikes you most about the motion of the Sun?</div>
       <div class="answer">
         <p>The most striking thing about the motion of the Sun is how
@@ -745,7 +755,7 @@
           along a closed path in space, like a train around a fixed
           track on an unvarying schedule.</p>
       </div>
-      <div class="question unselectable">
+      <div class="question">
         What does the periodicity of the Sun suggest about planetary
         motion?</div>
       <div class="answer">
@@ -784,8 +794,9 @@
       </div>
     </div>
     <div id="orbit-view-help" class="helper hidden">
-      <h1>Tips &amp; Queries: Orbit View</h1>
-      <div class="question unselectable">
+      <h1>Tips &amp; Queries:
+        <span>&lt;</span>Orbit View<span>&gt;</span></h1>
+      <div class="question">
         What does the diagram in the right panel show?</div>
       <div class="answer">
         <p>The diagram shows three different pictures or paradigms for
@@ -852,7 +863,7 @@
           where you would like to go, you need to wake up and get to
           work!</p>
       </div>
-      <div class="question unselectable">How do the controls work?</div>
+      <div class="question">How do the controls work?</div>
       <div class="answer">
         <ol>
           <li>Click upper triangle (in upper left corner) to zoom out view.</li>
@@ -868,7 +879,7 @@
       </div>
       <hr/>
       <div class="answer"></div>  <!-- do not remove dummy answer -->
-      <div class="question unselectable">
+      <div class="question">
         What do you like about the heliocentric picture?</div>
       <div class="answer">
         <p>When you adopt the heliocentric picture, you are likely to
@@ -896,7 +907,7 @@
           points, while you can see the disk of the Sun in the
           sky.</p>
       </div>
-      <div class="question unselectable">
+      <div class="question">
         What do you like about the geocentric picture?</div>
       <div class="answer">
         <p>You might be attracted to the geocentric picture because it
@@ -920,7 +931,7 @@
           to the stars was even less likely than the Earth being
           stationary.  But the universe holds many surprises.</p>
       </div>
-      <div class="question unselectable">
+      <div class="question">
         What do you like about the epicycles picture?</div>
       <div class="answer">
         <p>The epicycles picture was the backbone of astronomy for
@@ -958,8 +969,9 @@
       </div>
     </div>
     <div id="mars-year-help" class="helper hidden">
-      <h1>Tips &amp; Queries: Mars Period</h1>
-      <div class="question unselectable">
+      <h1>Tips &amp; Queries:
+        <span>&lt;</span>Mars Period<span>&gt;</span></h1>
+      <div class="question">
         What does the plot in the right panel show?</div>
       <div class="answer">
         <p>Before you can begin surveying, you must determine the
@@ -1048,7 +1060,7 @@
           estimate.  For now it is easily good enough to begin
           surveying.</p>
       </div>
-      <div class="question unselectable">How do the controls work?</div>
+      <div class="question">How do the controls work?</div>
       <div class="answer">
         <ol>
           <li>Use planet clock controls to set starting date.</li>
@@ -1062,7 +1074,7 @@
       </div>
       <hr/>
       <div class="answer"></div>  <!-- do not remove dummy answer -->
-      <div class="question unselectable">How could you find the periods
+      <div class="question">How could you find the periods
          of the other planets?</div>
       <div class="answer">
         <p>Each planet has its own set of challenges.  With twenty
@@ -1091,8 +1103,9 @@
       </div>
     </div>
     <div id="surveyor-help" class="helper hidden">
-      <h1>Tips &amp; Queries: Survey Orbits</h1>
-      <div class="question unselectable">
+      <h1>Tips &amp; Queries:
+        <span>&lt;</span>Survey Orbits<span>&gt;</span></h1>
+      <div class="question">
         What does the diagram in the right panel show?</div>
       <div class="answer">
         <p>The diagram is the same map of points in the ecliptic plane
@@ -1143,7 +1156,7 @@
           lines on the planet clock.  This is precisely how surveyors
           triangulate two known landmarks - the Sun and your reference
           opposition point on Mars's orbit in this case - to chart
-          their position.</p>
+          their own position.</p>
         <p>Notice that one or two points are missing on this ring of
           points on Earth's orbit.  These points are too close to
           conjunction to be able to see Mars.  You will find their
@@ -1174,7 +1187,7 @@
           slowly lose points on Earth's orbit because they will fall
           outside your twenty year data window.  You also occasionally
           gain a new point as it moves into your twenty year window.
-          Compleetly new pionts on Earth's orbit are marked by a faint
+          Completely new points on Earth's orbit are marked by a faint
           yellow Earth-Sun line in addition to the red Earth-Mars
           line.  These new points are located by triangulation using
           the point where all the sight lines from existing points on
@@ -1194,11 +1207,11 @@
           different points on Mars's orbit from each point on Earth's
           orbit, and you have viewed each point on Mars's orbit from
           several different points on Earth's orbit, you have used
-          observations at a total of about 350 dates in order to
+          observations made on a total of about 350 dates in order to
           survey these 60 odd orbital points.  The diagram plots all
           the surveyed points on both orbits as faint dots.</p>
       </div>
-      <div class="question unselectable">What do the numbers in the upper
+      <div class="question">What do the numbers in the upper
         right corner in the third step mean?</div>
       <div class="answer">
         <p>When you observe a new point on Mars's orbit from several
@@ -1211,7 +1224,7 @@
           those lines will never exactly intersect at a common point;
           in fact, if you use the actual direction in 3D - latitude as
           well as longitude - none of the lines will exactly intersect
-          another at all.  The lines will always be skew.  But if the
+          any other at all.  The lines will always be skew.  But if the
           common point of intersection is only approximate, how do you
           compute exactly where to plot it on your chart of Mars's
           orbit?</p>
@@ -1219,7 +1232,7 @@
           squares fitting.  A least squares fit is a computationally
           convenient way to define the best compromise point: The
           lines may not all intersect at any point, but there will
-          always be a point which has the minimum RMS (root mean
+          always be a point which lies at the minimum RMS (root mean
           square) distance from all the lines.  However, in this case,
           you are measuring a direction - angles of longitude and
           latitude - so you really ought to find the point that
@@ -1242,19 +1255,20 @@
           of all of your measured directions from the direction of the
           charted Mars point from the charted Earth point.  The top
           number is the largest angular deviation of any of the 350
-          observations.  Using these numbers, you can make a final
-          adjustment to your estimated period of Mars: Move the slider
-          until you minimize one or the other of these two numbers -
-          they will both minimize for nearly the same period.</p>
+          observations from its corresponding Mars position on the
+          chart.  Using these numbers, you can make a final adjustment
+          to your estimated period of Mars: Move the slider until you
+          minimize one or the other of these two numbers - they will
+          both minimize for nearly the same period.</p>
         <p>After this final period adjustment, you can usually drive
           the maximum angular error down to about 0.02° and the RMS
           angular error to about 0.01°.  Tycho, the last and greatest
           naked-eye astronomer in history, measured the positions of
           planets with an accuracy of about 0.03° - about 1/15 the
-          disk of the Sun or Moon.  (Someone with acute vision cannot
-          distinguish two marks separated by less than about half
-          that, or half a millimeter viewed at a distance of a
-          meter.)  Notice that this means that the groups of lines
+          disk of the Sun or Moon, and Kepler used his data.  (Someone
+          with acute vision cannot distinguish two marks separated by
+          less than about half that, or half a millimeter viewed at a
+          distance of a meter.)  Notice that the groups of lines
           converging on every point around Mars orbit converge most
           accurately for a single value of the period of Mars.</p>
         <p>(Any error in the period of Earth would lead to a similar
@@ -1264,7 +1278,7 @@
           As noted, it is much easier to determine the period of Earth
           than the period of any other planet.)</p>
       </div>
-      <div class="question unselectable">How do the controls work?</div>
+      <div class="question">How do the controls work?</div>
       <div class="answer">
         <ol>
           <li>Click on opposition to select reference opposition.</li>
@@ -1279,7 +1293,7 @@
       </div>
       <hr/>
       <div class="answer"></div>  <!-- do not remove dummy answer -->
-      <div class="question unselectable">How confident are you in the
+      <div class="question">How confident are you in the
         orbital points you just surveyed?</div>
       <div class="answer">
         <p>You have discovered a very well hidden regularity in twenty
@@ -1321,7 +1335,7 @@
           of the sight lines on all the different days will be just as
           accurate.</p>
       </div>
-      <div class="question unselectable">Have you proven Earth and
+      <div class="question">Have you proven Earth and
         Mars repeat closed orbits around the Sun?</div>
       <div class="answer">
         <p>You have proven that Earth and Mars move <em>as if</em>
@@ -1352,8 +1366,36 @@
           telescope, proving that its prograde conjunctions are behind
           the Sun and its retrograde conjunctions in front of the Sun.
           By naked eye, there is no way to tell.</p>
+        <p>This strange orbit scaling idea may have been the genesis
+          of the other peculiar choice of Ptolemy's epicycles picture
+          for the outer planets: The reversal of the epicycle and
+          deferent that makes the planet move around a center that is
+          in empty space.  If the orbit scaling idea came first, then
+          it, too, places the center of the epicycle at a point in
+          empty space.  The orbit scaling hypothesis was undoubtedly
+          invented to keep each planet within its own (imaginary)
+          sphere above the Earth.  But if the epicycle radius is
+          larger than the deferent radius (as we draw the orbits of
+          the outer planets), scaling them cannot isolate all these
+          imaginary orbit lines in their own sphere!  If that is why
+          you are scaling the orbits, then you <em>must</em> swap
+          epicycle and deferent for the scaling to have the effect you
+          want.  The single idea that each planet together with all
+          the imaginary lines and orbit paths used to describe it must
+          fit within its own sphere above the Earth seems to have
+          driven the only real error of the Ptolemaic system - its
+          arbitrary scaling of the orbits.</p>
+        <p>Would the astonishing consistency of Kepler's surveying
+          technique have convinced ancient Greek astronomers that the
+          planets orbited the Sun rather than moving along scaled
+          orbits whose centers merely aligned with the direction of
+          the Sun?  They may well have acknowledged only the
+          periodicity of the motion and clung to their scaled orbits.
+          At the same time, they would certainly have pounced on
+          Kepler's surveyed orbital shapes and recognized them as the
+          true shapes of their deferents and epicycles.</p>
       </div>
-      <div class="question unselectable">Do you think the other
+      <div class="question">Do you think the other
         planets repeat closed orbits around the Sun?</div>
       <div class="answer">
         <p>Your first order of business is to check that the other
@@ -1363,54 +1405,126 @@
       </div>
     </div>
     <div id="incline-help" class="helper hidden">
-      <h1>Tips &amp; Queries: Mars Inclination</h1>
-      <div class="question unselectable">
+      <h1>Tips &amp; Queries:
+        <span>&lt;</span>Mars Inclination<span>&gt;</span></h1>
+      <div class="question">
         What does the diagram in the right panel show?</div>
       <div class="answer">
+        <p>Initially, the right panel shows the same chart of the
+          orbits of Mars and Earth as the third step of the Survey
+          Orbits section.  However, the points you charted on Mars's
+          orbit are now plotted in 3D, as you can see by dragging the
+          sliders on the bottom and right edges.  You can see that
+          your surveyed points all lie in a single plane containing
+          the Sun, but tilted at a small angle away from the ecliptic.
+          Because this orbital inclination of Mars is so small, you
+          should magnify the z-coordinates by clicking the 10× button
+          so you can clearly see the tilt.  You should click on the
+          point on Mars's orbit where the red sight lines converge to
+          turn them off as you familiarize yourself with this
+          diagram.</p>
+        <p>The light blue line through the Sun is the intersection of
+          the best fit plane to your Mars survey points with the
+          ecliptic plane, which is called the line of nodes.  The
+          ecliptic longitude of this line of nodes (specifically the
+          ascending node) is the number at the top right of the
+          diagram.  The angle between this best fit plane and the
+          ecliptic plane, the orbital inclination of Mars, is the
+          number under the ascending node longitude.  Click the Reset
+          button at the lower left to return to the map of the
+          ecliptic plane.  Now drag the bottom slider until the blue
+          node line is vertical (you can use the stationary tick mark
+          at the top of the diagram to align it exactly).  Drag the
+          right slider all the way to the top to get the view along
+          the line of nodes, exactly edge on to both the ecliptic and
+          the plane of Mars's orbit.  If you go back to 1×
+          z-magnification you can see how small the tilt really
+          is.</p>
+        <p>Notice that a ring of faint red dots is drawn in the
+          ecliptic plane.  These are the projections of your dark red
+          surveyed points into the ecliptic plane.  Viewed from Earth,
+          these points have the same ecliptic longitude as Mars, but
+          zero ecliptic latitude.</p>
+        <p>You can click on any of the dark red points to toggle on or
+          off red sight lines for all of the observations you made of
+          Mars when it was at that position through your twenty years
+          of data.  The corresponding blue points on Earth's orbit
+          will highlight.  When you view any set of these sight lines
+          from different perspectives using the sliders, you can see
+          that they all converge to a single point in 3D, not just in
+          the plane of the ecliptic.</p>
       </div>
-      <div class="question unselectable">How do the controls work?</div>
+      <div class="question">How do the controls work?</div>
       <div class="answer">
         <ol>
-          <li>Click on opposition to select reference opposition.</li>
-          <li>Click Next button at upper right to move to the next step.</li>
-          <li>Click ±M buttons at lower right to step Mars periods.</li>
-          <li>Click ±E buttons at lower left to step Earth periods.</li>
-          <li>Click Prev button at upper left to return to the
-            previous step.</li>
-          <li>Drag slider (along right edge) up or down to change your
-            estimate of Mars's orbital period.</li>
+          <li>Drag bottom slider to rotate ecliptic plane around Sun.</li>
+          <li>Drag right edge slider to rotate view out of ecliptic plane.</li>
+          <li>Click one of the magnify z buttons at upper left to select z
+            magnification.</li>
+          <li>Click any red point on Mars orbit to toggle on or off
+            sight lines from Earth orbit points.</li>
+          <li>Click Reset button at lower left to restore original
+            orientation.</li>
         </ol>
       </div>
       <hr/>
       <div class="answer"></div>  <!-- do not remove dummy answer -->
+      <div class="question">What features are most remarkable about
+        your survey points?</div>
+      <div class="answer">
+        <p>The fact that all the Earth-Mars sight lines emanating from
+          your surveyed positions of Earth at the dates you found by
+          stepping multiples of Mars years all converge at a single
+          point in three dimensions is very striking.  Kepler's survey
+          technique works in three dimensions, as it must to be
+          successful.</p>
+        <p>As if all these convergences were not remarkable enough,
+          you should also reflect on the fact that the survey points
+          all lie exactly in a single plane containing the Sun.  You
+          did not assume this - the only thing you assumed to make
+          your survey was that the orbits of Earth and Mars were
+          periodic.  You already knew that Earth's orbit was confined
+          to a plane containig the Sun, because that it how you
+          defined the plane of the ecliptic.  But you now know that
+          not only is Mars's orbit as periodic as Earth's, but that it
+          too is confined to a plane containing the Sun.</p>
+        <p>It seems as if Mars, and probably the other planets,
+          completely ignore one another - only the Sun seems to exert
+          any influence over the motion of the planets.  Heliocentrism
+          is not about what body lies at the the center so much as
+          what body dominates the dynamics.  The answer is apparently
+          that every body except the Sun is negligible.</p>
+      </div>
     </div>
     <div id="first-two-r-help" class="helper hidden">
-      <h1>Tips &amp; Queries: First Two Laws</h1>
-      <div class="question unselectable">
+      <h1>Tips &amp; Queries:
+        <span>&lt;</span>First Two Laws<span>&gt;</span></h1>
+      <div class="question">
         What does the diagram in the left panel show?</div>
       <div class="answer">
       </div>
-      <div class="question unselectable">
+      <div class="question">
         What does the plot in the right panel show?</div>
       <div class="answer">
       </div>
-      <div class="question unselectable">How do the controls work?</div>
+      <div class="question">How do the controls work?</div>
       <div class="answer">
       </div>
       <hr/>
       <div class="answer"></div>  <!-- do not remove dummy answer -->
     </div>
     <div id="third-law-r-help" class="helper hidden">
-      <h1>Tips &amp; Queries: Third Law</h1>
-      <div class="question unselectable">
+      <h1>Tips &amp; Queries:
+        <span>&lt;</span>Third Law</h1>
+      <div class="question">
         What does the diagram in the left panel show?</div>
       <div class="answer">
       </div>
-      <div class="question unselectable">
+      <div class="question">
         What does the plot in the right panel show?</div>
       <div class="answer">
       </div>
-      <div class="question unselectable">How do the controls work?</div>
+      <div class="question">How do the controls work?</div>
       <div class="answer">
       </div>
       <hr/>
@@ -1435,8 +1549,8 @@
       .attr("width", 620).attr("height", 580)
       .attr("x", -310).attr("y", -290);
   introCover.append(() => d3.select("#intro").node());
-  const orbits = new OrbitView(d3.select("#orbit-view"), clock);
   const eyear = new EarthYear(d3.select("#earth-year"), clock);
+  const orbits = new OrbitView(d3.select("#orbit-view"), clock);
   const myear = new MarsYear(d3.select("#mars-year"), clock);
   const surveyor = new SurveyOrbits(d3.select("#surveyor"), clock, myear, eyear);
   const incline = new Inclination(d3.select("#incline"), clock, surveyor);
@@ -1444,7 +1558,7 @@
                             d3.select("#first-two-r"), incline);
   const law3 = new ThirdLaw(d3.select("#third-law-l"),
                             d3.select("#third-law-r"), incline);
-  const slaves = {"top-clock": null, "orbit-view": orbits, "earth-year": eyear,
+  const slaves = {"top-clock": null, "earth-year": eyear, "orbit-view": orbits,
                   "mars-year": myear, "surveyor": surveyor, "incline": incline,
                   "first-two-r": laws2, "third-law-r": law3};
 
@@ -1459,7 +1573,7 @@
       hamList.remove("holding", "open");
       const overList = overlay.classList;
       overList.add("faded");
-      d3.timeout(() => overList.add("hidden"), 500);
+      d3.timeout(() => { overList.add("hidden"); resetHelper(); }, 500);
     } else {
       hamList.toggle("open");
       barList.toggle("open");
@@ -1480,6 +1594,57 @@
   }
   document.querySelectorAll(".question").forEach(
     e => { e.onclick = toggleAnswer; });
+
+  const helpers = Object.keys(slaves).map(s => "#" + s + "-help");
+  let helperDiv = helpers[0];
+  function pageTips(di) {
+    for (let i=0 ; i<helpers.length ; i+=1) {
+      let helpList = document.querySelector(helpers[i]).classList
+      if (!helpList.contains("hidden")) {
+        helpList.add("hidden");
+        helperDiv = helpers[i+di];
+        document.querySelector(helperDiv).classList.remove("hidden");
+        break;
+      }
+    }
+  }
+  function prevTips() {
+    return pageTips(-1);
+  }
+  function nextTips() {
+    return pageTips(1);
+  }
+  document.querySelectorAll(".helper h1 span").forEach(
+    e => {
+      e.onclick = (e.innerText == "<")? prevTips : nextTips;
+    });
+  function resetHelper() {
+    if (currentSlave == null) {
+      helperDiv = helpers[0];
+      document.querySelector(helperDiv).classList.remove("hidden");
+    } else {
+      document.querySelector(helpers[0]).classList.add("hidden");
+    }
+    for (let i=1 ; i<helpers.length ; i+=1) {
+      const panel = document.querySelector(helpers[i].slice(0, -5));
+      if (panel.classList.contains("hidden")) {
+        document.querySelector(helpers[i]).classList.add("hidden");
+      } else {
+        helperDiv = helpers[i];
+        document.querySelector(helperDiv).classList.remove("hidden");
+      }
+    }
+  }
+  function showHelperScroll(on) {
+    document.querySelectorAll(".helper h1 span").forEach(
+      e => {
+        if (on) {
+          e.classList.remove("hidden");
+        } else {
+          e.classList.add("hidden");
+        }
+      });
+  }
 
   function removeIntro() {
     const intro = d3.select("#intro");
@@ -1517,6 +1682,7 @@
       p => clock.setHandVisibility(p, false));
     const oldDiv = currentElem.dataset.id;
     const newDiv = elem.dataset.id;
+    document.querySelector(helperDiv).classList.add("hidden");
     document.querySelector("#"+oldDiv+"-help").classList.add("hidden");
     document.querySelector("#"+newDiv+"-help").classList.remove("hidden");
     const oldDivL = oldDiv.endsWith("-r")? oldDiv.replace("-r", "-l")
@@ -1573,11 +1739,11 @@
     }
   }
 
-  function orbitClick(elem) {
+  function earthClick(elem) {
     if (makeCurrent(elem)) return;
   }
 
-  function earthClick(elem) {
+  function orbitClick(elem) {
     if (makeCurrent(elem)) return;
   }
 
@@ -1599,6 +1765,72 @@
 
   function thirdClick(elem) {
     if (makeCurrent(elem)) return;
+  }
+
+  // Interpret URL query parameters
+  // helpDebug=yes     (helper scroll buttons)
+  // tab=orb-view  (intro, earth-year, orb-view, ... main select id)
+  // day=8114      (clock.elapsed0 JD minus J2000 day number)
+  // eyear=365.25636  (earthYear period value, otherwise unused)
+  // myear=686.979  (marsYear.yearEstimate value)
+  // oppo=0        (surveyor.iOppo opposition index)
+  let urlQueries = location.search.replace("\?", "");
+  if (urlQueries) {
+    urlQueries = Object.fromEntries(urlQueries.split("&")
+                                    .map(q => q.split("=")));
+  } else {
+    urlQueries = {}
+  }
+  showHelperScroll(urlQueries.helpDebug == "yes");
+  if (urlQueries.eyear && !isNaN(urlQueries.eyear)) {
+    let year = parseFloat(urlQueries.eyear);
+    if (year < 350) year = 350;
+    else if (year > 380) year = 380;
+    earthYear.changeYearEstimate(year);
+  }
+  if (urlQueries.day && !isNaN(urlQueries.day)) {
+    let day = parseFloat(urlQueries.day);
+    clock.goToDay(day);
+    clock.elapsed0 = day;
+    eyear.elapsedUpdate(true);
+    myear.elapsedUpdate(true);
+    if (urlQueries.myear && !isNaN(urlQueries.myear)) {
+      let year = parseFloat(urlQueries.myear);
+      if (year < 650) year = 650;
+      else if (year > 730) year = 730;
+      myear.changeYearEstimate(year);
+    } else {
+      myear.changeYearEstimate(686.97973);
+    }
+    if (!urlQueries.eyear) {
+      eyear.changeYearEstimate(365.25636);
+    }
+    surveyor.notReady();
+    if (urlQueries.oppo && !isNaN(urlQueries.oppo)
+        && surveyor.oppositionsFound) {
+      let iOppo = parseInt(urlQueries.oppo);
+      if (iOppo >= 0 && iOppo < surveyor.oppositionsFound.length) {
+        surveyor.selector(undefined, [undefined, iOppo]);
+      }
+    } else {
+      surveyor.selector(undefined, [undefined, 0]);
+    }
+    surveyor.findEarth();
+    surveyor.findMars();
+  }
+  if (urlQueries.tab &&
+      ["intro", "orb-view", "earth-year", "mars-year", "survey-orbits",
+       "mars-incline", "two-laws", "third-law"].indexOf(urlQueries.tab)) {
+    if (urlQueries.tab != "intro" || urlQueries.helpDebug == "yes")
+      removeIntro();
+    document.querySelectorAll("#main-sidebar ul li").forEach(
+      e => {
+        if (e.dataset && e.dataset.id == urlQueries.tab) e.click();
+      });
+  }
+  if (urlQueries.helpDebug && urlQueries.helpDebug == "yes") {
+    openSidebar();
+    document.querySelector("#main-sidebar ul li.usage").click();
   }
 
 </script>

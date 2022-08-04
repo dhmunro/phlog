@@ -3286,6 +3286,17 @@ class Inclination {
           .attr("cx", -width/2 + 72).attr("cy", -height/2 + 54)
           .attr("r", 5);
       });
+
+    // Node and inclination values
+    this.nodeText = this.svg.append("text")
+      .attr("pointer-events", "none")
+      .attr("text-anchor", "end")
+      .attr("fill", "#fdf8e0")
+      .attr("font-size", 20)
+      .attr("x", width/2 - 10)
+      .attr("y", -height/2 + 25);
+    this.inclText = this.nodeText.clone(true)
+      .attr("y", -height/2 + 55);
   }
 
   activate(on) {
@@ -3367,6 +3378,10 @@ class Inclination {
     this.zerr = Math.sqrt(this.zerr / this.xyzm.length);
 
     this.instructions.attr("display", "none");
+    let angle = Math.atan2(this.anode[1], this.anode[0]) * 180/Math.PI;
+    this.nodeText.text(`node: ${angle.toFixed(3)}°`);
+    angle = Math.atan(this.tani) * 180/Math.PI;
+    this.inclText.text(`incl: ${angle.toFixed(3)}°`);
     this.replot();
     this.sunPlane.select("line").attr("opacity", 0.25);
   }
@@ -3486,9 +3501,10 @@ class Inclination {
       this.frontMars.selectAll("line").remove();
       this.backEarth.selectAll("circle").attr("opacity", 0.15);
       this.frontEarth.selectAll("circle").attr("opacity", 0.15);
-      if (i == this.iNow || i < 0) {  // just toggle off
+      if (i == this.iNow && this.linesOff.attr("display") == "block") i = -1;
+      if (i < 0) {  // just toggle off
         this.iNow = -1;
-        this.linesOff.attr("display", "block");
+        this.linesOff.attr("display", "none");
         return;
       }
     }
@@ -3832,31 +3848,6 @@ class Slider {
     this.marker.attr(this.horiz? "cx" : "cy", xy);
     if (!inhibitCallback) this.callback(s);
     return s;
-  }
-}
-
-
-/**
- * Find the intersection point of two lines
- *
- * @param {Array} line1 - [px, py, ex, ey] where (px, py) is a point on the
- *    line and (ex, ey) is the normalized direction of the line.
- * @param {Array} line2 - [px, py, ex, ey] for the second line.
- *    line2 may be only [ex, ey] if px = py = 0
- *
- * @return {Array<number>} - [x, y] coordinates of intersection point
- */
-function intersectionOf(line1, line2) {
-  let [px1, py1, ex1, ey1] = line1;
-  if (line2.length < 4) {
-    let [ex2, ey2] = line2;
-    let r = (py2*ex2 - px2*ey2) / (ex2*ey1 - ey2*ex1);
-    return [r*ex1, r*ey1];
-  } else {
-    let [px2, py2, ex2, ey2] = line2;
-    let det = ex2*ey1 - ey2*ex1;
-    let [c1, c2] = [(px1*ey1 - py1*ex1)/det, (px2*ey2 - py2*ex2)/det];
-    return [c1*ex2 - c2*ex1, c1*ey2 - c2*ey1];
   }
 }
 
