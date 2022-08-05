@@ -61,15 +61,8 @@ class PlanetClock {
     // night sky ring
     let nightSky = this.svg.append("g").call(
       g => {
-        g.append("circle")
-          .style("fill", "#ddd")
-          .style("stroke", "none")
-          .attr("r", rInner);
-        g.append("circle")
-          .style("fill", "none")
-          .style("stroke", "#000")
-          .style("stroke-width", rOuter - rInner)
-          .attr("r", 0.5*(rOuter + rInner))
+        appendCircle(g, rInner, "#ddd", 0);
+        appendCircle(g, 0.5*(rOuter + rInner), "#000", rOuter - rInner);
       });
 
     // Zodiac constellations
@@ -103,15 +96,11 @@ class PlanetClock {
                 .attr("y1", d => -rInner*d[1])
                 .attr("x2", d => 1.03*rOuter*d[0])
                 .attr("y2", d => -1.03*rOuter*d[1]))
-        .call(g => g.append("text")
-              .style("pointer-events", "none")
-              .attr("x", d => rBar*zodiacNames[d[2]][0])
-              .attr("y", d => -rBar*zodiacNames[d[2]][1])
-              .attr("dy", "0.35em")
-              .attr("fill", "#575")
-              .text(d => zodiacNames[d[2]][2]));
+          .call(g => appendText(
+            g, 0, "#575", false,
+            d => rBar*zodiacNames[d[2]][0], d => -rBar*zodiacNames[d[2]][1],
+            d => zodiacNames[d[2]][2]).attr("dy", "0.35em"));
       });
-
 
     // day sky wedge is dynamic element needing updates to transform property
     this.daySky = nightSky.append("g").call(
@@ -131,16 +120,8 @@ class PlanetClock {
               .attr("d", d3p);
           });
         let rcen = 0.5*(rOuter + rInner);
-        g.append("text")
-          .style("fill", "#94c6ff")
-          .style("stroke", "none")
-          .style("stroke-width", 1)
-          .style("pointer-events", "none")
-          .attr("font-size", 20)
-          .attr("x", rcen)
-          .attr("y", 0)
+        appendText(g, 20, "#94c6ff", false, rcen, 0, "evening")
           .attr("dy", "0.35em")
-          .text("evening")
           .attr("transform", "rotate(-12)")
           .clone(true)
           .attr("x", -rcen)
@@ -165,14 +146,9 @@ class PlanetClock {
                 .attr("y1", d => rTick*d[1])
                 .attr("x2", d => rOuter*d[0])
                 .attr("y2", d => rOuter*d[1]))
-          .call(g => g.append("text")
-                .style("fill", "#000")
-                .style("stroke", "none")
-                .style("pointer-events", "none")
-                .attr("x", d => rText*d[0])
-                .attr("y", d => rText*d[1])
-                .attr("dy", "0.35em")
-                .text(d => `${d[2]}°`));
+          .call(g => appendText(
+            g, 0, "#000", false, d => rText*d[0], d => rText*d[1],
+            d => `${d[2]}°`).attr("dy", "0.35em"));
       });
     this.svg.append("g").call(
       g => {
@@ -182,32 +158,20 @@ class PlanetClock {
         g.selectAll("g")
           .data([[-5, rcen-dr5], [0, rcen], [5, rcen+dr5]])
           .join("g")
-          .call(g => g.append("circle")
-                .style("fill", "none")
-                .style("stroke", "#555")
-                .style("stroke-width", 2)
-                .attr("r", d => d[1]))
-          .call(g => g.append("text")
-                .attr("x", 0)
-                .attr("y", d => -d[1])
+          .call(g => appendCircle(g, d => d[1], "#555", 2))
+          // first draw blodges to blot out grid lines underneath
+          .call(g => appendText(g, 0, "", false, 0, d => -d[1],
+                                d => `${d[0]}°`)
                 .attr("dy", "0.35em")
-                // first draw blodges to blot out grid lines underneath
                 .style("fill", "none")
                 .style("stroke", "#000")
                 .style("stroke-width", 6)
-                .style("pointer-events", "none")
-                .text(d => `${d[0]}°`)
                 .clone(true)
                 .attr("y", d => d[1]))
-          .call(g => g.append("text")
-                .attr("x", 0)
-                .attr("y", d => -d[1])
+          // then put the text on top of blodges
+          .call(g => appendText(g, 0, "#fff", false, 0, d => -d[1],
+                                d => `${d[0]}°`)
                 .attr("dy", "0.35em")
-                // draw text on top of blodges
-                .style("fill", "#fff")
-                .style("stroke", "none")
-                .style("pointer-events", "none")
-                .text(d => `${d[0]}°`)
                 .clone(true)
                 .attr("y", d => d[1]));
       });
@@ -227,12 +191,8 @@ class PlanetClock {
           t => buttonText(t, 0, -0.50*rInner - 1,
                           dateOfDay(this.dayNow).getUTCFullYear(), 24,
                           yearSetter));
-        this.dateText = g.append("text")
-          .style("pointer-events", "none")
-          .attr("font-size", 20)
-          .attr("x", 0)
-          .attr("y", -0.5*rInner + 29)
-          .text(this.getDateText(this.dayNow));
+        this.dateText = appendText(g, 20, "", false, 0, -0.5*rInner + 29,
+                                   this.getDateText(this.dayNow));
       });
     this.prevDayYear = [this.dayNow, dateOfDay(this.dayNow).getUTCFullYear()];
 
@@ -267,46 +227,21 @@ class PlanetClock {
           .attr("rx", 5)
           .style("fill", "#000")
           .style("stroke", "none");
-        g.append("circle")
-          .attr("stroke", "none")
-          .attr("fill", this.planetColors.sun)
-          .attr("cx", xdots)
-          .attr("cy", ytop - 5)
-          .attr("r", 8);
-        g.append("text")
-          .style("pointer-events", "none")
-          .attr("text-anchor", "start")
-          .attr("font-size", 14)
-          .attr("x", xdots + 15)
-          .attr("y", ytop)
-          .text("Sun");
+        appendCircle(g, 8, this.planetColors.sun, 0, xdots, ytop - 5);
+        appendText(g, 14, "", false, xdots + 15, ytop, "Sun")
+          .attr("text-anchor", "start");
         ["mercury", "venus", "mars", "jupiter", "saturn"].forEach(
           (p, i) => {
             let planet = p[0].toUpperCase() + p.substring(1);
-            g.append("circle")
-              .attr("stroke", "#0000")
-              .attr("stroke-width", 12)
+            appendCircle(g, 4, "#0000", 12, xdots, ytop + 15 + 20*i)
               .attr("fill", this.planetColors[p])
-              .attr("cx", xdots)
-              .attr("cy", ytop + 15 + 20*i)
-              .attr("r", 4)
               .style("cursor", "pointer")
               .on("click", handToggler[i]);
-            g.append("text")
-              .style("cursor", "pointer")
+            appendText(g, 14, "", true, xdots + 15, ytop + 20 + 20*i, planet)
               .attr("text-anchor", "start")
-              .attr("font-size", 14)
-              .attr("x", xdots + 15)
-              .attr("y", ytop + 20 + 20*i)
-              .text(planet)
               .on("click", handToggler[i]);
           });
-        g.append("text")
-          .style("pointer-events", "none")
-          .attr("font-size", 14)
-          .attr("x", 0)
-          .attr("y", 20)
-          .text("Earth");
+        appendText(g, 14, "", false, 0, 20, "Earth");
       });
 
     // Month dial
@@ -314,21 +249,9 @@ class PlanetClock {
       // months clock dial ring background
       svg.append("g").call(
         g => {
-          g.append("circle")
-            .style("fill", "none")
-            .style("stroke", "#f8f8f8")
-            .style("stroke-width", 0.12*rInner)
-            .attr("r", 0.75*rInner);
-          g.append("circle")
-            .style("fill", "none")
-            .style("stroke", "#000")
-            .style("stroke-width", 2)
-            .attr("r", 0.69*rInner);
-          g.append("circle")
-            .style("fill", "none")
-            .style("stroke", "#000")
-            .style("stroke-width", 2)
-            .attr("r", 0.81*rInner);
+          appendCircle(g, 0.75*rInner, "#f8f8f8", 0.12*rInner);
+          appendCircle(g, 0.69*rInner, "#000", 2);
+          appendCircle(g, 0.81*rInner, "#000", 2);
         });
 
       // month labels and radial separators
@@ -343,13 +266,10 @@ class PlanetClock {
                 .attr("y1", d => 0.69*rInner*d[0][1])
                 .attr("x2", d => 0.81*rInner*d[0][0])
                 .attr("y2", d => 0.81*rInner*d[0][1]))
-          .call(g => g.append("text")
-                .style("pointer-events", "none")
-                .attr("x", d => 0.75*rInner*d[1][0])
-                .attr("y", d => 0.75*rInner*d[1][1])
-                .attr("dy", "0.35em")
-                .attr("fill", "#000")
-                .text(d => d[2])));
+          .call(g => appendText(g, 0, "#000", false,
+                                d => 0.75*rInner*d[1][0],
+                                d => 0.75*rInner*d[1][1],
+                                d => d[2]).attr("dy", "0.35em")));
     }
 
     // Sun position and clock hand
@@ -369,12 +289,7 @@ class PlanetClock {
             .clone(true)
             .attr("x1", -0.69*rInner).attr("y1", 0.)
             .attr("x2", 0.).attr("y2", 0.);
-          g.append("circle")
-            .attr("stroke", "none")
-            .attr("fill", color)
-            .attr("cx", 0.5*(rInner+rOuter))
-            .attr("cy", 0.)
-            .attr("r", 8);
+          appendCircle(g, 8, color, 0, 0.5*(rInner+rOuter), 0);
           g.append("rect")
             .style("pointer-events", "all")
             .style("cursor", "pointer")
@@ -406,13 +321,9 @@ class PlanetClock {
       (p, i) => {
         let [xp, yp, lat] = directionOf(p, this.dayNow);
         let r = rcen + dr * lat * 20./Math.PI;
-        this.planetMarkers[i] = planetGroup.append("circle")
-          .style("pointer-events", "none")
-          .attr("stroke", "none")
-          .attr("fill", this.planetColors[p])
-          .attr("cx", r*xp)
-          .attr("cy", -r*yp)
-          .attr("r", 4);
+        this.planetMarkers[i] = appendCircle(
+          planetGroup, 4, this.planetColors[p], 0, r*xp, -r*yp)
+          .style("pointer-events", "none");
         this.planetHands[i] = planetGroup.append("line")
           .style("pointer-events", "none")
           .attr("visibility", this.planetHandVisibility[p])
@@ -436,10 +347,7 @@ class PlanetClock {
     this.monthSel = addMonthDial(this.svg, this.months);
     this.sunHand = addSunHand(this.svg, this.planetColors.sun);
 
-    this.svg.append("circle")  // earth is at center
-      .attr("stroke", "none")
-      .attr("fill", this.planetColors.earth)
-      .attr("r", 4);
+    appendCircle(this.svg, 4, this.planetColors.earth);  // earth at center
 
     // Animation controls
     this.speeds = [1, 2.5, 5];
@@ -485,11 +393,8 @@ class PlanetClock {
 
   turnOnMoon() {
     if (this.moonMarker == null) {
-      this.moonMarker = this.moonGroup.append("circle")
-        .attr("style", "pointer-events: none;")
-        .attr("stroke", "none")
-        .attr("fill", "#fff")
-        .attr("r", 6);
+      this.moonMarker = appendCircle(this.moonGroup, 6, "#fff")
+        .attr("style", "pointer-events: none;");
       this.updateMoon();
     }
   }
@@ -769,12 +674,8 @@ class PlanetClock {
     }
     this.elapsed = this.centerGroup.append("g").call(
       g => {
-        g.append("text")
-          .style("pointer-events", "none")
-          .attr("font-size", 20)
-          .attr("x", 0)
-          .attr("y", yElapsed)
-          .text(`${(this.dayNow - this.elapsed0).toFixed(2)} days`);
+        appendText(g, 20, "", false, 0, yElapsed,
+                   `${(this.dayNow - this.elapsed0).toFixed(2)} days`);
         g.append("g").call(
           gg => {
             let date = dateOfDay(this.elapsed0);
@@ -782,13 +683,8 @@ class PlanetClock {
             ymd += `${this.getDateText(this.elapsed0)} `;
             ymd += `${("0"+date.getUTCHours()).slice(-2)}`;
             ymd += `:${("0"+date.getUTCMinutes()).slice(-2)}`;
-            gg.append("text")
-              .style("pointer-events", "none")
-              .attr("text-anchor", "end")
-              .attr("font-size", 20)
-              .attr("x", 115-40)
-              .attr("y", yElapsed + 29)
-              .text("from " + ymd)
+            appendText(gg, 20, "", false, 115-40, yElapsed + 29, "from " + ymd)
+              .attr("text-anchor", "end");
             gg.append("rect").call(
               rect => buttonBox(rect, 115-35, yElapsed + 8, 70, 28,
                                 resetElapsed));
@@ -969,11 +865,8 @@ class OrbitView {
     ["mercury", "venus", "mars", "jupiter", "saturn"].forEach(
       (p, i) => {
         let [x, y] = positionOf(p, clock.dayNow);
-        this.planetMarkers[i] = this.planetGroup.append("circle")
-          .attr("stroke", "none")
-          .attr("fill", clock.planetColors[p])
-          .attr("cx", 100*x).attr("cy", -100*y)
-          .attr("r", 4/scale);
+        this.planetMarkers[i] = appendCircle(
+          this.planetGroup, 4/scale, clock.planetColors[p], 0, 100*x, -100*y);
         this.planetHands[i] = this.planetGroup.append("line")
           .attr("visibility", clock.planetHandVisibility[p])
           .attr("stroke", clock.planetColors[p])
@@ -987,16 +880,10 @@ class OrbitView {
       .attr("stroke-width", 3/scale)
       .attr("x1", 0).attr("y1", 0)
       .attr("x2", 100*xe).attr("y2", -100*ye);
-    this.planetMarkers[5] = this.planetGroup.append("circle")  // Earth
-      .attr("stroke", "none")
-      .attr("fill", clock.planetColors.earth)
-      .attr("cx", 100*xe).attr("cy", -100*ye)
-      .attr("r", 4/scale);
-    this.planetMarkers[6] = this.planetGroup.append("circle")  // Sun
-      .attr("stroke", "none")
-      .attr("fill", clock.planetColors.sun)
-      .attr("cx", 0).attr("cy", 0)
-      .attr("r", 8/scale);
+    this.planetMarkers[5] = appendCircle(  // Earth
+      this.planetGroup, 4/scale, clock.planetColors.earth, 0, 100*xe, -100*ye);
+    this.planetMarkers[6] = appendCircle(  // Sun
+      this.planetGroup, 8/scale, clock.planetColors.sun, 0, 0, 0);
 
     this.clock.addSlave(() => this.update());
   }
@@ -1210,10 +1097,8 @@ class EarthYear {
         .attr("stroke-width", 2);
 
     // Axis labels
-    this.svg.append("text").attr("x", left-10).attr("y", top-12)
-      .attr("pointer-events", "none").text("days");
-    this.svg.append("text").attr("x", right).attr("y", bottom+50)
-      .attr("pointer-events", "none").text("revs");
+    appendText(this.svg, 0, "", false, left-10, top-12, "days");
+    appendText(this.svg, 0, "", false, right, bottom+50, "revs");
 
     let xgen = d => this.x(d[0]);
     this.lineGenerator = d3.line()
@@ -1231,15 +1116,10 @@ class EarthYear {
 
     this.instructions = this.svg.append("g").call(
       g => {
-        g.attr("pointer-events", "none")
-          .attr("display", "block");
-        g.append("text")
+        g.attr("display", "block");
+        appendText(g, 20, "#960", false, -260, -height/2 + 100,
+                   "1. Set start date using planet clock")
           .attr("text-anchor", "start")
-          .attr("fill", "#960")
-          .attr("font-size", 20)
-          .attr("x", -260)
-          .attr("y", -height/2 + 100)
-          .text("1. Set start date using planet clock")
           .clone(true)
           .attr("y", -height/2 + 125)
           .text("2. Click Reset to collect 10 years data")
@@ -1252,11 +1132,9 @@ class EarthYear {
       });
 
     this.yearEstimate = 360;  // Have to start somewhere...
-    this.yearText = this.svg.append("text")
-      .attr("pointer-events", "none")
-      .attr("font-size", 20)
-      .attr("y", -height/2 + 30)
-      .text(`Period estimate: ${this.yearEstimate.toFixed(3)} days`);
+    this.yearText = appendText(
+      this.svg, 20, "", false, undefined, -height/2 + 30,
+      `Period estimate: ${this.yearEstimate.toFixed(3)} days`);
     let yearDragger = (event, d) => this.yearDrag(event, d);
     let yearStarter = (event, d) => this.yearDragStart(event, d);
     let d3p = d3.path();
@@ -1294,12 +1172,8 @@ class EarthYear {
       .attr("fill", "none")
       .attr("stroke", this.clock.planetColors.earth)
       .attr("stroke-width", 2);
-    this.sunMarker = this.plot.append("circle")
-      .attr("display", "none")
-      .attr("fill", this.clock.planetColors.sun)
-      .attr("stroke", "none")
-      .attr("r", 8)
-      .attr("cx", this.x(0)).attr("cy", this.y(0));
+    this.sunMarker = appendCircle(this.plot, 8, this.clock.planetColors.sun, 0,
+                                  this.x(0), this.y(0));
     this.sunMarker2 = this.sunMarker.clone(true);
     this.sunMarkerPos = [0, 0];
 
@@ -1725,10 +1599,8 @@ class MarsYear {
         .attr("stroke-width", 2);
 
     // Axis labels
-    this.svg.append("text").attr("x", left-10).attr("y", top-12)
-      .attr("pointer-events", "none").text("days");
-    this.svg.append("text").attr("x", right).attr("y", bottom+50)
-      .attr("pointer-events", "none").text("revs");
+    appendText(this.svg, 0, "", false, left-10, top-12, "days");
+    appendText(this.svg, 0, "", false, right, bottom+50, "revs");
 
     let xgen = d => this.x(d[0]);
     let dgen = d => d[2];
@@ -1751,13 +1623,9 @@ class MarsYear {
       g => {
         g.attr("pointer-events", "none")
           .attr("display", "block");
-        g.append("text")
+        appendText(g, 20, "#960", false, -260, -height/2 + 100,
+                   "1. Set start date using planet clock")
           .attr("text-anchor", "start")
-          .attr("fill", "#960")
-          .attr("font-size", 20)
-          .attr("x", -260)
-          .attr("y", -height/2 + 100)
-          .text("1. Set start date using planet clock")
           .clone(true)
           .attr("y", -height/2 + 125)
           .text("2. Reset to collect 20 years opposition data")
@@ -1770,11 +1638,9 @@ class MarsYear {
       });
 
     this.yearEstimate = 680;  // Have to start somewhere...
-    this.yearText = this.svg.append("text")
-      .attr("pointer-events", "none")
-      .attr("font-size", 20)
-      .attr("y", -height/2 + 30)
-      .text(`Period estimate: ${this.yearEstimate.toFixed(3)} days`);
+    this.yearText = appendText(
+      this.svg, 20, "", false, undefined, -height/2 + 30,
+      `Period estimate: ${this.yearEstimate.toFixed(3)} days`);
     let yearDragger = (event, d) => this.yearDrag(event, d);
     let yearStarter = (event, d) => this.yearDragStart(event, d);
     let d3p = d3.path();
@@ -1812,13 +1678,9 @@ class MarsYear {
       .attr("fill", "none")
       .attr("stroke", this.clock.planetColors.mars)
       .attr("stroke-width", 5);
-    this.marsMarker = this.plot.append("circle")
-      .attr("display", "none")
-      .attr("opacity", 0.3)
-      .attr("fill", this.clock.planetColors.mars)
-      .attr("stroke", "none")
-      .attr("r", 5)
-      .attr("cx", this.x(0)).attr("cy", this.y(0));
+    this.marsMarker = appendCircle(
+      this.plot, 5, this.clock.planetColors.mars, 0, this.x(0), this.y(0))
+      .attr("opacity", 0.3);
     this.marsMarkerPos = [0, 0];
     this.oppoMarkers = this.plot.append("g");
 
@@ -2309,55 +2171,33 @@ class SurveyOrbits {
       .clone(true)
       .attr("x1", 0).attr("y1", -height/2).attr("x2", 0).attr("y2", height/2)
     // Approximate too-close-to-sun circle
-    this.svg.append("circle")
-      .attr("stroke", "none")
-      .attr("fill", "#bdf")
-      .attr("opacity", 0.3)
-      .attr("cx", 0).attr("cy", 0)
-      .attr("r", sin15*AU);
+    appendCircle(this.svg, sin15*AU, "#bdf", 0, 0, 0)
+      .attr("opacity", 0.3);
 
     // Each state has its own group
     this.stateGroup = new Array(4);
     this.stateGroup[0] = this.svg.append("g").attr("display", "none").call(
-      g =>  {
-        g.append("text")
-          .attr("pointer-events", "none")
-          .attr("fill", "#960")
-          .attr("font-size", 20)
-          .attr("y", -height/2 + 100)
-          .text("Not ready to survey orbits.")
-          .clone(true)
-          .attr("y", -height/2 + 130)
-          .text("Return to Mars Period tab and collect data.");
-      });
+      g => appendText(g, 20, "#960", false, undefined, -height/2 + 100,
+                       "Not ready to survey orbits.")
+        .clone(true)
+        .attr("y", -height/2 + 130)
+        .text("Return to Mars Period tab and collect data."));
     this.stateGroup[1] = this.svg.append("g").attr("display", "none").call(
-      g =>  {
-        g.append("g").append("text")  // g allows selectChildren in selectOppo
-          .attr("pointer-events", "none")
-          .attr("fill", "#960")
-          .attr("font-size", 20)
-          .attr("y", -height/2 + 25)
-          .text("Select reference Mars opposition");
-      });
+      // extra append g allows selectChildren in selectOppo
+      g => appendText(g.append("g"), 20, "#960", false, undefined,
+                      -height/2 + 25, "Select reference Mars opposition"));
     this.stateGroup[2] = this.svg.append("g").attr("display", "none").call(
       g =>  {
         let gg = g.append("g");  // g allows selectChildren in selectOppo
-        this.state2Text1 = gg.append("text")
-          .attr("pointer-events", "none")
-          .attr("fill", "#960")
-          .attr("font-size", 20)
-          .attr("y", -height/2 + 25)
-          .text("Survey points on Earth's orbit...")
+        this.state2Text1 = appendText(
+          g, 20, "#960", false, undefined, -height/2 + 25,
+          "Survey points on Earth's orbit...")
         this.state2Text2 = this.state2Text1.clone(true)
           .attr("y", height/2 - 25)
           .text("by stepping Mars periods->")
-        this.yearText = gg.append("text")
-          .attr("text-anchor", "end")
-          .attr("font-size", 20)
-          .attr("fill", "#fdf8e0")
-          .attr("x", width/2 - 5)
-          .attr("y", -height/2 + 76)
-          .text("686.980")
+        this.yearText = appendText(gg, 20, "#fdf8e0", false,
+                                   width/2 - 5, -height/2 + 76, "686.980")
+          .attr("text-anchor", "end");
       });
     // marsLines is set of lines from Earth to Mars
     // sunLines is set of lines from Earth to Sun
@@ -2376,11 +2216,8 @@ class SurveyOrbits {
         g.append("line")  // x2, y2 filled in in findEarth
           .attr("stroke", "#000")
           .attr("stroke-width", 4)
-        g.append("circle")  // cx, cy filled in in findEarth
-          .style("cursor", null)
-          .attr("fill", clock.planetColors.mars)
-          .attr("stroke", "none")
-          .attr("r", 5);
+        appendCircle(g, 5, clock.planetColors.mars)
+          .style("cursor", null);  // cx, cy filled in in findEarth
       });
     this.stateGroup[3] = this.svg.append("g").attr("display", "none");
 
@@ -2388,11 +2225,7 @@ class SurveyOrbits {
     this.iOppo = -1;  // index of selected opposition
 
     // Sun marker goes on top of everything else
-    this.svg.append("circle")
-      .attr("stroke", "none")
-      .attr("fill", clock.planetColors.sun)
-      .attr("cx", 0).attr("cy", 0)
-      .attr("r", 8);
+    appendCircle(this.svg, 8, clock.planetColors.sun);
 
     // Next and Prev buttons
     this.nextButton = this.svg.append("g").attr("display", "none").call(
@@ -2413,14 +2246,9 @@ class SurveyOrbits {
     // + and - buttons
     this.plusMars = this.svg.append("g").attr("display", "none").call(
       g => {
-        g.append("text")
-          .attr("pointer-events", "none")
-          .attr("text-anchor", "end")
-          .attr("fill", "#960")
-          .attr("font-size", 20)
-          .attr("x", width/2 - 15)
-          .attr("y", height/2 - 10)
-          .text("step Mars period");
+        appendText(g, 20, "#960", false, width/2 - 15, height/2 - 10,
+                   "step Mars period")
+          .attr("text-anchor", "end");
         buttonBox(g.append("rect"), 285, height/2 - 60, 50, 28,
                   () => this.stepMars(1));
         buttonText(g.append("text"), 309, height/2 - 38, "+M", 20,
@@ -2432,14 +2260,9 @@ class SurveyOrbits {
       });
     this.plusEarth = this.svg.append("g").attr("display", "none").call(
       g => {
-        g.append("text")
-          .attr("pointer-events", "none")
-          .attr("text-anchor", "start")
-          .attr("fill", "#960")
-          .attr("font-size", 20)
-          .attr("x", -width/2 + 15)
-          .attr("y", height/2 - 10)
-          .text("step Earth period");
+        appendText(g, 20, "#960", false, -width/2 + 15, height/2 - 10,
+                   "step Earth period")
+          .attr("text-anchor", "start");
         buttonBox(g.append("rect"), -335, height/2 - 60, 50, 28,
                   () => this.stepEarth(-1));
         buttonText(g.append("text"), -309, height/2 - 38, "-E", 20,
@@ -2448,13 +2271,9 @@ class SurveyOrbits {
                   () => this.stepEarth(1));
         buttonText(g.append("text"), -226, height/2 - 38, "+E", 20,
                    () => this.stepEarth(1));
-        this.stdDevText = g.append("text")
-          .attr("pointer-events", "none")
-          .attr("text-anchor", "end")
-          .attr("fill", "#fdf8e0")
-          .attr("font-size", 20)
-          .attr("x", width/2 - 5)
-          .attr("y", -height/2 + 50);
+        this.stdDevText = appendText(g, 20, "#fdf8e0", false,
+                                     width/2 - 5, -height/2 + 50)
+          .attr("text-anchor", "end");
         this.maxDevText = this.stdDevText.clone(true)
           .attr("y", -height/2 + 25);
       });
@@ -2933,12 +2752,9 @@ class SurveyOrbits {
       this.marsGroup.attr("display", "block");
       this.marsGroup.selectAll("circle")
         .data(xym.filter((d, i) => i != iRef))  // iRef drawn in referenceGroup
-        .join(enter => enter.append("circle")
-                .attr("opacity", d => (d[4] == iNow)? 1 : 0.16)
-                .attr("stroke", "none")
-                .attr("fill", planetColors.mars)
-                .attr("cx", d => d[0]*AU).attr("cy", d => -d[1]*AU)
-                .attr("r", 4),
+        .join(enter => appendCircle(enter, 4, planetColors.mars, 0,
+                                    d => d[0]*AU, d => -d[1]*AU)
+                .attr("opacity", d => (d[4] == iNow)? 1 : 0.16),
              update => update
                .attr("opacity", d => (d[4] == iNow)? 1 : 0.16)
                .attr("cx", d => d[0]*AU).attr("cy", d => -d[1]*AU),
@@ -2946,12 +2762,9 @@ class SurveyOrbits {
       // Earth points newly used or defined here are highlighted, others dim.
       this.earthGroup.selectAll("circle")
         .data(xye)
-        .join(enter => enter.append("circle")
-              .attr("opacity", d => (this.earthType(d) >= 2)? 1 : 0.16)
-                .attr("stroke", "none")
-                .attr("fill", planetColors.earth)
-                .attr("cx", d => d[0]*AU).attr("cy", d => -d[1]*AU)
-                .attr("r", 4),
+        .join(enter => appendCircle(enter, 4, planetColors.earth, 0,
+                                    d => d[0]*AU, d => -d[1]*AU)
+              .attr("opacity", d => (this.earthType(d) >= 2)? 1 : 0.16),
               update => update
                 .attr("opacity", d => (this.earthType(d) >= 2)? 1 : 0.16)
                 .attr("cx", d => d[0]*AU).attr("cy", d => -d[1]*AU),
@@ -3016,11 +2829,8 @@ class SurveyOrbits {
       let xyeRefOnly = xye.filter(d => d[5]==0);
       this.earthGroup.selectAll("circle")
         .data(xyeRefOnly)
-        .join(enter => enter.append("circle")
-                .attr("stroke", "none")
-                .attr("fill", planetColors.earth)
-                .attr("cx", d => d[0]*AU).attr("cy", d => -d[1]*AU)
-                .attr("r", 4),
+        .join(enter => appendCircle(enter, 4, planetColors.earth, 0,
+                                    d => d[0]*AU, d => -d[1]*AU),
               update => update
                 .attr("opacity", null)
                 .attr("cx", d => d[0]*AU).attr("cy", d => -d[1]*AU),
@@ -3179,12 +2989,8 @@ class Inclination {
     this.instructions = this.svg.append("g").call(
       g =>  {
         g.attr("display", "block");
-        g.append("text")
-          .attr("pointer-events", "none")
-          .attr("fill", "#960")
-          .attr("font-size", 20)
-          .attr("y", -height/2 + 100)
-          .text("Not ready to find inclination of Mars orbit.")
+        appendText(g, 20, "#960", false, undefined, -height/2 + 100,
+                   "Not ready to find inclination of Mars orbit.")
           .clone(true)
           .attr("y", -height/2 + 130)
           .text("Return to Survey Orbits tab to determine orbit.");
@@ -3213,24 +3019,16 @@ class Inclination {
           .attr("opacity", 0)
           .attr("stroke", clock.planetColors.earth)
           .attr("stroke-width", 3);
-        g.append("circle")  // Sun marker
-          .attr("stroke", "none")
-          .attr("fill", clock.planetColors.sun)
-          .attr("cx", 0).attr("cy", 0)
-          .attr("r", 8);
+        appendCircle(g, 8, clock.planetColors.sun);  // Sun marker
       });
     this.frontEarth = this.svg.append("g");
     this.frontMarsp = this.svg.append("g");
     this.frontMars = this.svg.append("g");
     // Bigger target to toggle off lines:
-    this.linesOff = this.svg.append("circle")
+    this.linesOff = appendCircle(this.svg, 15, clock.planetColors.mars, 0, 0)
       .attr("display", "none")
       .attr("cursor", "pointer")
       .attr("opacity", 0)
-      .attr("stroke", "none")
-      .attr("fill", clock.planetColors.mars)
-      .attr("cx", 0).attr("cy", 0)
-      .attr("r", 15)
       .on("click", () => this.emShow(-1));
     this.iNow = -1;  // Earth-Mars lines
 
@@ -3260,14 +3058,8 @@ class Inclination {
     this.zmag = 1;
     this.zmagButtons = this.svg.append("g").call(
       g => {
-        g.append("text")
-          .attr("pointer-events", "none")
-          .attr("text-anchor", "start")
-          .attr("fill", "#000")
-          .attr("font-size", 20)
-          .attr("x", -width/2 + 10)
-          .attr("y", -height/2 + 25)
-          .text("magnify z:");
+        appendText(g, 20, "#000", false, -width/2 + 10, -height/2 + 25,
+                   "magnify z:").attr("text-anchor", "start");
         buttonBox(g.append("rect"), -width/2 + 10, -height/2 + 40, 51, 28,
                   () => this.zmagSet(1));
         buttonText(g.append("text"), -width/2 + 36, -height/2 + 62, "1×", 20,
@@ -3280,21 +3072,14 @@ class Inclination {
                   () => this.zmagSet(10));
         buttonText(g.append("text"), -width/2 + 36, -height/2 + 136, "10×", 20,
                    () => this.zmagSet(10));
-        this.magDot = g.append("circle")
-          .attr("stroke", "none")
-          .attr("fill", "#000")
-          .attr("cx", -width/2 + 72).attr("cy", -height/2 + 54)
-          .attr("r", 5);
+        this.magDot = appendCircle(
+          g, 5, "#000", 0, -width/2 + 72, -height/2 + 54);
       });
 
     // Node and inclination values
-    this.nodeText = this.svg.append("text")
-      .attr("pointer-events", "none")
-      .attr("text-anchor", "end")
-      .attr("fill", "#fdf8e0")
-      .attr("font-size", 20)
-      .attr("x", width/2 - 10)
-      .attr("y", -height/2 + 25);
+    this.nodeText = appendText(this.svg, 20, "#fdf8e0", false,
+                               width/2 - 5, -height/2 + 25)
+      .attr("text-anchor", "end");
     this.inclText = this.nodeText.clone(true)
       .attr("y", -height/2 + 55);
   }
@@ -3410,25 +3195,19 @@ class Inclination {
                               this.clock.planetColors.earth];
     this.backMarsp.selectAll("circle")
       .data(xyzmp.filter(xyz => xyz[2]<0))
-      .join(enter => enter.append("circle")
+      .join(enter => appendCircle(enter, 4, mcolor, 0,
+                                  xyz => xyz[0]*AU, xyz => -xyz[1]*AU)
               .attr("pointer-events", "none")
-              .attr("opacity", 0.15)
-              .attr("stroke", "none")
-              .attr("fill", mcolor)
-              .attr("cx", xyz => xyz[0]*AU).attr("cy", xyz => -xyz[1]*AU)
-              .attr("r", 4),
+              .attr("opacity", 0.15),
             update => update
               .attr("cx", xyz => xyz[0]*AU).attr("cy", xyz => -xyz[1]*AU),
             exit => exit.remove());
     this.backMars.selectAll("circle")
       .data(xyzm.filter(xyz => xyz[2]<0))
-      .join(enter => enter.append("circle")
+      .join(enter => appendCircle(enter, 4, "#0000", 20,
+                                  xyz => xyz[0]*AU, xyz => -xyz[1]*AU)
               .attr("cursor", "pointer")
-              .attr("stroke", "#0000")
-              .attr("stroke-width", 20)
               .attr("fill", mcolor)
-              .attr("cx", xyz => xyz[0]*AU).attr("cy", xyz => -xyz[1]*AU)
-              .attr("r", 4)
               .on("click", (event, xyz) => this.emShow(xyz[3])),
             update => update
               .attr("cx", xyz => xyz[0]*AU).attr("cy", xyz => -xyz[1]*AU)
@@ -3436,13 +3215,10 @@ class Inclination {
             exit => exit.remove());
     this.backEarth.selectAll("circle")
       .data(xyze.filter(xyz => xyz[2]<0))
-      .join(enter => enter.append("circle")
+      .join(enter => appendCircle(enter, 4, ecolor, 0,
+                                  xyz => xyz[0]*AU, xyz => -xyz[1]*AU)
               .attr("pointer-events", "none")
-              .attr("opacity", eIsLit)
-              .attr("stroke", "none")
-              .attr("fill", ecolor)
-              .attr("cx", xyz => xyz[0]*AU).attr("cy", xyz => -xyz[1]*AU)
-              .attr("r", 4),
+              .attr("opacity", eIsLit),
             update => update
               .attr("cx", xyz => xyz[0]*AU).attr("cy", xyz => -xyz[1]*AU),
             exit => exit.remove());
@@ -3451,37 +3227,28 @@ class Inclination {
       .attr("x2", -1.75*xnode*AU).attr("y2", 1.75*ynode*AU)
     this.frontEarth.selectAll("circle")
       .data(xyze.filter(xyz => xyz[2]>=0))
-      .join(enter => enter.append("circle")
+      .join(enter => appendCircle(enter, 4, ecolor, 0,
+                                  xyz => xyz[0]*AU, xyz => -xyz[1]*AU)
               .attr("pointer-events", "none")
-              .attr("opacity", eIsLit)
-              .attr("stroke", "none")
-              .attr("fill", ecolor)
-              .attr("cx", xyz => xyz[0]*AU).attr("cy", xyz => -xyz[1]*AU)
-              .attr("r", 4),
+              .attr("opacity", eIsLit),
             update => update
               .attr("cx", xyz => xyz[0]*AU).attr("cy", xyz => -xyz[1]*AU),
             exit => exit.remove());
     this.frontMarsp.selectAll("circle")
       .data(xyzmp.filter(xyz => xyz[2]>=0))
-      .join(enter => enter.append("circle")
+      .join(enter => appendCircle(enter, 4, mcolor, 0,
+                                  xyz => xyz[0]*AU, xyz => -xyz[1]*AU)
               .attr("pointer-events", "none")
-              .attr("opacity", 0.15)
-              .attr("stroke", "none")
-              .attr("fill", mcolor)
-              .attr("cx", xyz => xyz[0]*AU).attr("cy", xyz => -xyz[1]*AU)
-              .attr("r", 4),
+              .attr("opacity", 0.15),
             update => update
               .attr("cx", xyz => xyz[0]*AU).attr("cy", xyz => -xyz[1]*AU),
             exit => exit.remove());
     this.frontMars.selectAll("circle")
       .data(xyzm.filter(xyz => xyz[2]>=0))
-      .join(enter => enter.append("circle")
+      .join(enter => appendCircle(enter, 4, "#0000", 20,
+                                  xyz => xyz[0]*AU, xyz => -xyz[1]*AU)
               .attr("cursor", "pointer")
-              .attr("stroke", "#0000")
-              .attr("stroke-width", 20)
               .attr("fill", mcolor)
-              .attr("cx", xyz => xyz[0]*AU).attr("cy", xyz => -xyz[1]*AU)
-              .attr("r", 4)
               .on("click", (event, xyz) => this.emShow(xyz[3])),
             update => update
               .attr("cx", xyz => xyz[0]*AU).attr("cy", xyz => -xyz[1]*AU)
@@ -3731,6 +3498,33 @@ function buttonText(textSel, x, y, text, size, callback) {
     .style("cursor", "pointer")
     .text(text)
     .on("click", callback);
+}
+
+
+function appendText(parent, size, color, events, x, y, text) {
+  let t = parent.append("text").style("stroke", "none");
+  if (color) t.style("fill", color);
+  if (events) t.style("cursor", "pointer");
+  else t.style("pointer-events", "none");
+  if (size) t.attr("font-size", size);
+  if (x !== undefined) t.attr("x", x);
+  if (y !== undefined) t.attr("y", y);
+  if (text) t.text(text);
+  return t;
+}
+
+
+function appendCircle(parent, r, color, width, cx, cy) {
+  let c = parent.append("circle");
+  if (width) {
+    c.attr("fill", "none").attr("stroke", color).attr("stroke-width", width);
+  } else {
+    c.attr("fill", color).attr("stroke", "none");
+  }
+  c.attr("r", r);
+  if (cx !== undefined) c.attr("cx", cx);
+  if (cy !== undefined) c.attr("cy", cy);
+  return c;
 }
 
 
