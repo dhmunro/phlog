@@ -1830,10 +1830,12 @@
     }
     surveyor.findEarth();
     surveyor.findMars();
+    incline.activate(true);
+    incline.activate(false);
   }
   if (urlQueries.tab &&
-      ["intro", "orb-view", "earth-year", "mars-year", "survey-orbits",
-       "mars-incline", "two-laws", "third-law"].indexOf(urlQueries.tab)) {
+      ["intro", "earth-year", "orbit-view", "mars-year", "surveyor",
+       "incline", "first-two-r", "third-law-r"].indexOf(urlQueries.tab)) {
     if (urlQueries.tab != "intro" || urlQueries.helpDebug == "yes")
       removeIntro();
     document.querySelectorAll("#main-sidebar ul li").forEach(

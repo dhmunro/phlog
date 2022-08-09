@@ -3027,7 +3027,7 @@ class Inclination {
     // Bigger target to toggle off lines:
     this.linesOff = appendCircle(this.svg, 15, clock.planetColors.mars, 0, 0)
       .attr("display", "none")
-      .attr("cursor", "pointer")
+      .style("cursor", "pointer")
       .attr("opacity", 0)
       .on("click", () => this.emShow(-1));
     this.iNow = -1;  // Earth-Mars lines
@@ -3078,7 +3078,7 @@ class Inclination {
 
     // Node and inclination values
     this.nodeText = appendText(this.svg, 20, "#fdf8e0", false,
-                               width/2 - 5, -height/2 + 25)
+                               width/2 - 10, -height/2 + 25)
       .attr("text-anchor", "end");
     this.inclText = this.nodeText.clone(true)
       .attr("y", -height/2 + 55);
@@ -3206,7 +3206,7 @@ class Inclination {
       .data(xyzm.filter(xyz => xyz[2]<0))
       .join(enter => appendCircle(enter, 4, "#0000", 20,
                                   xyz => xyz[0]*AU, xyz => -xyz[1]*AU)
-              .attr("cursor", "pointer")
+              .style("cursor", "pointer")
               .attr("fill", mcolor)
               .on("click", (event, xyz) => this.emShow(xyz[3])),
             update => update
@@ -3247,7 +3247,7 @@ class Inclination {
       .data(xyzm.filter(xyz => xyz[2]>=0))
       .join(enter => appendCircle(enter, 4, "#0000", 20,
                                   xyz => xyz[0]*AU, xyz => -xyz[1]*AU)
-              .attr("cursor", "pointer")
+              .style("cursor", "pointer")
               .attr("fill", mcolor)
               .on("click", (event, xyz) => this.emShow(xyz[3])),
             update => update
@@ -3386,13 +3386,19 @@ class TwoLaws {
       .attr("stroke-linejoin", "round")
       .attr("stroke-linecap", "round");
 
-    this.clock = clock;
     this.incline = incline;
+    this.clock = incline.clock;
+    this.survey = incline.survey;
 
-    this.svgl.append("text")
-      .attr("fill", "#000")
-      .attr("font-size", 24)
-      .text("Two Laws left panel");
+    this.instructions = this.svgl.append("g").call(
+      g =>  {
+        g.attr("display", "block");
+        appendText(g, 20, "#960", false, undefined, -height/2 + 100,
+                   "Not ready to fit Mars or Earth orbits.")
+          .clone(true)
+          .attr("y", -height/2 + 130)
+          .text("Return to Survey Orbits tab to determine orbits.");
+      });
 
     this.svgr.append("text")
       .attr("fill", "#000")
@@ -3402,14 +3408,387 @@ class TwoLaws {
     // Scale is 1 AU = width/3.6, same as zoomLevel=0 in OrbitView.
     const AU = width / 3.6;
     this.AU = AU;
+
+    this.marsFit = [1.4, 0, 0];
+    this.earthFit = [1.4, 0, 0];
+
+    this.orbitPlot = this.svgl.append("g").attr("display", "none").call(
+      g => {
+      });
+
+    // Ellipse/Circle button
+    appendCircle(this.svgl, 8, clock.planetColors.sun);
+    appendText(this.svgl, 20, "#000", false, -width/2 + 10, -height/2 + 25,
+               "Fit").attr("text-anchor", "start");
+    buttonBox(this.svgl.append("rect"), -width/2 + 44, -height/2 + 5, 80, 28,
+              () => this.toggleShape());
+    this.shapeText = this.svgl.append("text").call(
+      t => buttonText(t, -width/2 + 84, -height/2 + 25, "Ellipse", 20,
+                      () => this.toggleShape()));
+    this.useEllipse = true;
+    // Earth/Mars button
+    appendText(this.svgl, 20, "#000", false, -width/2 + 130, -height/2 + 25,
+               "to").attr("text-anchor", "start");
+    buttonBox(this.svgl.append("rect"), -width/2 + 158, -height/2 + 5, 70, 28,
+              () => this.togglePlanet());
+    this.planetText = this.svgl.append("text").call(
+      t => buttonText(t, -width/2 + 193, -height/2 + 25, "Mars", 20,
+                      () => this.togglePlanet()));
+    this.useMars = true;
+    appendText(this.svgl, 20, "#000", false, -width/2 + 234, -height/2 + 25,
+               "orbit").attr("text-anchor", "start");
+    let txt = appendText(this.svgl, 20, "#000", false, -width/2 + 10,
+                         -height/2 + 56, "error:")
+        .attr("text-anchor", "start");
+    this.errText = appendText(this.svgl, 20, "#fdf8e0", false, -width/2 + 75,
+                              -height/2 + 56, "0.00000")
+      .attr("text-anchor", "start");
+    txt.clone(true).attr("y", height/2 - 41).text("perihelion: ");
+    this.periText = this.errText.clone(true).attr("y", height/2 - 41)
+      .attr("x", -width/2 + 125).text("1.0000");
+    txt.clone(true).attr("y", height/2 - 10).text("aphelion: ");
+    this.apText = this.errText.clone(true).attr("y", height/2 - 10)
+      .attr("x", -width/2 + 125).text("1.0000");
+    txt = txt.clone(true).attr("x", width/2 - 96).attr("y", height/2 - 72)
+      .attr("text-anchor", "end").text("a: ");
+    this.aText = this.errText.clone(true).attr("x", width/2 - 10)
+      .attr("y", height/2 - 72).attr("text-anchor", "end").text("1.0000");
+    txt.clone(true).attr("x", width/2 - 96).attr("y", height/2 - 41)
+      .text("e: ");
+    this.eText = this.aText.clone(true).attr("y", height/2 - 41)
+      .text("0.0000");
+    txt.clone(true).attr("x", width/2 - 120).attr("y", height/2 - 10)
+      .text("angle: ");
+    this.angText = this.aText.clone(true).attr("y", height/2 - 10)
+      .text("000.000°");
+    // Vernier/Coarse button
+    buttonBox(this.svgl.append("rect"), width/2 - 90, -height/2 + 5, 80, 28,
+              () => this.toggleSensitivity());
+    this.vernierText = this.svgl.append("text").call(
+      t => buttonText(t, width/2 - 50, -height/2 + 25, "Coarse", 20,
+                      () => this.toggleSensitivity()));
+    this.vernier = false;
+  }
+
+  toggleShape() {
+    this.useEllipse = !this.useEllipse;
+    this.shapeText.text(this.useEllipse? "Ellipse" : "Circle");
+    this.redrawShape();
+  }
+
+  togglePlanet() {
+    this.useMars = !this.useMars;
+    this.planetText.text(this.useMars? "Mars" : "Earth");
+    if (this.vernier) this.toggleSensitivity();
+    this.redrawOrbit();
+    this.redrawShape();
+  }
+
+  toggleSensitivity() {
+    this.vernier = !this.vernier;
+    this.vernierText.text(this.vernier? "Vernier" : "Coarse");
   }
 
   activate(on) {
-    if (on) {
+    if (!on) return;
+    this.orbitPlot.selectAll("*").remove();
+    if (!this.incline.ready) {
+      this.orbitPlot.attr("display", "none");
+      this.instructions.attr("display", "block");
+      return;
     }
+    this.instructions.attr("display", "none");
+
+    // Convert Earth and Mars orbits to coordinates in the plane of
+    // the orbit, keeping line of nodes of J2000 ecliptic fixed.
+    // Conversion includes a z coordinate showing non-planarity of
+    // the orbit; sum of squares of these z values is miminum.
+    function toPlaneOfOrbit(xyz) {
+      // Get least squares best fit to orbital plane.
+      let [x2, xy, y2, xz, yz] = xyz.reduce(
+        ([x2, xy, y2, xz, yz], [x, y, z, zvar]) =>
+          [x2+x**2, xy+x*y, y2+y**2, xz+x*z, yz+y*z], [0, 0, 0, 0, 0]);
+      let det = x2*y2 - xy**2;
+      // Gradient (mx, my), z(x, y) ~ mx*x + my*y:
+      let [mx, my] = [(y2*xz - xy*yz) / det, (x2*yz - xy*xz) / det];
+      let [mxx, myy, mxy] = [mx**2, my**2, mx*my];
+      let mu = mxx + myy;  // mxx+myy = square of tangent of inclination
+      let ci = Math.sqrt(1 + mu);
+      mu = 1 + ci;
+      ci = 1 / ci;  // cosine of inclination (very near 1)
+      mu = ci / mu;
+      [mxx, myy, mxy] = [1 - mu*mxx, 1 - mu*myy, mu*mxy];
+      let [mxz, myz] = [ci*mx, ci*my];
+      return xyz.map(([x, y, z]) =>
+                     [mxx*x - mxy*y + mxz*z, myy*y - mxy*x + myz*z,
+                      ci*z - mxz*x - myz*y]);
+    }
+    let [escale, mscale] = [1.475, 0.95];  // to put aphelion at ~1.5 AU
+    [this.escale, this.mscale] = [escale, mscale];
+    this.xyze = toPlaneOfOrbit(this.incline.xyze.map(
+      ([x, y, z]) => [escale*x, escale*y, escale*z]));
+    this.xyzm = toPlaneOfOrbit(this.incline.xyzm.map(
+      ([x, y, z]) => [mscale*x, mscale*y, mscale*z]));
+
+    this.orbitPlot.attr("display", "block");
+    this.theShape = this.orbitPlot.append("g");
+    this.theOrbit = this.orbitPlot.append("g");
+
+    this.theShape.call(
+      g => {
+        this.areaElem = g.append("path")
+          .attr("pointer-events", "none")
+          .attr("stroke", "none")
+          .attr("fill", "#eee");
+        let starter = (event, d) => this.shapeStart(event, d);
+        let dragger = (event, d) => this.shapeDrag(event, d);
+        this.shapeElems = new Array(8)
+        this.shapeElems[0] = g.append("line")
+          .attr("pointer-events", "none")
+          .attr("stroke-width", 2)
+          .attr("y1", 0).attr("y2", 0);
+        this.shapeElems[1] = this.shapeElems[0].clone(true)
+          .attr("opacity", 0.2);
+        this.shapeElems[2] = g.append("ellipse")
+          .attr("pointer-events", "none")
+          .attr("stroke-width", 2)
+          .attr("fill", "none")
+        appendCircle(g, 14, "#000", 2, 0.75*this.AU, 0)
+          .datum(0)
+          .style("cursor", "pointer")
+          .attr("fill", "#fdf8e0")
+          .call(d3.drag().on("start", starter).on("drag", dragger))
+          .on("touchstart", starter).on("touchmove", dragger);
+        g.append("path")
+          .attr("pointer-events", "none")
+          .attr("stroke", "none")
+          .attr("fill", "#000")
+          .attr("d", `M ${0.75*this.AU-7} 2 l 7 8 7 -8 Z m 0 -4 l 7 -8 7 8 Z`);
+        this.shapeElems[3] = appendCircle(g, 14, "#000", 2, 2000, 0)
+          .datum(1)
+          .style("cursor", "pointer")
+          .attr("fill", "#fdf8e0")
+          .call(d3.drag().on("start", starter).on("drag", dragger))
+          .on("touchstart", starter).on("touchmove", dragger);
+        this.shapeElems[4] = g.append("path")
+          .attr("pointer-events", "none")
+          .attr("stroke", "none")
+          .attr("fill", "#000")
+          .attr("d", `M 2000 -7 l 8 7 -8 7 Z m -4 0 l -8 7 8 7 Z`);
+        this.shapeElems[5] = appendCircle(g, 14, "#000", 2, -2000, 0)
+          .datum(2)
+          .style("cursor", "pointer")
+          .attr("fill", "#fdf8e0")
+          .call(d3.drag().on("start", starter).on("drag", dragger))
+          .on("touchstart", starter).on("touchmove", dragger);
+        this.shapeElems[6] = g.append("path")
+          .attr("pointer-events", "none")
+          .attr("stroke", "none")
+          .attr("fill", "#000")
+          .attr("d", `M -2000 -7 l 8 7 -8 7 Z m -4 0 l -8 7 8 7 Z`);
+        starter = (event, d) => this.areaStart(event, d);
+        dragger = (event, d) => this.areaDrag(event, d);
+        this.shapeElems[7] = g.append("path")
+          .style("cursor", "pointer")
+          .attr("stroke", "#000")
+          .attr("stroke-width", 2)
+          .attr("fill", "#fdf8e0")
+          .attr("d", `M 2000 0 l 24 -14 0 28 Z`)
+          .call(d3.drag().on("start", starter).on("drag", dragger))
+          .on("touchstart", starter).on("touchmove", dragger);
+      });
+    this.aangle = 0;
+    this.redrawShape();
+    this.redrawOrbit();
   }
 
-  setPlanet(planet) {
+  shapeStart(event, d) {
+    // Apparently event coordinates are prior to transform?
+    let [x, y] = [event.x, -event.y];
+    let [a, e, pomega] = this.useMars? this.marsFit : this.earthFit;
+    const AU = this.AU;
+    let r;
+    if (d == 0) {
+      r = 0.75 * AU;
+    } else {
+      const ff = 0.9;
+      r = (d == 1)? ff*(1 - e)*a*AU : -ff*(1 + e)*a*AU;
+    }
+    const [cx, cy] = [r, 0];
+    this.dragOffset = [cx - x, cy - y, Math.abs(r), pomega];
+  }
+
+  shapeDrag(event, d) {
+    // Apparently event coordinates are prior to transform?
+    let [x, y] = [event.x + this.dragOffset[0],
+                  -event.y + this.dragOffset[1]];
+    let [a, e, pomega] = this.useMars? this.marsFit : this.earthFit;
+    let [p, q] = [(1 - e)*a, (1 + e)*a];
+    const AU = this.AU;
+    const ff = 0.9;
+    if (d == 0) {
+      if (this.vernier) {
+        // pomega has shifted since shapeStart - recover y relative to original
+        let r = (d == 1)? ff*p*AU : ff*q*AU;
+        let dy = r * Math.sin((pomega - this.dragOffset[3])*Math.PI/180);
+        y = 0.1 * (y - dy);
+      }
+      pomega +=  Math.atan2(y, x) * 180/Math.PI;
+      if (pomega < 0) pomega += 360;
+      if (pomega > 360) pomega -= 360;
+    } else {
+      if (d == 2) x = -x;
+      if (this.vernier) {
+        let r0 = this.dragOffset[2];
+        x = r0 + 0.1 * (x - r0);
+      }
+      if (x < 0.92*AU) x = 0.92*AU;
+      else if (x > 1.5*AU) x = 1.5*AU;
+      x /= ff * AU;
+      if (d == 1) {  // change perihelion
+        p = x;
+        if (p > q) q = p;
+      } else {  // change aphelion
+        q = x;
+        if (q < p) p = q;
+      }
+      a = 0.5 * (q + p);
+      e = (q - p) / (q + p);
+    }
+    if (this.useMars) {
+      this.marsFit = [a, e, pomega];
+    } else {
+      this.earthFit = [a, e, pomega];
+    }
+    this.redrawShape();
+  }
+
+  areaStart(event, d) {
+    // Apparently event coordinates are prior to only group transform?
+    let [x, y] = [event.x, -event.y];
+    let angle = this.aangle * Math.PI/180;
+    let [c, s] = [Math.cos(angle), Math.sin(angle)];
+    [x, y] = [c*x + s*y, c*y - s*x];
+    this.dragOffset = [this.areaRadius(this.aangle) - x, -y];
+  }
+
+  areaDrag(event, d) {
+    const [cos, sin] = [Math.cos, Math.sin];
+    const torad = Math.PI / 180;
+    // Apparently event coordinates are prior to only group transform?
+    let [x, y] = [event.x, -event.y];
+    let aangle = this.aangle;
+    let angle = aangle * torad;
+    let [c, s] = [cos(angle), sin(angle)];
+    [x, y] = [c*x + s*y + this.dragOffset[0], c*y - s*x + this.dragOffset[1]];
+    aangle += Math.atan2(y, x) / torad;
+    if (aangle < 0) aangle += 360;
+    if (aangle > 360) aangle -= 360;
+    this.aangle = aangle;
+    let rModel = this.areaRadius(aangle);
+    this.shapeElems[7].attr("d", `M ${rModel} 0 l 24 -14 0 28 Z`)
+      .attr("transform", `rotate(${-aangle})`);
+
+    angle = aangle * torad;
+    s = sin(angle);
+    if (cos(angle) > 0 && s < 0.005 && s > -0.005) {
+      this.areaElem.attr("d", null);
+      return;
+    }
+    let n = Math.ceil(aangle / 4);  // up to 90 points for full circle
+    if (n < 3) n = 3;
+    let d3p = d3.path();
+    let da = aangle / n;
+    let r = this.areaRadius(0);
+    d3p.moveTo(0, 0);
+    d3p.lineTo(r, 0);
+    for (let i = 1 ; i <= n ; i += 1) {
+      angle = i * da;
+      r = this.areaRadius(angle);
+      angle *= torad;
+      d3p.lineTo(r*cos(angle), -r*sin(angle));
+    }
+    d3p.closePath();
+    this.areaElem.attr("d", d3p);
+  }
+
+  areaRadius(aangle) {
+    let [a, e, pomega] = this.useMars? this.marsFit : this.earthFit;
+    const AU = this.AU;
+    let angle = aangle * Math.PI/180;
+    let ecp = e * Math.cos(angle);
+    let rModel = (1 - e**2) * a * AU;
+    if (this.useEllipse) {
+      rModel /= 1 + ecp;
+    } else {
+      rModel /= Math.sqrt(1 - (e * Math.sin(angle))**2) + ecp;
+    }
+    return rModel;
+  }
+
+  redrawShape() {
+    const [sin, cos, sqrt] = [Math.sin, Math.cos, Math.sqrt];
+    const AU = this.AU;
+    const ff = 0.9;
+    let [a, e, pomega] = this.useMars? this.marsFit : this.earthFit;
+    const [rp, rq] = [(1 - e)*a*AU, (1 + e)*a*AU];
+    const cx = -0.5*(rq - rp);
+    const b = this.useEllipse? sqrt(rq*rp) : 0.5*(rq + rp);
+    const color = this.clock.planetColors[this.useMars? "mars" : "earth"];
+    this.areaElem.attr("d", null);
+    let child = this.shapeElems;
+    child[0].attr("stroke", color).attr("x1", -rq).attr("x2", rp);
+    child[1].attr("stroke", color).attr("x1", cx).attr("x2", cx)
+      .attr("y1", -b).attr("y2", b);
+    child[2].attr("stroke", color)
+      .attr("rx", 0.5*(rq + rp)).attr("ry", b).attr("cx", cx);
+    child[3].attr("cx", ff*rp);
+    child[4].attr("d", `M ${ff*rp+2} -7 l 8 7 -8 7 Z m -4 0 l -8 7 8 7 Z`);
+    child[5].attr("cx", -ff*rq);
+    child[6].attr("d", `M ${-ff*rq+2} -7 l 8 7 -8 7 Z m -4 0 l -8 7 8 7 Z`);
+    child[7].attr("d", `M ${rp} 0 l 24 -14 0 28 Z`)
+      .attr("transform", "rotate(0)");
+    this.aangle = 0;
+    this.theShape.attr("transform", `rotate(${-pomega})`);
+
+    let omega = pomega * Math.PI / 180;
+    let [cw, sw] = [cos(omega), sin(omega)];
+    let scale = 1 / (this.useMars? this.mscale : this.escale);
+    let pqoa = (1 - e**2) * a * scale;
+    let rrcs = (this.useMars? this.xyzm : this.xyze).map(
+      ([x, y]) => {
+        let r = sqrt(x**2 + y**2) * scale;
+        let [c, s] = [x/r, y/r];
+        let ecp = e * (c*cw + s*sw);
+        let rModel = pqoa;
+        if (this.useEllipse) {
+          rModel /= 1 + ecp;
+        } else {
+          rModel /= sqrt(1 - (e * (s*cw - c*sw))**2) + ecp;
+        }
+        return [rModel, r, c, s]
+      });
+    let err = sqrt(rrcs.reduce((prev, [rm, r]) => prev + (rm-r)**2, 0)
+                   / rrcs.length);
+    this.errText.text(err.toFixed(5));
+    this.aText.text((a * scale).toFixed(4));
+    this.eText.text(e.toFixed(4));
+    this.angText.text(`${pomega.toFixed(3)}°`);
+    this.periText.text(((1-e) * a * scale).toFixed(4));
+    this.apText.text(((1+e) * a * scale).toFixed(4));
+  }
+
+  redrawOrbit() {
+    const xyz = this.useMars? this.xyzm : this.xyze;
+    const color = this.clock.planetColors[this.useMars? "mars" : "earth"];
+    const AU = this.AU;
+    this.theOrbit.selectAll("circle").data(xyz).join("circle")
+      .attr("pointer-events", "none")
+      .attr("fill", color)
+      .attr("stroke", "none")
+      .attr("r", 4)
+      .attr("cx", d => d[0]*AU)
+      .attr("cy", d => -d[1]*AU);
   }
 }
 
