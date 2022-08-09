@@ -3487,6 +3487,7 @@ class TwoLaws {
   toggleSensitivity() {
     this.vernier = !this.vernier;
     this.vernierText.text(this.vernier? "Vernier" : "Coarse");
+    this.redrawShape();  // toggle ghost points
   }
 
   activate(on) {
@@ -3540,6 +3541,7 @@ class TwoLaws {
           .attr("pointer-events", "none")
           .attr("stroke", "none")
           .attr("fill", "#eee");
+        this.ghostElem = g.append("g");
         let starter = (event, d) => this.shapeStart(event, d);
         let dragger = (event, d) => this.shapeDrag(event, d);
         this.shapeElems = new Array(8)
@@ -3631,7 +3633,7 @@ class TwoLaws {
         // pomega has shifted since shapeStart - recover y relative to original
         let r = (d == 1)? ff*p*AU : ff*q*AU;
         let dy = r * Math.sin((pomega - this.dragOffset[3])*Math.PI/180);
-        y = 0.1 * (y - dy);
+        y = 0.05 * (y - dy);
       }
       pomega +=  Math.atan2(y, x) * 180/Math.PI;
       if (pomega < 0) pomega += 360;
@@ -3640,7 +3642,7 @@ class TwoLaws {
       if (d == 2) x = -x;
       if (this.vernier) {
         let r0 = this.dragOffset[2];
-        x = r0 + 0.1 * (x - r0);
+        x = r0 + 0.05 * (x - r0);
       }
       if (x < 0.92*AU) x = 0.92*AU;
       else if (x > 1.5*AU) x = 1.5*AU;
@@ -3727,7 +3729,7 @@ class TwoLaws {
   }
 
   redrawShape() {
-    const [sin, cos, sqrt] = [Math.sin, Math.cos, Math.sqrt];
+    const [sin, cos, sqrt, atan2] = [Math.sin, Math.cos, Math.sqrt, Math.atan2];
     const AU = this.AU;
     const ff = 0.9;
     let [a, e, pomega] = this.useMars? this.marsFit : this.earthFit;
@@ -3755,18 +3757,28 @@ class TwoLaws {
     let [cw, sw] = [cos(omega), sin(omega)];
     let scale = 1 / (this.useMars? this.mscale : this.escale);
     let pqoa = (1 - e**2) * a * scale;
-    let rrcs = (this.useMars? this.xyzm : this.xyze).map(
+    let xyz = this.useMars? this.xyzm : this.xyze;
+    xyz = xyz.map(([x, y]) => [cw*x + sw*y, cw*y - sw*x]);
+    let rrcs = xyz.map(
       ([x, y]) => {
+        // Compute distance to ellipse model in direction of planet.
         let r = sqrt(x**2 + y**2) * scale;
         let [c, s] = [x/r, y/r];
-        let ecp = e * (c*cw + s*sw);
+        let ecp = e * c;
         let rModel = pqoa;
         if (this.useEllipse) {
           rModel /= 1 + ecp;
         } else {
-          rModel /= sqrt(1 - (e * (s*cw - c*sw))**2) + ecp;
+          rModel /= sqrt(1 - (e * s)**2) + ecp;
         }
-        return [rModel, r, c, s]
+        // Compute area swept since perihelion, normalized to total area.
+        let b = sqrt(1 - e**2) * a;
+        let xoa = rModel / scale;
+        let yob = xoa * s / b;
+        xoa *= c / a;
+        let area = (atan2(yob, xoa + e) - e*yob) / (2 * Math.PI);
+        if (area < 0) area += 1;
+        return [rModel, r, c, s, area];
       });
     let err = sqrt(rrcs.reduce((prev, [rm, r]) => prev + (rm-r)**2, 0)
                    / rrcs.length);
@@ -3776,6 +3788,32 @@ class TwoLaws {
     this.angText.text(`${pomega.toFixed(3)}°`);
     this.periText.text(((1-e) * a * scale).toFixed(4));
     this.apText.text(((1+e) * a * scale).toFixed(4));
+    if (this.useMars) {
+      this.marsModel = rrcs;
+    } else {
+      this.earthModel = rrcs;
+    }
+    if (this.vernier) {
+      this.ghostElem.attr("display", "block");
+      let ghostCoords = (i, axis) => {
+        let [x, y] = xyz[i];
+        let [rModel, r, c, s] = rrcs[i];
+        let [xm, ym] = [rModel*c, rModel*s];
+        return axis? -(ym + 20*(y - ym))*AU : (xm + 20*(x - xm))*AU;
+      }
+      this.ghostElem.selectAll("circle")
+        .data(d3.range(xyz.length))
+        .join("circle")
+        .attr("pointer-events", "none")
+        .attr("fill", color)
+        .attr("stroke", "none")
+        .attr("opacity", 0.2)
+        .attr("r", 4)
+        .attr("cx", i => ghostCoords(i, 0))
+        .attr("cy", i => ghostCoords(i, 1));
+    } else {
+      this.ghostElem.attr("display", "none");
+    }
   }
 
   redrawOrbit() {
