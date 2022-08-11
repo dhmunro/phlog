@@ -3852,7 +3852,7 @@ class TwoLaws {
     return [area, r];  // r is scaled to a = 1
   }
 
-  redrawShape() {
+  redrawShape(trans=0) {
     const [sin, cos, sqrt, atan2] = [Math.sin, Math.cos, Math.sqrt, Math.atan2];
     const AU = this.AU;
     const ff = 0.9;
@@ -3864,19 +3864,24 @@ class TwoLaws {
     this.areaElem.attr("d", null);
     this.areaMarker.attr("display", "none");
     let child = this.shapeElems;
-    child[0].attr("stroke", color).attr("x1", -rq).attr("x2", rp);
-    child[1].attr("stroke", color).attr("x1", cx).attr("x2", cx)
+    child[0].attr("stroke", color).maybeTransition(trans)
+      .attr("x1", -rq).attr("x2", rp);
+    child[1].attr("stroke", color).maybeTransition(trans)
+      .attr("x1", cx).attr("x2", cx)
       .attr("y1", -b).attr("y2", b);
-    child[2].attr("stroke", color)
+    child[2].attr("stroke", color).maybeTransition(trans)
       .attr("rx", 0.5*(rq + rp)).attr("ry", b).attr("cx", cx);
-    child[3].attr("cx", ff*rp);
-    child[4].attr("d", `M ${ff*rp+2} -7 l 8 7 -8 7 Z m -4 0 l -8 7 8 7 Z`);
-    child[5].attr("cx", -ff*rq);
-    child[6].attr("d", `M ${-ff*rq+2} -7 l 8 7 -8 7 Z m -4 0 l -8 7 8 7 Z`);
-    child[7].attr("d", `M ${rp} 0 l 24 -14 0 28 Z`)
+    child[3].maybeTransition(trans).attr("cx", ff*rp);
+    child[4].maybeTransition(trans)
+      .attr("d", `M ${ff*rp+2} -7 l 8 7 -8 7 Z m -4 0 l -8 7 8 7 Z`);
+    child[5].maybeTransition(trans).attr("cx", -ff*rq);
+    child[6].maybeTransition(trans)
+      .attr("d", `M ${-ff*rq+2} -7 l 8 7 -8 7 Z m -4 0 l -8 7 8 7 Z`);
+    child[7].maybeTransition(trans).attr("d", `M ${rp} 0 l 24 -14 0 28 Z`)
       .attr("transform", "rotate(0)");
     this.aangle = 0;
-    this.theShape.attr("transform", `rotate(${-pomega})`);
+    this.theShape.maybeTransition(trans)
+      .attr("transform", `rotate(${-pomega})`);
 
     let omega = pomega * Math.PI / 180;
     let [cw, sw] = [cos(omega), sin(omega)];
@@ -3922,6 +3927,7 @@ class TwoLaws {
         .attr("stroke", "none")
         .attr("opacity", 0.2)
         .attr("r", 4)
+        .maybeTransition(trans)
         .attr("cx", i => ghostCoords(i, 0))
         .attr("cy", i => ghostCoords(i, 1));
     } else {
@@ -4017,7 +4023,7 @@ class TwoLaws {
     } else {
       this.earthFit = [a, e, pomega];
     }
-    this.redrawShape();
+    this.redrawShape(1000);
   }
 }
 
