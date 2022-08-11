@@ -783,7 +783,7 @@ class OrbitView {
     this.zoomLevel = 0;
     let scale = this.zoomFactor[this.zoomLevel];
 
-    zoomButtons(width, this);
+    zoomButtons(width, this, this.svg);
     let gap = 0.01*width;  // matches gap in zoomButtons
     let originCycler = () => this.cycleOrigin();
     this.svg.append("rect").call(
@@ -1064,8 +1064,7 @@ class EarthYear {
 
     this.clock = clock;
 
-    zoomButtons(width, this);
-    let gap = 0.01*width;  // matches gap in zoomButtons
+    zoomButtons(width, this, this.svg);
 
     let [left, right, bottom, top] = [-width/2+80, width/2-30,
                                       height/2-60, -height/2+60];
@@ -1566,8 +1565,7 @@ class MarsYear {
 
     this.clock = clock;
 
-    zoomButtons(width, this);
-    let gap = 0.01*width;  // matches gap in zoomButtons
+    zoomButtons(width, this, this.svg);
 
     let [left, right, bottom, top] = [-width/2+80, width/2-30,
                                       height/2-60, -height/2+60];
@@ -3045,12 +3043,12 @@ class Inclination {
                               () => this.replot());
     this.rotVert.sSet(0);
 
-    // Create Reset button, lower left, resets rotation angles.
+    // Create Home button, lower left, resets rotation angles.
     this.resetButton = this.svg.append("g").call(
       g => {
         buttonBox(g.append("rect"), -width/2 + 10, height/2 - 38, 80, 28,
                   () => this.resetRotation());
-        buttonText(g.append("text"), -width/2 + 49, height/2 - 16, "Reset", 20,
+        buttonText(g.append("text"), -width/2 + 49, height/2 - 16, "Home", 20,
                    () => this.resetRotation());
       });
 
@@ -3374,7 +3372,7 @@ class TwoLaws {
     this.svgr = d3ParentR.append("svg")
       .attr("xmlns", "http://www.w3.org/2000/svg")
       .attr("xmlns:xlink", "http://www.w3.org/1999/xlink")
-      .attr("class", "LeftTwoLaws")
+      .attr("class", "RightTwoLaws")
       .attr("viewBox", [-width/2, -height/2, width, height])
       .style("display", "block")
       .style("margin", "20px")  // padding does not work for SVG?
@@ -3382,13 +3380,15 @@ class TwoLaws {
       .attr("text-anchor", "middle")
       .attr("font-family", "'Merriweather Sans', sans-serif")
       .attr("font-weight", "bold")
-      .attr("font-size", 12)
+      .attr("font-size", 16)
       .attr("stroke-linejoin", "round")
       .attr("stroke-linecap", "round");
 
     this.incline = incline;
     this.clock = incline.clock;
     this.survey = incline.survey;
+
+    // =================== Left Panel ===================
 
     this.instructions = this.svgl.append("g").call(
       g =>  {
@@ -3400,16 +3400,14 @@ class TwoLaws {
           .text("Return to Survey Orbits tab to determine orbits.");
       });
 
-    this.svgr.append("text")
-      .attr("fill", "#000")
-      .attr("font-size", 24)
-      .text("Two Laws right panel");
-
     // Scale is 1 AU = width/3.6, same as zoomLevel=0 in OrbitView.
     const AU = width / 3.6;
     this.AU = AU;
 
+    // for day=8114.5
+    // [1.4477162984212222, 0.09343736395400881, 336.2490146018458]
     this.marsFit = [1.4, 0, 0];
+    // [1.4751636067708327, 0.01665518054957968, 102.71944206697788]
     this.earthFit = [1.4, 0, 0];
 
     this.orbitPlot = this.svgl.append("g").attr("display", "none").call(
@@ -3462,31 +3460,106 @@ class TwoLaws {
     this.angText = this.aText.clone(true).attr("y", height/2 - 10)
       .text("000.000°");
     // Vernier/Coarse button
-    buttonBox(this.svgl.append("rect"), width/2 - 90, -height/2 + 5, 80, 28,
+    buttonBox(this.svgl.append("rect"), width/2 - 98, -height/2 + 5, 88, 28,
               () => this.toggleSensitivity());
     this.vernierText = this.svgl.append("text").call(
-      t => buttonText(t, width/2 - 50, -height/2 + 25, "Coarse", 20,
+      t => buttonText(t, width/2 - 54, -height/2 + 25, "Coarse", 20,
                       () => this.toggleSensitivity()));
     this.vernier = false;
+    // Auto button
+    buttonBox(this.svgl.append("rect"), width/2 - 76, -height/2 + 43, 66, 28,
+              () => this.autoSolve());
+    this.autoText = this.svgl.append("text").call(
+      t => buttonText(t, width/2 - 43, -height/2 + 63, "Auto", 20,
+                      () => this.autoSolve()));
+
+    // =================== Right Panel ===================
+
+    this.zoomLevel = this.earthLevel = this.marsLevel = 0;
+    zoomButtons(width, this, this.svgr);
+
+    let [left, right, bottom, top] = [-width/2+80, width/2-30,
+                                      height/2-60, -height/2+60];
+
+    this.svgr.append("clipPath").attr("id", "first-two-clip")
+      .append("rect")
+      .attr("x", left).attr("width", right-left)
+      .attr("y", top).attr("height", bottom-top);
+
+    this.x = d3.scaleLinear().range([left, right])
+      .domain([-0.02, 1.02]);
+    this.y = d3.scaleLinear().range([bottom, top])
+      .domain([-10, 700]);
+    this.xAxis = d3.axisBottom(this.x)
+      .ticks(6).tickSize(10).tickPadding(10).tickSizeOuter(0);
+    this.yAxis = d3.axisLeft(this.y)
+      .ticks(6).tickSize(10).tickPadding(10).tickSizeOuter(0);
+
+    this.gxAxis = this.svgr.append("g").call(this.xAxis)
+        .style("color", "#000")
+        .attr("transform", `translate(0, ${bottom})`)
+        .attr("font-size", 16)
+        .attr("stroke-width", 2);
+    this.gyAxis = this.svgr.append("g").call(this.yAxis)
+        .style("color", "#000")
+        .attr("transform", `translate(${left}, 0)`)
+        .attr("font-size", 16)
+        .attr("stroke-width", 2);
+
+    // Axis labels
+    appendText(this.svgr, 0, "", false, left-10, top-12, "days");
+    appendText(this.svgr, 0, "", false, right, bottom+50, "area");
+
+    this.areaPlot = this.svgr.append("g")
+      .attr("clip-path", "url(#first-two-clip)");
+    this.areaMarker = appendCircle(
+      this.areaPlot.append("g"), 5, "#fdf8e0", 0, this.x(0), this.y(0))
+      .attr("pointer-events", "none")
+      .attr("display", "none");
+  }
+
+  zoomer(inout) {
+    if (!this.incline.ready) return;
+    let level = this.zoomLevel;
+    if (inout == 0) {  // Decrease magnification.
+      level -= 1;
+      if (level < 0) return;
+    } else {  // Increase magnification.
+      level += 1;
+      if (level > 2) return;
+    }
+    this.zoomLevel = level;
+    this.updatePlot();
   }
 
   toggleShape() {
     this.useEllipse = !this.useEllipse;
     this.shapeText.text(this.useEllipse? "Ellipse" : "Circle");
+    if (!this.incline.ready) return;
     this.redrawShape();
+    this.updatePlot(true);
   }
 
   togglePlanet() {
+    if (this.useMars) {
+      this.marsLevel = this.zoomLevel;
+    } else {
+      this.earthLevel = this.zoomLevel;
+    }
     this.useMars = !this.useMars;
     this.planetText.text(this.useMars? "Mars" : "Earth");
     if (this.vernier) this.toggleSensitivity();
+    this.zoomLevel = this.useMars? this.marsLevel : this.earthLevel;
+    if (!this.incline.ready) return;
     this.redrawOrbit();
     this.redrawShape();
+    this.updatePlot(true);
   }
 
   toggleSensitivity() {
     this.vernier = !this.vernier;
     this.vernierText.text(this.vernier? "Vernier" : "Coarse");
+    if (!this.incline.ready) return;
     this.redrawShape();  // toggle ghost points
   }
 
@@ -3600,6 +3673,27 @@ class TwoLaws {
           .on("touchstart", starter).on("touchmove", dragger);
       });
     this.aangle = 0;
+
+    const survey = this.survey;
+    const [iRef, jRef] = [survey.iRef, survey.jRef];
+    const [marsYear, earthYear] = [survey.marsYear, survey.earthYear];
+    // t = t0 + i*earthYear + j*marsYear
+    // survey.xyEarth --> [xe, ye, mvec, svec, flag, idef, jdef]
+    // survey.xyMars --> [xm, ym, chi2, n, idef, zm]
+    // Here make time zero at reference opposition.
+    this.xyze = this.xyze.map(
+      ([x, y, z], j) => {
+        let t = (j - jRef) * marsYear;  // which Earth year does not matter
+        return [x, y, z, (t%earthYear + earthYear)%earthYear];
+      });
+    this.xyzm = this.xyzm.map(
+      ([x, y, z], i) => {
+        let t = (i - iRef) * earthYear;  // which Mars year does not matter
+        return [x, y, z, (t%marsYear + marsYear)%marsYear];
+      });
+    this.i0m = iRef;
+    this.i0e = jRef;
+
     this.redrawShape();
     this.redrawOrbit();
   }
@@ -3694,6 +3788,7 @@ class TwoLaws {
     angle = aangle * torad;
     s = sin(angle);
     if (cos(angle) > 0 && s < 0.005 && s > -0.005) {
+      this.aangle = 0;
       this.areaElem.attr("d", null);
       return;
     }
@@ -3712,6 +3807,12 @@ class TwoLaws {
     }
     d3p.closePath();
     this.areaElem.attr("d", d3p);
+    let [a, e, pomega] = this.useMars? this.marsFit : this.earthFit;
+    let area = this.modelArea(!this.useEllipse, e, aangle)[0];
+    let year = this.useMars? this.survey.marsYear : this.survey.earthYear;
+    if (this.zoomLevel) year = 0;
+    this.areaMarker.attr("display", "block")
+      .attr("cx", this.x(area)).attr("cy", this.y(area*year));
   }
 
   areaRadius(aangle) {
@@ -3728,6 +3829,29 @@ class TwoLaws {
     return rModel;
   }
 
+  modelArea(circle, e, c, s) {
+    if (s === undefined) {  // ellipseArea(aangle)
+      let angle = c * Math.PI/180;
+      [c, s] = [Math.cos(angle), Math.sin(angle)];
+    }
+    let ec = e * c;
+    let yob;
+    let r = 1 - e**2;
+    if (circle) {
+      r /= Math.sqrt(1 - (e * s)**2) + ec;
+      yob = r * s;
+    } else {  // ellipse
+      yob = Math.sqrt(r);  // = b
+      r /= 1 + ec;
+      yob = r * s / yob;
+    }
+    let xoa = r * c;
+    // Compute area swept since perihelion, normalized to total area.
+    let area = (Math.atan2(yob, xoa + e) - e*yob) / (2 * Math.PI)
+    if (area < 0) area += 1;
+    return [area, r];  // r is scaled to a = 1
+  }
+
   redrawShape() {
     const [sin, cos, sqrt, atan2] = [Math.sin, Math.cos, Math.sqrt, Math.atan2];
     const AU = this.AU;
@@ -3738,6 +3862,7 @@ class TwoLaws {
     const b = this.useEllipse? sqrt(rq*rp) : 0.5*(rq + rp);
     const color = this.clock.planetColors[this.useMars? "mars" : "earth"];
     this.areaElem.attr("d", null);
+    this.areaMarker.attr("display", "none");
     let child = this.shapeElems;
     child[0].attr("stroke", color).attr("x1", -rq).attr("x2", rp);
     child[1].attr("stroke", color).attr("x1", cx).attr("x2", cx)
@@ -3762,22 +3887,10 @@ class TwoLaws {
     let rrcs = xyz.map(
       ([x, y]) => {
         // Compute distance to ellipse model in direction of planet.
-        let r = sqrt(x**2 + y**2) * scale;
+        let r = sqrt(x**2 + y**2);
         let [c, s] = [x/r, y/r];
-        let ecp = e * c;
-        let rModel = pqoa;
-        if (this.useEllipse) {
-          rModel /= 1 + ecp;
-        } else {
-          rModel /= sqrt(1 - (e * s)**2) + ecp;
-        }
-        // Compute area swept since perihelion, normalized to total area.
-        let b = sqrt(1 - e**2) * a;
-        let xoa = rModel / scale;
-        let yob = xoa * s / b;
-        xoa *= c / a;
-        let area = (atan2(yob, xoa + e) - e*yob) / (2 * Math.PI);
-        if (area < 0) area += 1;
+        let [area, rModel] = this.modelArea(!this.useEllipse, e, c, s);
+        rModel *= a;
         return [rModel, r, c, s, area];
       });
     let err = sqrt(rrcs.reduce((prev, [rm, r]) => prev + (rm-r)**2, 0)
@@ -3814,6 +3927,8 @@ class TwoLaws {
     } else {
       this.ghostElem.attr("display", "none");
     }
+
+    this.updatePlot(true);
   }
 
   redrawOrbit() {
@@ -3827,6 +3942,82 @@ class TwoLaws {
       .attr("r", 4)
       .attr("cx", d => d[0]*AU)
       .attr("cy", d => -d[1]*AU);
+  }
+
+  updatePlot(noTransition) {
+    const trans = noTransition? 0 : 1000;
+    let year = this.useMars? this.survey.marsYear : this.survey.earthYear;
+    const rrcs = this.useMars? this.marsModel : this.earthModel;
+    const xyzt = this.useMars? this.xyzm : this.xyze;
+    const i0 = this.useMars? this.i0m : this.i0e;
+    const color = this.clock.planetColors[this.useMars? "mars" : "earth"];
+    let y2 = 0;
+    if (this.zoomLevel == 0) {
+      this.y.domain([-0.02*year, 1.02*year]);
+      y2 = year;
+    } else if (this.zoomLevel == 1) {
+      this.y.domain([-0.02*year, 0.02*year]);
+    } else {
+      this.y.domain([-0.001*year, 0.001*year]);
+    }
+    this.yAxis.scale(this.y);
+    this.gyAxis.maybeTransition(trans).call(this.yAxis);
+
+    this.areaPlot.selectAll("line").data([0]).join("line")
+      .attr("stroke", "#fdf8e0")
+      .attr("stroke-width", 2)
+      .attr("x1", this.x(0)).attr("x2", this.x(1))
+      .maybeTransition(trans).attr("y1", this.y(0)).attr("y2", this.y(y2));
+    if (i0 === undefined) return;  // happens before activate called
+    // The area in rrcs usable as-is, but time t has t=0 at element i=i0.
+    // We want to add dt = area*year to all these t to make them consistent
+    let dt = rrcs[i0][4] * year;
+    let areaTime = rrcs.map(
+      ([rModel, r, c, s, area], i) => {
+        let t = (xyzt[i][3] + dt) % year;
+        if (t < 0.5*year && area > 0.5) t += year;
+        if (y2 == 0) t -= area * year;
+        return [area, t];
+      });
+    this.areaPlot.selectChildren("circle").data(areaTime).join("circle")
+      .attr("fill", color)
+      .attr("stroke", "none")
+      .attr("r", 4)
+      .maybeTransition(trans)
+      .attr("cx", d => this.x(d[0])).attr("cy", d => this.y(d[1]));
+    if (this.aangle) {
+      let [a, e, pomega] = this.useMars? this.marsFit : this.earthFit;
+      let area = this.modelArea(!this.useEllipse, e, this.aangle)[0];
+      if (this.zoomLevel) year = 0;
+      this.areaMarker.attr("display", "block")
+        .maybeTransition(trans)
+        .attr("cx", this.x(area)).attr("cy", this.y(area*year));
+    }
+  }
+
+  autoSolve() {
+    if (!this.incline.ready) return;
+    let [[xx, xy, xz], yAxis, [zx, zy, zz], e, a, b] =
+        orbitParams(this.useMars? "mars" : "earth", this.incline.t0);
+    a *= this.useMars? this.mscale : this.escale;
+    // [-zy, zx, 0] is direction of ascending node (relative to J2000 plane)
+    // Need to rotate to system with z-axis along zAxis, which fixes
+    // the coordinates of the shared [-zy, zx, 0] ~ [nx, ny, 0] direction.
+    let s = Math.sqrt(zx**2 + zy**2);
+    let [mx, my] = (s > 1.0e-6)? [zx/s, zy/s] : [1, 0];
+    let [nx, ny] = [-my, mx];
+    let [ax, ay, az] = [zz*mx, zz*my, -s];
+    // p = perihelion direction = xAxis
+    // (x', y') = (p.(n n.x + a m.x), p.(n n.y + a m.y))
+    let [pn, pa] = [xx*nx + xy*ny, xx*ax + xy*ay + xz*az];
+    let pomega = Math.atan2(pn*ny + pa*my, pn*nx + pa*mx) * 180/Math.PI;
+    if (pomega < 0) pomega += 360;
+    if (this.useMars) {
+      this.marsFit = [a, e, pomega];
+    } else {
+      this.earthFit = [a, e, pomega];
+    }
+    this.redrawShape();
   }
 }
 
@@ -3856,7 +4047,7 @@ class ThirdLaw {
     this.svgr = d3ParentR.append("svg")
       .attr("xmlns", "http://www.w3.org/2000/svg")
       .attr("xmlns:xlink", "http://www.w3.org/1999/xlink")
-      .attr("class", "LeftThirdLaw")
+      .attr("class", "RightThirdLaw")
       .attr("viewBox", [-width/2, -height/2, width, height])
       .style("display", "block")
       .style("margin", "20px")  // padding does not work for SVG?
@@ -3945,11 +4136,11 @@ function appendCircle(parent, r, color, width, cx, cy) {
 }
 
 
-function zoomButtons(width, objectThis) {
+function zoomButtons(width, objectThis, svg) {
   let [xbox, ybox] = [-width/2, -width/2];
   let dbox = 0.045*width;
   let gap = 0.01*width;
-  return objectThis.svg.append("g").call(
+  return svg.append("g").call(
     g => {
       g.append("path").call(
         p => {

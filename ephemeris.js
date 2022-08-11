@@ -143,6 +143,35 @@ function eclipticOrientation(day) {
 }
 
 /**
+ * Return J2000 ecliptic orbital parameters of planet for a given time.
+ *
+ * @param {string} planet - name (mercury, venus, earth, mars, jupiter,
+ *     saturn, uranus, or neptune).
+ * @param {number} day - Time in Julian days relative to J2000 (that is
+ *     Julian day - 2451545.0).  Use dayOfDate() to convert from Date.
+ *
+ * @return {Array} - [xAxis, yAxis, zAxis, e, a, b, ea, ma],
+ *     xAxis is unit vector [x,y,z] in direction of perihelion,
+ *     yAxis is unit vector [x,y,z] in direction of normal to xAxis, zAxis,
+ *     zAxis is unit vector [x,y,z] normal to orbital plane,
+ *     e is eccentricity, a is semi-major axis (AU), b is semi-minor axis (AU),
+ *     ea is ecentric anomaly (rad), and ma is mean anomaly (rad).
+ *     The planet orbits counterclockwise viewed from the direction of zAxis
+ *     (that is, according to the right hand rule), and the three axes form
+ *     a right-handed orthonormal basis.  Note that the direction of the
+ *     ascending node is [-zAxis[1], zAxis[0], 0].
+ */
+function orbitParams(planet, day) {
+  day = parseFloat(day);
+  if (isNaN(day)) {
+    return undefined;
+  }
+  // Use ssModel1 from 1800 to 2050, otherwise ssModel2
+  const ssModel = (day<-73048.0 || day>18263.0)? ssModel2 : ssModel1;
+  return ssModel.orbitParams(planet, day);
+}
+
+/**
  * Find x such that f(x) = 0, given bracketing initial x values.
  * The initial values x0 and x1 must satisfy f(x0)*f(x1) <= 0.
  * You can optionally pass [x0, f(x0)] and [x1, f(x1)] to avoid
@@ -384,7 +413,7 @@ class SolarSystem {
                                                           x + rates[i+1]*t);
     let ma = mlon - plon  // mean anomaly
     if (aux !== undefined) {  // outer planet correction to ma for Model2
-      const ft = aux[3]*t
+      const ft = aux[3]*t;
       ma += aux[0]*t*t + aux[1]*cos(ft) + aux[2]*sin(ft);
     }
     // ee = eccentric anomaly, compute from mean anomaly by Newton iteration
@@ -393,7 +422,7 @@ class SolarSystem {
     let dma = ma - (ee - e*see);  // find ee so this equals 0.
     while (abs(dma) > 1.e-9) {
       ee += dma / (1. - e*cee);
-      [cee, see] = [cos(ee), sin(ee)]
+      [cee, see] = [cos(ee), sin(ee)];
       dma = ma - (ee - e*see);
     }
     let x = cee - e;
@@ -408,6 +437,40 @@ class SolarSystem {
                  (cw*sn + sw*cicn)*x - (sw*sn - cw*cicn)*y,
                  (sw*x + cw*y)*si];
     return [x, y, z, e, ee, see, ma, aper, nlon];
+  }
+
+  orbitParams(planet, day) {
+    const t = day / 36525.;  // Julian centuries past J2000.0.
+    const [sqrt, sin, cos, abs] = [Math.sqrt, Math.sin, Math.cos, Math.abs];
+    const [values, rates, aux] = this.params[planet];
+    let [a, e, incl, mlon, plon, nlon] = values.map((x, i) => x + rates[i]*t);
+    let ma = mlon - plon  // mean anomaly
+    if (aux !== undefined) {  // outer planet correction to ma for Model2
+      const ft = aux[3]*t;
+      ma += aux[0]*t*t + aux[1]*cos(ft) + aux[2]*sin(ft);
+    }
+    // ee = eccentric anomaly, compute from mean anomaly by Newton iteration
+    let ee = ma + e*sin(ma + e*sin(ma));  // initial guess
+    let [cee, see] = [cos(ee), sin(ee)]
+    let dma = ma - (ee - e*see);  // find ee so this equals 0.
+    while (abs(dma) > 1.e-9) {
+      ee += dma / (1. - e*cee);
+      [cee, see] = [cos(ee), sin(ee)];
+      dma = ma - (ee - e*see);
+    }
+    let x = cee - e;
+    let y = sqrt(1. - e*e) * see;
+    let aper = plon - nlon  // argument of perihelion
+    let [cw, sw] = [cos(aper), sin(aper)];
+    let [cn, sn] = [cos(nlon), sin(nlon)];
+    let [ci, si] = [cos(incl), sin(incl)];
+    let [cisn, cicn] = [ci*sn, ci*cn];
+    let xaxis = [cw*cn - sw*cisn, cw*sn + sw*cicn, sw*si];
+    let yaxis = [-sw*cn - cw*cisn, cw*cicn - sw*sn, cw*si];
+    let zaxis = [xaxis[1]*yaxis[2] - yaxis[1]*xaxis[2],
+                 xaxis[2]*yaxis[0] - yaxis[2]*xaxis[0],
+                 xaxis[0]*yaxis[1] - yaxis[0]*xaxis[1]];
+    return [xaxis, yaxis, zaxis, e, a, a*sqrt(1-e*e), ee, ma];
   }
 
   earthInclination(day) {
