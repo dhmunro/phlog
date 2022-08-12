@@ -1476,7 +1476,7 @@
             magnification.</li>
           <li>Click any red point on Mars orbit to toggle on or off
             sight lines from Earth orbit points.</li>
-          <li>Click Reset button at lower left to restore original
+          <li>Click Home button at lower left to restore original
             orientation.</li>
         </ol>
       </div>
@@ -1515,16 +1515,278 @@
       <div class="question">
         What does the diagram in the left panel show?</div>
       <div class="answer">
+        <ul>
+          <li>The points in the ring are the ones you found in the
+            Survey Orbits section, plotted in the plane of the orbit.
+            In the case of Mars, this is tilted about 2 degrees from
+            the J2000 ecliptic plane you have used for orbit plots
+            until now.</li>
+          <li>Drag the three round buttons around to adjust the
+            perihelion (point nearest the Sun), aphelion (point
+            farthest from Sun), and the line of apses (radial line
+            through the Sun connecting perihelion and aphelion).</li>
+          <li>The numbers at the bottom left show the perihelion and
+            aphelion of your current fit.  The numbers at the bottom
+            right are the three conventional orbital parameters:
+            The <em>a</em> is the semi-major axis (average of
+            perihelion and aphelion).  The <em>e</em> is eccentricity
+            (displacement of center from Sun as a fraction
+            of <em>a</em>, equal to the difference between perihelion
+            and aphelion divided by their sum).  The <em>angle</em> is
+            the counterclockwise angle of perihelion from the
+            x-axis.</li>
+          <li>Your goal is to adjust the three orbital parameters to
+            fit your survey points as closely as possible.  One
+            systematic procedure is:
+            <ol>
+              <li>If all points lie outside your current orbit fit,
+                drag the <em>perihelion</em> button outward until your fit
+                just begins to touch points on the orbit.  Otherwise,
+                drag the <em>aphelion</em> button inward (this will
+                change perihelion too once they become equal) until
+                all points just barely lie outside it.</li>
+              <li>In either case, drag the <em>angle</em> button
+                around to align the perihelion with the points which
+                are just touching your fit.</li>
+              <li>Drag the <em>aphelion</em> button outward until your
+                fit just touches the points nearest aphelion.</li>
+              <li>Alternate among the three round buttons, moving them
+                to minimize the error number in the upper left
+                corner.</li>
+            </ol>
+          </li>
+          <li>The error number in the upper left corner is the RMS
+            (root mean square) distance of your orbit fit from your
+            surveyed points.  The units are the same as for the
+            perihelion and aphelion numbers at the lower left, namely
+            AU (astronomical units, the <em>a</em> value for
+            Earth).</li>
+          <li>Click the Ellipse/Circle button to fit an eccentric
+            circle (simply a circle whose center is displaced from the
+            Sun) instead of an ellipse with one focus at the Sun.</li>
+          <li>Click the Mars/Earth button to fit Earth's orbit instead
+            of Mars's orbit.</li>
+          <li>Click the Coarse/Vernier button when you want to make
+            fine adjustments to your orbital fit parameters.  This
+            does two things: First, you have to move your mouse 20
+            times farther to change the parameter by a given amount.
+            Second, a set of "ghost" points become visible, which are
+            plotted at a distance from your orbit fit that is 20 times
+            the distance of the actual solid survey points.  If you
+            can get all the ghost points to coincide with the actual
+            points you have a perfect fit.</li>
+          <li>Click the Auto button if you get frustrated trying to
+            make very small adjustments even on Vernier.  You may be
+            able to get a slightly better fit after clicking Auto, but
+            Auto will get you almost all the way to the minimum error
+            fit.</li>
+        </ul>
       </div>
       <div class="question">
         What does the plot in the right panel show?</div>
       <div class="answer">
+        <ul>
+          <li>In the left panel, you have parametrized the shape of
+            the orbits of Mars and Earth - Kepler's first law.  In the
+            right panel, you will characterize how the planet speeds
+            up and slows down as it moves around the shape you have
+            fit - Kepler's second law.</li>
+          <li>The easiest way to describe the position of the planet
+            on its orbit is to specify its angle around the Sun from
+            some standard point, usually taken to be its perihelion
+            point.</li>
+          <li>You saw in the Earth Period section that this angle
+            changes with time at an almost, but not quite, uniform
+            rate.  After you have fit Earth's orbit in the left panel,
+            note the direction of the line of apses you have set.
+            Return to the Earth Period section and zoom in twice, then
+            drag the Sun marker on the clock around to the steepest
+            downward point on the sinusoidal curve - it will be in
+            early January (if you are within a few hundred years of
+            the present).  Notice that the angle of the Sun hand on
+            the clock matches the perihelion angle you set in your fit
+            in this section!  This means the Sun is moving around
+            fastest at perihelion and slowest at aphelion.</li>
+          <li>Drag the triangle button on the left panel around to
+            highlight the area enclosed by the line from the Sun to
+            the perihelion point, your orbit fit, and the line from
+            the curent point on your orbit back to the Sun.</li>
+          <li>This will show a white dot on the graph in the right
+            panel, which shows you the area of the highlighted area
+            in the left panel (as a fraction of the total area of
+            the elliptical or circular orbit).</li>
+          <li>Since the radius is smaller near perihelion, a given
+            change in angle there produces a smaller change in area
+            than elsewhere.  Kepler noticed that meant if the area,
+            instead of angle, were changing at a constant rate, the
+            point would move faster near perihelion and slower near
+            aphelion, as you have seen it does.</li>
+          <li>Therefore, instead of time as a function of angle, the
+            plot in the right panel shows time as a function of
+            area.  The white line is a straight line going from
+            zero days at area zero to one period (of Mars or Earth)
+            at at area one.</li>
+          <li>Each orbital point is plotted at the fit area at the
+            same angle as the surveyed point in the left panel, and
+            the time of those observations modulo one period, shifted
+            in time so that the reference opposition you chose in the
+            Survey Orbits section lies exactly on the white line.</li>
+          <li>Click the zoom in button to plot the difference between
+            the survey point times and the white line instead of the
+            times themselves.  You can click zoom in a second time
+            for an even higher magnification of the vertical
+            axis.</li>
+          <li>At the first zoom level, play around with the fit
+            adjustment buttons in the left panel to see how they
+            affect the area-time relationship.</li>
+          <li>Recall that the standard ruler in your orbit survey was
+            the distance from the Sun to Mars at your reference
+            opposition.  However, there is no reason you need to call
+            this distance 1.0 unit.  The standard choice is to call
+            1.0 unit Earth's <em>a</em> value, which is called the
+            astronomical unit, or AU.  To accomplish this, your
+            reference distance has been given a numerical value equal
+            to the ephemeris Sun-Mars distance at the time of your
+            reference opposition.  If that had not been done, you
+            would have simply adjusted your units so your
+            fitted <em>a</em> value for Earth's orbit was exactly 1.0
+            unit.</li>
+        </ul>
       </div>
       <div class="question">How do the controls work?</div>
       <div class="answer">
+        <p>In the left panel:</p>
+        <ol>
+          <li>Drag round button nearest the Sun around the Sun to
+             change perihelion angle of fit.</li>
+          <li>Drag round button nearest the orbit on the side with two
+            round buttons radially to change the perihelion distance
+            of the fit.</li>
+          <li>Drag round button opposite the two round buttons
+            radially to change the aphelion distance of the fit.</li>
+          <li>Click Ellipse/Circle button to fit either an ellipse with
+            one focus at the Sun or an eccentric circle.</li>
+          <li>Click Mars/Earth button to fit either the points you
+            surveyed on Mars's or earth's orbit.</li>
+          <li>Click Coarse/Vernier button to change the sensitivity of
+            all the drag buttons.</li>
+          <li>Click Auto button to set fit parameters to ephemeris
+            values.</li>
+          <li>Drag triangle button around Sun to show area used by the
+            Area-Time relation plot.</li>
+        </ol>
+        <p>In the right panel:</p>
+        <ol>
+          <li>Click on triangular buttons in the upper left corner
+            to zoom the plot out or in.</li>
+        </ol>
       </div>
       <hr/>
       <div class="answer"></div>  <!-- do not remove dummy answer -->
+      <div class="question">
+        Are you convinced that orbits are ellipses with the Sun at one
+        focus?</div>
+      <div class="answer">
+        <ul>
+          <li>An ellipse with the Sun at one focus certainly describes
+            the surveyed orbit points for both Mars and the Earth
+            extremely precisely - within about 0.0003 AU.</li>
+          <li>The ancient guess for orbit shapes was an eccentric
+            circle.  For the case of Earth's orbit, you have seen that
+            the difference between an eccentric circle and an ellipse
+            with the Sun at one focus is completely negligible.  By
+            naked eye observations, it is impossible to see the
+            difference - the two models have the same shape.</li>
+          <li>As you see here, even for Mars it is very difficult to
+            see the difference between an ellipse and an eccentric
+            circle.  The difference between the major and minor axes
+            of the best fit ellipse is about one part in 230.  You can
+            see it easily only with the 20 times magnified ghost
+            points in Vernier mode.  (Toggle Ellipse/Circle in Vernier
+            mode after Auto.)</li>
+          <li>For Mars, the best fit eccentric circle has RMS error
+            of about 0.0023 AU, about seven or eight times larger than
+            the RMS error of the best fit ellipse.</li>
+          <li>Thus for Mars, an ellipse is clearly a somewhat better
+            fit than an eccentric circle.  However, you need to survey
+            the position of Mars to within a couple of thousandths of
+            its distance to the Sun in order to be able to make that
+            judgement.</li>
+          <li>Kepler's first law therefore rests on the very slight
+            deviations of Mars's orbit from an eccentric circle.
+            Until you can verify it with a more eccentric orbit, it is
+            a tentative conclusion.</li>
+          <li>Mercury's orbit deviates from an eccentric circle by
+            about 2&percnt;, largest of all the planets.  Perhaps the
+            first really obviously elliptic orbit was Halley's comet,
+            discovered about 100 years after Kepler published his
+            first and second laws.  (Kepler saw this comet in 1607,
+            but did not realize it was orbiting according to his brand
+            new laws.)</li>
+        </ul>
+      </div>
+      <div class="question">
+        Are you convinced that orbits sweep out equal areas in equal
+        times?</div>
+      <div class="answer">
+        <ul>
+          <li>You must have been struck by the accuracy with which the
+            area-time survey points lie along the straight line when
+            you adjust your orbital shape model to be near best
+            fit.</li>
+          <li>At best fit, the deviations from a perfectly straight
+            line are of order hundredths of a day for Mars as well as
+            Earth, out of hundreds of days.  In order words, the law
+            that the radius from the Sun to a planet sweeps out equal
+            areas in equal times in correct to better than a part in
+            ten thousand.  This is at least as good as the accuracy of
+            your survey, or of the fit to an ellipse.</li>
+          <li>Note the effects of moving your model parameters away
+            from the best fit orbital parameters, or switching from
+            an ellipse fit to an eccentric circle fit.</li>
+          <li>Kepler's second law that planets sweep out equal areas
+            in equal times is extremely convincing, much more so than
+            his first law.</li>
+          <li>For both laws, you can very confidently assert that the
+            motions of Mars and Earth are <em>consistent</em> with
+            Kepler's laws to very high accuracy.  (Measuring something
+            with an accuracy of one part in ten thousand is like
+            measuring a one meter distance to within a tenth of a
+            millimeter.)</li>
+        </ul>
+      </div>
+      <div class="question">
+        How can you test these laws for planets other than Mars and
+        Earth?</div>
+      <div class="answer">
+        <ul>
+          <li>In the case of Jupiter, using twenty years of data you
+            could survey its orbit using the same techniques you used
+            for Mars, then directly fit its orbit and check the equal
+            area law as you did for Mars.  Saturn would require about
+            thirty years of data, and the survey method you used for
+            Mars does not work for Mercury and Venus, since they have
+            no oppositions.</li>
+          <li>The best way to test laws like these is to <em>assume</em>
+            them to be true, and work out the consequences.  That
+            strategy was a spectacular success in the case of the law
+            that the motion of planets is periodic with respect to
+            the Sun, as you found when you assumed it to survey the
+            orbits of Earth and Mars.</li>
+          <li>If you assume Kepler's first two laws are true, the
+            motion of each planet can be described by only six
+            numbers: The ecliptic longitude of its ascending node and
+            its inclination (which together determine its orbital
+            plane), its semi-major axis, eccentricity, and angle of
+            perihelion (which determine the shape and orientation of
+            its ellipse), and its period.  (A seventh number is its
+            position at some initial time, which we can take as
+            given.)</li>
+          <li>In the next section, you will find these six orbital
+            parameters by trial and error, fitting the observed planet
+            positions in the sky.</li>
+        </ul>
+      </div>
     </div>
     <div id="third-law-r-help" class="helper hidden">
       <h1>Tips &amp; Queries:
@@ -1596,7 +1858,6 @@
   let activeAnswer;
   function toggleAnswer() {
     const answer = this.nextElementSibling;
-    console.log(this, answer);
     if (activeAnswer) activeAnswer.classList.remove("active");
     if (answer == activeAnswer) {
       activeAnswer = undefined;
