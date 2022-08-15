@@ -150,16 +150,18 @@ function eclipticOrientation(day) {
  * @param {number} day - Time in Julian days relative to J2000 (that is
  *     Julian day - 2451545.0).  Use dayOfDate() to convert from Date.
  *
- * @return {Array} - [xAxis, yAxis, zAxis, e, a, b, ea, ma],
+ * @return {Array} - [xAxis, yAxis, zAxis, e, a, b, ea, ma, madot],
  *     xAxis is unit vector [x,y,z] in direction of perihelion,
  *     yAxis is unit vector [x,y,z] in direction of normal to xAxis, zAxis,
  *     zAxis is unit vector [x,y,z] normal to orbital plane,
  *     e is eccentricity, a is semi-major axis (AU), b is semi-minor axis (AU),
- *     ea is ecentric anomaly (rad), and ma is mean anomaly (rad).
+ *     ea is eccentric anomaly (rad), ma is mean anomaly (rad), and
+ *     madot is rate of change of mean anomaly (rad/day)
  *     The planet orbits counterclockwise viewed from the direction of zAxis
  *     (that is, according to the right hand rule), and the three axes form
  *     a right-handed orthonormal basis.  Note that the direction of the
  *     ascending node is [-zAxis[1], zAxis[0], 0].
+ *     The period of the planet in days is 2*pi/madot.
  */
 function orbitParams(planet, day) {
   day = parseFloat(day);
@@ -445,9 +447,13 @@ class SolarSystem {
     const [values, rates, aux] = this.params[planet];
     let [a, e, incl, mlon, plon, nlon] = values.map((x, i) => x + rates[i]*t);
     let ma = mlon - plon  // mean anomaly
+    let madot = rates[3];  // do not include -rates[4] because ma is measured
+                           // from perihelion and want relative to fixed value
     if (aux !== undefined) {  // outer planet correction to ma for Model2
       const ft = aux[3]*t;
-      ma += aux[0]*t*t + aux[1]*cos(ft) + aux[2]*sin(ft);
+      const [cft, sft, a0t] = [cos(ft), sin(ft), aux[0]*t];
+      ma += a0t*t + aux[1]*cft + aux[2]*sft;
+      madot += 2*a0t + aux[3]*(aux[2]*cft - aux[1]*sft);
     }
     // ee = eccentric anomaly, compute from mean anomaly by Newton iteration
     let ee = ma + e*sin(ma + e*sin(ma));  // initial guess
@@ -470,7 +476,7 @@ class SolarSystem {
     let zaxis = [xaxis[1]*yaxis[2] - yaxis[1]*xaxis[2],
                  xaxis[2]*yaxis[0] - yaxis[2]*xaxis[0],
                  xaxis[0]*yaxis[1] - yaxis[0]*xaxis[1]];
-    return [xaxis, yaxis, zaxis, e, a, a*sqrt(1-e*e), ee, ma];
+    return [xaxis, yaxis, zaxis, e, a, a*sqrt(1-e*e), ee, ma, madot/36525.];
   }
 
   earthInclination(day) {

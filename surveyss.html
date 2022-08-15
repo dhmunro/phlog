@@ -2109,8 +2109,34 @@
     document.querySelector("#main-sidebar ul li.usage").click();
   }
 
-</script>
+  /* https://stackoverflow.com/a/68146412  how to create and download csv data
+   * data = [[row1col1, row1col2, ...], [row2col1, row2col2, ...], ...]
+   */
+  function arrayToCsv(data) {
+    return data.map(
+      row => row
+        .map(String)  // convert every value to String
+        .map(v => v.replaceAll('"', '""'))  // escape double quotes
+        .map(v => `"${v}"`)  // quote it
+        .join(',')  // comma-separated
+    ).join('\r\n');  // rows starting on new lines
+  }
 
+  function downloadBlob(content, filename, contentType) {
+    // Create a blob holding the content
+    let blob = new Blob([content], { type: contentType });
+    let pom = document.createElement('a');  // Create a link to download it
+    pom.setAttribute("href", URL.createObjectURL(blob));
+    pom.setAttribute("download", filename);
+    pom.click();
+  }
+
+  // In chrome, this is immediate, with no dialog.
+  function downloadAsCsv(data, filename="data.csv") {
+    downloadBlob(arrayToCsv(data), filename, "text/csv;charset=utf-8;");
+  }
+
+</script>
 
 </body>
 </html>

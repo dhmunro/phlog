@@ -790,7 +790,7 @@ class OrbitView {
       rect => buttonBox(rect, width/2 - 150 - gap, -height/2 + gap, 150, 28,
                         originCycler));
     this.originText = this.svg.append("text").call(
-      t => buttonText(t, width/2 - 82, -height/2 + gap + 21, "heliocentric", 20,
+      t => buttonText(t, width/2 - 82, -height/2 + gap + 20, "heliocentric", 20,
                       originCycler));
     this.currentOrigin = "heliocentric";
 
@@ -824,8 +824,9 @@ class OrbitView {
         .style("pointer-events", "none")
         .attr("transform", `scale(${scale}) translate(0, 0)`);
     this.getOrbit = (p, i, t0) => {
-      const period = [87.969257, 224.700799, 686.967971, 4332.820129,
-                      10755.698644, 365.256355];  // J2000 sidereal years (days)
+      // Periods come from orbitParams near year 2000.
+      const period = [87.969, 224.701, 686.980, 4332.817,
+                      10755.884, 365.25637];  // J2000 sidereal years (days)
       let d3p = d3.path();
       let dt = period[i] * 0.01;
       let t = t0;
@@ -1701,8 +1702,6 @@ class MarsYear {
      * make 732 points, but with the two extra points in the first and
      * last intervals, the total comes to 736.
      */
-    const atan2 = Math.atan2;
-    const twoPI = 2 * Math.PI;
     const nt = 736;
     let time = new Array(nt);
     time[0] = 0;
@@ -2141,7 +2140,7 @@ class SurveyOrbits {
       .attr("viewBox", [-width/2, -height/2, width, height])
       .style("display", "block")
       .style("margin", "20px")  // padding does not work for SVG?
-      .style("background-color", "#bbb")
+      .style("background-color", "#aaa")
       .attr("text-anchor", "middle")
       .attr("font-family", "'Merriweather Sans', sans-serif")
       .attr("font-weight", "bold")
@@ -2969,7 +2968,7 @@ class Inclination {
       .attr("viewBox", [-width/2, -height/2, width, height])
       .style("display", "block")
       .style("margin", "20px")  // padding does not work for SVG?
-      .style("background-color", "#bbb")
+      .style("background-color", "#aaa")
       .attr("text-anchor", "middle")
       .attr("font-family", "'Merriweather Sans', sans-serif")
       .attr("font-weight", "bold")
@@ -3376,7 +3375,7 @@ class TwoLaws {
       .attr("viewBox", [-width/2, -height/2, width, height])
       .style("display", "block")
       .style("margin", "20px")  // padding does not work for SVG?
-      .style("background-color", "#aaa")
+      .style("background-color", "#ddd")
       .attr("text-anchor", "middle")
       .attr("font-family", "'Merriweather Sans', sans-serif")
       .attr("font-weight", "bold")
@@ -4004,7 +4003,7 @@ class TwoLaws {
   autoSolve() {
     if (!this.incline.ready) return;
     let [[xx, xy, xz], yAxis, [zx, zy, zz], e, a, b] =
-        orbitParams(this.useMars? "mars" : "earth", this.incline.t0);
+        orbitParams(this.useMars? "mars" : "earth", this.incline.tStart+3655);
     a *= this.useMars? this.mscale : this.escale;
     // [-zy, zx, 0] is direction of ascending node (relative to J2000 plane)
     // Need to rotate to system with z-axis along zAxis, which fixes
@@ -4031,6 +4030,8 @@ class TwoLaws {
 class ThirdLaw {
   static #width = 750;
   static #height = ThirdLaw.#width;
+  static #rOuter = ThirdLaw.#width * 0.5 - 20;
+  static #rInner = ThirdLaw.#rOuter * 0.71;
 
   constructor(d3ParentL, d3ParentR, incline) {
     let [width, height] = [ThirdLaw.#width, ThirdLaw.#height];
@@ -4042,7 +4043,7 @@ class ThirdLaw {
       .attr("viewBox", [-width/2, -height/2, width, height])
       .style("display", "block")
       .style("margin", "20px")  // padding does not work for SVG?
-      .style("background-color", "#aaa")
+      .style("background-color", "#fff")
       .attr("text-anchor", "middle")
       .attr("font-family", "'Merriweather Sans', sans-serif")
       .attr("font-weight", "bold")
@@ -4057,7 +4058,7 @@ class ThirdLaw {
       .attr("viewBox", [-width/2, -height/2, width, height])
       .style("display", "block")
       .style("margin", "20px")  // padding does not work for SVG?
-      .style("background-color", "#aaa")
+      .style("background-color", "#ddd")
       .attr("text-anchor", "middle")
       .attr("font-family", "'Merriweather Sans', sans-serif")
       .attr("font-weight", "bold")
@@ -4081,14 +4082,277 @@ class ThirdLaw {
     // Scale is 1 AU = width/3.6, same as zoomLevel=0 in OrbitView.
     const AU = width / 3.6;
     this.AU = AU;
+
+    let [rInner, rOuter] = [ThirdLaw.#rInner, ThirdLaw.#rOuter];
+
+    // night sky ring
+    let nightSky = this.svgl.append("g").call(
+      g => {
+        appendCircle(g, rInner, "#bbb", 0);
+        appendCircle(g, 0.5*(rOuter + rInner), "#000", rOuter - rInner);
+      });
+
+    // Planet legend
+    this.svgl.append("g").call(
+      g => {
+        let xdots = -30;
+        let ytop = 0.40 * rInner;
+        this.tickIndicators = {};
+        g.append("rect")
+          .attr("x", xdots - 10)
+          .attr("y", ytop)
+          .attr("height", 110)
+          .attr("width", 20)
+          .attr("rx", 5)
+          .style("fill", "#000")
+          .style("stroke", "none");
+        ["mercury", "venus", "mars", "jupiter", "saturn"].forEach(
+          (p, i) => {
+            let planet = p[0].toUpperCase() + p.substring(1);
+            appendCircle(g, 4, "#0000", 12, xdots, ytop + 15 + 20*i)
+              .attr("fill", this.clock.planetColors[p])
+              .style("cursor", "pointer")
+              .on("click", () => this.setPlanet(p));
+            this.tickIndicators[p] = g.append("rect")
+              .attr("stroke", "none")
+              .attr("fill", "#bbb")
+              .attr("x", xdots + 11).attr("y", ytop + 15 + 20*i - 8)
+              .attr("width", 67).attr("height", 16);
+            appendText(g, 14, "", true, xdots + 15, ytop + 20 + 20*i, planet)
+              .attr("text-anchor", "start")
+              .on("click", () => this.setPlanet(p));
+          });
+      });
+
+    // Orbit parameter controls
+    appendText(this.svgl, 20, "#000", false, -20, -0.85*rInner, "error: ")
+      .attr("text-anchor", "end");
+    this.errlText = appendText(this.svgl, 20, "#fdf8e0", false,
+                               -10, -0.85*rInner)
+      .attr("text-anchor", "start");
+    let top = -0.68 * rInner;
+    this.paramTop = top - 19;  // +25*param
+    this.paramLeft = -110;  // width 132, +36 for param>2 (left -36)
+    this.currentRect = this.svgl.append("rect").attr("stroke", "none")
+      .attr("fill", "#fff").attr("width", 168).attr("height", 25)
+      .attr("x", -146).attr("y", this.paramTop);
+    appendText(this.svgl, 20, "#000", true, 20, top, "period (yr): ")
+      .attr("text-anchor", "end").on("click", () => this.setParam(0));
+    this.periodText = appendText(this.svgl, 20, "#fdf8e0", false, 30, top)
+      .attr("text-anchor", "start");
+    appendText(this.svgl, 20, "#000", true, 20, top+25, "a (AU): ")
+      .attr("text-anchor", "end").on("click", () => this.setParam(1));
+    this.semiText = appendText(this.svgl, 20, "#fdf8e0", false, 30, top+25)
+      .attr("text-anchor", "start");
+    appendText(this.svgl, 20, "#000", true, 20, top+50, "eccentricity: ")
+      .attr("text-anchor", "end").on("click", () => this.setParam(2));
+    this.eccText = appendText(this.svgl, 20, "#fdf8e0", false, 30, top+50)
+      .attr("text-anchor", "start");
+    appendText(this.svgl, 20, "#000", true, 20, top+75, "perihelion lon: ")
+      .attr("text-anchor", "end").on("click", () => this.setParam(3));
+    this.periText = appendText(this.svgl, 20, "#fdf8e0", false, 30, top+75)
+      .attr("text-anchor", "start");
+    appendText(this.svgl, 20, "#000", true, 20, top+100, "inclination: ")
+      .attr("text-anchor", "end").on("click", () => this.setParam(4));
+    this.inclText = appendText(this.svgl, 20, "#fdf8e0", false, 30, top+100)
+      .attr("text-anchor", "start");
+    appendText(this.svgl, 20, "#000", true, 20, top+125, "ascending node: ")
+      .attr("text-anchor", "end").on("click", () => this.setParam(5));
+    this.anodeText = appendText(this.svgl, 20, "#fdf8e0", false, 30, top+125)
+      .attr("text-anchor", "start");
+    this.currentParam = 0;
+
+    // Model curve
+    this.modelCurve = this.svgl.append("path")
+      .attr("pointer-events", "none")
+      .attr("fill", "none")
+      .attr("stroke-width", 2);
+
+    // Data points
+    this.dataGroup = this.svgl.append("g");
+
+    // Begin with Mars
+    this.currentPlanet = "mars";
+    this.tickIndicators.mars.attr("fill", "#fff");
   }
 
   activate(on) {
-    if (on) {
-    }
+    if (!on || !this.incline.ready) return;
+
+    this.tStart = this.incline.tStart;
+
+    const twoPI = 2 * Math.PI;
+    const tStart = this.tStart;
+    const planets = ["mercury", "venus", "mars", "jupiter", "saturn", "earth"];
+    this.windows = [366, 731, 731, 1097, 1828, 366];  // 1, 2, 2, 3, 5 years
+    this.orbits = this.windows.map(
+      (dt, ip) => {
+        let orbit = orbitParams(planets[ip], tStart + 0.5*dt);
+        orbit[7] -= orbit[8]*0.5*dt;  // correct ma to tStart
+        return orbit;
+      });
+    this.modelTimes = this.windows.slice(0, -1).map(
+      tDelta => {
+        let [t, dt] = [0, tDelta / 250];
+        return d3.range(251).map(i => i * tDelta / 250);
+      });
+    const [rInner, rOuter] = [ThirdLaw.#rInner, ThirdLaw.#rOuter];
+    this.xytEphem = this.modelTimes.map(
+      (times, ip) => {
+        let xyt = times.map(
+          t => {
+            let [c, s, lat] = directionOf(planets[ip], tStart + t);
+            let drdlat = 0.5*(rOuter - rInner)/9;  // 9 degrees lat full scale
+            let r = 0.5*(rOuter + rInner) + drdlat * lat * 180/Math.PI;
+            let [c0, s0] = directionOf("sun", tStart + t);
+            return [r*c, r*s, t, c*c0+s*s0<0.965925826289, c, s, lat];
+            // [xeph, yeph, days, isVisible, c, s, lat]
+            // isVisible means more than 15 degrees from Sun
+          }).filter(d => d[3]);
+        return d3.range(10).map(i => xyt[Math.floor(i/9.0 * (xyt.length-1))]);
+      });
+
+    this.setPlanet(this.currentPlanet, false);
   }
 
-  setPlanet(planet) {
+  setParam(i) {
+    this.currentParam = i;
+    this.currentRect.attr("y", this.paramTop + 25*i);
+  }
+
+  setPlanet(planet, noForce=true) {
+    let oldPlanet = this.currentPlanet;
+    noForce = noForce && planet == oldPlanet;
+    if (!this.incline.ready || !this.tickIndicators[planet] || noForce) return;
+    this.currentPlanet = planet;
+    if (this.tickIndicators[oldPlanet]) {
+      this.tickIndicators[oldPlanet].attr("fill", "#bbb");
+    }
+    this.tickIndicators[planet].attr("fill", "#fff");
+    const planets = ["mercury", "venus", "mars", "jupiter", "saturn", "earth"];
+    const ip = planets.indexOf(planet);
+    this.currentOrbit = [...this.orbits[ip]];
+    this.setParam(0);
+    this.drawModel();
+    this.drawEphem();
+  }
+
+  drawEphem() {
+    const planet = this.currentPlanet;
+    const ip = ["mercury", "venus", "mars", "jupiter",
+                "saturn"].indexOf(planet);
+    this.dataGroup.selectAll("circle").data(this.xytEphem[ip])
+      .join("circle")
+      .attr("pointer-events", "none")
+      .attr("stroke", "none")
+      .attr("fill", this.clock.planetColors[planet])
+      .attr("r", 4)
+      .attr("cx", d => d[0]).attr("cy", d => -d[1]);
+  }
+
+  drawModel() {
+    const planet = this.currentPlanet;
+    const orbit = this.currentOrbit;
+    const tStart = this.tStart;
+    const ip = ["mercury", "venus", "mars", "jupiter",
+                "saturn"].indexOf(planet);
+    const times = this.modelTimes[ip];
+    let d3p = d3.path();
+    let [x, y] = this.xyModel(planet, times[0], orbit);
+    d3p.moveTo(x, -y);
+    times.slice(1).forEach(
+      t => {
+        [x, y] = this.xyModel(planet, t);
+        d3p.lineTo(x, -y);
+      });
+    // let times = d3.range(0, 7310, 10);
+    // let xgen = d => this.x(d[0]);
+    // let dgen = d => d[2];
+    // this.lineGenerator = d3.line()
+    //   .x(xgen)
+    //   .y(d => this.y(d[1]))
+    //   .defined(dgen)
+    //   .curve(d3.curveNatural);  // .curve(d3.curveCatmullRom);
+    // Natural spline has continuous second derivative (C2).
+    // Catmull Rom only C1, each interval based on surrounding two only.
+    // .curve(d3.curveCatmullRom);
+    // this.linePath.attr("d", this.lineGenerator(this.revT))
+    this.modelCurve.attr("stroke", this.clock.planetColors[planet])
+      .attr("d", d3p);
+
+    let [rInner, rOuter] = [ThirdLaw.#rInner, ThirdLaw.#rOuter];
+    let drdlat = 0.5*(rOuter - rInner) / 9;
+    let rbar = 0.5*(rOuter + rInner);
+    const xytEphem = this.xytEphem[ip];
+    this.xytModel = xytEphem.map(
+      ([xeph, yeph, t, isvis, ceph, seph, leph]) => {
+        let [c, s, lat] = this.directionModel(planet, t);
+        let r = rbar + drdlat * lat * 180/Math.PI;
+        let err2 = Math.atan2(c*seph-s*ceph, c*ceph+s*seph)**2
+        err2 += (lat - leph)**2;
+        return [r*c, r*s, t, err2];
+      });
+    let err2 = this.xytModel.reduce((p, [x, y, t, e]) => (e > p)? e : p, 0);
+    this.errlText.text(`${(Math.sqrt(err2)*180/Math.PI).toFixed(4)}°`);
+
+    const [atan2, sqrt] = [Math.atan2, Math.sqrt];
+    let rad2deg = 180 / Math.PI;
+    let [[xx, xy, xz], [yx, yy, yz], [zx, zy, zz], e, a, b, ea, ma, madot] =
+        this.currentOrbit;
+    let zr = sqrt(zx**2 + zy**2);
+    let [mx, my] = (zr > 1.0e-6)? [zx/zr, zy/zr] : [1, 0];
+    let [nx, ny] = [-my, mx];
+    let [ax, ay, az] = [zz*mx, zz*my, -zr];
+    // p = perihelion direction = xAxis
+    // (x', y') = (p.(n n.x + a m.x), p.(n n.y + a m.y))
+    let [pn, pa] = [xx*nx + xy*ny, xx*ax + xy*ay + xz*az];
+    let pomega = atan2(pn*ny + pa*my, pn*nx + pa*mx) * rad2deg;
+    if (pomega < 0) pomega += 360;
+    let anode = atan2(zx, -zy) * rad2deg;
+    if (anode < 0) anode += 360;
+    this.periodText.text(`${(2*Math.PI/madot / 365.25636).toFixed(4)}`);
+    this.semiText.text(`${a.toFixed(5)}`);
+    this.eccText.text(`${e.toFixed(5)}`);
+    this.periText.text(`${pomega.toFixed(4)}°`);
+    this.inclText.text(`${(atan2(zr, zz) * rad2deg).toFixed(4)}°`);
+    this.anodeText.text(`${anode.toFixed(4)}°`);
+  }
+
+  xyModel(planet, time, orbit) {
+    let [c, s, lat] = this.directionModel(planet, time, orbit);
+    let [rInner, rOuter] = [ThirdLaw.#rInner, ThirdLaw.#rOuter];
+    let drdlat = 0.5*(rOuter - rInner) / 9;  // 9 degrees lat full scale
+    let r = 0.5*(rOuter + rInner) + drdlat * lat * 180/Math.PI;
+    return [r*c, r*s];
+  }
+
+  directionModel(planet, time, orbit) {
+    let [x, y, z] = this.xyzModel(planet, time, orbit);
+    let [xe, ye, ze] = this.xyzModel("earth", time);
+    [x, y, z] = [x - xe, y - ye, z - ze];
+    let r = Math.sqrt(x**2 + y**2);
+    return [x/r, y/r, Math.atan2(z, r)];
+  }
+
+  xyzModel(planet, time, orbit) {
+    const [cos, sin, sqrt, abs] = [Math.cos, Math.sin, Math.sqrt, Math.abs];
+    let ip = ["mercury", "venus", "mars", "jupiter", "saturn",
+              "earth"].indexOf(planet);
+    let [[xx, xy, xz], [yx, yy, yz], z, e, a, b, ea, ma, madot] =
+        orbit? orbit : this.orbits[ip];
+    // ma is mean anomaly at this.tStart, so at time mean anomaly is:
+    ma += madot*time;
+    let ee = ma + e*sin(ma + e*sin(ma));  // initial guess
+    let [cee, see] = [cos(ee), sin(ee)]
+    let dma = ma - (ee - e*see);  // find ee so this equals 0.
+    while (abs(dma) > 1.e-9) {
+      ee += dma / (1. - e*cee);
+      [cee, see] = [cos(ee), sin(ee)];
+      dma = ma - (ee - e*see);
+    }
+    let x = a * (cee - e);
+    let y = b * see;
+    return [x*xx + y*yx, x*xy + y*yy, x*xz + y*yz];
   }
 }
 
