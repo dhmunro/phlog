@@ -4092,6 +4092,13 @@ class ThirdLaw {
         appendCircle(g, 0.5*(rOuter + rInner), "#000", rOuter - rInner);
       });
 
+    // Date text
+    this.startDate = appendText(this.svgl, 20, "", false, -30, 50)
+      .attr("text-anchor", "end");
+    appendText(this.svgl, 20, "", false, 0, 50, "to");
+    this.endDate = appendText(this.svgl, 20, "", false, 30, 50)
+      .attr("text-anchor", "start");
+
     // Planet legend
     this.svgl.append("g").call(
       g => {
@@ -4216,7 +4223,13 @@ class ThirdLaw {
         return d3.range(10).map(i => xyt[Math.floor(i/9.0 * (xyt.length-1))]);
       });
 
+    this.startDate.text(this.dateText(this.tStart));
     this.setPlanet(this.currentPlanet, false);
+  }
+
+  dateText(day) {
+    let ymd = `${dateOfDay(day).getUTCFullYear()}`;
+    return ymd + ` ${this.clock.getDateText(day)}`;
   }
 
   setParam(i) {
@@ -4268,6 +4281,7 @@ class ThirdLaw {
     this.currentPlanet = planet;
     const planets = ["mercury", "venus", "mars", "jupiter", "saturn", "earth"];
     const ip = planets.indexOf(planet);
+    this.endDate.text(this.dateText(this.tStart + this.windows[ip]));
     this.tickIndicator.attr("y", this.tickTop + 25*ip);
     this.currentOrbit = [...this.orbits[ip]];
     this.setParam(0);
