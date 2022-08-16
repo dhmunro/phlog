@@ -4096,33 +4096,34 @@ class ThirdLaw {
     this.svgl.append("g").call(
       g => {
         let xdots = -30;
-        let ytop = 0.40 * rInner;
-        this.tickIndicators = {};
+        let ytop = 0.30 * rInner;
         g.append("rect")
-          .attr("x", xdots - 10)
+          .attr("x", xdots - 12)
           .attr("y", ytop)
-          .attr("height", 110)
-          .attr("width", 20)
+          .attr("height", 142)
+          .attr("width", 23)
           .attr("rx", 5)
           .style("fill", "#000")
           .style("stroke", "none");
+        this.tickTop = ytop + 9;
+        this.tickIndicator = g.append("rect")
+          .attr("stroke", "none").attr("fill", "#fff")
+          .attr("x", xdots + 12).attr("y", this.tickTop)
+          .attr("width", 90).attr("height", 25);
         ["mercury", "venus", "mars", "jupiter", "saturn"].forEach(
           (p, i) => {
             let planet = p[0].toUpperCase() + p.substring(1);
-            appendCircle(g, 4, "#0000", 12, xdots, ytop + 15 + 20*i)
+            appendCircle(g, 5, "#0000", 12, xdots, ytop + 20 + 25*i)
               .attr("fill", this.clock.planetColors[p])
               .style("cursor", "pointer")
               .on("click", () => this.setPlanet(p));
-            this.tickIndicators[p] = g.append("rect")
-              .attr("stroke", "none")
-              .attr("fill", "#bbb")
-              .attr("x", xdots + 11).attr("y", ytop + 15 + 20*i - 8)
-              .attr("width", 67).attr("height", 16);
-            appendText(g, 14, "", true, xdots + 15, ytop + 20 + 20*i, planet)
+            appendText(g, 20, "", true, xdots + 16, ytop + 28 + 25*i, planet)
               .attr("text-anchor", "start")
               .on("click", () => this.setPlanet(p));
           });
       });
+    this.planetNames = {mercury: true, venus: true, mars: true,
+                        jupiter: true, saturn: true};
 
     // Orbit parameter controls
     appendText(this.svgl, 20, "#000", false, -20, -0.85*rInner, "error: ")
@@ -4161,6 +4162,9 @@ class ThirdLaw {
     this.anodeText = appendText(this.svgl, 20, "#fdf8e0", false, 30, top+125)
       .attr("text-anchor", "start");
     this.currentParam = 0;
+    this.adjustParam = new Slider(this.svgl, [-0.75*rInner, 0.75*rInner],
+                                  -10, -1, 1, () => this.adjuster());
+    this.adjustLimit = [0.001, 0.02, 0.2, 20, 0.5, 20];
 
     // Model curve
     this.modelCurve = this.svgl.append("path")
@@ -4169,11 +4173,11 @@ class ThirdLaw {
       .attr("stroke-width", 2);
 
     // Data points
+    this.adjustGroup = this.svgl.append("g");
     this.dataGroup = this.svgl.append("g");
 
     // Begin with Mars
     this.currentPlanet = "mars";
-    this.tickIndicators.mars.attr("fill", "#fff");
   }
 
   activate(on) {
@@ -4218,19 +4222,53 @@ class ThirdLaw {
   setParam(i) {
     this.currentParam = i;
     this.currentRect.attr("y", this.paramTop + 25*i);
+    this.adjustParam.sSet(0);
   }
 
-  setPlanet(planet, noForce=true) {
-    let oldPlanet = this.currentPlanet;
-    noForce = noForce && planet == oldPlanet;
-    if (!this.incline.ready || !this.tickIndicators[planet] || noForce) return;
-    this.currentPlanet = planet;
-    if (this.tickIndicators[oldPlanet]) {
-      this.tickIndicators[oldPlanet].attr("fill", "#bbb");
+  adjuster() {
+    let s = this.adjustParam.s;
+    let iParam = this.currentParam;
+    const planet = this.currentPlanet;
+    const ip = ["mercury", "venus", "mars", "jupiter",
+                "saturn"].indexOf(planet);
+    let [xax, yax, zax, e, a, b, ea, ma, madot] = this.orbits[ip];
+    let ds;
+    if (iParam == 0) {
+      // produce about +-0.3 degree full scale change in error
+      ds = [0.0006, 0.0003, 0.001, 0.003, 0.006][ip] * s;
+      this.currentOrbit[8] = madot / (1 + ds);
+    } else if (iParam == 1) {
+      ds = [0.012, 0.004, 0.004, 0.03, 0.05][ip] * s;
+      this.currentOrbit[4] = a * (1 + ds);
+      this.currentOrbit[5] = b * (1 + ds);
+    } else if (iParam == 2) {
+      ds = [0.03, 0.8, 0.014, 0.06, 0.05][ip] * s;
+      this.currentOrbit[3] = e * (1 + ds);
+    } else {
+      let [pomega0, incl0, anode0] = vec2parm(xax, yax, zax);
+      let [pomega, incl, anode] = vec2parm(...this.currentOrbit.slice(0, 3));
+      if (iParam == 3) {
+        ds = [0.9, 0.22, 0.13, 0.3, 0.3][ip] * s;
+        pomega = pomega0 + ds;
+      } else if (iParam == 4) {
+        ds = [0.6, 0.16, 0.25, 0.3, 0.3][ip] * s;
+        incl = incl0 + ds;
+      } else if (iParam == 5) {
+        ds = [6, 6.5, 5, 10.3, 8][ip] * s;
+        anode = anode0 + ds;
+      }
+      this.currentOrbit.splice(0, 3, ...parm2vec(pomega, incl, anode));
     }
-    this.tickIndicators[planet].attr("fill", "#fff");
+    this.drawModel();
+  }
+
+  setPlanet(planet) {
+    let oldPlanet = this.currentPlanet;
+    if (!this.incline.ready || !this.planetNames[planet]) return;
+    this.currentPlanet = planet;
     const planets = ["mercury", "venus", "mars", "jupiter", "saturn", "earth"];
     const ip = planets.indexOf(planet);
+    this.tickIndicator.attr("y", this.tickTop + 25*ip);
     this.currentOrbit = [...this.orbits[ip]];
     this.setParam(0);
     this.drawModel();
@@ -4243,7 +4281,6 @@ class ThirdLaw {
                 "saturn"].indexOf(planet);
     this.dataGroup.selectAll("circle").data(this.xytEphem[ip])
       .join("circle")
-      .attr("pointer-events", "none")
       .attr("stroke", "none")
       .attr("fill", this.clock.planetColors[planet])
       .attr("r", 4)
@@ -4262,7 +4299,7 @@ class ThirdLaw {
     d3p.moveTo(x, -y);
     times.slice(1).forEach(
       t => {
-        [x, y] = this.xyModel(planet, t);
+        [x, y] = this.xyModel(planet, t, orbit);
         d3p.lineTo(x, -y);
       });
     // let times = d3.range(0, 7310, 10);
@@ -4286,35 +4323,29 @@ class ThirdLaw {
     const xytEphem = this.xytEphem[ip];
     this.xytModel = xytEphem.map(
       ([xeph, yeph, t, isvis, ceph, seph, leph]) => {
-        let [c, s, lat] = this.directionModel(planet, t);
+        let [c, s, lat] = this.directionModel(planet, t, orbit);
         let r = rbar + drdlat * lat * 180/Math.PI;
         let err2 = Math.atan2(c*seph-s*ceph, c*ceph+s*seph)**2
         err2 += (lat - leph)**2;
-        return [r*c, r*s, t, err2];
+        return [xeph + 20*(r*c-xeph), yeph - 20*(r*s-yeph), t, err2];
       });
     let err2 = this.xytModel.reduce((p, [x, y, t, e]) => (e > p)? e : p, 0);
     this.errlText.text(`${(Math.sqrt(err2)*180/Math.PI).toFixed(4)}°`);
+    this.adjustGroup.selectAll("circle").data(this.xytModel)
+      .join("circle")
+      .attr("stroke", "none")
+      .attr("fill", this.clock.planetColors[planet])
+      .attr("opacity", 0.6)
+      .attr("r", 4)
+      .attr("cx", d => d[0]).attr("cy", d => -d[1]);
 
-    const [atan2, sqrt] = [Math.atan2, Math.sqrt];
-    let rad2deg = 180 / Math.PI;
-    let [[xx, xy, xz], [yx, yy, yz], [zx, zy, zz], e, a, b, ea, ma, madot] =
-        this.currentOrbit;
-    let zr = sqrt(zx**2 + zy**2);
-    let [mx, my] = (zr > 1.0e-6)? [zx/zr, zy/zr] : [1, 0];
-    let [nx, ny] = [-my, mx];
-    let [ax, ay, az] = [zz*mx, zz*my, -zr];
-    // p = perihelion direction = xAxis
-    // (x', y') = (p.(n n.x + a m.x), p.(n n.y + a m.y))
-    let [pn, pa] = [xx*nx + xy*ny, xx*ax + xy*ay + xz*az];
-    let pomega = atan2(pn*ny + pa*my, pn*nx + pa*mx) * rad2deg;
-    if (pomega < 0) pomega += 360;
-    let anode = atan2(zx, -zy) * rad2deg;
-    if (anode < 0) anode += 360;
-    this.periodText.text(`${(2*Math.PI/madot / 365.25636).toFixed(4)}`);
+    let [xax, yax, zax, e, a, b, ea, ma, madot] = this.currentOrbit;
+    let [pomega, incl, anode] = vec2parm(xax, yax, zax);
+    this.periodText.text(`${(2*Math.PI/madot / 365.25636).toFixed(5)}`);
     this.semiText.text(`${a.toFixed(5)}`);
     this.eccText.text(`${e.toFixed(5)}`);
     this.periText.text(`${pomega.toFixed(4)}°`);
-    this.inclText.text(`${(atan2(zr, zz) * rad2deg).toFixed(4)}°`);
+    this.inclText.text(`${incl.toFixed(4)}°`);
     this.anodeText.text(`${anode.toFixed(4)}°`);
   }
 
@@ -4354,6 +4385,45 @@ class ThirdLaw {
     let y = b * see;
     return [x*xx + y*yx, x*xy + y*yy, x*xz + y*yz];
   }
+}
+
+
+function vec2parm([xx, xy, xz], [yx, yy, yz], [zx, zy, zz]) {
+  const [atan2, sqrt] = [Math.atan2, Math.sqrt];
+  const rad2deg = 180 / Math.PI;
+  let zr = sqrt(zx**2 + zy**2);
+  let [mx, my] = (zr > 1.0e-6)? [zx/zr, zy/zr] : [1, 0];
+  let [nx, ny] = [-my, mx];
+  let [ax, ay, az] = [zz*mx, zz*my, -zr];
+  // p = perihelion direction = xAxis
+  // (x', y') = (p.(n n.x + a m.x), p.(n n.y + a m.y))
+  let [pn, pa] = [xx*nx + xy*ny, xx*ax + xy*ay + xz*az];
+  let pomega = atan2(pn*ny + pa*my, pn*nx + pa*mx) * rad2deg;
+  if (pomega < 0) pomega += 360;
+  let anode = atan2(zx, -zy) * rad2deg;
+  if (anode < 0) anode += 360;
+  let incl = atan2(zr, zz) * rad2deg;
+  return [pomega, incl, anode];
+}
+
+
+function parm2vec(pomega, incl, anode) {
+  const [cos, sin] = [Math.cos, Math.sin];
+  const deg2rad = Math.PI / 180;
+  let [cw, sw] = [cos(pomega * deg2rad), sin(pomega * deg2rad)];
+  let [ci, si] = [cos(incl * deg2rad), sin(incl * deg2rad)];
+  let [cn, sn] = [cos(anode * deg2rad), sin(anode * deg2rad)];
+  let [zx, zy, zz] = [sn*si, -cn*si, ci];
+  // y' axis is [cn, sn, 0] (ascending node), so x' axis is y' cross z
+  let [ax, ay, az] = [sn*ci, -cn*ci, -si];
+  // pomega measured from where [1,0,0] is carried when [0,0,1]
+  // [1,0,0] = sn*[sn,-cn,0] + cn*[cn,sn,0]
+  // so [sn, cn] are (x', y') coordinates of x-direction for pomega
+  // and y-direction for pomega is [-cn, sn]
+  let [xx, xy, xz] = [sn*cw - cn*sw, cn*cw + sn*sw, 0];  // in (x', y')
+  [xx, xy, xz] = [xx*ax + xy*cn, xx*ay + xy*sn, xx*az];  // in (x, y, z)
+  let [yx, yy, yz] = [zy*xz - zz*xy, zz*xx - zx*xz, zx*xy - zy*xx];
+  return [[xx, xy, xz], [yx, yy, yz], [zx, zy, zz]];
 }
 
 
