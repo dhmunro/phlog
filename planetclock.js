@@ -4058,26 +4058,23 @@ class ThirdLaw {
       .attr("viewBox", [-width/2, -height/2, width, height])
       .style("display", "block")
       .style("margin", "20px")  // padding does not work for SVG?
-      .style("background-color", "#ddd")
+      .style("background-color", "#bbb")
       .attr("text-anchor", "middle")
       .attr("font-family", "'Merriweather Sans', sans-serif")
       .attr("font-weight", "bold")
-      .attr("font-size", 12)
+      .attr("font-size", 16)
       .attr("stroke-linejoin", "round")
       .attr("stroke-linecap", "round");
 
     this.clock = clock;
     this.incline = incline;
 
-    this.svgl.append("text")
-      .attr("fill", "#000")
-      .attr("font-size", 24)
-      .text("Third Law left panel");
-
-    this.svgr.append("text")
-      .attr("fill", "#000")
-      .attr("font-size", 24)
-      .text("Third Law right panel");
+    this.planetColors = { ...this.clock.planetColors };
+    ["mercury", "venus", "earth", "mars", "jupiter", "saturn"].forEach(
+      p => {
+        let planet = p[0].toUpperCase() + p.substring(1);
+        this.planetColors[planet] = this.planetColors[p];
+      });
 
     // Scale is 1 AU = width/3.6, same as zoomLevel=0 in OrbitView.
     const AU = width / 3.6;
@@ -4121,7 +4118,7 @@ class ThirdLaw {
           (p, i) => {
             let planet = p[0].toUpperCase() + p.substring(1);
             appendCircle(g, 5, "#0000", 12, xdots, ytop + 20 + 25*i)
-              .attr("fill", this.clock.planetColors[p])
+              .attr("fill", this.planetColors[p])
               .style("cursor", "pointer")
               .on("click", () => this.setPlanet(p));
             appendText(g, 20, "", true, xdots + 16, ytop + 28 + 25*i, planet)
@@ -4144,11 +4141,11 @@ class ThirdLaw {
     this.currentRect = this.svgl.append("rect").attr("stroke", "none")
       .attr("fill", "#fff").attr("width", 168).attr("height", 25)
       .attr("x", -146).attr("y", this.paramTop);
-    appendText(this.svgl, 20, "#000", true, 20, top, "period (yr): ")
+    appendText(this.svgl, 20, "#000", true, 20, top, "period T (yr): ")
       .attr("text-anchor", "end").on("click", () => this.setParam(0));
     this.periodText = appendText(this.svgl, 20, "#fdf8e0", false, 30, top)
       .attr("text-anchor", "start");
-    appendText(this.svgl, 20, "#000", true, 20, top+25, "a (AU): ")
+    appendText(this.svgl, 20, "#000", true, 20, top+25, "semi-axis a (AU): ")
       .attr("text-anchor", "end").on("click", () => this.setParam(1));
     this.semiText = appendText(this.svgl, 20, "#fdf8e0", false, 30, top+25)
       .attr("text-anchor", "start");
@@ -4185,6 +4182,96 @@ class ThirdLaw {
 
     // Begin with Mars
     this.currentPlanet = "mars";
+
+    // =================== Right Panel ===================
+
+    let left, right, bottom;
+    [left, right, bottom, top] = [-width/2+80, width/2-80,
+                                  height/2-100, -height/2+100];
+
+    this.svgr.append("clipPath").attr("id", "third-clip")
+      .append("rect")
+      .attr("x", left).attr("width", right-left)
+      .attr("y", top).attr("height", bottom-top);
+
+    this.x = d3.scaleBand().range([left, right])
+      .domain(["Mercury", "Venus", "Earth", "Mars", "Jupiter", "Saturn"]);
+    this.y = d3.scaleLinear().range([bottom, top])
+      .domain([0.99, 1.01]);
+    this.xAxis = d3.axisBottom(this.x)
+      .ticks(6).tickSize(0).tickPadding(10).tickSizeOuter(0);
+    this.yAxis = d3.axisLeft(this.y)
+      .ticks(6).tickSize(10).tickPadding(10).tickSizeOuter(0);
+
+    this.svgr.append("line")
+      .attr("stroke", this.planetColors.earth)
+      .attr("stroke-width", 2)
+      .attr("opacity", 0.2)
+      .attr("x1", left).attr("x2", right)
+      .attr("y1", this.y(1)).attr("y2", this.y(1));
+
+    this.gxAxis = this.svgr.append("g").call(this.xAxis)
+      .style("color", "#000")
+      .attr("transform", `translate(0, ${bottom})`)
+      .attr("font-size", 16)
+      .attr("stroke-width", 2);
+    this.gyAxis = this.svgr.append("g").call(this.yAxis)
+      .style("color", "#000")
+      .attr("transform", `translate(${left}, 0)`)
+      .attr("font-size", 16)
+      .attr("stroke-width", 2);
+
+    ["mercury", "venus", "earth", "mars", "jupiter", "saturn"].forEach(
+      p => {
+        let planet = p[0].toUpperCase() + p.substring(1);
+        this.svgr.append("rect").attr("stroke", "none")
+          .attr("fill", this.planetColors[p]).attr("opacity", 0.1)
+          .attr("width", 80).attr("height", height-120)
+          .attr("x", this.x(planet)+8).attr("y", -height/2 + 90);
+      });
+
+    // Axis labels
+    appendText(this.svgr, 24, "#000", false,
+               -width/2 + 40, -height/2 + 40, "ratio")
+    appendText(this.svgr, 24, "#000", false,
+               -width/2 + 40, -height/2 + 70, "a").call(
+        t => t.append("tspan").attr("dy", -10).style("font-size", "0.7em")
+          .text("p"))
+      .call(
+        t => t.append("tspan").attr("dy", 10).text("/T"))
+      .call(
+        t => t.append("tspan").attr("dy", -10).style("font-size", "0.7em")
+          .text("2"));
+
+    this.adjustPower = new Slider(this.svgr, width/2 - 40,
+                                  [height/2-200, -height/2+200],
+                                  2.99, 3.01, () => this.adjPower());
+    appendText(this.svgr, 24, "#000", false,
+               width/2 - 40, -height/2 + 125, "power")
+    appendText(this.svgr, 24, "#000", false,
+               width/2 - 40, -height/2 + 155, "p =")
+    this.powerText = appendText(this.svgr, 24, "#fdf8e0", false,
+                                width/2 - 40, -height/2 + 185, "3.000")
+    this.currentPower = 3.0;
+
+    this.ratioLines = this.svgr.append("g")
+      .attr("clip-path", "url(#third-clip)");
+
+    this.ratioLines.selectAll("line")
+      .data(["Mercury", "Venus", "Earth", "Mars", "Jupiter", "Saturn"])
+      .join("line")
+      .attr("stroke", d => this.planetColors[d])
+      .attr("stroke-width", 3)
+      .attr("x1", d => this.x(d)+8).attr("x2", d => this.x(d)+88)
+      .attr("y1", this.y(1)).attr("y2", this.y(1));
+    this.ratioText = this.svgr.append("g");
+    this.ratioText.selectAll("text")
+      .data(["Mercury", "Venus", "Earth", "Mars", "Jupiter", "Saturn"])
+      .join("text")
+      .attr("fill", "#fdf8e0")
+      .attr("font-size", 16)
+      .attr("x", d => this.x(d)+48).attr("y", height/2 - 50)
+      .text("1.0000");
   }
 
   activate(on) {
@@ -4242,8 +4329,7 @@ class ThirdLaw {
     let s = this.adjustParam.s;
     let iParam = this.currentParam;
     const planet = this.currentPlanet;
-    const ip = ["mercury", "venus", "mars", "jupiter",
-                "saturn"].indexOf(planet);
+    const ip = this.getPlanetIndex(planet);
     let [xax, yax, zax, e, a, b, ea, ma, madot] = this.orbits[ip];
     let ds;
     if (iParam == 0) {
@@ -4273,26 +4359,26 @@ class ThirdLaw {
       this.currentOrbit.splice(0, 3, ...parm2vec(pomega, incl, anode));
     }
     this.drawModel();
+    this.drawGraph();
   }
 
   setPlanet(planet) {
     let oldPlanet = this.currentPlanet;
     if (!this.incline.ready || !this.planetNames[planet]) return;
     this.currentPlanet = planet;
-    const planets = ["mercury", "venus", "mars", "jupiter", "saturn", "earth"];
-    const ip = planets.indexOf(planet);
+    const ip = this.getPlanetIndex(planet);
     this.endDate.text(this.dateText(this.tStart + this.windows[ip]));
     this.tickIndicator.attr("y", this.tickTop + 25*ip);
     this.currentOrbit = [...this.orbits[ip]];
     this.setParam(0);
     this.drawModel();
     this.drawEphem();
+    this.drawGraph();
   }
 
   drawEphem() {
     const planet = this.currentPlanet;
-    const ip = ["mercury", "venus", "mars", "jupiter",
-                "saturn"].indexOf(planet);
+    const ip = this.getPlanetIndex(planet);
     this.dataGroup.selectAll("circle").data(this.xytEphem[ip])
       .join("circle")
       .attr("stroke", "none")
@@ -4305,8 +4391,7 @@ class ThirdLaw {
     const planet = this.currentPlanet;
     const orbit = this.currentOrbit;
     const tStart = this.tStart;
-    const ip = ["mercury", "venus", "mars", "jupiter",
-                "saturn"].indexOf(planet);
+    const ip = this.getPlanetIndex(planet);
     const times = this.modelTimes[ip];
     let d3p = d3.path();
     let [x, y] = this.xyModel(planet, times[0], orbit);
@@ -4381,8 +4466,7 @@ class ThirdLaw {
 
   xyzModel(planet, time, orbit) {
     const [cos, sin, sqrt, abs] = [Math.cos, Math.sin, Math.sqrt, Math.abs];
-    let ip = ["mercury", "venus", "mars", "jupiter", "saturn",
-              "earth"].indexOf(planet);
+    let ip = this.getPlanetIndex(planet);
     let [[xx, xy, xz], [yx, yy, yz], z, e, a, b, ea, ma, madot] =
         orbit? orbit : this.orbits[ip];
     // ma is mean anomaly at this.tStart, so at time mean anomaly is:
@@ -4398,6 +4482,50 @@ class ThirdLaw {
     let x = a * (cee - e);
     let y = b * see;
     return [x*xx + y*yx, x*xy + y*yy, x*xz + y*yz];
+  }
+
+  getPlanetIndex(planet) {
+    return ["mercury", "venus", "mars", "jupiter", "saturn",
+            "earth"].indexOf(planet);
+  }
+
+  adjPower() {
+    let p = this.adjustPower.s;
+    if (p == 3) return;
+    if (Math.abs(p - 3) < 0.0005) p = 3;
+    this.currentPower = p;
+    this.powerText.text(p.toFixed(3));
+    this.drawGraph();
+    if (p == 3) this.adjustPower.sSet(3);
+  }
+
+  drawGraph() {
+    const madot0 = 2*Math.PI / 365.25636;
+    let ratio = {};
+    ["Mercury", "Venus", "Mars", "Jupiter", "Saturn", "Earth"].forEach(
+      (p, ip) => {
+        let planet = p.toLowerCase();
+        let a, period;
+        if (ip < 5) {
+          let orbit = (planet === this.currentPlanet)?
+              this.currentOrbit : this.orbits[ip];
+          [a, period] = [orbit[4], madot0 / orbit[8]];
+        } else {
+          a = period = 1.0;
+        }
+        ratio[p] = a**this.currentPower / period**2;
+      });
+    this.ratioLines.selectAll("line")
+      .data(["Mercury", "Venus", "Earth", "Mars", "Jupiter", "Saturn"])
+      .join(enter => undefined, update => {
+        update.attr("y1", d => this.y(ratio[d]))
+          .attr("y2", d => this.y(ratio[d]));
+      }, exit => undefined);
+    this.ratioText.selectAll("text")
+      .data(["Mercury", "Venus", "Earth", "Mars", "Jupiter", "Saturn"])
+      .join(enter => undefined, update => {
+        update.text(d => ratio[d].toFixed(4));
+      }, exit => undefined);
   }
 }
 
