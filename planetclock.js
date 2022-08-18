@@ -3564,6 +3564,9 @@ class TwoLaws {
 
   activate(on) {
     if (!on) return;
+    if (this.incline.tStart !== this.clock.elapsed0) {
+      this.incline.ready = false;
+    }
     this.orbitPlot.selectAll("*").remove();
     if (!this.incline.ready) {
       this.orbitPlot.attr("display", "none");
@@ -4139,8 +4142,8 @@ class ThirdLaw {
     this.paramTop = top - 19;  // +25*param
     this.paramLeft = -110;  // width 132, +36 for param>2 (left -36)
     this.currentRect = this.svgl.append("rect").attr("stroke", "none")
-      .attr("fill", "#fff").attr("width", 168).attr("height", 25)
-      .attr("x", -146).attr("y", this.paramTop);
+      .attr("fill", "#fff").attr("width", 175).attr("height", 25)
+      .attr("x", -153).attr("y", this.paramTop);
     appendText(this.svgl, 20, "#000", true, 20, top, "period T (yr): ")
       .attr("text-anchor", "end").on("click", () => this.setParam(0));
     this.periodText = appendText(this.svgl, 20, "#fdf8e0", false, 30, top)
@@ -4275,9 +4278,12 @@ class ThirdLaw {
   }
 
   activate(on) {
-    if (!on || !this.incline.ready) return;
-
-    this.tStart = this.incline.tStart;
+    if (!on) return;
+    this.tStart = this.incline.survey.mars.elapsed0;
+    if (this.tStart === undefined) {
+      this.tStart = (this.clock.elapsed0 === undefined)?
+        this.clock.dayNow : this.clock.elapsed0;
+    }
 
     const twoPI = 2 * Math.PI;
     const tStart = this.tStart;
@@ -4364,7 +4370,7 @@ class ThirdLaw {
 
   setPlanet(planet) {
     let oldPlanet = this.currentPlanet;
-    if (!this.incline.ready || !this.planetNames[planet]) return;
+    if (!this.planetNames[planet]) return;
     this.currentPlanet = planet;
     const ip = this.getPlanetIndex(planet);
     this.endDate.text(this.dateText(this.tStart + this.windows[ip]));
