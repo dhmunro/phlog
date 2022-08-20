@@ -4280,10 +4280,7 @@ class ThirdLaw {
   activate(on) {
     if (!on) return;
     this.tStart = this.incline.survey.mars.elapsed0;
-    if (this.tStart === undefined) {
-      this.tStart = (this.clock.elapsed0 === undefined)?
-        this.clock.dayNow : this.clock.elapsed0;
-    }
+    if (this.tStart === undefined) this.tStart = this.clock.dayNow;
 
     const twoPI = 2 * Math.PI;
     const tStart = this.tStart;
