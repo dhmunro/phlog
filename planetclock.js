@@ -3118,6 +3118,7 @@ class Inclination {
     this.iNow = survey.ijNow[0] + iRef;
 
     const xym = survey.xyMars;
+    this.xymUsed = xym;
     const xye = survey.xyEarth;
     const od = survey.orbitDirections;
     const earthYear = survey.earthYear;
@@ -3564,8 +3565,9 @@ class TwoLaws {
 
   activate(on) {
     if (!on) return;
-    if (this.incline.tStart !== this.clock.elapsed0) {
-      this.incline.ready = false;
+    if (this.incline.xymUsed !== this.survey.xyMars) {
+      this.incline.activate(true);
+      this.incline.activate(false);
     }
     this.orbitPlot.selectAll("*").remove();
     if (!this.incline.ready) {
@@ -3984,6 +3986,7 @@ class TwoLaws {
       ([rModel, r, c, s, area], i) => {
         let t = (xyzt[i][3] + dt) % year;
         if (t < 0.5*year && area > 0.5) t += year;
+        else if (t > 0.5*year && area < 0.5) t -= year;
         if (y2 == 0) t -= area * year;
         return [area, t];
       });
