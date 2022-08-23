@@ -86,6 +86,18 @@
     .hidden {
         display: none;
     }
+    #main-helpicon {
+        position: absolute;
+        top: 6px;
+        left: 8px;
+        z-index: 99;
+        background: white;
+    }
+    .helpicon {
+        width: 40px;
+        height: 30px;
+        cursor: pointer;
+    }
     #main-hamburger {
         position: absolute;
         top: 10px;
@@ -332,6 +344,18 @@
          onclick="openSidebar()">
       <span></span><span></span><span></span><span></span>
     </div>
+    <div id="main-helpicon" class="helpicon hidden" onclick="usageClick(this)">
+      <svg xmlns="http://www.w3.org/2000/svg"
+           xmlns:xlink="http://www.w3.org/1999/xlink"
+           viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="42"
+                fill="none" stroke="darkslategray" stroke-width="10" />
+        <text x="53" y="80" fill="darkslategray"
+              font-family="'Merriweather Sans', sans-serif"
+              font-weight="bold" font-size="64"
+              text-anchor="middle">?</text>
+      </svg>
+    </div>
     <div class="left-wrapper">
       <div id="top-clock" class="left-panel unselectable">
         <!-- The intro will be moved into the clock svg in javascript below.
@@ -397,9 +421,9 @@
              the "event" argument is the event.  However, it's a little
              unclear how universal this is, and there is very little
              information about exactly what can go in the onclick string.
-          -->
         <li onclick="usageClick(this)" class="usage">Tips &amp; Queries</li>
         <li class="separator"></li>
+          -->
         <li onclick="clockClick(this)" class="current"
             data-id="top-clock">Planet Clock</li>
         <li onclick="earthClick(this)" data-id="earth-year">Earth Period</li>
@@ -2192,6 +2216,7 @@
                   "first-two-r": laws2, "third-law-r": law3};
 
   const hamburger = document.querySelector("#main-hamburger");
+  const helpicon = document.querySelector("#main-helpicon");
   const sidebar = document.querySelector("#main-sidebar");
   const overlay = document.querySelector("#main-overlay");
   function openSidebar() {
@@ -2278,6 +2303,7 @@
     const intro = d3.select("#intro");
     intro.style("transform", "translate(750px, -375px) scale(0.1)");
     hamburger.classList.remove("hidden");
+    helpicon.classList.remove("hidden");
     d3.timeout(
       () => {
         introCover.style("display", "none");
@@ -2287,6 +2313,7 @@
 
   function restoreIntro() {
     hamburger.classList.add("hidden");
+    helpicon.classList.add("hidden");
     const intro = d3.select("#intro");
     introCover.style("display", null);
     d3.timeout(() => intro.style("transform", "translate(0, 0)"), 10);
@@ -2352,10 +2379,18 @@
   }
 
   function usageClick(elem) {
-    hamburger.classList.add("holding");
-    sidebar.classList.remove("open");
-    overlay.classList.remove("hidden");
-    d3.timeout(() => overlay.classList.remove("faded"), 10);
+    if (hamburger.classList.contains("holding")) {
+      // Usage Overlay active - take overlay down but keep sidebar collapsed.
+      hamburger.classList.remove("holding", "open");
+      const overList = overlay.classList;
+      overList.add("faded");
+      d3.timeout(() => { overList.add("hidden"); resetHelper(); }, 500);
+    } else {
+      hamburger.classList.add("holding", "open");
+      sidebar.classList.remove("open");
+      overlay.classList.remove("hidden");
+      d3.timeout(() => overlay.classList.remove("faded"), 10);
+    }
   }
 
   function clockClick(elem) {
