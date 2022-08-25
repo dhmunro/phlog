@@ -350,7 +350,7 @@ class PlanetClock {
     appendCircle(this.svg, 4, this.planetColors.earth);  // earth at center
 
     // Animation controls
-    this.speeds = [1, 2.5, 5];
+    this.speeds = [0.6, 1.4, 3];
     let arrowr = d3.path();
     arrowr.moveTo(-10, rOuter + 20);
     arrowr.lineTo(-10, rOuter + 80);
@@ -394,6 +394,7 @@ class PlanetClock {
     if (this.moonMarker == null) {
       this.moonMarker = appendCircle(this.moonGroup, 6, "#fff")
         .attr("style", "pointer-events: none;");
+      this.speeds = [0.1, 0.3, 1];
       this.updateMoon();
     }
   }
@@ -402,6 +403,7 @@ class PlanetClock {
     if (this.moonMarker != null) {
       this.moonMarker.remove();
       this.moonMarker = null;
+      this.speeds = [0.6, 1.4, 3];
     }
   }
 
