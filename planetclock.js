@@ -351,7 +351,6 @@ class PlanetClock {
 
     // Animation controls
     this.speeds = [1, 2.5, 5];
-    let [lo, med, hi] = this.speeds;
     let arrowr = d3.path();
     arrowr.moveTo(-10, rOuter + 20);
     arrowr.lineTo(-10, rOuter + 80);
@@ -369,23 +368,23 @@ class PlanetClock {
       .attr("stroke-width", 2)
       .attr("d", arrowr)
       .attr("transform", "rotate(-35)")
-      .on("mousedown touchstart", (event, d) => this.startAnimation(false, lo))
+      .on("mousedown touchstart", (event, d) => this.startAnimation(false, 0))
       .clone(true)
       .attr("transform", "rotate(-45)")
-      .on("mousedown touchstart", (event, d) => this.startAnimation(false, med))
+      .on("mousedown touchstart", (event, d) => this.startAnimation(false, -1))
       .clone(true)
       .attr("transform", "rotate(-55)")
-      .on("mousedown touchstart", (event, d) => this.startAnimation(false, hi))
+      .on("mousedown touchstart", (event, d) => this.startAnimation(false, -2))
       .clone(true)
       .attr("d", arrowl)
       .attr("transform", "rotate(35)")
-      .on("mousedown touchstart", (event, d) => this.startAnimation(true, lo))
+      .on("mousedown touchstart", (event, d) => this.startAnimation(true, 0))
       .clone(true)
       .attr("transform", "rotate(45)")
-      .on("mousedown touchstart", (event, d) => this.startAnimation(true, med))
+      .on("mousedown touchstart", (event, d) => this.startAnimation(true, -1))
       .clone(true)
       .attr("transform", "rotate(55)")
-      .on("mousedown touchstart", (event, d) => this.startAnimation(true, hi));
+      .on("mousedown touchstart", (event, d) => this.startAnimation(true, -2));
     this.svg.on("mouseup mouseleave touchend",
                 (event, d) => this.stopAnimation());
 
@@ -491,6 +490,9 @@ class PlanetClock {
 
   startAnimation(backward, step=3) {
     if (this.disabled) return;
+    if (step <= 0) {
+      step = this.speeds[-step];
+    }
     this.animateTo(this.dayNow + (backward? -1.0e7 : 1.0e7), step);
   }
 
