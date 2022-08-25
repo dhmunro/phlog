@@ -4330,16 +4330,44 @@ class ThirdLaw {
   }
 
   setParam(i) {
+    let s = (this.currentParam == i);
     this.currentParam = i;
     this.currentRect.attr("y", this.paramTop + 25*i);
-    this.adjustParam.sSet(0);
+    if (s) return;
+    // invert slider position --> orbit parameter mappings (see adjuster)
+    const ip = this.getPlanetIndex(this.currentPlanet);
+    let [xax, yax, zax, e, a, b, ea, ma, madot] = this.orbits[ip];
+    if (i == 0) {
+      // produce about +-0.3 degree full scale change in error
+      s = madot / this.currentOrbit[8] - 1;
+      s /= [0.0006, 0.0003, 0.001, 0.003, 0.006][ip];
+    } else if (i == 1) {
+      s = this.currentOrbit[4] / a - 1;
+      s /= [0.012, 0.004, 0.004, 0.03, 0.05][ip];
+    } else if (i == 2) {
+      s = this.currentOrbit[3] / e - 1;
+      s /= [0.03, 0.8, 0.014, 0.06, 0.05][ip];
+    } else {
+      let [pomega0, incl0, anode0] = vec2parm(xax, yax, zax);
+      let [pomega, incl, anode] = vec2parm(...this.currentOrbit.slice(0, 3));
+      if (i == 3) {
+        s = pomega - pomega0;
+        s /= [0.9, 0.22, 0.13, 0.3, 0.3][ip];
+      } else if (i == 4) {
+        s = incl - incl0;
+        s /= [0.6, 0.16, 0.25, 0.3, 0.3][ip];
+      } else if (i == 5) {
+        s = anode - anode0;
+        s /= [6, 6.5, 5, 10.3, 8][ip];
+      }
+    }
+    this.adjustParam.sSet(s);
   }
 
   adjuster() {
     let s = this.adjustParam.s;
     let iParam = this.currentParam;
-    const planet = this.currentPlanet;
-    const ip = this.getPlanetIndex(planet);
+    const ip = this.getPlanetIndex(this.currentPlanet);
     let [xax, yax, zax, e, a, b, ea, ma, madot] = this.orbits[ip];
     let ds;
     if (iParam == 0) {
