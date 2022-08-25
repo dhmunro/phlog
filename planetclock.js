@@ -539,6 +539,11 @@ class PlanetClock {
     let yearNow = dateNow.getUTCFullYear();
     let year = parseInt(prompt("Jump to Year:", yearNow.toString()));
     if (!isNaN(year) && year != yearNow) {
+      if (year > 3000) {
+        year = 3000;
+      } else if (year < -3000) {
+        year = -3000;
+      }
       dateNow.setUTCFullYear(year);
       let newDay = dayOfDate(dateNow);
       let [xp, yp] = directionOf("sun", this.dayNow);
