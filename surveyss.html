@@ -2346,7 +2346,6 @@
       const classes = document.querySelector("#"+oldDiv).classList;
       classes.add("shrunken");
       d3.timeout(() => classes.add("hidden"), 300);
-      clock.setHandVisibility("mars", true);
     }
     if (currentSlave != null) {
       currentSlave.activate(false);
@@ -2356,7 +2355,7 @@
           : "top-clock";
     if (newDiv != "top-clock") {
       clock.hasMoonButton(false);
-      clock.setHandVisibility("mars", true);
+      if (newDiv != "earth-year") clock.setHandVisibility("mars", true);
       currentSlave.activate(true);
       const classes = document.querySelector("#"+newDiv).classList;
       classes.remove("hidden");
