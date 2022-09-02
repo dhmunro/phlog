@@ -87,6 +87,9 @@
         display: none;
     }
     #main-helpicon {
+        -webkit-user-select: none; /* Safari */
+        -ms-user-select: none; /* IE 10 and IE 11 */
+        user-select: none; /* Standard syntax */
         position: absolute;
         top: 6px;
         left: 8px;
@@ -457,6 +460,12 @@
           the motion of the Moon, because it affects the tides.  The
           motions of the planets have no effect whatsoever on our
           world.</p>
+        <p>While the planets have no physical effect on us, working
+          out how they move profoundly changed how we think about the
+          world.  It's not the puzzle itself, but the process of
+          solving it that proved so important in this case.  Here you
+          can follow the crucial first step in understanding what you
+          are looking at in the sky.</p>
         <p>This &ldquo;planet clock&rdquo; is a very accurate
           ephemeris, which shows you exactly where the Sun and planets
           are relative to the fixed constellations of stars on any
@@ -473,6 +482,16 @@
           structure of our solar system was solved using only the
           information here before you.  Can you do what Kepler
           did?</p>
+        <!-- Questions asked and topics discussed 9/1/2022 Quest meeting:
+1. Scientific method -
+   relation between theory/model-computation-experiment/observation
+2. Importance of failure
+3. Historical context and importance - Newton and gravity
+4. Orbit view and what distinguishes models - attachment to one model
+5. Casual versus in-depth exploration - sync audio/captioned run through?
+6. Other directions: diameter of Earth (flat Earth), parallax of Moon
+   (also Newton)
+          -->
       </div>
       <hr/>  <!-- following dummy answer fixes spacing after this hr -->
       <div class="answer"></div>
@@ -489,10 +508,11 @@
         <li>The plane of the great circle the Sun moves around (or
           sometimes the circle itself) is called the ecliptic.</li>
         <li>The black outer ring of the &ldquo;planet clock&rdquo;
-          represents a ribbon of sky arond the ecliptic: The middle
-          gray circle marked 0° is the ecliptic itself; points outside
-          this circle are north of the ecliptic in the sky, while
-          points inside the circle are south of the ecliptic.</li>
+          represents a ribbon of sky centered on the ecliptic: The
+          middle gray circle marked 0° is the ecliptic itself; points
+          outside this circle are north of the ecliptic in the sky,
+          while points inside the circle are south of the
+          ecliptic.</li>
         <li>The ribbon extends 9° north and south, and gray circles
           are drawn 5° north and south of the ecliptic.</li>
         <li>The dashed radial lines show the astronomical boundaries
@@ -508,7 +528,8 @@
         <li>On a 3D globe of the sky, the black ring looks like a
           ribbon or a very short cylinder:
         <div style="min-width: 300px; max-width: 700px; padding: 10px;">
-          <img src="planetclock.svg" style="width: 100%"
+          <img src="planetclock.svg"
+               style="width: 70%; display: block; margin: 0 auto;"
                alt="picture of ecliptic coordinate system" />
         </div>
         <ul>
@@ -2118,8 +2139,7 @@
       </div>
       <hr/>
       <div class="answer"></div>  <!-- do not remove dummy answer -->
-      <div class="question">Why are Kepler's laws only the beginning
-        of the story?</div>
+      <div class="question">Why study how the planets move?</div>
       <div class="answer">
         <p>The epicycles of ancient Greek astronomy, like Kepler's
           laws, reduce planetary orbits to only a handful of
@@ -2127,60 +2147,40 @@
           provided using his survey technique: The Greek epicycles
           were derived solely by a fitting process little different
           from what you just did in the Third Law section.  Kepler, on
-          the other hand, had fit his ellipse and equal area laws to
-          the points he had surveyed on the orbits of Earth and
-          Mars.</p>
+          the other hand, fit his ellipse and equal area laws to the
+          points he had surveyed on the orbits of Earth and Mars.</p>
         <p>While this was a great leap for astronomy, other thinkers
           would have taken little notice.  After all, the motion of
-          the planets have no consequences or relation to more
-          down-to-earth problems.  Or do they?</p>
-        <p>At the end of the same century that began with Kepler's
-          laws, in 1687, Isaac Newton published his three laws of
+          the planets has no consequences for or relation to more
+          down-to-earth problems.  Or does it?</p>
+        <p>In 1687, at the end of the same century that began with
+          Kepler's laws, Isaac Newton published his three laws of
           motion.  Newton's laws lay out our modern understanding of
           the relationship between forces and motion, and provide a
           general framework for studying how things move.</p>
-        <p>Naturally enough, Newton used his framework to reformulate
-          Kepler's planetary motion laws.  In Newton's framework,
-          Kepler's three laws reduce to a single statement: The force
-          on a planet is directed toward the Sun, and varies inversely
-          as the square of its distance from the Sun.  This is a nice
-          insight, but it still would only have been of interest to
-          astronomers, if it were not for the Moon.  The moon is about
-          a quarter the size of the Earth and orbits at a distance of
-          about 60 Earth radii.  The ancient Greeks knew this, because
-          to Tycho-quality observers, the Moon appears in a slightly
-          different place relative to the stars depending on where on
-          Earth you observe it.</p>
-        <p>The Moon's orbital period is about 30 days, so you can use
-          Kepler's cube-square law (or Newton's inverse square law) to
-          compute the period of a hypothetical satellite orbiting just
-          above its surface at 1 Earth radius.  The answer is about an
-          hour and a half.  But Newton's laws cover projectiles on
-          Earth, which fall under the force of gravity.  If you shoot
-          a cannonball horizontally, it curves downward more and more
-          slowly the faster its horizontal speed.  Newton computed the
-          speed at which its downward curvature exactly matches the
-          curvature of the Earth, and how long it would take to circle
-          the globe at that speed: The answer is about an hour and a
-          half - which we today recognize as the period of an LEO
-          satellite.</p>
-        <p>And that fact is what grabbed universal attention, way
-          beyond the circle of astronomers.  The gravity which we all
-          feel throughout our lives is exactly the force holding the
-          Moon in its orbit around the Earth.  And the Sun also has
-          gravity, which holds the planets in orbit around it.
-          Suddenly, and for the first time in history, Newton had
-          found a definite and measureable connection between earthly
-          and celestial motion.  Even exceedingly large objects obey
-          Newton's laws of motion.</p>
+        <p>When Newton applied his laws of motion to the planets, he
+          realized that Kepler's laws are equivalent to the statement
+          that the planets all accelerate directly toward the Sun at a
+          rate inversely proportional to the square of their distance
+          from it.  Newton knew that the four Galilean moons of
+          Jupiter also obey Kepler's laws, differing from the planets
+          only in the constant of proportionality between acceleration
+          and the inverse square of distance.  When he compared the
+          acceleration of our Moon to the acceleration of gravity here
+          on Earth, Newton made perhaps the single greatest scientific
+          discovery of all time, his law of universal gravitation:
+          Gravity is a property of all matter, which not only holds us
+          to the surface of the Earth, but also holds the planets in
+          orbit around the Sun.</p>
         <p>The influence of Newton's work as a trigger for the
           scientific and industrial revolution cannot be overstated.
           And that excitement, in large measure, was caused by the
-          neat way Newton explained Kepler's planetary motion laws
-          most importantly connecting them to the familiar force of
-          gravity on Earth.  And Kepler's laws are based on surveyor's
-          geometry and the hypothesis of periodic orbits around the
-          Sun - the beginning of the story of modern science.</p>
+          neat way Newton explained Kepler's planetary motion laws -
+          most importantly, by connecting them to the familiar force
+          of gravity on Earth.  And Kepler's laws are based on
+          surveyor's geometry and the hypothesis of periodic orbits
+          around the Sun - the beginning of the story of modern
+          science.</p>
       </div>
     </div>
   </div>
