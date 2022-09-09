@@ -1416,6 +1416,8 @@ class EarthYear {
       } else if (this.elapsed0 === undefined) {
         this.elapsedUpdate(true, true);
         this.clock.elapsed0 = this.clock.dayNow;
+      } else {
+        this.elapsedUpdate(false);
       }
     }
   }
@@ -1688,6 +1690,7 @@ class MarsYear {
       .attr("stroke-width", 5);
     this.marsMarker = appendCircle(
       this.plot, 5, this.clock.planetColors.mars, 0, this.x(0), this.y(0))
+      .attr("display", "none")
       .attr("opacity", 0.3);
     this.marsMarkerPos = [0, 0];
     this.oppoMarkers = this.plot.append("g");
@@ -1983,6 +1986,7 @@ class MarsYear {
         this.updateMarsMarker(true);
       }
     } else if (this.revT) {
+      if (inhibitReset) delete this.prevUpdate;  // only from activate
       this.updateMarsMarker(true);
     }
   }
@@ -2013,6 +2017,8 @@ class MarsYear {
         this.clock.updateElapsed(true);
       } else if (oldElapsed0 === undefined) {
         this.clock.elapsed0 = this.clock.dayNow;
+      } else {
+        this.clock.updateElapsed(false, true);
       }
     }
   }
@@ -2942,11 +2948,7 @@ class SurveyOrbits {
       if (oldElapsed0 === undefined) {
         this.clock.elapsed0 = this.clock.dayNow;
       }
-      if (this.notReady()) {
-        this.clock.disabled = false;
-      } else {
-        this.clock.disabled = true;
-      }
+      this.clock.disabled = !this.notReady();
     } else {
       if (this.clock.disabled && this.mars.yearEstimate != this.marsEstimate) {
         this.clock.disabled = false;
