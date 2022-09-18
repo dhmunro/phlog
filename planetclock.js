@@ -1376,6 +1376,7 @@ class EarthYear {
         delete this.revs0;
         delete this.revT;
         delete this.revTRange;
+        delete this.elapsed0;
         this.sunMarker.attr("cx", this.x(0)).attr("cy", this.y(0));
         this.sunMarker2.attr("cx", this.x(0)).attr("cy", this.y(0));
         this.sunMarkerPos = [0, 0];
@@ -1410,12 +1411,12 @@ class EarthYear {
       let oldElapsed0 = this.clock.elapsed0;
       this.clock.addElapsed((r, ir) => this.elapsedUpdate(r, ir));
       this.clock.elapsed0 = oldElapsed0;
-      if (this.elapsed0 != this.clock.elapsed0) {
-        this.clock.goToDay(this.clock.elapsed0);
-        this.elapsedUpdate(true);
-      } else if (this.elapsed0 === undefined) {
+      if (this.elapsed0 === undefined) {
         this.elapsedUpdate(true, true);
         this.clock.elapsed0 = this.clock.dayNow;
+      } else if (this.elapsed0 != this.clock.elapsed0) {
+        this.clock.goToDay(this.clock.elapsed0);
+        this.elapsedUpdate(true);
       } else {
         this.elapsedUpdate(false);
       }
