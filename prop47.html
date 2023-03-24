@@ -61,7 +61,7 @@
     obvious.</p>
   <div class="halfwide" style="float: right;">
   <svg id="prop47" xmlns="http://www.w3.org/2000/svg"
-      viewBox="-2.05 -2.45 4.1 4.5" onload="prop47_interactions(evt)">
+      viewBox="-2.05 -2.45 4.1 4.5">
     <!-- illustration of Euclid's Proposition 47 with 3-4-5 triangle
          also illustrates Proposition 35 -->
     <!-- <rect x="-2.05" y="-2.45" width="4.1" height="4.5"
@@ -168,8 +168,8 @@
     on the hypotenuse.  Here is a well-known proof which sheds that baggage,
     not distinguishing between the areas of the squares on the sides at all.</p>
   <div class="halfwide" style="float: right;">
-  <svg xmlns="http://www.w3.org/2000/svg" style="stroke-width: 0.0078"
-      viewBox="-0.8 -0.8 1.6 1.6" onload="alt47_interactions(evt)">
+  <svg id="alt47" xmlns="http://www.w3.org/2000/svg" style="stroke-width: 0.0078"
+      viewBox="-0.8 -0.8 1.6 1.6">
     <rect id="rect0" fill="#83c2ff" stroke="#000000" x="-0.7" y="-0.7"
       width="1.4" height="1.4"/>
     <polygon class="moveable" id="tri0" fill="#ffffff" stroke="#000000"
@@ -224,8 +224,8 @@
   </blockquote>
 </div>
 
-<script>function prop47_interactions(evt) {
-  var prop47 = evt.target;
+<script>
+  function prop47_interactions(prop47) {
   var poly_ids = ["polyur", "polylr", "polyul", "polyll", "polymov"]
   var polys = poly_ids.map(
    function(id) {return document.getElementById(id)});
@@ -613,9 +613,9 @@
       drag_ready = true;
     }
   }
-}
-function alt47_interactions(evt) {
-  var alt47 = evt.target;
+  }
+  prop47_interactions(document.getElementById("prop47"));
+function alt47_interactions(alt47) {
   var ids = ["tri0", "tri1", "tri2", "circ0", "ghost"];
   var movers = ids.map(
    function(id) {return document.getElementById(id)});
@@ -814,6 +814,7 @@ function alt47_interactions(evt) {
     adjust = 0.0;
   }
 }
+  alt47_interactions(document.getElementById("alt47"));
 </script>
 
 </body>
