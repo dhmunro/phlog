@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Surveying the Solar System</title>
+  <meta name="description"
+    content="How did Kepler survey the solar system?">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script>MathJax = {tex: { inlineMath: [["$", "$"], ["\\(", "\\)"]] }};
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"
+          id="MathJax-script">
+  </script>
+  <style>
+    div {
+      -moz-box-sizing: border-box;
+      box-sizing: border-box;
+    }
+    .textcolumn {
+      padding-left: 1em;
+      padding-right: 1em;
+      min-width: 22em;
+      max-width: 52em;
+      margin: 0 auto;
+    }
+    td {
+        padding: 0 1em
+    }
+  </style>
+</head>
+<body>
+<div class="textcolumn">
+  <h1 style="text-align: center;"><a href="index.html">
+      Surveying the Solar System</a></h1>
+
+  <h2>How the Sun Moves</h2>
+
+  <p>The Sun moves through the constellations of fixed stars, making
+    one complete trip around the Zodiac every year.  It follows
+    exactly the same path through the stars every year with great
+    precision.  That path, called the ecliptic, is also very precisely
+    a great circle - the Earth-Sun line rotates once per year but
+    remains in the plane of the ecliptic.  This motion is not quite
+    uniform - the Sun takes 186 days to move from the vernal equinox
+    in Pisces to the autumnal equinox in Virgo, but only 179 days to
+    complete the cycle, although the two points are exactly 180
+    degrees apart in the sky.</p>
+
+  <!--
+      Title starts with a background showing 120 degrees ecliptic longitude
+      and perhaps +-15 degrees ecliptic latitude - a 4:1 aspect.
+      The ecliptic plane should be marked and a low contrast grid.
+      Constellations of the Zodiac named, with boundaries (including
+      Ophiuchus?)  Possibly the celestial equator should be marked as well.
+      Left should be east and right west, as if you are facing south and
+      looking up.
+
+      As you scroll, the 1st paragraph slides up and the Sun begins to
+      move around the ecliptic.  As it gets within say 10 degrees of
+      the left (east) edge, the view should scroll to the next 120
+      sector, with the scroll finishing when it is say 10 degrees from
+      the right edge.  A date indicator increments as you scroll.
+
+      As you continue to scroll, second paragraph materializes and moves
+      upwards.
+
+      Need some way to illustrate variation in rate - perhaps show mean
+      Sun line, so you can watch it fall behind and move ahead?  This is
+      a bit small, but fairly obvious on a 120 degree sector.  This is
+      a good way to go.  Furthermore can build plot of deviation from
+      mean Sun (in angle?) versus angle to illustrate that it repeats
+      perfectly every sidereal year (365.2566 days).  The sky plot can
+      scroll to the top to make room for this plot below.  Continuing to
+      scroll allows several years to pass, showing the deviation from
+      mean Sun retarce precisely the same curve every year.
+
+      Note that eyes.nasa.gov has a fairly clear display of star fields,
+      and the way the Sun is plotted with a gradual halo is good.
+
+      Mean Sun: where Sun would be if it moved at constant angular speed
+                around the ecliptic.  Possibly this explanation should
+                pop up it you click on "Mean Sun" label.
+    -->
+
+  <p>Although the Sun does not move at a constant rate around the
+    Zodiac, it speeds up and slows down in exactly the same pattern
+    every year, with the same remarkable precision that it exactly
+    follows a great circle.  This very strongly suggests that its
+    motion in the third dimension - distance from Earth - is also
+    repeating exactly each year.  So we might naturally suppose that
+    the Sun is orbiting a closed path around the Earth (or vice versa)
+    in the ecliptic plane once each year.  If so, how can we work out
+    the exact shape of this orbit?</p>
+
+  <h2>How the Planets Move</h2>
+
+  <!--
+      As the next section heading scrolls into view, the sky map
+      recenters and the planets appear; the calendar resets to
+      the original start date.
+
+      A few years go by, scrolling to first follow Venus for a
+      couple of orbits, then Mars.  The anti-Sun point is marked.
+
+      When the second paragraph scrolls by, the sky view changes
+      the way it scrolls to keep the Sun centered, so you can
+      watch Mercury and Venus zig zag.
+
+      When the third paragraph starts, we want to follow Mars.
+      Probably the best way to do this is the same scrolling
+      technique used to follow the Sun.  The anti-sun point
+      needs to be marked on the sky, so you can watch the
+      retrograde motion near there.  (With luck, a Jupiter or
+      Saturn retrograde will also happen within view.)
+    -->
+
+  <p>The five naked-eye planets Mercury, Venus, Mars, Jupiter, and
+    Saturn also move through the constellations of fixed stars.  They
+    circle through the same constellations as the Sun, but the planets
+    all wander noticeably above and below the ecliptic plane.  Their
+    motion around the ecliptic is far more erratic than the Sun as
+    well.  Usually the planets move around the Zodiac from west to
+    east like the Sun, but sometimes they reverse direction and move
+    backwards from east to west - retrograde motion.</p>
+
+  <p>Mercury and Venus slowly overtake the Sun, moving from morning
+    side to evening side, then reverse direction and rapidly move back
+    from evening to morning side.  This looks very much as if we have
+    a nearly edge-on view of two objects circling the Sun at a roughly
+    uniform rate, moving around it in the same direction as the Sun
+    moves around the Zodiac, but faster.  Mercury stays closer to the
+    Sun and moves around it faster than Venus.</p>
+
+  <p>Conversely, the Sun overtakes Mars, Jupiter, and Saturn, but they
+    go retrograde whenever they are on the opposite side of the sky
+    from the Sun, called opposition.  Thus, their motions are also
+    connected with the Sun, but not in as obvious a way as the motions
+    of Mercury and Venus.  A good way to picture the motion of Mars,
+    for example, is to imagine how Earth would appear to move around
+    the Zodiac if you were standing on Venus.  You would then be
+    looking along the same line as when you look at Venus from Earth,
+    but in the opposite direction.  That is, wherever Venus appears
+    viewed from Earth, Earth is in the antipodal direction viewed from
+    Venus.  If Venus is indeed circling the Sun, it is passing between
+    the Sun and Earth on its retrograde crossing.  Thus, viewed from
+    Venus, Earth appears to go retrograde whenever it is opposite the
+    Sun in the sky.  But this is exactly how Mars moves when viewed
+    from Earth!</p>
+
+  <p>The motions of the planets thus suggest that they all circle the
+    Sun rather than the Earth, because this would neatly explain why
+    their retrograde motion is coupled to the position of the Sun.  If
+    so, Mercury would be closest to the Sun and circling fastest, then
+    Venus - both moving around orbits smaller than the distance from
+    Earth to the Sun.  Meanwhile Mars, Jupiter, and Saturn would be
+    circling the Sun at progressively larger distances than Earth and
+    with increasingly longer orbital periods.</p>
+
+  <h2>Surveying the First Two Orbits</h2>
+
+  <p>So the motions of the planets would be qualitatively explained if
+    we were standing on the third planet from the Sun, orbiting it
+    once per year, with planets closer to the Sun orbiting faster and
+    planets more distant orbiting slower.  When this is your picture
+    of the solar system, it's hard not to ask yourself what it would
+    look like if you were riding around on one of the other planets
+    instead of Earth.  In fact, you already did this when you imagined
+    how Earth would appear to move around the sky if you were on
+    Venus.</p>
+
+  <p>The Earth seems to be following a closed path around the Sun (or
+    vice versa), speeding up and slowing down in precisely the same
+    places and at exactly the same times on each lap.  What if the
+    Sun's motion is like that when viewed from <em>any</em> planet,
+    not just from Earth?  What if all the planets follow their own
+    orbit with this same precise periodicity?  Can we test this
+    hypothesis?</p>
+
+  <p>Kepler was the first to realize that if a planet orbits the Sun
+    periodically, you can use it as a fixed landmark in the sky by
+    comparing observations exactly one period apart.  Astonishingly,
+    none of the great astronomers for at least two millenia before him
+    realized this relatively simple trick gives you a way to survey
+    the detailed three dimensional orbits of the planets.  This is
+    partly because very few ancient astronomers pictured a
+    heliocentric solar system - and in the minds of Kepler and his
+    contemporaries this was the revolutionary idea.  However, as a
+    matter of experimental technique, the idea of comparing
+    observations exactly one period apart would have provided great
+    insight even if you adhered to an epicyclic solar system model.
+    In fact, periodicity is the cornerstone of epicycles as well,
+    making it all the stranger that no one thought to make a real test
+    of periodicity for two thousand years.</p>
+
+  <p>Ancient astronomers measured the periods of the planets relative
+    to the Sun quite accurately, since they are just as important for
+    an epicycle model as for a heliocentric model.  (They did this by
+    noting where conjunctions and oppositions with the Sun occurred on
+    the ecliptic over many decades.)  Here are the values (in days)
+    Ptolemy used in the
+    <a href="https://archive.org/details/asurveyofthealmagestopedersenajones_573_U/page/n423/mode/2up">Almagest</a>, compared to modern values from
+    <a href="https://ssd.jpl.nasa.gov/planets/approx_pos.html">JPL</a>:</p>
+  <table style="margin:auto;">
+    <thead>
+      <tr><th></th> <th>Almagest</th> <th>JPL</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Mercury</td><td>87.97</td>    <td>87.96926</td></tr>
+      <tr><td>Venus</td>  <td>224.7</td>    <td>224.70080</td></tr>
+      <tr><td>Sun (Earth)</td> <td>365.25682</td> <td>365.25636</td></tr>
+      <tr><td>Mars</td>   <td>687.04</td>   <td>686.97985</td></tr>
+      <tr><td>Jupiter</td><td>4332.38</td>  <td>4332.5921</td></tr>
+      <tr><td>Saturn</td> <td>10770</td>    <td>10759.217</td></tr>
+    </tbody>
+  </table>
+
+  <!--
+    https://archive.org/details/asurveyofthealmagestopedersenajones_573_U/page/n423/mode/2up
+    A Survey of the Almagest, Pedersen, Olaf, ed. Jones, Alexander
+       Springer 2011
+    Appendix B, p 423 - 429
+       original Odense Universitetsforlag 1974
+    365.25682  [365.25636  modern value for Ptolemy's time]
+    Mercury synodic/anomalistic period 115.88d [115.88d]  (87.97d?)
+    Venus 583.98d [583.92d]  (224.7d?)
+    Mars 779.94d [779.94d]  ==> 687.04d [686.93d]
+    Jupiter 398.88d [398.88d]  ==> 4332.38d [4331d]
+    Saturn 378.09d [378.09d]  ==> 10770d [10747d]
+       https://ssd.jpl.nasa.gov/planets/approx_pos.html
+       87.96926d 224.70080d 365.25636d 686.97985d 4332.59214d 10759.21707d
+    -->
+
+  <p>As long as a planet orbits the Sun periodically in a closed path,
+    the projection of its orbit into the plane of the ecliptic will
+    also move periodically around a closed path.  The direction of
+    this projected orbital point arond the ecliptic is just the
+    ecliptic longitude coordinate of the planet.  Thus, we begin
+    by simply ignoring the ecliptic latitude coordinate, and figuring
+    out the path traced by the projection of the planet's orbit into
+    the ecliptic - a problem of plane geometry.  Once we know the
+    distance to this projected point, we can easily calculate the
+    actual height above or below the ecliptic from the ecliptic
+    longitude we started by ignoring.</p>
+
+  <p>Mars is the best choice for a landmark.  You can accurately
+    measure the time when it comes into opposition, that is 180
+    degrees from the Sun around the ecliptic.  You do not know the
+    distance to Mars at this time, but since you don't know any other
+    distance yet, you can (temporarily) take this distance as a unit.
+    If you step forward or backward in time by exactly one Mars
+    orbital period, Mars will have returned to exactly this position,
+    but Earth will not.  Each time Mars returns to this landmark spot,
+    you measure its direction around the ecliptic.  You also know the
+    direction of the Sun, so you can use the Mars-Sun-Earth triangle
+    to compute exactly where the Earth is in the ecliptic plane.  Over
+    twenty years, you can triangulate eight or nine points on Earth's
+    orbit that are one Mars period apart.</p>
+
+  <p>Now from each one of those eight or nine points on Earth's orbit,
+    you can step forward or back in time by one Earth year.  Mars will
+    have advanced by exactly one Earth year around its orbit in every
+    case, so you have a set of eight or nine dates at which you know
+    Mars will be exactly at this second landmark position.  But this
+    time, you know exactly where Earth was.  Thus, choosing any pair
+    of these dates, you can use the observed directions of Mars to
+    solve this Earth-Earth-Mars triangle and figure out the exact
+    position of this second point on Mars's orbit.</p>
+
+  <p>Notice that any two of these points fix this second position of
+    Mars.  The fact that all the pairs of your eight or nine points
+    produce the <em>same</em> position is a spectacular confirmation
+    of the hypothesis that both Earth and Mars are moving around the
+    Sun in periodic orbits.  Another way to picture this is that when
+    you draw the eight or nine lines from the points on Earth's orbit
+    in the directions you measured, they all intersect at a common
+    point.  You have discovered a very subtle, very precise pattern in
+    your twenty years of measurements of Mars meandering around the
+    sky.</p>
+
+  <p>Incidentally, even if your estimate of the period of Mars is
+    imprecise, you find that but tweaking that period, you can always
+    make all the lines intersect at a common point.  So you also have
+    found a high precision way to measure the period of Mars.</p>
+
+  <p>By stepping forward and backward by Mars years you can fill in
+    more points on Earth's orbit, and by stepping forward and backward
+    by Earth years you can fill in more points on Mars's orbit.
+    Twenty years of data is enough to work your way entirely around
+    both orbits, determining roughly forty points on Mars's orbit and
+    twenty points on Earth's orbit.  One final great vindication
+    awaits: The forty points on Mars's orbit - each viewed from a half
+    dozen different points around Earth's orbit - are still just the
+    projections of Mars's position into the ecliptic plane.  When you
+    put back all of your observed ecliptic longitudes to find
+    distances out of plane, you find that not only do all the
+    different measurements at each indivdual point produce the same
+    distance above or below the ecliptic, but also all forty points
+    lie exactly in a single plane containing the Sun!  Just like
+    Earth, Mars orbits the Sun periodically in a plane containing the
+    Sun.</p>
+
+  <h2>Determining the Remaining Orbits</h2>
+
+  <p>Kepler's technique for surveying a few dozen points on the orbits
+    of Earth and Mars is completely original.  No one had ever done
+    anything like it in astronomy.  The ancient technique for modeling
+    the motion of planets was to guess a form for their orbits with a
+    few free parameters - periods, deferent and epicycle radii, and a
+    deferent offset, for example - then adjust those parameters to fit
+    your observations.  Guessing a parametrized model and fitting its
+    parameters to data is still by far the most common way scientists
+    work today.  If you guess a good model, this is a tremendously
+    efficient way to generate predictive models, in the sense that you
+    need very few observations to pin down your parameters - typically
+    about as many as you have free parameters.</p>
+
+  <p>By contrast, Kepler's parameter-free survey knit together
+    hundreds of observations to produce just a couple dozen points.
+    However, once he had finished he had something no astronomer
+    before him ever had: He knew the three dimensional positions of a
+    bunch of points around the orbits of both Earth and Mars.  For the
+    first time, Kepler had a view of what those orbits look like from
+    a viewpoint far above the ecliptic plane.  Armed with this
+    picture, he could guess a mathematical form for orbital shapes
+    with great confidence, and work out the parameters for the case of
+    Earth and Mars with unprecedented precision.  He chose a model
+    with six parameters for each orbit (seven if you count a starting
+    time): its period, its plane (two parameters), its perihelion and
+    aphelion (minimum and maximum distances from the Sun), and the
+    angle of its perihelion in its orbital plane.  Kepler's first two
+    laws, published in 1609, are his formulation of this model.</p>
+
+  <p>Although the calculations are quite involved, measurements of a
+    planet's direction in the sky at only three reasonably spread out
+    times suffice to determine Kepler's six (or seven) orbital
+    parameters, and hence a predictive model of exactly how it is
+    moving through the sky.  This is still how astronomers calculate
+    the orbits of comets and asteroids, at least to a first
+    approximation.  Kepler was the first to apply his laws in this way
+    to determine the orbits of Mercury, Venus, Jupiter, and Saturn by
+    fitting a few observations of each to his orbital model.  Hence,
+    in the event, only the orbits of Earth and Mars were gotten by the
+    meticulous and original surveying technique based on the
+    periodicity of orbits.  The shapes of the other orbits were found
+    using the age-old fitting technique, albeit with a much better
+    model.</p>
+
+  <p>After ten years reflection on these results, Kepler published his
+    third law of orbital mechanics in 1620.  Unlike the first two, the
+    third law connects the orbits of different planets: He noticed
+    that the cube of the sum of the aphelion and perihelion distances
+    is nearly exactly proportional to the square of the period.  Since
+    the period can be calculated from the size of the orbit in this
+    way, the third law reduces the number of orbital parameters from
+    six to five (or seven to six).</p>
+
+  <h2>Historical Notes</h2>
+
+  <p>Fifty years later, Newton realized that the constant of
+    proportionality in Kepler's third law is proportional to the mass
+    of the Sun.  Newton reformulated the problem with his universal
+    law of gravitation, which unifies planetary motion with the motion
+    of ordinary human-scale objects on Earth.  Newton's laws explain
+    the small deviations of the planets from Kepler's laws telescopic
+    observations had revealed in the intervening decades, as well as
+    the detailed motion of the Moon.</p>
+
+  <p>The truly original insight Kepler had was how to exploit the
+    periodicity of orbits to use Mars as a surveying landmark for
+    mapping the solar system.  This is what broke a two thousand year
+    logjam and opened new territory for astronomy, much more than the
+    rather irrelevant arguments about whether the Sun or the Earth is
+    at the "center".  And while Kepler's three laws are a brilliant
+    guess at a parametric form describing his newly surveyed orbits,
+    they are not nearly as important or original as his periodic
+    surveying technique.  If Kepler's guess hadn't happened to solve
+    the simplest approximate form of Newton's equations, perhaps his
+    more important surveying technique would be better remembered.</p>
+
+  <!-- Separate page should use same periodic analysis to work
+       out epicycle model, showing that the real power comes from
+       exploiting periodicity, not heliocentrism.
+    -->
+
+</div>
+</body>
+</html>
