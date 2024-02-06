@@ -34,7 +34,7 @@
   <p>In modern times, computing trillions of digits $\pi$ has become a
     rite of passage for the latest parallel computer clusters.  This
     obviously frivolous feat obscures the difficulty and importance of
-    computing the first few digits of $\pi$, the ratio of the distance
+    computing the first few digits of $\pi,$ the ratio of the distance
     around a circle to the distance across it.  Engineers need six or
     eight digits to make precision machinery work properly, while the
     standard double precision floating point accuracy of about sixteen
@@ -53,7 +53,7 @@
     method is purely abstract reasoning, and his accuracy was limited
     only by his patience in selecting how many sides he was willing to
     choose for his polygons.  In decimal fractions, Archimedes put
-    $\pi$ between $3.1429$ and $3.1408$, which is accurate to two
+    $\pi$ between $3.1429$ and $3.1408,$ which is accurate to two
     places for either bound, or three places if you average the two.
     Archimedes was working under the extreme handicap that the only
     way he had to write numbers was Roman numerals or the equivalent,
@@ -86,14 +86,14 @@
     work backwards to a finite angle.  The idea is to develop a power
     series for a function with values related to $\pi$.  By far the
     simplest such series is for the inverse tangent function
-    $\tan^{-1}t$, which is the angle measured in radians of a right
+    $\tan^{-1}t,$ which is the angle measured in radians of a right
     triangle with ratio of opposite to adjacent sides equal to $t$:
 
     $$\tan^{-1}t = t - t^3/3 + t^5/5 - t^7/7 + ...$$
 
     The opposite side is obviously $0$ when $t=0$.  Furthermore, $t$
     is the length of the side of a polygon circumscribed around the
-    unit circle, so for small $t$, $\tan^{-1}t \approx t$ simply says
+    unit circle, so for small $t,$ $\tan^{-1}t \approx t$ simply says
     the angle of an arc of the unit circle in radians is equal to the
     length of the side of the polygon.  If you know how to take
     derivatives, you can check the inverse tangent series by
@@ -110,7 +110,7 @@
 
     $$\pi/4 = 1 - 1/3 + 1/5 - 1/7 + ...$$
 
-    For actually calculating $\pi$, this is a huge step backwards
+    For actually calculating $\pi,$ this is a huge step backwards
     from Archimedes.  It is hard to find any series which converges
     more slowly than this one; no one would be foolhardy enough to
     attempt to use it to compute $\pi$.
@@ -133,13 +133,13 @@
     and $\tan^{-1}u$ in radians, which we know sum to
     $\tan^{-1}1=\pi/4.$</p>
   <p>But Machin realized he could do substantially better, both by
-    finding smaller $t$, and by finding values of $t$ which are easy
+    finding smaller $t,$ and by finding values of $t$ which are easy
     to multiply by hand in base ten.  Once you see the potential of
-    the tangent sum formula for finding angles whose sum is $\pi/4$,
-    and you realize you can use them to efficiently compute $\pi$, you
+    the tangent sum formula for finding angles whose sum is $\pi/4,$
+    and you realize you can use them to efficiently compute $\pi,$ you
     naturally begin to try some combinations of simple fractions.  You
     are rewarded quickly when you try multiples of the angle whose
-    tangent is $t=1/5$.  By accident, four times that angle is
+    tangent is $t=1/5.$  By accident, four times that angle is
     exceptionally close to $45^\circ$:
 
     $$\begin{align*}
@@ -175,12 +175,12 @@
     advance: How else did he choose a hundred digits as a reasonable
     goal?  For the $1/5$ series, each term is a factor of a bit more
     than $5^2=25$ less than the previous.  Now
-    $5^{-10}=2^{10}/10^{10}$ is just a bit more than $10^{-7}$, which
+    $5^{-10}=2^{10}/10^{10}$ is just a bit more than $10^{-7},$ which
     means that each $5$ (that is, $10/2$) terms of the series adds
     another $7$ digits.  To get a hundred digits, therefore, Machin
     needs about $75$ ($100/7\times 5$) terms of the $1/5$ series (up
     to about $t^{150}$).  For the $1/239$ series, $1/239\sim 4/1000$
-    which means $239^{-5}\sim 10^3/10^{15} = 10^{-12}$, so every $5$
+    which means $239^{-5}\sim 10^3/10^{15} = 10^{-12},$ so every $5$
     terms of that series adds another $24$ digits.  A hundred digits
     therefore requires about $21$ terms of the $1/239$ series, in
     addition to about $75$ terms of the $1/5$ series.</p>
@@ -225,7 +225,7 @@
     alternate in sign into a new infinite sum which converges faster
     than the original.  The Euler transform is far too complicated to
     explain here, but it is a very important result, unlike a few
-    digits of $\pi$.</p>
+    digits of $\pi.$</p>
   <p>Since the inverse tangent series is one of the most famous
     alternating infinite sums, Euler certainly would have used it as
     an example of his general method.  Euler's transformed series for
@@ -251,8 +251,8 @@
 
     Now for base ten calculations using the original inverse tangent
     series, $1/7$ and $3/79$ would be terribly ugly choices, easily
-    as bad as $1/239$.  But look at their values of $x$!  $t=1/7$
-    becomes $x=1/50=0.02$ and $t=3/79$ becomes $x=9/6250=0.00144$.
+    as bad as $1/239.$  But look at their values of $x$!  $t=1/7$
+    becomes $x=1/50=0.02$ and $t=3/79$ becomes $x=9/6250=0.00144.$
     Not one, but both of the two series involve powers which are
     very easy to calculate by hand in base ten!</p>
   <p>Like Machin's decomposition, the fact that any decomposition as
@@ -279,8 +279,8 @@
   <p>If Euler had the decomposition first, and had studied them enough
     to know they weren't all that common, then it is easy to
     understand how he would have simply checked all the known
-    decompositions to see if any happened to have nice values of $x$,
-    like Machin's nice value of $t=1/5$.  If so, he would have been
+    decompositions to see if any happened to have nice values of $x,$
+    like Machin's nice value of $t=1/5.$  If so, he would have been
     just a shocked as we are to find that both $x$ values were nice
     numbers.  Even better, it is a decomposition that he himself
     discovered a decode before.  If this is an accurate reconstruction
@@ -289,10 +289,10 @@
   <p>That still doesn't explain how Euler discovered his
     decomposition.  Unlike the Machin decomposition, it isn't just a
     matter of noticing that some multiple of a small fraction is
-    extremely close to $45^\circ$, and subtracting to find the
+    extremely close to $45^\circ,$ and subtracting to find the
     remainder.  The factor of $2$ in front of the $3/79$ term breaks
-    that simple approach.  And unlike four times $1/5$, five times
-    $1/7$ is not unusually close to $45^\circ$.  I wouldn't have
+    that simple approach.  And unlike four times $1/5,$ five times
+    $1/7$ is not unusually close to $45^\circ.$  I wouldn't have
     found this decomposition in a century.  Euler too must have had
     some method he discovered to narrow his search, but I've been unable
     to find out what it was.</p>
@@ -322,24 +322,24 @@
     \end{align*}$$
 
     Since the final equality is indeed true, $\pi/4 = 5\tan^{-1}1/7 +
-    2\tan^{-1}3/79$, as Euler says.  If you search for "Machin-like
+    2\tan^{-1}3/79,$ as Euler says.  If you search for "Machin-like
     formulas" you'll find a lot of research on these decompositions,
     continuing to the present day.</p>
   <p>It would be pointless for me to carry out a twenty digit
     calculation of $\pi$ by hand if I had not also proven for myself
-    that the series I was using does in fact converge to $\pi$.  So
+    that the series I was using does in fact converge to $\pi.$  So
     here is a specific derivation of Euler's series for inverse
     tangent based on some ideas I found in my web research.  Remember
     that Euler would have applied his much more powerful and general
     Euler transform; like the above proof of his $45^\circ$
     decomposition, this proof is constructed backwards from the series
     itself.</p>
-  <p>First, note that if $t=\tan\alpha$, then $x=\sin^2\alpha$.
-    Hence, $\alpha=\tan^{-1}t=\sin^{-1}\sqrt{x}$.  Consider the function
+  <p>First, note that if $t=\tan\alpha,$ then $x=\sin^2\alpha.$
+    Hence, $\alpha=\tan^{-1}t=\sin^{-1}\sqrt{x}.$  Consider the function
 
     $$f(x) = \frac{\sin^{-1}\sqrt{x}}{\sqrt{x(1-x)}}.$$
 
-    Unlike its numerator, $f$ has no $\sqrt{x}$ singularity at $x=0$,
+    Unlike its numerator, $f$ has no $\sqrt{x}$ singularity at $x=0,$
     so it has a power series expansion
 
     $$f(x) = \sum_{n=0}^{\infty}b_n x^n$$
@@ -358,8 +358,8 @@
     b_n &= \frac{2n}{2n+1} b_{n-1}
     \end{align*}$$
 
-    This recurrence for $b_n$, together with the fact that
-    $\sqrt{x(1-x)}=x/t$, produces the Euler series for inverse tangent.</p>
+    This recurrence for $b_n,$ together with the fact that
+    $\sqrt{x(1-x)}=x/t,$ produces the Euler series for inverse tangent.</p>
   <p>However much serendipity was involved, Euler's method is arguably the
     easiest way to compute an accurate value of $\pi$ with pencil and paper
     which has ever been discovered.  If Euler could get twenty digits in an
@@ -367,7 +367,7 @@
 
   <h2>My arithmetic</h2>
   <p>The $t=1/7$ series has $x=0.02$ and we need to multiply it by
-    $5x/t=0.7$.  The $t=3/79$ series has $x=0.00144$ and we need to
+    $5x/t=0.7.$  The $t=3/79$ series has $x=0.00144$ and we need to
     multiply it by $2x/t=0.07584$:
 
     $$\frac{\pi}{4} = 0.7\sum b_n (0.02)^n + 0.07584\sum b_n (0.00144)^n$$
@@ -382,7 +382,7 @@
 
     Using the recurrence, computing each term requires a simple
     multiply $2nx$ followed by the full precision decimal multiply by
-    $b_{n-1}x^{n-1}$, followed by a small integer divide by $2n+1$.
+    $b_{n-1}x^{n-1},$ followed by a small integer divide by $2n+1.$
   </p>
   <p>Before starting, we need to decide how many decimal points we
     want in our final result, because we need to cut off the long
@@ -410,27 +410,27 @@
     sequence without computing it exactly.  I estimated an upper bound
     for $b_6 = 2^{10}/(3\cdot 7\cdot 11\cdot 13) \sim 0.4$ while an
     upper bound for $b_{10} = 2^{18}/(11\cdot 13\cdot 17\cdot 19\cdot
-    21) \sim 0.3$.  In other words, assuming $b_n \sim 0.4$ is not
+    21) \sim 0.3.$  In other words, assuming $b_n \sim 0.4$ is not
     going to be a huge overestimate for any $n\ge6$ we are likely to
     want to compute.  To get 20 digits of $\pi$ after the decimal
     point, we need the sum of all omitted terms to be less than about
-    $3\times 10^{-21}$.  But to get $\pi$ we need to multiply the first series
-    by $2.8$ and the second series by roughly $0.32$.  (Note the sum
+    $3\times 10^{-21}.$  But to get $\pi$ we need to multiply the first series
+    by $2.8$ and the second series by roughly $0.32.$  (Note the sum
     $3.12$ is just a bit less than $\pi$!)  Thus the tolerable
     errors in the series themselves are about $10^{-21}$ for the
     $t=1/7$ series, and $t=10^{-20}$ for the $t=3/79$ series.
   </p>
   <p>So how many terms of each will we need?  The sixth term of the
-    $t=3/79$ series is roughly $0.4\cdot 0.00144^6$, which is roughly
-    $3\times 10^{-18}$.  The sum of all remaining terms is thus
-    roughly $4.5\times 10^{-21}$, which is about half our acceptable
+    $t=3/79$ series is roughly $0.4\cdot 0.00144^6,$ which is roughly
+    $3\times 10^{-18}.$  The sum of all remaining terms is thus
+    roughly $4.5\times 10^{-21},$ which is about half our acceptable
     limit.  The tenth term of the $t=1/7$ series is roughly $0.3\cdot
-    0.02^{10}$, also about $3\times 10^{-18}$.  The sum of all the
-    remaining terms is thus about $6\times 10^{-20}$, which is too
+    0.02^{10},$ also about $3\times 10^{-18}.$  The sum of all the
+    remaining terms is thus about $6\times 10^{-20},$ which is too
     big.  Even after the eleventh term, the sum of what remains would
-    be about $x$ times smaller, or $10^{-21}$, which is right on the
+    be about $x$ times smaller, or $10^{-21},$ which is right on the
     borderline of our target.  Hence if we want to be absolutely sure
-    of 20 places after the decimal point of $\pi$, we need 6 terms of
+    of 20 places after the decimal point of $\pi,$ we need 6 terms of
     the $t=3/79$ series, and 11 or possibly 12 terms of the $t=1/7$
     series.  Since we only need to keep a few significant digits of
     the last couple of terms, it doesn't cost a lot to tack on one
@@ -457,8 +457,8 @@
 
     Note that some of the $2nx/(2n+1)$ factors have cancellations
     which simplify the calculation, because
-    $x=0.00144=16\cdot9\cdot10^{-5}$.  For example, $8x/9=128\cdot
-    10^{-5}$.</p>
+    $x=0.00144=16\cdot9\cdot10^{-5}.$  For example, $8x/9=128\cdot
+    10^{-5}.$</p>
 
   <p>And here is the $t=1/7$ series:
     $$\begin{align*}
@@ -491,11 +491,11 @@
 
     The upper bounds on the contributions of the remaining terms are
     $1.3\times 10^{-21}$ for the $t=3/79$ part and $3.1\times 10^{-21}$
-    for the $t=1/7$ part, for a total of $4.4\times 10^{-21}$, putting
-    an upper bound of $3.1415926535897932384638$.  The correct value to
-    22 places is $3.1415926535897932384626$, which is indeed in our
+    for the $t=1/7$ part, for a total of $4.4\times 10^{-21},$ putting
+    an upper bound of $3.1415926535897932384638.$  The correct value to
+    22 places is $3.1415926535897932384626,$ which is indeed in our
     calculated range.  Rounding our result to 20 places gives 20 correct
-    decimal places $\pi = 3.14159265358979323846$, using 11 $t=1/7$ terms
+    decimal places $\pi = 3.14159265358979323846,$ using 11 $t=1/7$ terms
     and 6 $t=3/79$ terms, although we need to round up the final digit.
   </p>
   <p>The diameter of the solar system is about $1.5\times
