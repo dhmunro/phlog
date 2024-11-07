@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Line to Point Formulas</title>
+  <meta name="description"
+    content="Euler computed Pi to twenty digits in an hour.  Can you?">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script>MathJax = {tex: { inlineMath: [["$", "$"], ["\\(", "\\)"]],
+                  macros: {
+                    bv: ['\\mathbf{#1}', 1],
+                    bh: ['\\hat{\\mathbf{#1}}', 1],
+                    bm: ['\\underline{\\mathbf{#1}}', 1]
+                  }
+                }};
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"
+          id="MathJax-script">
+  </script>
+  <style>
+    div {
+      -moz-box-sizing: border-box;
+      box-sizing: border-box;
+    }
+    .textcolumn {
+      padding-left: 1em;
+      padding-right: 1em;
+      min-width: 22em;
+      max-width: 52em;
+      margin: 0 auto;
+    }
+  </style>
+</head>
+<body>
+<div class="textcolumn">
+  <h1 style="text-align: center;">Line to Point Formulas</h1>
+
+  <p>Consider the line L through a point $\bv{p}$ (a vector) in a
+    direction $\bh{d}$ (a unit vector).  So we start with a line L
+    and a point $\bv{x}$ not necessarily on L.</p>
+
+  <p>Let $\bm{Q}$ (a matrix) be the operator that projects vectors
+    into the plane perpendicular to $\bh{d}.$  Since $\bh{d}\bh{d}^T$
+    (the T superscript is transpose) is the operator that projects
+    vectors onto the $\bh{d}$ direction,
+    \[\bm{Q} = \bm{1} - \bh{d}\bh{d}^T,\]
+    where $\bm{1}$ is the identity matrix.  Note that
+    $\bm{Q}^T=\bm{Q}^2=\bm{Q}.$</p>
+
+  <p>Hopefully it is clear that $\bv{u}=\bm{Q}(\bv{x}-\bv{p})$ is the
+    vector from the point on L nearest $\bv{x}$ to the point $\bv{x}$
+    itself.  The length $u$ of $\bv{u}$ is the impact parameter of L
+    relative to $\bv{x}$.</p>
+
+  <p>Consider dithering $\bm{x}$ by some tiny amount $\delta\bv{x}.$
+    Then $\delta\bv{u}=\bm{Q}\delta\bv{x},$ and $\delta u^2=
+    2\delta \bv{u}^T \bv{u},$
+    so that
+    \[\delta u^2 = 2\delta\bv{x}^T \bm{Q}(\bv{x}-\bv{p}).\]
+    (Because $\bm{Q}^T\bm{Q}=\bm{Q}.$)</p>
+
+  <p>Now suppose there are $N$ lines L$_i$, passing through points
+    $\bv{p}_i$ with directions $\bh{d}_i$.  These will have impact
+    parameters $u_i$ relative to some point $\bv{x},$ and we can find
+    the point $\bv{x}$ which minimizes $\sum_i u_i^2,$ which is in
+    some sense the point where the lines most nearly intersect (note
+    that the minimum of this sum is zero if the lines really do all
+    intersect at a point).  At the minimum,
+    \[\delta\sum_i u_i^2 = 2\delta\bv{x}^T \sum_i\bm{Q}_i(\bv{x}-\bv{p}_i) = 0,\]
+    for every possible displacement $\delta\bv{x},$ so
+    \[\bigl(\sum_i\bm{Q}_i\bigr)\bv{x} = \sum_i\bm{Q}_i\bv{p}_i.\]
+  </p>
+
+  <p>If you think about what you have done here, this formula is the
+    best estimate for the intersection point of a set of lines
+    assuming that each line is fuzzy - that is, each line is really a
+    cylindrical cloud: Assuming independent cylindrical Gaussian fuzz
+    clouds of equal variance around each line, minimizing $\sum_i
+    u_i^2$ maximizes the probability that the lines all pass through
+    $\bv{x}.$  This would be the case if the errors in the $\bh{d}_i$
+    were zero, while the errors in the $\bv{p}_i$ were isotropic and
+    equal to a common $\sigma_u.$</p>
+
+  <p>On the other hand, if the errors in the $\bv{p}_i$ are negligible
+    compared to the errors in the $\bh{d}_i,$ then you should think of
+    each line as a fuzzy cone, tapering to a single point at
+    $\bv{p}_i,$ and expanding with a tiny angle $\sigma_\alpha$ equal
+    to the error in the direction $\bh{d}_i.$ Let
+    $\sigma_i=p_i\sigma_\alpha,$ where $p_i$ is the length of
+    $\bv{p}_i$ on the assumption that this is far larger than any of
+    the $u_i.$  Then
+    \[\chi^2 = \sum_i u_i^2/\sigma_i^2
+            = \bigr(\sum_i u_i^2/p_i^2\bigl)/\sigma_\alpha^2\]
+    is minus the log of the probability that all the measurements $\bv{d}_i$
+    could have been made if the true comman intersection point were $\bv{x}.$
+    Minimizing this $\chi^2$ thus gives the least squares best estimate
+    of $\bv{x}$ assuming that the $\bv{p}_i$ are exactly known and very
+    distant, while the $\bh{d}_i$ have a common angular standard deviation
+    of $\sigma_\alpha.$  The formula for $\bv{x}$ is the same as before,
+    except that the terms in the sums are weighted by $1/p_i^2,$ the
+    squares of the distances to $\bv{p}_i$:
+    \[\bigl(\sum_i\bm{Q}_i/p_i^2\bigr)\bv{x} = \sum_i\bm{Q}_i\bv{p}_i/p_i^2.\]
+    This makes a certain amount of sense - if all of the uncertainty is
+    in the directions $\bh{d}_i,$ then very distant points $\bv{p}_i$
+    should contribute very little to your best guess at $\bv{x}.$</p>
+
+  <p>You can obviously write down many such minimum $\chi^2$ formulas to
+    account for anisotropic or individual variances in the $\bv{p}_i$ and
+    $\bh{d}_i.$  Also, the $\chi^2$ formalism gives you a standard way to
+    write down the resulting uncertainty in $\bv{x}$ if you wish.</p>
+
+</div>
+</body>
+</html>
