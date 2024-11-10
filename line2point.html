@@ -35,6 +35,119 @@
 <div class="textcolumn">
   <h1 style="text-align: center;">Line to Point Formulas</h1>
 
+  <p>How can you determine your own vector position $\bv{x}$ by
+    measuring the directions $\bh{d}_i$ (as unit vectors) to $N\ge2$
+    landmarks with known vector locations $\bv{p}_i$?  Each direction
+    restricts your position to some point on the line L$_i$ passing
+    through $\bv{p}_i$ with direction $\bh{d}_i$.  Your position
+    $\bv{x}$ is the common intersection point of all the L$_i$.</p>
+
+  <p>Consider the operator $\bv{Q}$ (a 3x3 matrix) which projects
+    vectors into a plane perpendicular to a direction $\bh{d}.$ Since
+    $\bh{d}^T\bv{p}=\bh{d}\cdot\bv{p}$ is the component of $\bv{p}$
+    along $\bh{d},$ the projection is $\bv{Q}\bv{p}=\bv{p} -
+    \bh{d}\bh{d}^T\bv{p},$ so that
+    \[\bv{Q}=\bv{I} - \bh{d}\bh{d}^T,\]
+    where $\bv{I}$ is the 3x3 identity matrix.  Note that $\bv{Q}$
+    is symmetric and idempotent (applying it a second time leaves
+    a projected vector unchanged), so
+    \[\bv{Q}^T=\bv{Q}^2=\bv{Q}.\]
+    Also notice that $\bv{Q}$ is a singular matrix, collapsing everything
+    into the plane normal to $\bh{d}.$</p>
+
+  <p>Returning to the original problem, $\bv{x}$ satisfies
+    \[\bv{Q}_i(\bv{x}-\bv{p}_i)=0\]
+    for every individual landmark, because $\bv{x}-\bv{p}_i$ is
+    parallel to $\bh{d}.$ This amounts to $2N$ independent equations
+    for the 3 components of $\bv{x}$ owing to the singularity of each
+    $\bv{Q}_i$.  This is an overdetermined system with $2N-3$ extra
+    degrees of freedom for $N\ge2$, so there are many ways to solve
+    for $\bv{x}.$ One interesting way is to sum linear combinations of
+    the $N$ vector equations to get a single 3x3 system:
+    \[\bigl(\sum_i\bv{W}_i\bv{Q}_i\bigr)\bv{x}=\sum_i\bv{W}_i\bv{Q}_i\bv{p}_i\]
+    Here the $\bv{W}_i$ are arbitrary 3x3 weighting matrices - they
+    can be anything that doesn't make the matrix on the left side
+    singular.  For now notice that you could choose all the $\bv{W}_i$
+    to be the identity matrix to solve for $\bv{x}$ if all your
+    measurements were perfect.</p>
+
+  <p>In practice, errors in your direction measurements, or in
+    the landmark positions, or both, mean that the L$_i$ will not
+    quite intersect.  (In 3D this will happen even if you use only two
+    landmarks, since the two lines will inevitably be skew.)  The best
+    you can do is to choose the point $\bv{x}$ most likely to be the
+    intersection of the true, mutually intersecting L$_i$, given the
+    errors in directions and positions.  We use a $\chi^2$ analysis
+    to find this most likely intersection point in terms of the
+    direction and landmark errors.</p>
+
+  <p>When there are errors in $\bv{p}_i$ and $\bh{d}_i$ (hence in
+    $\bv{Q}_i$), the $\bv{Q}_i(\bv{x}-\bv{p}_i)$ will be
+    slightly non-zero.  In general, a vector has an error ellipsoid
+    defined by a 3x3 symmetric covariance matrix $\bv{V},$ whose
+    eigenvectors are the principal axes of the ellipsoid and
+    eigenvalues are the corresponding variances.  The $\chi^2$
+    statistic is
+    \[\chi^2 = \sum_i(\bv{x}-\bv{p}_i)^T\bv{Q}_i^T
+                      \bv{V}_i^{-1}\bv{Q}_i(\bv{x}-\bv{p}_i).\]
+    As noted above, there are $2N-3$ degrees of freedom in this
+    system, so if you make good estimates of the $\bv{V}_i$, you
+    expect $\chi^2\approx2N-3.$</p>
+
+  <p>To minimize $\chi^2,$ any small variation $\delta\bv{x}$ leaves
+    \[\delta\chi^2 = 2\delta\bv{x}^T
+       \sum_i\bv{Q}_i^T\bv{V}_i^{-1}\bv{Q}_i(\bv{x}-\bv{p}_i) = 0,\]
+    which matches the solution for exact positions
+    and directions with weights chosen to be
+    \[\bv{W}_i = \bv{Q}_i^T\bv{V}_i^{-1}\bv{Q}_i.\]
+    In other words, the weights which minimize $\chi^2$ are simply
+    the projection of the inverse covariance matrix $\bv{V}_i^{-1}$
+    into the plane normal to $\bh{d}_i.$  Notice that with this
+    definition $\bv{W}_i\bv{Q}_i=\bv{W}_i,$ so the 3x3 system for
+    $\bv{x}$ becomes simply
+    \[\bigl(\sum_i\bv{W}_i\bigr)\bv{x}=\sum_i\bv{W}_i\bv{p}_i.\]
+  </p>
+
+  <p>This $\chi^2$ analysis is based on the idea that the likelihood
+    of the measured directions and landmark positions being consistent
+    with a true position $\bv{x}$ is proportional to $\exp(-\chi^2/2).$
+    But this is Gaussian in $\bv{x}.$  The 3x3 covariance matrix for this
+    Gaussian is
+    \[\bv{V}_{\!\bv{x}} = \bigl(\sum_i\bv{W}_i\bigr)^{-1},\]
+    so this is the natural estimate for the error ellipsoid associated
+    with the minimum $\chi^2$ solution for $\bv{x}$.</p>
+
+  <p>The final result of the $\chi^2$ analysis is thus that the best
+    estimate of your position is
+    \[ \bv{x} = \bv{V}_{\!\bv{x}}\sum_i\bv{W}_i\bv{p}_i, \]
+    with an error ellipsoid specified by the covariance matrix
+    \[\bv{V}_{\!\bv{x}} = \bigl(\sum_i\bv{W}_i\bigr)^{-1},\]
+    where the weights are
+    \[\bv{W}_i = \bv{Q}_i\bv{V}_i^{-1}\bv{Q}_i,\]
+    and the $\bv{V}_i^{-1}$ are the inverse covariance matrices for
+    the residuals $\bv{Q}_i(\bv{x}-\bv{p}_i)$ estimated from the
+    errors in the $\bv{p}_i$ and $\bh{d}_i.$</p>
+
+  <p>The only remaining task is to estimate the $\bv{V}_i^{-1}$ for
+    some specific cases.</p>
+
+  <p>If a direction $\bh{d}_i$ is imperfectly known, then $\bv{x}$
+    could lie anywhere in a thin cone with its apex at $\bv{p}_i$ and
+    its axis along L$_i.$ Assuming a normally distributed angular
+    error, this conical error distribution has a half-angle of
+    $\sigma_{\eta i},$ the standard deviation of the error in
+    direction $\bh{d}_i.$ On the other hand, if the landmark position
+    is imperfectly known, then $\bv{x}$ could lie anywhere in a thin
+    cylinder around L$_i.$ The radius of this cylindrical error
+    distribution is $\sigma_{p i},$ the standard deviation of the
+    landmark position $\bv{p}_i.$ Note that if the error in $\bv{p}_i$
+    is anisotropic, then this error cylinder has an elliptical cross
+    section.  If both direction and position are uncertain, the
+    combined error distribution will be a thin hyperboloid of one
+    sheet with L$_i$ for its axis.</p>
+
+  <h2>Original sketch</h2>
+
   <p>Consider the line L through a point $\bv{p}$ (a vector) in a
     direction $\bh{d}$ (a unit vector).  So we start with a line L
     and a point $\bv{x}$ not necessarily on L.</p>
